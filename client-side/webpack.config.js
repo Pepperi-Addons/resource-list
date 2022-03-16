@@ -13,7 +13,7 @@ sharedMappings.register(
 
 // TODO: Change block_file_name to block name (lowercase and if it more then one word put '_' between them),
 // this name should be the same as AddonRelativeURL that declared on the relation object (search for runMigration function in installation.ts file).
-const filename = 'block_file_name'; // block_file_name
+const filename = 'data_viewer_block'; // block_file_name
 
 module.exports = {
     output: {
