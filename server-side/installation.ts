@@ -14,7 +14,7 @@ import MyService from './my.service';
 
 export async function install(client: Client, request: Request): Promise<any> {
     // For page block template uncomment this.
-    // const res = await createPageBlockRelation(client);
+    await createPageBlockRelation(client);
     // return res;
     return {success:true,resultObject:{}}
 }
@@ -35,15 +35,15 @@ export async function downgrade(client: Client, request: Request): Promise<any> 
 async function createPageBlockRelation(client: Client): Promise<any> {
     try {
         // TODO: change to block name (this is the unique relation name and the description that will be on the page builder editor in Blocks section).
-        const blockName = 'BLOCK_NAME_TO_CHANGE';
+        const blockName = 'DataViewerBlock';
 
         // TODO: Change to fileName that declared in webpack.config.js
-        const filename = 'block_file_name';
+        const filename = 'data_viewer_block';
 
         const pageComponentRelation: Relation = {
             RelationName: "PageBlock",
             Name: blockName,
-            Description: `${blockName} block`,
+            Description: `data viewer`,
             Type: "NgComponent",
             SubType: "NG11",
             AddonUUID: client.AddonUUID,
