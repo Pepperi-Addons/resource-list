@@ -30,7 +30,6 @@ export class BlockComponent implements OnInit {
         this.blockService.getItems(this.resource).then(items => {
           this.datasource = new DataSource(this.translate, items)
         })
-        debugger
       }
     }
 }
