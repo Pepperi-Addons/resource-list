@@ -1,13 +1,13 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
-
 import { TranslateLoader, TranslateModule, TranslateService, TranslateStore } from '@ngx-translate/core';
 import { PepAddonService } from '@pepperi-addons/ngx-lib';
-
 import { BlockComponent } from './index';
-
 import { config } from '../addon.config';
+import { PepNgxCompositeLibModule } from '@pepperi-addons/ngx-composite-lib';
+import { PepGenericListModule } from '@pepperi-addons/ngx-composite-lib/generic-list';
+import { BlockService } from './block.service';
 
 export const routes: Routes = [
     {
@@ -20,6 +20,8 @@ export const routes: Routes = [
     declarations: [BlockComponent],
     imports: [
         CommonModule,
+        PepGenericListModule,
+        PepNgxCompositeLibModule,
         TranslateModule.forChild({
             loader: {
                 provide: TranslateLoader,
@@ -33,7 +35,8 @@ export const routes: Routes = [
     exports: [BlockComponent],
     providers: [
         TranslateStore,
-        // Add here all used services.
+        BlockService,
+        TranslateService
     ]
 })
 export class BlockModule {

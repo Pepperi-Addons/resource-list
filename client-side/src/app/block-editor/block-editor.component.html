@@ -1,1 +1,16 @@
-Block editor works...
+<mat-tab-group #tabgroutp class="editor-tabs">
+    <mat-tab label= "GENERAL">
+
+
+        <pep-select
+            value=""
+            label="select a resource"
+            type="select"
+            mandatory = "true"
+            [options] = "resourcesNames"
+            [showTitle]="true"
+            (valueChange)="onResourceChanged($event)"
+    ></pep-select>
+    </mat-tab>
+</mat-tab-group>
+

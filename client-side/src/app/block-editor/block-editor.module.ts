@@ -2,15 +2,18 @@ import { TranslateLoader, TranslateModule, TranslateService, TranslateStore } fr
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PepAddonService } from '@pepperi-addons/ngx-lib';
-
+import { MatTabsModule } from '@angular/material/tabs';
 import { BlockEditorComponent } from './index';
-
 import { config } from '../addon.config';
+import { PepSelectModule } from '@pepperi-addons/ngx-lib/select';
+import { BlockEditorService } from './block-editor.service';
 
 @NgModule({
     declarations: [BlockEditorComponent],
     imports: [
         CommonModule,
+        MatTabsModule,
+        PepSelectModule,
         TranslateModule.forChild({
             loader: {
                 provide: TranslateLoader,
@@ -23,6 +26,8 @@ import { config } from '../addon.config';
     exports: [BlockEditorComponent],
     providers: [
         TranslateStore,
+        BlockEditorService,
+        TranslateService
         // Add here all used services.
     ]
 })

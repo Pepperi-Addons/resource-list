@@ -1,3 +1,7 @@
 {
-    "Block_Title": "Block title"
+    "Block_Title": "Block title",
+    "DATA_VIEWER_TABS": {
+        "GENERAL": "GENERAL"
+    }
+
 }
