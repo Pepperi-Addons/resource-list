@@ -12,7 +12,6 @@ import { BlockService } from './block.service'
 export class BlockComponent implements OnInit {
     @Input() hostObject: any;
     datasource: DataSource = new DataSource(this.translate, [])
-    noDataFoundMessage: string
     actions: IPepGenericListActions
     resource: any
     @Output() hostEvents: EventEmitter<any> = new EventEmitter<any>();

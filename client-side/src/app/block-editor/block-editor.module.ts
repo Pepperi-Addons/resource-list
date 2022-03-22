@@ -28,7 +28,6 @@ import { BlockEditorService } from './block-editor.service';
         TranslateStore,
         BlockEditorService,
         TranslateService
-        // Add here all used services.
     ]
 })
 export class BlockEditorModule {
