@@ -31,7 +31,6 @@ export class BlockEditorComponent implements OnInit {
         })
     }
     onTitleChanged($event):void{
-        debugger
         this.title = $event;
         this.hostEvents.emit({
             action: 'set-configuration',
