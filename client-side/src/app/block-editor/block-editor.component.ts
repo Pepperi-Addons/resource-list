@@ -11,6 +11,7 @@ export class BlockEditorComponent implements OnInit {
     resourcesNames:  {key:string, value:string}[] = []
     resources: any[] = []
     resource: any
+    title: string
     @Input() hostObject: any;
     @Output() hostEvents: EventEmitter<any> = new EventEmitter<any>();
 
@@ -26,6 +27,17 @@ export class BlockEditorComponent implements OnInit {
             this.resources = resources;
             this.resourcesNames = resources.map(resource => {
                 return {key: resource.Name, value: resource.Name}})
+        })
+    }
+    onTitleChanged($event):void{
+        debugger
+        this.title = $event;
+        this.hostEvents.emit({
+            action: 'set-configuration',
+            configuration : {
+                'title': $event
+            }
+            
         })
     }
     onResourceChanged($event):void{

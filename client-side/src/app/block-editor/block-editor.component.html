@@ -9,6 +9,16 @@
             [showTitle]="true"
             (valueChange)="onResourceChanged($event)"
         ></pep-select>
+
+        <pep-textbox
+        [value]="title"
+        label="text"
+        type="text"
+        mandatory="true"
+        xAlignment="left"
+        showTitle="true"
+        (valueChange)="onTitleChanged($event)"
+></pep-textbox>
     </mat-tab>
 </mat-tab-group>
 

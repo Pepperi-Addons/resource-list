@@ -14,17 +14,18 @@ export class BlockComponent implements OnInit {
     datasource: DataSource = new DataSource(this.translate, [])
     actions: IPepGenericListActions
     resource: any
+    title: string
     @Output() hostEvents: EventEmitter<any> = new EventEmitter<any>();
 
     constructor(private translate: TranslateService,
         private genericListService: PepGenericListService, private blockService: BlockService) {
     }
-
     ngOnInit(): void {
     }
     ngOnChanges(e: any): void {
       if(this.hostObject.configuration){
-        this.resource = this.hostObject.configuration.resource
+        this.title = this.hostObject.configuration.title || this.title
+        this.resource = this.hostObject.configuration.resource || this.resource
         this.blockService.pluginUUID = "0e2ae61b-a26a-4c26-81fe-13bdd2e4aaa3"
         this.blockService.getItems(this.resource).then(items => {
           this.datasource = new DataSource(this.translate, items)

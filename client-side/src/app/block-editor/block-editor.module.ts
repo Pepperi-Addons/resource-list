@@ -7,6 +7,7 @@ import { BlockEditorComponent } from './index';
 import { config } from '../addon.config';
 import { PepSelectModule } from '@pepperi-addons/ngx-lib/select';
 import { BlockEditorService } from './block-editor.service';
+import { PepTextboxModule } from '@pepperi-addons/ngx-lib/textbox';
 
 @NgModule({
     declarations: [BlockEditorComponent],
@@ -14,6 +15,7 @@ import { BlockEditorService } from './block-editor.service';
         CommonModule,
         MatTabsModule,
         PepSelectModule,
+        PepTextboxModule,
         TranslateModule.forChild({
             loader: {
                 provide: TranslateLoader,
