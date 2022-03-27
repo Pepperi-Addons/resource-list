@@ -68,9 +68,13 @@ export class BlockComponent implements OnInit {
       }
     }
     onDIMXProcessDone($event){
-      this.blockService.getItems(this.resource).then(items => {
-        this.datasource = new DataSource(this.translate, items)
-      })
+      const downloadURL = $event[0]?.ReturnedObject?.DownloadURL
+      if(downloadURL && 'cdn' == downloadURL.substring(8,11))
+      {
+        this.blockService.getItems(this.resource).then(items => {
+          this.datasource = new DataSource(this.translate, items)
+        })
+      }
     }
     getMenuItems() {
       return [
