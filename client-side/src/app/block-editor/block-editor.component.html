@@ -19,6 +19,32 @@
         showTitle="true"
         (valueChange)="onTitleChanged($event)"
 ></pep-textbox>
+
+<h3>Menu Settings</h3>
+<pep-checkbox
+  [value]="allowExport"
+  label="Allow data export"
+  type="checkbox"
+  [mandatory]="false"
+  [disabled]="false"
+  xAlignment="left"
+  [showTitle]="true"
+  [renderTitle]="true"
+  [visible]="true"
+  (valueChange)="onAllowExportChange($event)"
+></pep-checkbox>
+<pep-checkbox
+  [value]="allowImport"
+  label="Allow data import"
+  type="checkbox"
+  [mandatory]="false"
+  [disabled]="false"
+  xAlignment="left"
+  [showTitle]="true"
+  [renderTitle]="true"
+  [visible]="true"
+  (valueChange)="onAllowImportChange($event)"
+></pep-checkbox>
     </mat-tab>
 </mat-tab-group>
 

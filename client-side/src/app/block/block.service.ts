@@ -16,7 +16,6 @@ export class BlockService{
             suppressLogging:true
         })
     }
-
     constructor(
         public session:  PepSessionService,
         public jwtService: PepJwtHelperService
@@ -25,8 +24,10 @@ export class BlockService{
         this.parsedToken = jwtService.decodeToken(accessToken);
         this.papiBaseURL = this.parsedToken["pepperi.baseurl"]
     }
-
     async getItems(resourceName: string){
-        return await this.papiClient.addons.api.uuid(this.pluginUUID).file('api').func('get_collection_data').get({collectionName: resourceName})
+        if(resourceName){
+            return await this.papiClient.addons.api.uuid(this.pluginUUID).file('api').func('get_collection_data').get({collectionName: resourceName})
+        }
+        return [];
     }
 }

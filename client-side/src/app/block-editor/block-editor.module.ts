@@ -8,6 +8,7 @@ import { config } from '../addon.config';
 import { PepSelectModule } from '@pepperi-addons/ngx-lib/select';
 import { BlockEditorService } from './block-editor.service';
 import { PepTextboxModule } from '@pepperi-addons/ngx-lib/textbox';
+import { PepCheckboxModule } from '@pepperi-addons/ngx-lib/checkbox';
 
 @NgModule({
     declarations: [BlockEditorComponent],
@@ -16,6 +17,7 @@ import { PepTextboxModule } from '@pepperi-addons/ngx-lib/textbox';
         MatTabsModule,
         PepSelectModule,
         PepTextboxModule,
+        PepCheckboxModule,
         TranslateModule.forChild({
             loader: {
                 provide: TranslateLoader,

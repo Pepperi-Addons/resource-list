@@ -8,6 +8,9 @@ import { config } from '../addon.config';
 import { PepNgxCompositeLibModule } from '@pepperi-addons/ngx-composite-lib';
 import { PepGenericListModule } from '@pepperi-addons/ngx-composite-lib/generic-list';
 import { BlockService } from './block.service';
+import { PepMenuModule } from '@pepperi-addons/ngx-lib/menu';
+import { PepDIMXModule } from '@pepperi-addons/ngx-composite-lib/dimx-export';
+
 
 export const routes: Routes = [
     {
@@ -22,6 +25,8 @@ export const routes: Routes = [
         CommonModule,
         PepGenericListModule,
         PepNgxCompositeLibModule,
+        PepMenuModule,
+        PepDIMXModule,
         TranslateModule.forChild({
             loader: {
                 provide: TranslateLoader,

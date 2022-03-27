@@ -1,7 +1,23 @@
-<pep-generic-list
-    [showTopBar]="true"
-    [dataSource]="datasource"
-    inline = true
-    [showSearch]="true"
-    [title] = "title">
-</pep-generic-list>
+
+<ng-container pep-main-area>
+    <pep-generic-list class="generic-list"
+        [showTopBar]="true"
+        [dataSource]="datasource"
+        inline = true
+        [showSearch]="true"
+        [title] = "title">
+        <ng-container right-buttons>
+            <pep-menu
+                classNames="pep-spacing-element"
+                iconName="system_menu"
+                type="action"
+                styleType="strong"
+                sizeType="md"
+                [items]="menuItems"
+                [disabled]="false"
+                (menuItemClick)="onMenuItemClick($event)"
+            ></pep-menu>
+        </ng-container>
+    </pep-generic-list>
+</ng-container>
+<pep-dimx #dimx [DIMXAddonUUID]="'122c0e9d-c240-4865-b446-f37ece866c22'" [DIMXResource]="resource"></pep-dimx>
