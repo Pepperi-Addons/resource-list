@@ -67,6 +67,11 @@ export class BlockComponent implements OnInit {
           break;    
       }
     }
+    onDIMXProcessDone($event){
+      this.blockService.getItems(this.resource).then(items => {
+        this.datasource = new DataSource(this.translate, items)
+      })
+    }
     getMenuItems() {
       return [
           {
