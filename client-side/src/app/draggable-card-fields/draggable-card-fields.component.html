@@ -1,0 +1,17 @@
+<div class="card-editor-container">
+    <div>
+        <pep-button classNames="lock-events" sizeType="xs" ></pep-button>
+    </div>
+    <div *ngIf="title !== ''" class="title-container">
+        <span class="body-sm ellipsis">{{id + 1}}.&nbsp;</span>
+        <span class="body-sm color-link bold ellipsis" title="">{{"SOME"}}</span>
+    </div>
+    <div class="actions" >
+        <pep-button classNames="caution" sizeType="xs" iconName="system_bin" (buttonClick)="onRemoveClick();"></pep-button>
+        <pep-button *ngIf="!showContentOfField" sizeType="xs" iconName="arrow_down" (buttonClick)="onEditClick();"></pep-button>
+        <pep-button *ngIf="showContentOfField" sizeType="xs" iconName="arrow_up" (buttonClick)="onEditClick();"></pep-button>
+    </div>
+    <div class="editorCont">
+       <p *ngIf = "showContentOfField"> {{id}} </p>
+    </div>
+</div>

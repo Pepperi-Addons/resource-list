@@ -9,6 +9,9 @@ import { PepSelectModule } from '@pepperi-addons/ngx-lib/select';
 import { BlockEditorService } from './block-editor.service';
 import { PepTextboxModule } from '@pepperi-addons/ngx-lib/textbox';
 import { PepCheckboxModule } from '@pepperi-addons/ngx-lib/checkbox';
+import { DraggableCardFieldsModule } from '../draggable-card-fields/draggable-card-fields.module';
+import { PepButtonModule } from '@pepperi-addons/ngx-lib/button';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 @NgModule({
     declarations: [BlockEditorComponent],
@@ -17,7 +20,10 @@ import { PepCheckboxModule } from '@pepperi-addons/ngx-lib/checkbox';
         MatTabsModule,
         PepSelectModule,
         PepTextboxModule,
+        DragDropModule,
         PepCheckboxModule,
+        DraggableCardFieldsModule,
+        PepButtonModule,
         TranslateModule.forChild({
             loader: {
                 provide: TranslateLoader,

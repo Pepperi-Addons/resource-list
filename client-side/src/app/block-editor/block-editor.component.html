@@ -1,5 +1,5 @@
 <mat-tab-group #tabgroutp class="editor-tabs">
-    <mat-tab label= "GENERAL">
+    <mat-tab label= "General">
         <div>
             <pep-select 
                 [value]="resource"
@@ -19,7 +19,6 @@
                 showTitle="true"
                 (valueChange)="onTitleChanged($event)"
             ></pep-textbox>
-
             <h3>Menu Settings</h3>
             <pep-checkbox
                 [value]="allowExport"
@@ -46,6 +45,23 @@
                 (valueChange)="onAllowImportChange($event)"
             ></pep-checkbox>
         </div>
+    </mat-tab>
+    <mat-tab cdkDropListGroup label= "Content">
+        <h3>Fields</h3>
+        <div (cdkDropListDropped)="drop($event)"  cdkDropList> 
+        <draggable-card-fields  
+        *ngFor="let currentCard of cardsList"
+        [id]= "currentCard.id" [showActions] = "true" [isDraggable] = "true"
+        (hostEvents)='onHostObjectChange($event)'
+        (editClick)='onCardEditClick($event);'
+        (removeClick)='onCardRemoveClick($event);'
+        [configuration]="configuration"
+        cdkDrag [cdkDragDisabled]="false"  style="cursor: grab;" (cdkDragStarted)="onDragStart($event)" (cdkDragEnded)="onDragEnd($event)">
+        </draggable-card-fields>
+    </div>
+    <pep-button class="add-content-button" value="Add" styleType="regular"  
+    (buttonClick)="addNewCardClick()"></pep-button>
+
     </mat-tab>
 </mat-tab-group>
 

@@ -47,7 +47,7 @@ export class BlockComponent implements OnInit {
       }
     }
     onMenuItemClick($event){
-      debugger
+
       switch ($event.source.key){
         case 'Export':
           this.dimx?.DIMXExportRun({
