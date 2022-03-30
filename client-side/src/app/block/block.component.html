@@ -14,10 +14,10 @@
                 styleType="strong"
                 sizeType="md"
                 [items]="menuItems"
-                [disabled]="false"
+                [disabled]="menuDisabled"
                 (menuItemClick)="onMenuItemClick($event)"
             ></pep-menu>
         </ng-container>
     </pep-generic-list>
 </ng-container>
-<pep-dimx #dimx [DIMXAddonUUID]="'122c0e9d-c240-4865-b446-f37ece866c22'" [DIMXResource]="resource" (DIMXProcessDone)='onDIMXProcessDone($event);'></pep-dimx>
+<pep-dimx #dimx [DIMXAddonUUID]="udcUUID" [DIMXResource]="resource" (DIMXProcessDone)='onDIMXProcessDone($event);'></pep-dimx>

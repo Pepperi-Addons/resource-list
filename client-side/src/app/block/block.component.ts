@@ -5,6 +5,7 @@ import { IPepListSortingChangeEvent } from '@pepperi-addons/ngx-lib/list';
 import { BlockService } from './block.service' 
 import { PepMenuItem } from "@pepperi-addons/ngx-lib/menu";
 import { DIMXComponent } from '@pepperi-addons/ngx-composite-lib/dimx-export';
+import { UDCUUID } from '../addon.config';
 
 @Component({
     selector: 'block',
@@ -18,9 +19,11 @@ export class BlockComponent implements OnInit {
     actions: IPepGenericListActions
     resource: any
     title: string
+    udcUUID: string = UDCUUID
     menuItems: PepMenuItem[] = []
     allowExport: boolean = false;
     allowImport: boolean = false;
+    menuDisabled: boolean = false;
     @Output() hostEvents: EventEmitter<any> = new EventEmitter<any>();
 
     constructor(private translate: TranslateService,
@@ -29,6 +32,7 @@ export class BlockComponent implements OnInit {
     ngOnInit(): void {
       this.allowExport = Boolean(this.hostObject.configuration.allowExport)
       this.allowImport = Boolean(this.hostObject.configuration.allowImport)
+      this.menuDisabled = !(this.allowImport || this.allowExport)
       this.title = this.hostObject.configuration.title || ""
       this.resource = this.hostObject.configuration.resource
       this.menuItems = this.getMenuItems()
@@ -39,6 +43,8 @@ export class BlockComponent implements OnInit {
         this.resource = this.hostObject.configuration.resource || this.resource
         this.allowExport = Boolean(this.hostObject.configuration.allowExport)
         this.allowImport = Boolean(this.hostObject.configuration.allowImport)
+        debugger
+        this.menuDisabled = !(this.allowImport || this.allowExport)
         this.menuItems = this.getMenuItems()
         this.blockService.pluginUUID = "0e2ae61b-a26a-4c26-81fe-13bdd2e4aaa3"
         this.blockService.getItems(this.resource).then(items => {
@@ -62,22 +68,18 @@ export class BlockComponent implements OnInit {
           this.dimx?.uploadFile({
             OverwriteOBject: true,
             Delimiter: ",",
-            OwnerID: "122c0e9d-c240-4865-b446-f37ece866c22"
+            OwnerID: UDCUUID
           });
           break;    
       }
     }
     onDIMXProcessDone($event){
-      const downloadURL = $event[0]?.ReturnedObject?.DownloadURL
-      if(downloadURL && 'cdn' == downloadURL.substring(8,11))
-      {
         this.blockService.getItems(this.resource).then(items => {
           this.datasource = new DataSource(this.translate, items)
         })
-      }
     }
     getMenuItems() {
-      return [
+      return this.menuDisabled? [] :  [
           {
             key:'Export',
             text: this.translate.instant('Export'),
@@ -93,9 +95,6 @@ export class BlockComponent implements OnInit {
 class DataSource implements IPepGenericListDataSource{
     items: any[] = []
     constructor(private translate: TranslateService, items: any[]){
-      this.items = items
-    }
-    setItems(items:any[]){
       this.items = items
     }
     async init(params: { searchString?: string; filter?: any; sorting?: IPepListSortingChangeEvent; fromIndex: number; toIndex: number; }): Promise<IPepGenericListInitData> {
