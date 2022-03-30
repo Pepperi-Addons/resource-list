@@ -43,7 +43,6 @@ export class BlockComponent implements OnInit {
         this.resource = this.hostObject.configuration.resource || this.resource
         this.allowExport = Boolean(this.hostObject.configuration.allowExport)
         this.allowImport = Boolean(this.hostObject.configuration.allowImport)
-        debugger
         this.menuDisabled = !(this.allowImport || this.allowExport)
         this.menuItems = this.getMenuItems()
         this.blockService.pluginUUID = "0e2ae61b-a26a-4c26-81fe-13bdd2e4aaa3"
