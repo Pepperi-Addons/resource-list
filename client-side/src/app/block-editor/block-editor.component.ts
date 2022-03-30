@@ -26,6 +26,7 @@ export class BlockEditorComponent implements OnInit {
         this.resource = this.hostObject?.configuration?.resource
         this.title = this.hostObject.configuration.title
         this.allowExport = this.hostObject.configuration.allowExport
+        this.allowImport = this.hostObject.configuration.allowImport
         this.blockEditorService.getCollections().then(resources => {
             this.resources = resources;
             this.resourcesNames = resources.map(resource => {
