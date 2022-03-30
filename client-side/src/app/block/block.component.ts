@@ -30,17 +30,17 @@ export class BlockComponent implements OnInit {
         private genericListService: PepGenericListService, private blockService: BlockService) {
     }
     ngOnInit(): void {
-      this.allowExport = Boolean(this.hostObject.configuration.allowExport)
-      this.allowImport = Boolean(this.hostObject.configuration.allowImport)
+      this.allowExport = Boolean(this.hostObject?.configuration?.allowExport)
+      this.allowImport = Boolean(this.hostObject?.configuration?.allowImport)
       this.menuDisabled = !(this.allowImport || this.allowExport)
-      this.title = this.hostObject.configuration.title || ""
-      this.resource = this.hostObject.configuration.resource
+      this.title = this.hostObject?.configuration?.title || ""
+      this.resource = this.hostObject?.configuration?.resource
       this.menuItems = this.getMenuItems()
     }
     ngOnChanges(e: any): void {
-      if(this.hostObject.configuration){
+      if(this.hostObject?.configuration){
         this.title = this.hostObject.configuration.title || this.title
-        this.resource = this.hostObject.configuration.resource || this.resource
+        this.resource = this.hostObject?.configuration.resource || this.resource
         this.allowExport = Boolean(this.hostObject.configuration.allowExport)
         this.allowImport = Boolean(this.hostObject.configuration.allowImport)
         this.menuDisabled = !(this.allowImport || this.allowExport)
