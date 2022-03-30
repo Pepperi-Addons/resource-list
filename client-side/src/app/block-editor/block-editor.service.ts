@@ -29,4 +29,10 @@ export class BlockEditorService{
     async getCollections(): Promise<any[]>{
         return await this.papiClient.addons.api.uuid(this.pluginUUID).file('api').func('get_all_collections').get()
     }
+    async getItems(resourceName: string){
+        if(resourceName){
+            return await this.papiClient.addons.api.uuid(this.pluginUUID).file('api').func('get_collection_data').get({collectionName: resourceName})
+        }
+        return [];
+    }
 }

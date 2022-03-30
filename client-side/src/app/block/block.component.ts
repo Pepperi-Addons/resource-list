@@ -22,6 +22,7 @@ export class BlockComponent implements OnInit {
     allowExport: boolean = false;
     allowImport: boolean = false;
     @Output() hostEvents: EventEmitter<any> = new EventEmitter<any>();
+    items: any[]
 
     constructor(private translate: TranslateService,
         private genericListService: PepGenericListService, private blockService: BlockService) {

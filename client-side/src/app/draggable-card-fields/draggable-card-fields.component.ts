@@ -13,6 +13,8 @@ export class DraggableCardFieldsComponent implements OnInit {
   public title: string;
   showContentOfField = false;
   @Input() showActions = true;
+  private currentField:any;
+  private fields: any
   constructor(
     private translate: TranslateService,
 ) { 
@@ -31,5 +33,11 @@ onCardFieldChange(key, event){
     if(key.indexOf('.') > -1){
         let keyObj = key.split('.');0
     }
+}
+onSelectField($event){
+
+}
+onMenuClick($event){
+
 }
 }

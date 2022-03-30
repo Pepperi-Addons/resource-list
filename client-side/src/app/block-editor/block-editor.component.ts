@@ -17,6 +17,7 @@ export class BlockEditorComponent implements OnInit {
     title: string
     allowExport: boolean = false;
     allowImport: boolean = false;
+    items: any[] = []
     @Input() hostObject: any;
     @Output() hostEvents: EventEmitter<any> = new EventEmitter<any>();
     currentCardindex: number;
@@ -25,18 +26,17 @@ export class BlockEditorComponent implements OnInit {
     get configuration(): IContent {
         return this._configuration;
     }
-
     constructor(private translate: TranslateService,
                 private blockEditorService: BlockEditorService,
                 private cardsService: CardsService
                ) {
     }
-
     ngOnInit(): void {
         this.blockEditorService.pluginUUID = "0e2ae61b-a26a-4c26-81fe-13bdd2e4aaa3"
         this.resource = this.hostObject?.configuration?.resource
         this.title = this.hostObject.configuration.title
         this.allowExport = this.hostObject.configuration.allowExport
+        this.items = this.hostObject.items
         this.blockEditorService.getCollections().then(resources => {
             this.resources = resources;
             this.resourcesNames = resources.map(resource => {
@@ -52,7 +52,6 @@ export class BlockEditorComponent implements OnInit {
         });
     }
     private updateHostObject() {
-        
         this.hostEvents.emit({
             action: 'set-configuration',
             configuration: this.configuration
@@ -72,6 +71,9 @@ export class BlockEditorComponent implements OnInit {
     }
     onResourceChanged($event):void{
         this.resource = $event
+        this.blockEditorService.getItems(this.resource).then(items => {
+            this.items = items
+          })
         this.updateConfigurationObject()
     }
     updateConfigurationObject(){
@@ -81,7 +83,8 @@ export class BlockEditorComponent implements OnInit {
                 resource: this.resource,
                 title: this.title,
                 allowExport: this.allowExport,
-                allowImport: this.allowImport
+                allowImport: this.allowImport,
+                items: this.items
             }
         })
     }

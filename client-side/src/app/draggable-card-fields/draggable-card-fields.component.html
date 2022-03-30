@@ -12,6 +12,18 @@
         <pep-button *ngIf="showContentOfField" sizeType="xs" iconName="arrow_up" (buttonClick)="onEditClick();"></pep-button>
     </div>
     <div class="editorCont">
-       <p *ngIf = "showContentOfField"> {{id}} </p>
+        <pep-menu *ngIf ="showContentOfField"
+            text="choose a field"
+            iconName="system_menu"
+            type="select"
+            styleType="weak"
+            sizeType="md"
+            classNames=""
+            [items]="fields"
+            [selectedItem]="currentField"
+            [disabled]="false"
+            (menuItemClick)="onSelectField($event)"
+            (menuClick)="onMenuClick($event)"
+        ></pep-menu>
     </div>
 </div>
