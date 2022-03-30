@@ -24,9 +24,9 @@ export class BlockEditorComponent implements OnInit {
     ngOnInit(): void {
         this.blockEditorService.pluginUUID = "0e2ae61b-a26a-4c26-81fe-13bdd2e4aaa3"
         this.resource = this.hostObject?.configuration?.resource
-        this.title = this.hostObject.configuration.title
-        this.allowExport = this.hostObject.configuration.allowExport
-        this.allowImport = this.hostObject.configuration.allowImport
+        this.title = this.hostObject?.configuration?.title
+        this.allowExport = this.hostObject?.configuration?.allowExport
+        this.allowImport = this.hostObject?.configuration?.allowImport
         this.blockEditorService.getCollections().then(resources => {
             this.resources = resources;
             this.resourcesNames = resources.map(resource => {
