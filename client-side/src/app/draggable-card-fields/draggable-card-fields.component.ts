@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { IContent } from './cards.model';
+
 
 @Component({
   selector: 'draggable-card-fields',
@@ -9,23 +9,38 @@ import { IContent } from './cards.model';
 })
 
 export class DraggableCardFieldsComponent implements OnInit {
-  @Input() id: string;
   public title: string;
   showContentOfField = false;
   @Input() showActions = true;
+  @Input() field: any
+  @Input() items: any[]
+  itemsOptions: {key: string, value:string}[]
+  @Output() removeClick: EventEmitter<any> = new EventEmitter();
   constructor(
     private translate: TranslateService,
 ) { 
 }
 async ngOnInit(): Promise<void> {
     const desktopTitle = await this.translate.get('SLIDESHOW.HEIGHTUNITS_REM').toPromise();
+    this.setItemOptions()
+}
+
+setItemOptions(){
+    this.itemsOptions = this.items.map((item) => {return {key: item, value: item }})
 }
 onRemoveClick() {
-    //todo
+   this.items = this.items.filter((item) => item != this.field)
+   this.removeClick.emit({field: this.field})
+   this.field = undefined
+   //call editor to remove field with event emiter
 }
 onEditClick() {
     this.showContentOfField = !this.showContentOfField
 }
+onSelectField($event){
+    this.field = $event
+}
+
 onCardFieldChange(key, event){
     const value = key.indexOf('image') > -1 && key.indexOf('src') > -1 ? event.fileStr :  event && event.source && event.source.key ? event.source.key : event && event.source && event.source.value ? event.source.value :  event;
     if(key.indexOf('.') > -1){

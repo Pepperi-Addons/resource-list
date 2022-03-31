@@ -15,6 +15,7 @@ export class BlockEditorComponent implements OnInit {
     resources: any[] = []
     resource: any
     title: string
+    fields: string[]
     allowExport: boolean = false;
     allowImport: boolean = false;
     @Input() hostObject: any;
@@ -25,33 +26,32 @@ export class BlockEditorComponent implements OnInit {
     get configuration(): IContent {
         return this._configuration;
     }
-
     constructor(private translate: TranslateService,
                 private blockEditorService: BlockEditorService,
                 private cardsService: CardsService
                ) {
     }
-
     ngOnInit(): void {
         this.blockEditorService.pluginUUID = "0e2ae61b-a26a-4c26-81fe-13bdd2e4aaa3"
         this.resource = this.hostObject?.configuration?.resource
         this.title = this.hostObject?.configuration?.title
         this.allowExport = this.hostObject?.configuration?.allowExport
         this.allowImport = this.hostObject?.configuration?.allowImport
+        this.fields = this.hostObject?.configuration?.fields
+        this.fields = this.hostObject?.configuration?.fields
         this.blockEditorService.getCollections().then(resources => {
             this.resources = resources;
             this.resourcesNames = resources.map(resource => {
                 return {key: resource.Name, value: resource.Name}})
         })
     }
-    private updateHostObjectField(fieldKey: string, value: any) {
-        
-        this.hostEvents.emit({
-            action: 'set-configuration-field',
-            key: fieldKey, 
-            value: value
-        });
-    }
+    // private updateHostObjectField(fieldKey: string, value: any) {
+    //     this.hostEvents.emit({
+    //         action: 'set-configuration-field',
+    //         key: fieldKey, 
+    //         value: value
+    //     });
+    // }
     private updateHostObject() {
         
         this.hostEvents.emit({
@@ -71,9 +71,15 @@ export class BlockEditorComponent implements OnInit {
         this.title = $event;
         this.updateConfigurationObject()
     }
-    onResourceChanged($event):void{
+    async onResourceChanged($event):Promise<void>{
         this.resource = $event
+        const fields = this.getFieldsByResourceName(this.resource)
+        this.fields = fields? Object.keys(fields) : []
+        debugger
         this.updateConfigurationObject()
+    }
+    getFieldsByResourceName(resourceName: string){
+        return this.resources.find(resource => resourceName == resource.Name).Fields
     }
     updateConfigurationObject(){
         this.hostEvents.emit({
@@ -82,17 +88,14 @@ export class BlockEditorComponent implements OnInit {
                 resource: this.resource,
                 title: this.title,
                 allowExport: this.allowExport,
-                allowImport: this.allowImport
+                allowImport: this.allowImport,
+                fields: this.fields
             }
         })
     }
     drop(event: CdkDragDrop<string[]>){
         if (event.previousContainer === event.container) {
-            moveItemInArray(this.cardsList, event.previousIndex, event.currentIndex);
-            // for(let index = 0 ; index < this.cardsList.length; index++){
-            // //   this.cardsList[index].id = index;
-            // }
-            //  this.updateHostObject();
+            moveItemInArray(this.fields, event.previousIndex, event.currentIndex);
            } 
     }
     onDragStart(event: CdkDragStart) {
@@ -121,10 +124,9 @@ export class BlockEditorComponent implements OnInit {
         else{ 
             this.currentCardindex = this.configuration.cardsConfig.editSlideIndex = parseInt(event.id);
         }
-        this.updateHostObjectField(`galleryConfig.editSlideIndex`, this.configuration.cardsConfig.editSlideIndex);
     }
     onCardRemoveClick(event){
-        this.configuration?.cards.splice(event.id, 1);
-        this.configuration?.cards.forEach(function(card, index, arr) {card.id = index; });
+        this.fields = this.fields.filter((field) => field != event.field)
+        this.updateConfigurationObject()
     }
 }

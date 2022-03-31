@@ -50,18 +50,19 @@
         <h3>Fields</h3>
         <div (cdkDropListDropped)="drop($event)"  cdkDropList> 
         <draggable-card-fields  
-        *ngFor="let currentCard of cardsList"
-        [id]= "currentCard.id" [showActions] = "true" [isDraggable] = "true"
+        *ngFor="let field of fields"
+        [showActions] = "true" [isDraggable] = "true"
         (hostEvents)='onHostObjectChange($event)'
         (editClick)='onCardEditClick($event);'
         (removeClick)='onCardRemoveClick($event);'
         [configuration]="configuration"
+        [field] ="field"
+        [items] = "fields"
         cdkDrag [cdkDragDisabled]="false"  style="cursor: grab;" (cdkDragStarted)="onDragStart($event)" (cdkDragEnded)="onDragEnd($event)">
         </draggable-card-fields>
     </div>
     <pep-button class="add-content-button" value="Add" styleType="regular"  
     (buttonClick)="addNewCardClick()"></pep-button>
-
     </mat-tab>
 </mat-tab-group>
 
