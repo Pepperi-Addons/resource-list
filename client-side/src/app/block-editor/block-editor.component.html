@@ -2,7 +2,7 @@
     <mat-tab label= "General">
         <div>
             <pep-select 
-                [value]="resource"
+                [value]="currentResourceName"
                 label="select a resource"
                 type="select"
                 mandatory = "true"
@@ -50,19 +50,21 @@
         <h3>Fields</h3>
         <div (cdkDropListDropped)="drop($event)"  cdkDropList> 
         <draggable-card-fields  
-        *ngFor="let field of fields"
+        *ngFor="let card of currentCardsList"
         [showActions] = "true" [isDraggable] = "true"
         (hostEvents)='onHostObjectChange($event)'
         (editClick)='onCardEditClick($event);'
         (removeClick)='onCardRemoveClick($event);'
+        (selectedField) = 'onSelectField($event)'
         [configuration]="configuration"
-        [field] ="field"
-        [items] = "fields"
+        [field] ="card.value.Key"
+        [items] = "fieldsKeys"
+        [id] = "card.id"
         cdkDrag [cdkDragDisabled]="false"  style="cursor: grab;" (cdkDragStarted)="onDragStart($event)" (cdkDragEnded)="onDragEnd($event)">
         </draggable-card-fields>
     </div>
     <pep-button class="add-content-button" value="Add" styleType="regular"  
-    (buttonClick)="addNewCardClick()"></pep-button>
+    (buttonClick)="addNewCard()"></pep-button>
     </mat-tab>
 </mat-tab-group>
 
