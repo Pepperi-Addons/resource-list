@@ -44,8 +44,5 @@ export class IContentEditor {
 
 export class ICardEditor {
     id: number;
-    title: string = "Card";
-    description: string = "Description";
-    imageURL: string = "";
-    linkTo: string = "";
+    value: string
 }

@@ -50,14 +50,14 @@
         <h3>Fields</h3>
         <div (cdkDropListDropped)="drop($event)"  cdkDropList> 
         <draggable-card-fields  
-        *ngFor="let field of fields"
+        *ngFor="let card of cardsList"
         [showActions] = "true" [isDraggable] = "true"
         (hostEvents)='onHostObjectChange($event)'
         (editClick)='onCardEditClick($event);'
         (removeClick)='onCardRemoveClick($event);'
         [configuration]="configuration"
-        [field] ="field"
-        [items] = "fields"
+        [field] ="card.value"
+        [items] = "fieldsKeys"
         cdkDrag [cdkDragDisabled]="false"  style="cursor: grab;" (cdkDragStarted)="onDragStart($event)" (cdkDragEnded)="onDragEnd($event)">
         </draggable-card-fields>
     </div>

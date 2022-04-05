@@ -15,7 +15,8 @@ export class BlockEditorComponent implements OnInit {
     resources: any[] = []
     resource: any
     title: string
-    fields: string[]
+    fieldsKeys: string[]
+    fields: any[]
     allowExport: boolean = false;
     allowImport: boolean = false;
     @Input() hostObject: any;
@@ -32,66 +33,110 @@ export class BlockEditorComponent implements OnInit {
                ) {
     }
     ngOnInit(): void {
+        this.loadVariablesFromHostObject()
+        this.initResources()
+        .then(() => {
+            this.initCurrentResource()
+        })
+        .then(() => {
+            this.initCardsList()
+        })
+    }
+    async initCurrentResource(){
+        if(!this.resource){
+            await this.setCurrentResourceAndFields()
+            this.setFieldsKeysFromFields()
+        }
+    }
+    validateCardsListCompatibleToFieldsAndUpdate(){
+        if(!this.fieldsKeys){
+            return
+        }
+        const fieldsKeysSet: Set<string> = new Set(this.fieldsKeys)
+        const cardsToDelete = this.getCardsToDelete(fieldsKeysSet)
+        this.deleteCards(cardsToDelete)
+        this.updateConfigurationObjectField('cardsList', this.cardsList)
+    }
+    deleteCards(cradToDelete: ICardEditor[]){
+        cradToDelete.forEach((card) => {
+            this.removeCard(card.value)
+        })
+    }
+    getCardsToDelete(set: Set<string>): ICardEditor[]{
+        if(!this.cardsList){
+            return []
+        }
+        return this.cardsList.filter((card) => !(card.value in set))
+    }
+    setFieldsKeysFromFields(){
+        if(this.fields){
+            this.fieldsKeys = this.fields.map((field) => field.Key)
+        }
+    }
+    async setCurrentResourceAndFields(){
+        this.resource = this.resources.length > 0? this.resources[0] : undefined
+        this.fields =  this.resource? await this.blockEditorService.getItems(this.resource.Name): []
+        this.setFieldsKeysFromFields()
+    }
+    async initResources(){
         this.blockEditorService.pluginUUID = "0e2ae61b-a26a-4c26-81fe-13bdd2e4aaa3"
+        const resources = await this.blockEditorService.getCollections()
+        this.resources = resources;
+        this.resourcesNames = resources.map(resource => {
+            return {key: resource.Name, value: resource.Name}})
+    }
+
+    loadVariablesFromHostObject(){
         this.resource = this.hostObject?.configuration?.resource
         this.title = this.hostObject?.configuration?.title
         this.allowExport = this.hostObject?.configuration?.allowExport
         this.allowImport = this.hostObject?.configuration?.allowImport
-        this.fields = this.hostObject?.configuration?.fields
-        this.fields = this.hostObject?.configuration?.fields
-        this.blockEditorService.getCollections().then(resources => {
-            this.resources = resources;
-            this.resourcesNames = resources.map(resource => {
-                return {key: resource.Name, value: resource.Name}})
-        })
+        this.cardsList = this.hostObject?.configuration?.cardsList
     }
-    // private updateHostObjectField(fieldKey: string, value: any) {
-    //     this.hostEvents.emit({
-    //         action: 'set-configuration-field',
-    //         key: fieldKey, 
-    //         value: value
-    //     });
-    // }
-    private updateHostObject() {
-        
-        this.hostEvents.emit({
-            action: 'set-configuration',
-            configuration: this.configuration
-        });
+    initCardsList(){
+        this.cardsList = this.hostObject?.configuration?.cardsList
+        if(!this.cardsList){
+            this.generateCardsListFromFields()
+        }
+        else{
+            this.validateCardsListCompatibleToFieldsAndUpdate()
+        }
+    }
+    generateCardsListFromFields(){
+        this.cardsList = []
+        if(this.fieldsKeys){
+            this.fields?.map((fieldKey) => {
+                this.addNewCard().value = fieldKey
+            })
+        }
     }
     onAllowExportChange($event){
         this.allowExport = $event
-        this.updateConfigurationObject()
+        this.updateConfigurationObjectField('allowExport', this.allowExport)
     }
     onAllowImportChange($event){
         this.allowImport = $event
-        this.updateConfigurationObject()
+        this.updateConfigurationObjectField('allowImport', this.allowImport)
     }
     onTitleChanged($event):void{
         this.title = $event;
-        this.updateConfigurationObject()
+        this.updateConfigurationObjectField('title', this.title)
     }
     async onResourceChanged($event):Promise<void>{
         this.resource = $event
         const fields = this.getFieldsByResourceName(this.resource)
         this.fields = fields? Object.keys(fields) : []
-        debugger
-        this.updateConfigurationObject()
+        this.updateConfigurationObjectField('resource', this.resource)
+        this.updateConfigurationObjectField('fields', this.fields)
     }
     getFieldsByResourceName(resourceName: string){
         return this.resources.find(resource => resourceName == resource.Name).Fields
     }
-    updateConfigurationObject(){
-        this.hostEvents.emit({
-            action: 'set-configuration',
-            configuration: {
-                resource: this.resource,
-                title: this.title,
-                allowExport: this.allowExport,
-                allowImport: this.allowImport,
-                fields: this.fields
-            }
-        })
+    updateConfigurationObjectField(key: string, value: any) {
+        const hostObjectConfiguration = this.hostObject?.configuration
+        if(hostObjectConfiguration){
+            hostObjectConfiguration[key] = value
+        }
     }
     drop(event: CdkDragDrop<string[]>){
         if (event.previousContainer === event.container) {
@@ -105,17 +150,14 @@ export class BlockEditorComponent implements OnInit {
         this.cardsService.changeCursorOnDragEnd();
     }
     addNewCardClick(){
+        const card = this.addNewCard()
+        card.value = this.fieldsKeys.length > 0 ? this.fieldsKeys[card.id % this.fieldsKeys.length] : undefined
+    }
+    addNewCard(){
         let card = new ICardEditor();
         card.id = (this.cardsList.length);
-        this.cardsList.push(card); 
-    }
-    public onHostObjectChange(event) {
-        if(event && event.action){
-            if(event.action === 'set-configuration'){
-                this._configuration = event.configuration;
-                this.updateHostObject();
-            }
-        }
+        this.cardsList.push(card);
+        return card
     }
     onCardEditClick(event){
         if(this.configuration?.cardsConfig?.editSlideIndex === event.id){ //close the editor
@@ -126,7 +168,9 @@ export class BlockEditorComponent implements OnInit {
         }
     }
     onCardRemoveClick(event){
-        this.fields = this.fields.filter((field) => field != event.field)
-        this.updateConfigurationObject()
+       this.removeCard(event.field)
+    }
+    removeCard(value){
+        this.cardsList = this.cardsList.filter((card) => card.value != value)
     }
 }
