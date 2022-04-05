@@ -34,4 +34,10 @@ export class BlockEditorService{
             return await this.getCollections()
         }
     }
+    async getItems(resourceName: string){
+        if(resourceName){
+            return await this.papiClient.addons.api.uuid(this.pluginUUID).file('api').func('get_collection_data').get({collectionName: resourceName})
+        }
+        return [];
+    }
 }

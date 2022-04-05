@@ -4,14 +4,15 @@ import { BlockEditorService } from './block-editor.service'
 import { CdkDragDrop, CdkDragEnd, CdkDragStart, moveItemInArray, transferArrayItem} from '@angular/cdk/drag-drop';
 import { ICardEditor, IContent, IContentEditor } from '../draggable-card-fields/cards.model'
 import { CardsService } from '../draggable-card-fields/cards.service'
-import { KeyValuePair } from '@pepperi-addons/ngx-lib';
+import { KeyValuePair, Test } from '@pepperi-addons/ngx-lib';
+import { config } from '../addon.config'
 @Component({
     selector: 'block-editor',
     templateUrl: './block-editor.component.html',
     styleUrls: ['./block-editor.component.scss']
 })
 export class BlockEditorComponent implements OnInit {
-    resourcesNames: KeyValuePair<string>[] = []
+    resourcesNames: KeyValuePair<any>[] = []
     resources: any[] = []
     resource: any
     title: string
@@ -40,7 +41,9 @@ export class BlockEditorComponent implements OnInit {
         })
         .then(() => {
             this.initCardsList()
+            debugger
         })
+
     }
     async initCurrentResource(){
         if(!this.resource){
@@ -74,19 +77,28 @@ export class BlockEditorComponent implements OnInit {
         }
     }
     async setCurrentResourceAndFields(){
-        this.resource = this.resources.length > 0? this.resources[0] : undefined
-        this.fields =  this.resource? await this.blockEditorService.getItems(this.resource.Name): []
+        if(this.resources.length > 0){
+            const currResource = new KeyValuePair()
+            currResource.Key = this.resources[0].Name
+            currResource.Value = this.resources[0]
+            this.resource = currResource
+        }
+        else{
+            this.resource = undefined
+        }
+        this.fields =  this.resource? await this.blockEditorService.getItems(this.resource.Value.Name): []
         this.setFieldsKeysFromFields()
     }
     async initResources(){
-        this.blockEditorService.pluginUUID = "0e2ae61b-a26a-4c26-81fe-13bdd2e4aaa3"
+        this.blockEditorService.pluginUUID = config.AddonUUID
         const resources = await this.blockEditorService.getCollections()
         this.resources = resources;
         this.resourcesNames = resources.map(resource => {
-            const resourceName = new KeyValuePair<string>()
+            const resourceName = new KeyValuePair<any>()
             resourceName.Key = resource.Name
-            resourceName.Value = resource.Name
+            resourceName.Value = resource
             return resourceName})
+        debugger
     }
     loadVariablesFromHostObject(){
         this.resource = this.hostObject?.configuration?.resource
@@ -126,13 +138,13 @@ export class BlockEditorComponent implements OnInit {
     }
     async onResourceChanged($event):Promise<void>{
         this.resource = $event
-        const fields = this.getFieldsByResourceName(this.resource)
+        const fields = this.getFieldsByResourceName(this.resource.Value.Name)
         this.fields = fields? Object.keys(fields) : []
         this.updateConfigurationObjectField('resource', this.resource)
         this.updateConfigurationObjectField('fields', this.fields)
     }
     getFieldsByResourceName(resourceName: string){
-        return this.resources.find(resource => resourceName == resource.Name).Fields
+        return this.resources.find(resource => resourceName == resource.Value.Name).Fields
     }
     updateConfigurationObjectField(key: string, value: any) {
         const hostObjectConfiguration = this.hostObject?.configuration
