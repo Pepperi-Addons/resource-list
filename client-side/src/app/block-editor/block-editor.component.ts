@@ -1,6 +1,8 @@
 import { TranslateService } from '@ngx-translate/core';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { BlockEditorService } from './block-editor.service'
+import { config } from '../addon.config'
+import { KeyValuePair } from '@pepperi-addons/ngx-lib';
 
 @Component({
     selector: 'block-editor',
@@ -8,7 +10,7 @@ import { BlockEditorService } from './block-editor.service'
     styleUrls: ['./block-editor.component.scss']
 })
 export class BlockEditorComponent implements OnInit {
-    resourcesNames:  {key:string, value:string}[] = []
+    resourcesNames: KeyValuePair<string>[] = []
     resources: any[] = []
     resource: any
     title: string
@@ -22,15 +24,19 @@ export class BlockEditorComponent implements OnInit {
                ) {
     }
     ngOnInit(): void {
-        this.blockEditorService.pluginUUID = "0e2ae61b-a26a-4c26-81fe-13bdd2e4aaa3"
+        this.blockEditorService.pluginUUID = config.AddonUUID
         this.resource = this.hostObject?.configuration?.resource
         this.title = this.hostObject?.configuration?.title
         this.allowExport = this.hostObject?.configuration?.allowExport
         this.allowImport = this.hostObject?.configuration?.allowImport
-        this.blockEditorService.getCollections().then(resources => {
+        //phase 1 will support only UDC resources
+        this.blockEditorService.getAllResources('UDC').then(resources => {
             this.resources = resources;
             this.resourcesNames = resources.map(resource => {
-                return {key: resource.Name, value: resource.Name}})
+                const keyValuePair = new KeyValuePair<string>()
+                keyValuePair.Key = resource.Name
+                keyValuePair.Value = resource.Name
+                return keyValuePair})
         })
     }
     onAllowExportChange($event){

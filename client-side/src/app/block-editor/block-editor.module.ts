@@ -30,8 +30,7 @@ import { PepCheckboxModule } from '@pepperi-addons/ngx-lib/checkbox';
     exports: [BlockEditorComponent],
     providers: [
         TranslateStore,
-        BlockEditorService,
-        TranslateService
+        BlockEditorService
     ]
 })
 export class BlockEditorModule {

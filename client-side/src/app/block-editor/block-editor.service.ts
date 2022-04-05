@@ -29,4 +29,9 @@ export class BlockEditorService{
     async getCollections(): Promise<any[]>{
         return await this.papiClient.addons.api.uuid(this.pluginUUID).file('api').func('get_all_collections').get()
     }
+    async getAllResources(resourceType: string){
+        if(resourceType == 'UDC'){
+            return await this.getCollections()
+        }
+    }
 }
