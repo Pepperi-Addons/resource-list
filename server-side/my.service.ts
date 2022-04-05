@@ -28,7 +28,7 @@ class MyService {
         return this.papiClient.addons.installedAddons.find({});
     }
     getAllUDCCollections(): Promise<any>{
-        return this.papiClient.get('/user_defined_collections/schemes')
+        return this.papiClient.userDefinedCollections.schemes.find()
     }
     getCollectionDataByName(collectionName: string){
         return this.papiClient.get(`/user_defined_collections/${collectionName}`)
