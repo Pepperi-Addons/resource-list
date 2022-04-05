@@ -12,10 +12,9 @@ import { config } from '../addon.config'
     styleUrls: ['./block-editor.component.scss']
 })
 export class BlockEditorComponent implements OnInit {
-    resourcesNames: KeyValuePair<any>[] = []
+    resourcesNames: {'key': string, 'value': string}[] = []
     resources: any[] = []
     resource: any
-    names: KeyValuePair<any>[]
     currentResourceName: string
     title: string
     fieldsKeys: string[]
@@ -36,65 +35,61 @@ export class BlockEditorComponent implements OnInit {
                ) {
     }
     ngOnInit(): void {
+        this.restoreData()
         this.loadVariablesFromHostObject()
         this.initResources()
         .then(() => {
-            debugger
-            this.initCurrentResource()
+            return this.initCurrentResource()
         })
         .then(() => {
             this.initCardsList()
-            debugger
         })
 
     }
     async initCurrentResource(){
         if(!this.resource){
-            await this.setCurrentResourceAndFields()
-            this.setFieldsKeysFromFields()
+            this.resource = this.resources?.length > 0? this.resources[0] : undefined
+            this.updateAllConfigurationObject()
         }
+        this.currentResourceName = this.resource?.Name
+        await this.setCurrentResourceFields()
+        this.setFieldsKeysFromFields()
     }
     validateCardsListCompatibleToFieldsAndUpdate(){
-        if(!this.fieldsKeys){
+        if(!this.fieldsKeys || !this.cardsList){
             return
         }
         const fieldsKeysSet: Set<string> = new Set(this.fieldsKeys)
         const cardsToDelete = this.getCardsToDelete(fieldsKeysSet)
         this.deleteCards(cardsToDelete)
-        this.updateConfigurationObjectField('cardsList', this.cardsList)
+        this.updateAllConfigurationObject()
     }
     deleteCards(cradToDelete: ICardEditor[]){
         cradToDelete.forEach((card) => {
-            this.removeCard(card.value)
+            this.removeCard(card.id)
         })
     }
     getCardsToDelete(set: Set<string>): ICardEditor[]{
         if(!this.cardsList){
             return []
         }
-        return this.cardsList.filter((card) => !(card.value in set))
+        return this.cardsList.filter((card) => !(set.has(card.value)))
     }
     setFieldsKeysFromFields(){
         if(this.fields){
             this.fieldsKeys = this.fields.map((field) => field.Key)
         }
     }
-    async setCurrentResourceAndFields(){
-        this.resource = this.resources.length > 0 ? this.resources[0] : undefined
-        this.fields =  this.resource? await this.blockEditorService.getItems(this.resource.Key): []
-        this.currentResourceName = this.resource?.Name
+    async setCurrentResourceFields(){
+        this.fields =  this.resource? await this.blockEditorService.getItems(this.resource.Name): []
         this.setFieldsKeysFromFields()
     }
     async initResources(){
         this.blockEditorService.pluginUUID = config.AddonUUID
         const resources = await this.blockEditorService.getCollections()
         this.resources = resources;
-        this.names = resources.map(resource => {
-            const resourceName = new KeyValuePair<any>()
-            resourceName.Key = resource.Name
-            resourceName.Value = resource
-            return resourceName})
-        debugger
+        this.resourcesNames = resources.map(resource => {
+            return {'key': resource.Name, 'value': resource.Name}})
     }
     loadVariablesFromHostObject(){
         this.resource = this.hostObject?.configuration?.resource
@@ -104,8 +99,9 @@ export class BlockEditorComponent implements OnInit {
         this.cardsList = this.hostObject?.configuration?.cardsList
     }
     initCardsList(){
+        debugger
         this.cardsList = this.hostObject?.configuration?.cardsList
-        if(!this.cardsList){
+        if(this.cardsList && this.cardsList.length == 0){
             this.generateCardsListFromFields()
         }
         else{
@@ -115,43 +111,74 @@ export class BlockEditorComponent implements OnInit {
     generateCardsListFromFields(){
         this.cardsList = []
         if(this.fieldsKeys){
-            this.fields?.map((fieldKey) => {
+            this.fieldsKeys?.map((fieldKey) => {
                 this.addNewCard().value = fieldKey
             })
         }
     }
     onAllowExportChange($event){
         this.allowExport = $event
-        this.updateConfigurationObjectField('allowExport', this.allowExport)
+        // this.updateConfigurationObjectField('allowExport', this.allowExport)
+        this.updateAllConfigurationObject()
     }
     onAllowImportChange($event){
         this.allowImport = $event
-        this.updateConfigurationObjectField('allowImport', this.allowImport)
+        // this.updateConfigurationObjectField('allowImport', this.allowImport)
+        this.updateAllConfigurationObject()
     }
     onTitleChanged($event):void{
         this.title = $event;
-        this.updateConfigurationObjectField('title', this.title)
+        // this.updateConfigurationObjectField('title', this.title)
+        this.updateAllConfigurationObject()
     }
-    async onResourceChanged($event):Promise<void>{
-        this.updateConfigurationObjectField('resource', undefined)
-        this.resource = $event
-        const fields = this.getFieldsByResourceName(this.resource.Key)
-        this.fields = fields? Object.keys(fields) : []
-        this.updateConfigurationObjectField('resource', this.resource)
-        this.updateConfigurationObjectField('fields', this.fields)
+    async onResourceChanged($event){
+        this.restoreData()
+        this.currentResourceName = $event
+        this.resource = this.getResourceByName(this.currentResourceName)
+        await this.initCurrentResource()
+        debugger
+        this.generateCardsListFromFields()
+        this.updateAllConfigurationObject()  
+    }
+    restoreData(){
+        this.cardsList = []
+        this.fields = []
+        this.fieldsKeys = []
+        this.resource = undefined
+        this.currentResourceName = undefined
+        this.allowExport = false;
+        this.allowImport = false
+        this.title = ""
+        this.updateAllConfigurationObject()
+    }
+    updateAllConfigurationObject(){
+        this.hostEvents.emit({
+            action: 'set-configuration',
+            configuration: {
+                resource: this.resource,
+                title: this.title,
+                allowExport: this.allowExport,
+                allowImport: this.allowImport,
+                cardsList: this.cardsList
+            }
+        })
     }
     getFieldsByResourceName(resourceName: string){
         return this.resources.find(resource => resourceName == resource.Key).Fields
     }
+    getResourceByName(resourceName: string){
+        return this.resources?.find((resource) => resource.Name == resourceName)
+    }
     updateConfigurationObjectField(key: string, value: any) {
-        const hostObjectConfiguration = this.hostObject?.configuration
-        if(hostObjectConfiguration){
-            hostObjectConfiguration[key] = value
-        }
+        this.hostEvents.emit({
+            action: 'set-configuration-field',
+            key: key, 
+            value: value
+        });
     }
     drop(event: CdkDragDrop<string[]>){
         if (event.previousContainer === event.container) {
-            moveItemInArray(this.fields, event.previousIndex, event.currentIndex);
+            moveItemInArray(this.cardsList, event.previousIndex, event.currentIndex);
            } 
     }
     onDragStart(event: CdkDragStart) {
@@ -163,6 +190,7 @@ export class BlockEditorComponent implements OnInit {
     addNewCardClick(){
         const card = this.addNewCard()
         card.value = this.fieldsKeys.length > 0 ? this.fieldsKeys[card.id % this.fieldsKeys.length] : undefined
+        this.updateAllConfigurationObject()
     }
     addNewCard(){
         let card = new ICardEditor();
@@ -174,14 +202,15 @@ export class BlockEditorComponent implements OnInit {
         if(this.configuration?.cardsConfig?.editSlideIndex === event.id){ //close the editor
             this.configuration.cardsConfig.editSlideIndex = -1;
         }
-        else{ 
-            this.currentCardindex = this.configuration.cardsConfig.editSlideIndex = parseInt(event.id);
-        }
+        // else{ 
+        //     this.currentCardindex = this.configuration.cardsConfig.editSlideIndex = parseInt(event.id);
+        // }
     }
     onCardRemoveClick(event){
-       this.removeCard(event.field)
+       this.removeCard(event.id)
+       this.updateAllConfigurationObject()
     }
-    removeCard(value){
-        this.cardsList = this.cardsList.filter((card) => card.value != value)
+    removeCard(id){
+        this.cardsList = this.cardsList.filter((card) => card.id != id)
     }
 }

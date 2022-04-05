@@ -47,7 +47,7 @@ export class BlockComponent implements OnInit {
         this.menuDisabled = !(this.allowImport || this.allowExport)
         this.menuItems = this.getMenuItems()
         this.blockService.pluginUUID = config.AddonUUID
-        this.blockService.getItems(this.resource).then(items => {
+        this.blockService.getItems(this.resource.Name).then(items => {
           this.datasource = new DataSource(this.translate, items)
         })
       }
@@ -56,10 +56,11 @@ export class BlockComponent implements OnInit {
 
       switch ($event.source.key){
         case 'Export':
+          debugger
           this.dimx?.DIMXExportRun({
             DIMXExportFormat: "csv",
             DIMXExportIncludeDeleted: false,
-            DIMXExportFileName: this.resource,
+            DIMXExportFileName: this.resource.Name,
             DIMXExportFields: ['Key','CreationDateTime', 'ModificationDateTime'].join(),
             DIMXExportDelimiter: ","
           });
@@ -74,7 +75,7 @@ export class BlockComponent implements OnInit {
       }
     }
     onDIMXProcessDone($event){
-        this.blockService.getItems(this.resource).then(items => {
+        this.blockService.getItems(this.resource.Name).then(items => {
           this.datasource = new DataSource(this.translate, items)
         })
     }

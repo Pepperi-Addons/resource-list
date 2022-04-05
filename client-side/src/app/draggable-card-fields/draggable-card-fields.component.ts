@@ -1,5 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
+import { Observable, Subscription } from 'rxjs';
+import { ICardEditor } from './cards.model';
 
 
 @Component({
@@ -10,29 +12,34 @@ import { TranslateService } from '@ngx-translate/core';
 
 export class DraggableCardFieldsComponent implements OnInit {
   public title: string;
+  private eventsSubscription: Subscription;
   showContentOfField = false;
-  @Input() showActions = true;
   @Input() field: any
   @Input() items: any[]
+  @Input() card: ICardEditor
   itemsOptions: {key: string, value:string}[]
   @Output() removeClick: EventEmitter<any> = new EventEmitter();
   constructor(
     private translate: TranslateService,
 ) { 
 }
-async ngOnInit(): Promise<void> {
-    const desktopTitle = await this.translate.get('SLIDESHOW.HEIGHTUNITS_REM').toPromise();
-    this.setItemOptions()
+ ngOnInit(){
 }
-
+ngOnChanges(event){
+    this.field = event.field?.currentValue? event.field.currentValue : this.field
+    this.items = event.items?.currentValue? event.items.currentValue : this.items
+    this.title = event.title?.currentValue? event.title.currentValue : this.title
+    this.title = event.card?.currentValue? event.card.currentValue : this.card
+    if(event.items?.currentValue){
+        this.setItemOptions()
+    }
+}
 setItemOptions(){
-    this.itemsOptions = this.items.map((item) => {return {key: item, value: item }})
+    this.itemsOptions = this.items?.map((item) => {return {key: item, value: item}})
 }
 onRemoveClick() {
-   this.items = this.items.filter((item) => item != this.field)
-   this.removeClick.emit({field: this.field})
+   this.removeClick.emit({id: this.card.id})
    this.field = undefined
-   //call editor to remove field with event emiter
 }
 onEditClick() {
     this.showContentOfField = !this.showContentOfField
@@ -44,7 +51,7 @@ onSelectField($event){
 onCardFieldChange(key, event){
     const value = key.indexOf('image') > -1 && key.indexOf('src') > -1 ? event.fileStr :  event && event.source && event.source.key ? event.source.key : event && event.source && event.source.value ? event.source.value :  event;
     if(key.indexOf('.') > -1){
-        let keyObj = key.split('.');0
+        let keyObj = key.split('.');
     }
 }
 }
