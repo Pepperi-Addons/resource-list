@@ -42,8 +42,8 @@ export class BlockComponent implements OnInit {
       if(this.hostObject?.configuration){
         this.title = this.hostObject.configuration.title || this.title
         this.resource = this.hostObject?.configuration.resource || this.resource
-        this.allowExport = Boolean(this.hostObject.configuration.allowExport)
-        this.allowImport = Boolean(this.hostObject.configuration.allowImport)
+        this.allowExport = Boolean(this.hostObject?.configuration?.allowExport)
+        this.allowImport = Boolean(this?.hostObject?.configuration?.allowImport)
         this.menuDisabled = !(this.allowImport || this.allowExport)
         this.menuItems = this.getMenuItems()
         this.blockService.pluginUUID = config.AddonUUID
