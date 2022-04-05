@@ -36,8 +36,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
     exports: [BlockEditorComponent],
     providers: [
         TranslateStore,
-        BlockEditorService,
-        TranslateService
+        BlockEditorService
     ]
 })
 export class BlockEditorModule {

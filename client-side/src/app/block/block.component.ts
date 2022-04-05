@@ -6,6 +6,7 @@ import { BlockService } from './block.service'
 import { PepMenuItem } from "@pepperi-addons/ngx-lib/menu";
 import { DIMXComponent } from '@pepperi-addons/ngx-composite-lib/dimx-export';
 import { UDCUUID } from '../addon.config';
+import { config } from '../addon.config'
 
 @Component({
     selector: 'block',
@@ -41,11 +42,11 @@ export class BlockComponent implements OnInit {
       if(this.hostObject?.configuration){
         this.title = this.hostObject.configuration.title || this.title
         this.resource = this.hostObject?.configuration.resource || this.resource
-        this.allowExport = Boolean(this.hostObject.configuration.allowExport)
-        this.allowImport = Boolean(this.hostObject.configuration.allowImport)
+        this.allowExport = Boolean(this.hostObject?.configuration?.allowExport)
+        this.allowImport = Boolean(this?.hostObject?.configuration?.allowImport)
         this.menuDisabled = !(this.allowImport || this.allowExport)
         this.menuItems = this.getMenuItems()
-        this.blockService.pluginUUID = "0e2ae61b-a26a-4c26-81fe-13bdd2e4aaa3"
+        this.blockService.pluginUUID = config.AddonUUID
         this.blockService.getItems(this.resource).then(items => {
           this.datasource = new DataSource(this.translate, items)
         })

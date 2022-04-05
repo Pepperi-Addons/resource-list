@@ -4,14 +4,14 @@ import { BlockEditorService } from './block-editor.service'
 import { CdkDragDrop, CdkDragEnd, CdkDragStart, moveItemInArray, transferArrayItem} from '@angular/cdk/drag-drop';
 import { ICardEditor, IContent, IContentEditor } from '../draggable-card-fields/cards.model'
 import { CardsService } from '../draggable-card-fields/cards.service'
-
+import { KeyValuePair } from '@pepperi-addons/ngx-lib';
 @Component({
     selector: 'block-editor',
     templateUrl: './block-editor.component.html',
     styleUrls: ['./block-editor.component.scss']
 })
 export class BlockEditorComponent implements OnInit {
-    resourcesNames:  {key:string, value:string}[] = []
+    resourcesNames: KeyValuePair<string>[] = []
     resources: any[] = []
     resource: any
     title: string
@@ -83,9 +83,11 @@ export class BlockEditorComponent implements OnInit {
         const resources = await this.blockEditorService.getCollections()
         this.resources = resources;
         this.resourcesNames = resources.map(resource => {
-            return {key: resource.Name, value: resource.Name}})
+            const resourceName = new KeyValuePair<string>()
+            resourceName.Key = resource.Name
+            resourceName.Value = resource.Name
+            return resourceName})
     }
-
     loadVariablesFromHostObject(){
         this.resource = this.hostObject?.configuration?.resource
         this.title = this.hostObject?.configuration?.title
