@@ -15,6 +15,8 @@ export class BlockEditorComponent implements OnInit {
     resourcesNames: KeyValuePair<any>[] = []
     resources: any[] = []
     resource: any
+    names: KeyValuePair<any>[]
+    currentResourceName: string
     title: string
     fieldsKeys: string[]
     fields: any[]
@@ -37,6 +39,7 @@ export class BlockEditorComponent implements OnInit {
         this.loadVariablesFromHostObject()
         this.initResources()
         .then(() => {
+            debugger
             this.initCurrentResource()
         })
         .then(() => {
@@ -77,23 +80,16 @@ export class BlockEditorComponent implements OnInit {
         }
     }
     async setCurrentResourceAndFields(){
-        if(this.resources.length > 0){
-            const currResource = new KeyValuePair()
-            currResource.Key = this.resources[0].Name
-            currResource.Value = this.resources[0]
-            this.resource = currResource
-        }
-        else{
-            this.resource = undefined
-        }
-        this.fields =  this.resource? await this.blockEditorService.getItems(this.resource.Value.Name): []
+        this.resource = this.resources.length > 0 ? this.resources[0] : undefined
+        this.fields =  this.resource? await this.blockEditorService.getItems(this.resource.Key): []
+        this.currentResourceName = this.resource?.Name
         this.setFieldsKeysFromFields()
     }
     async initResources(){
         this.blockEditorService.pluginUUID = config.AddonUUID
         const resources = await this.blockEditorService.getCollections()
         this.resources = resources;
-        this.resourcesNames = resources.map(resource => {
+        this.names = resources.map(resource => {
             const resourceName = new KeyValuePair<any>()
             resourceName.Key = resource.Name
             resourceName.Value = resource
@@ -137,14 +133,15 @@ export class BlockEditorComponent implements OnInit {
         this.updateConfigurationObjectField('title', this.title)
     }
     async onResourceChanged($event):Promise<void>{
+        this.updateConfigurationObjectField('resource', undefined)
         this.resource = $event
-        const fields = this.getFieldsByResourceName(this.resource.Value.Name)
+        const fields = this.getFieldsByResourceName(this.resource.Key)
         this.fields = fields? Object.keys(fields) : []
         this.updateConfigurationObjectField('resource', this.resource)
         this.updateConfigurationObjectField('fields', this.fields)
     }
     getFieldsByResourceName(resourceName: string){
-        return this.resources.find(resource => resourceName == resource.Value.Name).Fields
+        return this.resources.find(resource => resourceName == resource.Key).Fields
     }
     updateConfigurationObjectField(key: string, value: any) {
         const hostObjectConfiguration = this.hostObject?.configuration
