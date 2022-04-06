@@ -41,7 +41,6 @@ export class BlockEditorComponent implements OnInit {
     ngOnInit(): void {
         this.typeMap = new TypeMap()
         this.typeMap.init()
-        this.restoreData()
         this.loadVariablesFromHostObject()
         this.initResources()
         .then(() => {
@@ -59,6 +58,7 @@ export class BlockEditorComponent implements OnInit {
         this.currentResourceName = this.resource?.Name
         this.resourceFields = this.resource? this.resource.Fields : {}
         this.genereateMapFromResourceFields()
+        this.resourceFieldsKeys = Object.keys(this.resourceFieldsMap)
         await this.setCurrentResourceFields()
         this.setFieldsKeysFromFields()
     }
@@ -69,9 +69,8 @@ export class BlockEditorComponent implements OnInit {
         this.addToResourceFieldsMap('CreationDateTime', 'DateAndTime', 'CrationDateTime', false)
         this.addToResourceFieldsMap('ModificationDateTime', 'DateAndTime', 'ModificationDateTime', false)
         for(let fieldKey of Object.keys(this.resourceFields)){
-            debugger
             const key = fieldKey
-            const title = this.translate.instant(fieldKey)
+            const title = fieldKey
             const mandatory = this.resourceFields[fieldKey]?.Mandatory
             const optionalValues = this.resourceFields[fieldKey]?.OptionalValues
             const type = this.typeMap.get(this.resourceFields[key]?.Type, optionalValues)
@@ -79,10 +78,10 @@ export class BlockEditorComponent implements OnInit {
         }
     }
     validateCardsListCompatibleToFieldsAndUpdate(){
-        if(!this.dataFieldsKeys || !this.cardsList){
+        if(!this.resourceFieldsKeys || !this.cardsList){
             return
         }
-        const fieldsKeysSet: Set<string> = new Set(this.dataFieldsKeys)
+        const fieldsKeysSet: Set<string> = new Set(this.resourceFieldsKeys)
         const cardsToDelete = this.getCardsToDelete(fieldsKeysSet)
         this.deleteCards(cardsToDelete)
         this.updateAllConfigurationObject()
@@ -122,7 +121,6 @@ export class BlockEditorComponent implements OnInit {
         this.cardsList = this.hostObject?.configuration?.cardsList
     }
     initCardsList(){
-        debugger
         this.cardsList = this.hostObject?.configuration?.cardsList
         if(this.cardsList && this.cardsList.length == 0){
             this.generateCardsListFromFields()
@@ -130,28 +128,25 @@ export class BlockEditorComponent implements OnInit {
         else{
             this.validateCardsListCompatibleToFieldsAndUpdate()
         }
+        this.updateAllConfigurationObject()
     }
     generateCardsListFromFields(){
         this.cardsList = []
-        if(this.resourceFields && this.resourceFieldsMap){ 
-            this.dataFieldsKeys?.map((fieldKey) => {
-                this.addNewCard().name = fieldKey
-            })
-        }
+        const resourceFieldKeys = this.resourceFieldsMap? Object.keys(this.resourceFieldsMap): []
+        resourceFieldKeys.map(resourceFieldKey => {
+            this.addNewCard(this.cardsList.length, resourceFieldKey, this.resourceFieldsMap[resourceFieldKey])
+        })
     }
     onAllowExportChange($event){
         this.allowExport = $event
-        // this.updateConfigurationObjectField('allowExport', this.allowExport)
         this.updateAllConfigurationObject()
     }
     onAllowImportChange($event){
         this.allowImport = $event
-        // this.updateConfigurationObjectField('allowImport', this.allowImport)
         this.updateAllConfigurationObject()
     }
     onTitleChanged($event):void{
         this.title = $event;
-        // this.updateConfigurationObjectField('title', this.title)
         this.updateAllConfigurationObject()
     }
     async onResourceChanged($event){
@@ -159,7 +154,6 @@ export class BlockEditorComponent implements OnInit {
         this.currentResourceName = $event
         this.resource = this.getResourceByName(this.currentResourceName)
         await this.initCurrentResource()
-        debugger
         this.generateCardsListFromFields()
         this.updateAllConfigurationObject()  
     }
@@ -202,7 +196,8 @@ export class BlockEditorComponent implements OnInit {
     drop(event: CdkDragDrop<string[]>){
         if (event.previousContainer === event.container) {
             moveItemInArray(this.cardsList, event.previousIndex, event.currentIndex);
-           } 
+           }
+        this.updateAllConfigurationObject() 
     }
     onDragStart(event: CdkDragStart) {
         this.cardsService.changeCursorOnDragStart();
@@ -211,14 +206,17 @@ export class BlockEditorComponent implements OnInit {
         this.cardsService.changeCursorOnDragEnd();
     }
     addNewCardClick(){
-        const card = this.addNewCard()
+        const id = this.cardsList?.length
+        const name = this.resourceFieldsKeys.length > 0 ? this.resourceFieldsKeys[id % this.resourceFieldsKeys.length] : undefined
+        const value = name? this.resourceFieldsMap[name]: undefined
+        this.addNewCard(id, name, value)
         this.updateAllConfigurationObject()
     }
-    addNewCard(){
+    addNewCard(id: number, name: string, value: any){
         let card = new ICardEditor();
-        card.id = (this.cardsList.length);
-        card.name = this.dataFieldsKeys.length > 0 ? this.dataFieldsKeys[card.id % this.dataFieldsKeys.length] : undefined
-        card.value = this.dataFields.length > 0 ? this.dataFields[card.id % this.dataFields.length] : undefined
+        card.id = id
+        card.name = name
+        card.value = value
         this.cardsList.push(card);
         return card
     }
@@ -226,9 +224,6 @@ export class BlockEditorComponent implements OnInit {
         if(this.configuration?.cardsConfig?.editSlideIndex === event.id){ //close the editor
             this.configuration.cardsConfig.editSlideIndex = -1;
         }
-        // else{ 
-        //     this.currentCardindex = this.configuration.cardsConfig.editSlideIndex = parseInt(event.id);
-        // }
     }
     onCardRemoveClick(event){
        this.removeCard(event.id)
@@ -236,5 +231,6 @@ export class BlockEditorComponent implements OnInit {
     }
     removeCard(id){
         this.cardsList = this.cardsList.filter((card) => card.id != id)
+        this.updateAllConfigurationObject()
     }
 }

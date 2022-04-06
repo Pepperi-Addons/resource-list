@@ -8,6 +8,7 @@ import { DIMXComponent } from '@pepperi-addons/ngx-composite-lib/dimx-export';
 import { UDCUUID } from '../addon.config';
 import { config } from '../addon.config'
 import { ICardEditor } from '../draggable-card-fields/cards.model';
+import { GridDataViewColumn } from '@pepperi-addons/papi-sdk';
 
 @Component({
     selector: 'block',
@@ -17,7 +18,7 @@ import { ICardEditor } from '../draggable-card-fields/cards.model';
 export class BlockComponent implements OnInit {
     @ViewChild('dimx') dimx:DIMXComponent | undefined;
     @Input() hostObject: any;
-    datasource: DataSource = new DataSource(this.translate, [])
+    datasource: DataSource = new DataSource(this.translate, [], [])
     actions: IPepGenericListActions
     resource: any
     title: string
@@ -26,19 +27,30 @@ export class BlockComponent implements OnInit {
     allowExport: boolean = false;
     allowImport: boolean = false;
     menuDisabled: boolean = false;
+    widthArray: GridDataViewColumn[] = []
     cardsList: ICardEditor[] = []
+    fields: any[] = []
     @Output() hostEvents: EventEmitter<any> = new EventEmitter<any>();
 
     constructor(private translate: TranslateService,
         private genericListService: PepGenericListService, private blockService: BlockService) {
     }
     ngOnInit(): void {
+      this.title = this.hostObject.configuration.title || this.title
+      this.resource = this.hostObject?.configuration.resource || this.resource
       this.allowExport = Boolean(this.hostObject?.configuration?.allowExport)
-      this.allowImport = Boolean(this.hostObject?.configuration?.allowImport)
+      this.allowImport = Boolean(this?.hostObject?.configuration?.allowImport)
+      this.cardsList = this.hostObject?.configuration?.cardsList
       this.menuDisabled = !(this.allowImport || this.allowExport)
-      this.title = this.hostObject?.configuration?.title || ""
-      this.resource = this.hostObject?.configuration?.resource
       this.menuItems = this.getMenuItems()
+      this.blockService.pluginUUID = config.AddonUUID
+      this.fields = this.generateItemsFromCards()
+      this.widthArray = this.generateWidthArrayFromCardsList()
+      if(this.widthArray.length > 0){
+        this.blockService.getItems(this.resource?.Name).then(items => {
+          this.datasource = new DataSource(this.translate, items, this.fields, this.widthArray)
+        })
+      }
     }
     ngOnChanges(e: any): void {
       if(this.hostObject?.configuration){
@@ -50,21 +62,34 @@ export class BlockComponent implements OnInit {
         this.menuDisabled = !(this.allowImport || this.allowExport)
         this.menuItems = this.getMenuItems()
         this.blockService.pluginUUID = config.AddonUUID
-        this.datasource = new DataSource(this.translate, this.generateItemsFromCards())
+        this.fields = this.generateItemsFromCards()
+        this.widthArray = this.generateWidthArrayFromCardsList()
+        if(this.widthArray.length > 0){
+          this.blockService.getItems(this.resource?.Name).then(items => {
+            this.datasource = new DataSource(this.translate, items, this.fields, this.widthArray)
+          })
+        }
       }
+    }
+    generateWidthArrayFromCardsList(): GridDataViewColumn[]{
+      if(!this.cardsList || this.cardsList.length == 0){
+        return []
+      }
+      return this.cardsList.map(card => {
+        return {'Width': Math.floor(100/this.cardsList.length)}})
     }
 
     generateItemsFromCards(){
       if(!this.cardsList){
         return []
       }
-      return this.cardsList.map(card => card.value);
+      const returnVal = this.cardsList.map(card => card.value);
+      return returnVal
     }
     onMenuItemClick($event){
 
       switch ($event.source.key){
         case 'Export':
-          debugger
           this.dimx?.DIMXExportRun({
             DIMXExportFormat: "csv",
             DIMXExportIncludeDeleted: false,
@@ -84,7 +109,7 @@ export class BlockComponent implements OnInit {
     }
     onDIMXProcessDone($event){
         this.blockService.getItems(this.resource.Name).then(items => {
-          this.datasource = new DataSource(this.translate, items)
+          this.datasource = new DataSource(this.translate, items, this.fields)
         })
     }
     getMenuItems() {
@@ -103,7 +128,7 @@ export class BlockComponent implements OnInit {
 }
 class DataSource implements IPepGenericListDataSource{
     items: any[] = []
-    constructor(private translate: TranslateService, items: any[]){
+    constructor(private translate: TranslateService, items: any[], private fields: any[], private widthArray: GridDataViewColumn[] = []){
       this.items = items
     }
     async init(params: { searchString?: string; filter?: any; sorting?: IPepListSortingChangeEvent; fromIndex: number; toIndex: number; }): Promise<IPepGenericListInitData> {
@@ -116,40 +141,8 @@ class DataSource implements IPepGenericListDataSource{
               },
               Type: 'Grid',
               Title: 'Block',
-              Fields: [
-                {
-                  FieldID: 'Key',
-                  Type: 'TextBox',
-                  Title: this.translate.instant('Key'),
-                  Mandatory: false,
-                  ReadOnly: true
-                },
-                {
-                  FieldID: 'CreationDateTime',
-                  Type: 'TextBox',
-                  Title: this.translate.instant('CreationDateTime'),
-                  Mandatory: false,
-                  ReadOnly: true
-                },
-                {
-                FieldID: 'ModificationDateTime',
-                Type: 'TextBox',
-                Title: this.translate.instant('ModificationDateTime'),
-                Mandatory: false,
-                ReadOnly: true
-              }
-              ],
-              Columns: [
-                {
-                  Width: 33
-                },
-                {
-                  Width: 33
-                },
-                {
-                  Width: 33
-                }
-              ],
+              Fields: this.fields,
+              Columns: this.widthArray,
               FrozenColumnsCount: 0,
               MinimumColumnWidth: 0
             },

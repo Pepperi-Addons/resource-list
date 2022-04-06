@@ -58,7 +58,7 @@
         [configuration]="configuration"
         [field] ="card.name"
         [card] = "card"
-        [items] = "dataFieldsKeys"
+        [items] = "resourceFieldsKeys"
         cdkDrag [cdkDragDisabled]="false"  style="cursor: grab;" (cdkDragStarted)="onDragStart($event)" (cdkDragEnded)="onDragEnd($event)">
         </draggable-card-fields>
     </div>
