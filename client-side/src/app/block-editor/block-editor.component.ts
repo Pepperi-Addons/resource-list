@@ -17,8 +17,6 @@ export class BlockEditorComponent implements OnInit {
     resource: any
     currentResourceName: string
     title: string
-    dataFieldsKeys: string[]
-    dataFields: any[]
     resourceFields: any = {}
     resourceFieldsMap: HashMap<any> = {}
     resourceFieldsKeys: string[] = [] 
@@ -44,13 +42,11 @@ export class BlockEditorComponent implements OnInit {
         this.loadVariablesFromHostObject()
         this.initResources()
         .then(() => {
-            return this.initCurrentResource()
-        })
-        .then(() => {
+            this.initCurrentResource()
             this.initCardsList()
         })
     }
-    async initCurrentResource(){
+    initCurrentResource(){
         if(!this.resource){
             this.resource = this.resources?.length > 0? this.resources[0] : undefined
             this.updateAllConfigurationObject()
@@ -59,8 +55,6 @@ export class BlockEditorComponent implements OnInit {
         this.resourceFields = this.resource? this.resource.Fields : {}
         this.genereateMapFromResourceFields()
         this.resourceFieldsKeys = Object.keys(this.resourceFieldsMap)
-        await this.setCurrentResourceFields()
-        this.setFieldsKeysFromFields()
     }
     addToResourceFieldsMap(fieldID: string, type:string, title: string, mandatory: boolean){
         this.resourceFieldsMap[fieldID] = {'FieldID': fieldID, 'Type': type, 'Title': this.translate.instant(title), 'Mandatory': mandatory, 'ReadOnly': true}
@@ -96,15 +90,6 @@ export class BlockEditorComponent implements OnInit {
             return []
         }
         return this.cardsList.filter((card) => !(set.has(card.name)))
-    }
-    setFieldsKeysFromFields(){
-        if(this.dataFields){
-            this.dataFieldsKeys = this.dataFields.map((field) => field.Key)
-        }
-    }
-    async setCurrentResourceFields(){
-        this.dataFields =  this.resource? await this.blockEditorService.getItems(this.resource.Name): []
-        this.setFieldsKeysFromFields()
     }
     async initResources(){
         this.blockEditorService.pluginUUID = config.AddonUUID
@@ -159,8 +144,6 @@ export class BlockEditorComponent implements OnInit {
     }
     restoreData(){
         this.cardsList = []
-        this.dataFields = []
-        this.dataFieldsKeys = []
         this.resource = undefined
         this.currentResourceName = undefined
         this.allowExport = false;
@@ -176,7 +159,8 @@ export class BlockEditorComponent implements OnInit {
                 title: this.title,
                 allowExport: this.allowExport,
                 allowImport: this.allowImport,
-                cardsList: this.cardsList
+                cardsList: this.cardsList,
+                resourceName: this.currentResourceName
             }
         })
     }
@@ -204,6 +188,10 @@ export class BlockEditorComponent implements OnInit {
     }
     onDragEnd(event: CdkDragEnd) {
         this.cardsService.changeCursorOnDragEnd();
+    }
+    onSelectField($event){
+        $event.card.value = this.resourceFieldsMap[$event.card.name]
+        this.updateAllConfigurationObject()
     }
     addNewCardClick(){
         const id = this.cardsList?.length

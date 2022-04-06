@@ -1,6 +1,6 @@
 import { TranslateService } from '@ngx-translate/core';
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { IPepGenericListActions, IPepGenericListDataSource, IPepGenericListInitData, IPepGenericListTableInputs, PepGenericListService } from '@pepperi-addons/ngx-composite-lib/generic-list';
+import { IPepGenericListDataSource, IPepGenericListInitData, IPepGenericListTableInputs, PepGenericListService } from '@pepperi-addons/ngx-composite-lib/generic-list';
 import { IPepListSortingChangeEvent } from '@pepperi-addons/ngx-lib/list';
 import { BlockService } from './block.service' 
 import { PepMenuItem } from "@pepperi-addons/ngx-lib/menu";
@@ -18,9 +18,8 @@ import { GridDataViewColumn } from '@pepperi-addons/papi-sdk';
 export class BlockComponent implements OnInit {
     @ViewChild('dimx') dimx:DIMXComponent | undefined;
     @Input() hostObject: any;
-    datasource: DataSource = new DataSource(this.translate, [], [])
-    actions: IPepGenericListActions
-    resource: any
+    datasource: DataSource
+    resourceName: string
     title: string
     udcUUID: string = UDCUUID
     menuItems: PepMenuItem[] = []
@@ -34,42 +33,34 @@ export class BlockComponent implements OnInit {
 
     constructor(private translate: TranslateService,
         private genericListService: PepGenericListService, private blockService: BlockService) {
+          this.blockService.pluginUUID = config.AddonUUID
     }
     ngOnInit(): void {
-      this.title = this.hostObject.configuration.title || this.title
-      this.resource = this.hostObject?.configuration.resource || this.resource
-      this.allowExport = Boolean(this.hostObject?.configuration?.allowExport)
-      this.allowImport = Boolean(this?.hostObject?.configuration?.allowImport)
-      this.cardsList = this.hostObject?.configuration?.cardsList
+      this.init()
+    }
+    ngOnChanges(e: any): void {
+      if(this.hostObject?.configuration){
+        this.init()
+      }
+    }
+    init(){
+      this.loadVariablesFromHostObject()
       this.menuDisabled = !(this.allowImport || this.allowExport)
       this.menuItems = this.getMenuItems()
-      this.blockService.pluginUUID = config.AddonUUID
-      this.fields = this.generateItemsFromCards()
+      this.fields = this.generateFieldsFromCards()
       this.widthArray = this.generateWidthArrayFromCardsList()
       if(this.widthArray.length > 0){
-        this.blockService.getItems(this.resource?.Name).then(items => {
+        this.blockService.getItems(this.resourceName).then(items => {
           this.datasource = new DataSource(this.translate, items, this.fields, this.widthArray)
         })
       }
     }
-    ngOnChanges(e: any): void {
-      if(this.hostObject?.configuration){
-        this.title = this.hostObject.configuration.title || this.title
-        this.resource = this.hostObject?.configuration.resource || this.resource
-        this.allowExport = Boolean(this.hostObject?.configuration?.allowExport)
-        this.allowImport = Boolean(this?.hostObject?.configuration?.allowImport)
-        this.cardsList = this.hostObject?.configuration?.cardsList
-        this.menuDisabled = !(this.allowImport || this.allowExport)
-        this.menuItems = this.getMenuItems()
-        this.blockService.pluginUUID = config.AddonUUID
-        this.fields = this.generateItemsFromCards()
-        this.widthArray = this.generateWidthArrayFromCardsList()
-        if(this.widthArray.length > 0){
-          this.blockService.getItems(this.resource?.Name).then(items => {
-            this.datasource = new DataSource(this.translate, items, this.fields, this.widthArray)
-          })
-        }
-      }
+    loadVariablesFromHostObject(){
+      this.title = this.hostObject.configuration.title || this.title
+      this.resourceName = this.hostObject?.configuration.resourceName || this.resourceName
+      this.allowExport = Boolean(this.hostObject?.configuration?.allowExport)
+      this.allowImport = Boolean(this?.hostObject?.configuration?.allowImport)
+      this.cardsList = this.hostObject?.configuration?.cardsList
     }
     generateWidthArrayFromCardsList(): GridDataViewColumn[]{
       if(!this.cardsList || this.cardsList.length == 0){
@@ -78,8 +69,7 @@ export class BlockComponent implements OnInit {
       return this.cardsList.map(card => {
         return {'Width': Math.floor(100/this.cardsList.length)}})
     }
-
-    generateItemsFromCards(){
+    generateFieldsFromCards(){
       if(!this.cardsList){
         return []
       }
@@ -93,7 +83,7 @@ export class BlockComponent implements OnInit {
           this.dimx?.DIMXExportRun({
             DIMXExportFormat: "csv",
             DIMXExportIncludeDeleted: false,
-            DIMXExportFileName: this.resource.Name,
+            DIMXExportFileName: this.resourceName,
             DIMXExportFields: ['Key','CreationDateTime', 'ModificationDateTime'].join(),
             DIMXExportDelimiter: ","
           });
@@ -108,7 +98,7 @@ export class BlockComponent implements OnInit {
       }
     }
     onDIMXProcessDone($event){
-        this.blockService.getItems(this.resource.Name).then(items => {
+        this.blockService.getItems(this.resourceName).then(items => {
           this.datasource = new DataSource(this.translate, items, this.fields)
         })
     }

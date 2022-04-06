@@ -55,6 +55,7 @@
         (hostEvents)='onHostObjectChange($event)'
         (editClick)='onCardEditClick($event);'
         (removeClick)='onCardRemoveClick($event);'
+        (fieldSelected) = 'onSelectField($event)'
         [configuration]="configuration"
         [field] ="card.name"
         [card] = "card"

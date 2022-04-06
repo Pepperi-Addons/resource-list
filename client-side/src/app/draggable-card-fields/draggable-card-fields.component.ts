@@ -19,6 +19,7 @@ export class DraggableCardFieldsComponent implements OnInit {
   @Input() card: ICardEditor
   itemsOptions: {key: string, value:string}[]
   @Output() removeClick: EventEmitter<any> = new EventEmitter();
+  @Output() fieldSelected: EventEmitter<any> = new EventEmitter()
   constructor(
     private translate: TranslateService,
 ) { 
@@ -46,6 +47,8 @@ onEditClick() {
 }
 onSelectField($event){
     this.field = $event
+    this.card.name = this.field
+    this.fieldSelected.emit({card: this.card})
 }
 
 onCardFieldChange(key, event){
