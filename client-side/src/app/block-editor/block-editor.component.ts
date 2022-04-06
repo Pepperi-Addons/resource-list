@@ -99,7 +99,6 @@ export class BlockEditorComponent implements OnInit {
         this.cardsList = this.hostObject?.configuration?.cardsList
     }
     initCardsList(){
-        debugger
         this.cardsList = this.hostObject?.configuration?.cardsList
         if(this.cardsList && this.cardsList.length == 0){
             this.generateCardsListFromFields()
@@ -136,7 +135,6 @@ export class BlockEditorComponent implements OnInit {
         this.currentResourceName = $event
         this.resource = this.getResourceByName(this.currentResourceName)
         await this.initCurrentResource()
-        debugger
         this.generateCardsListFromFields()
         this.updateAllConfigurationObject()  
     }

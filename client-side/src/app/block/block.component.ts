@@ -56,7 +56,6 @@ export class BlockComponent implements OnInit {
 
       switch ($event.source.key){
         case 'Export':
-          debugger
           this.dimx?.DIMXExportRun({
             DIMXExportFormat: "csv",
             DIMXExportIncludeDeleted: false,
