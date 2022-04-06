@@ -46,4 +46,5 @@ export class ICardEditor {
     id: number;
     name: string;
     value: any
+    width: number
 }

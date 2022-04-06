@@ -29,6 +29,7 @@ export class BlockComponent implements OnInit {
     widthArray: GridDataViewColumn[] = []
     cardsList: ICardEditor[] = []
     fields: any[] = []
+    items: any[] = []
     @Output() hostEvents: EventEmitter<any> = new EventEmitter<any>();
 
     constructor(private translate: TranslateService,
@@ -43,31 +44,41 @@ export class BlockComponent implements OnInit {
         this.init()
       }
     }
+    loadGenericList(){
+      if(this.widthArray.length > 0 && this.items){
+        this.datasource = new DataSource(this.translate, this.items, this.fields, this.widthArray)
+    }
+    }
     init(){
       this.loadVariablesFromHostObject()
       this.menuDisabled = !(this.allowImport || this.allowExport)
       this.menuItems = this.getMenuItems()
       this.fields = this.generateFieldsFromCards()
       this.widthArray = this.generateWidthArrayFromCardsList()
-      if(this.widthArray.length > 0){
-        this.blockService.getItems(this.resourceName).then(items => {
-          this.datasource = new DataSource(this.translate, items, this.fields, this.widthArray)
-        })
-      }
+      this.loadGenericList()
     }
     loadVariablesFromHostObject(){
-      this.title = this.hostObject.configuration.title || this.title
-      this.resourceName = this.hostObject?.configuration.resourceName || this.resourceName
+      this.title = this.hostObject?.configuration?.title || this.title
       this.allowExport = Boolean(this.hostObject?.configuration?.allowExport)
       this.allowImport = Boolean(this?.hostObject?.configuration?.allowImport)
       this.cardsList = this.hostObject?.configuration?.cardsList
+      this.updateResourceNameAndItemsIfChanged()
+    }
+    updateResourceNameAndItemsIfChanged(){
+      if(this.hostObject?.configuration?.resourceName != this.resourceName){
+        this.resourceName = this.hostObject?.configuration?.resourceName || this.resourceName
+        this.blockService.getItems(this.resourceName).then(items => {
+          this.items = items
+          this.datasource = new DataSource(this.translate, items, this.fields, this.widthArray)
+        })
+      }
     }
     generateWidthArrayFromCardsList(): GridDataViewColumn[]{
       if(!this.cardsList || this.cardsList.length == 0){
         return []
       }
       return this.cardsList.map(card => {
-        return {'Width': Math.floor(100/this.cardsList.length)}})
+        return {'Width': card.width}})
     }
     generateFieldsFromCards(){
       if(!this.cardsList){
@@ -76,8 +87,7 @@ export class BlockComponent implements OnInit {
       const returnVal = this.cardsList.map(card => card.value);
       return returnVal
     }
-    onMenuItemClick($event){
-
+    onMenuItemClick($event){  
       switch ($event.source.key){
         case 'Export':
           this.dimx?.DIMXExportRun({

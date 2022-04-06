@@ -205,13 +205,9 @@ export class BlockEditorComponent implements OnInit {
         card.id = id
         card.name = name
         card.value = value
+        card.width = 0
         this.cardsList.push(card);
         return card
-    }
-    onCardEditClick(event){
-        if(this.configuration?.cardsConfig?.editSlideIndex === event.id){ //close the editor
-            this.configuration.cardsConfig.editSlideIndex = -1;
-        }
     }
     onCardRemoveClick(event){
        this.removeCard(event.id)
@@ -219,6 +215,9 @@ export class BlockEditorComponent implements OnInit {
     }
     removeCard(id){
         this.cardsList = this.cardsList.filter((card) => card.id != id)
+        this.updateAllConfigurationObject()
+    }
+    onWidthChange(){
         this.updateAllConfigurationObject()
     }
 }

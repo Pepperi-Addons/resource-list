@@ -23,5 +23,22 @@
             [showTitle]="true"
             (valueChange)="onSelectField($event)"
         ></pep-select>
+
+        <pep-textbox
+            [value] = width
+            label="int"
+            type="int"
+            [mandatory]="false"
+            [disabled]="false"
+            textColor=""
+            xAlignment="left"
+            [showTitle]="true"
+            [renderTitle]="true"
+            [renderError]="true"
+            [renderSymbol]="true"
+            minValue = "0"
+            maxValue = "100"
+            (valueChange)="onWidthChange($event)"
+        ></pep-textbox>
     </div>
 </div>

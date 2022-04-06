@@ -56,6 +56,7 @@
         (editClick)='onCardEditClick($event);'
         (removeClick)='onCardRemoveClick($event);'
         (fieldSelected) = 'onSelectField($event)'
+        (insertWidth) = 'onWidthChange()'
         [configuration]="configuration"
         [field] ="card.name"
         [card] = "card"
