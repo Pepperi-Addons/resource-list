@@ -56,9 +56,9 @@
         (editClick)='onCardEditClick($event);'
         (removeClick)='onCardRemoveClick($event);'
         [configuration]="configuration"
-        [field] ="card.value"
+        [field] ="card.name"
         [card] = "card"
-        [items] = "fieldsKeys"
+        [items] = "dataFieldsKeys"
         cdkDrag [cdkDragDisabled]="false"  style="cursor: grab;" (cdkDragStarted)="onDragStart($event)" (cdkDragEnded)="onDragEnd($event)">
         </draggable-card-fields>
     </div>

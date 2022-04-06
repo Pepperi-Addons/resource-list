@@ -44,5 +44,6 @@ export class IContentEditor {
 
 export class ICardEditor {
     id: number;
-    value: string
+    name: string;
+    value: any
 }

@@ -7,6 +7,7 @@ import { PepMenuItem } from "@pepperi-addons/ngx-lib/menu";
 import { DIMXComponent } from '@pepperi-addons/ngx-composite-lib/dimx-export';
 import { UDCUUID } from '../addon.config';
 import { config } from '../addon.config'
+import { ICardEditor } from '../draggable-card-fields/cards.model';
 
 @Component({
     selector: 'block',
@@ -25,6 +26,7 @@ export class BlockComponent implements OnInit {
     allowExport: boolean = false;
     allowImport: boolean = false;
     menuDisabled: boolean = false;
+    cardsList: ICardEditor[] = []
     @Output() hostEvents: EventEmitter<any> = new EventEmitter<any>();
 
     constructor(private translate: TranslateService,
@@ -44,13 +46,19 @@ export class BlockComponent implements OnInit {
         this.resource = this.hostObject?.configuration.resource || this.resource
         this.allowExport = Boolean(this.hostObject?.configuration?.allowExport)
         this.allowImport = Boolean(this?.hostObject?.configuration?.allowImport)
+        this.cardsList = this.hostObject?.configuration?.cardsList
         this.menuDisabled = !(this.allowImport || this.allowExport)
         this.menuItems = this.getMenuItems()
         this.blockService.pluginUUID = config.AddonUUID
-        this.blockService.getItems(this.resource.Name).then(items => {
-          this.datasource = new DataSource(this.translate, items)
-        })
+        this.datasource = new DataSource(this.translate, this.generateItemsFromCards())
       }
+    }
+
+    generateItemsFromCards(){
+      if(!this.cardsList){
+        return []
+      }
+      return this.cardsList.map(card => card.value);
     }
     onMenuItemClick($event){
 
