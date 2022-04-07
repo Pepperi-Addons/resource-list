@@ -10,6 +10,7 @@ html {
     .add-content-button {
         margin-bottom: 1rem;
     }
+    
 
     ::ng-deep {
         .mat-tab-header-pagination{
@@ -33,6 +34,7 @@ html {
                 width: 100%;
             }
         }
+    
 
         .mat-tab-body-wrapper {
             overflow: unset;
@@ -58,7 +60,7 @@ html {
     
     pep-color-settings{
         margin-bottom: 1rem;
-    }
+    } 
     pep-checkbox{
         // height: 2rem;
         min-height: unset;
@@ -124,14 +126,13 @@ html {
         }
     }
 
-    // pep-group-buttons{
-    //     ::ng-deep pep-icon{
-    //         max-height: 1rem;
-    //     }
-    // }
+    pep-group-buttons{
+        ::ng-deep pep-icon{
+            max-height: 1rem;
+        }
+    }
 
-    // pep-slider{
-    //         margin-bottom: 1rem;
-    // }
-    
+    pep-slider{
+            margin-bottom: 1rem;
+    }
 }

@@ -6,6 +6,8 @@ import { ICardEditor, IContent, IContentEditor } from '../draggable-card-fields/
 import { CardsService } from '../draggable-card-fields/cards.service'
 import { config } from '../addon.config'
 import { TypeMap, HashMap } from '../type-map'
+import { DataViewFieldTypes } from '@pepperi-addons/papi-sdk';
+
 @Component({
     selector: 'block-editor',
     templateUrl: './block-editor.component.html',
@@ -15,7 +17,6 @@ export class BlockEditorComponent implements OnInit {
     resourcesNames: {'key': string, 'value': string}[] = []
     resources: any[] = []
     resource: any
-    currentResourceName: string
     title: string
     resourceFields: any = {}
     resourceFieldsMap: HashMap<any> = {}
@@ -51,8 +52,7 @@ export class BlockEditorComponent implements OnInit {
             this.resource = this.resources?.length > 0? this.resources[0] : undefined
             this.updateAllConfigurationObject()
         }
-        this.currentResourceName = this.resource?.Name
-        this.resourceFields = this.resource? this.resource.Fields : {}
+        this.resourceFields = this.resource?.Fields || {}
         this.genereateMapFromResourceFields()
         this.resourceFieldsKeys = Object.keys(this.resourceFieldsMap)
     }
@@ -136,8 +136,7 @@ export class BlockEditorComponent implements OnInit {
     }
     async onResourceChanged($event){
         this.restoreData()
-        this.currentResourceName = $event
-        this.resource = this.getResourceByName(this.currentResourceName)
+        this.resource = this.getResourceByName($event)
         await this.initCurrentResource()
         this.generateCardsListFromFields()
         this.updateAllConfigurationObject()  
@@ -145,7 +144,6 @@ export class BlockEditorComponent implements OnInit {
     restoreData(){
         this.cardsList = []
         this.resource = undefined
-        this.currentResourceName = undefined
         this.allowExport = false;
         this.allowImport = false
         this.title = ""
@@ -160,7 +158,7 @@ export class BlockEditorComponent implements OnInit {
                 allowExport: this.allowExport,
                 allowImport: this.allowImport,
                 cardsList: this.cardsList,
-                resourceName: this.currentResourceName
+                resourceName: this.resource?.Name
             }
         })
     }
