@@ -31,32 +31,58 @@ export async function downgrade(client: Client, request: Request): Promise<any> 
     return {success:true,resultObject:{}}
 }
 
+function createPageBlockRelationObject(client: Client,
+        blockNames:{
+            blockName: string,
+            filename: string,
+            componentName: string,
+            moduleName: string,
+            editorComponentName: string,
+            editorModuleName: string,
+            description: string
+        }){
+    return {
+        RelationName: "PageBlock",
+        Name: blockNames.blockName,
+        Description: blockNames.description,
+        Type: "NgComponent",
+        SubType: "NG11",
+        AddonUUID: client.AddonUUID,
+        AddonRelativeURL: blockNames.filename,
+        ComponentName: blockNames.componentName, // This is should be the block component name (from the client-side)
+        ModuleName: blockNames.moduleName, // This is should be the block module name (from the client-side)
+        EditorComponentName: blockNames.editorComponentName, // This is should be the block editor component name (from the client-side)
+        EditorModuleName: blockNames.editorModuleName // This is should be the block editor module name (from the client-side)
+    };
+}
+
 
 async function createPageBlockRelation(client: Client): Promise<any> {
     try {
-        // TODO: change to block name (this is the unique relation name and the description that will be on the page builder editor in Blocks section).
-        const blockName = 'DataViewerBlock';
-
-        // TODO: Change to fileName that declared in webpack.config.js
-        const filename = 'data_viewer_block';
-
-        const pageComponentRelation: Relation = {
-            RelationName: "PageBlock",
-            Name: blockName,
-            Description: `data viewer`,
-            Type: "NgComponent",
-            SubType: "NG11",
-            AddonUUID: client.AddonUUID,
-            AddonRelativeURL: filename,
-            ComponentName: `BlockComponent`, // This is should be the block component name (from the client-side)
-            ModuleName: `BlockModule`, // This is should be the block module name (from the client-side)
-            EditorComponentName: `BlockEditorComponent`, // This is should be the block editor component name (from the client-side)
-            EditorModuleName: `BlockEditorModule` // This is should be the block editor module name (from the client-side)
-        };
-
+        const dataViewerBlock = 
+        {
+            blockName: 'DataViewerBlock',
+            filename:'data_viewer_block',
+            componentName: `BlockComponent`,
+            moduleName: `BlockModule`,
+            editorComponentName: `BlockEditorComponent`,
+            editorModuleName:`BlockEditorModule`,
+            description: `data viewer`
+        }
+        const dataConfigurationBlock = 
+        {
+            blockName: 'DataConfigurationBlock',
+            filename:'data_viewer_block',
+            componentName: `DataConfigurationBlockComponent`,
+            moduleName: `DataConfigurationBlockModule`,
+            editorComponentName: `DataConfigurationBlockEditorComponent`,
+            editorModuleName:`DataConfigurationBlockEditorModule`,
+            description: `data configuration`
+        }
         const service = new MyService(client);
-        const result = await service.upsertRelation(pageComponentRelation);
-        return { success:true, resultObject: result };
+        const dataViewerResult = await service.upsertRelation(createPageBlockRelationObject(client, dataViewerBlock));
+        const dataConfigurationResult = await service.upsertRelation(createPageBlockRelationObject(client, dataConfigurationBlock));
+        return { success:true, resultObject: {'data-viewer-result': dataViewerResult, 'data-configuration-result': dataConfigurationResult}};
     } catch(err) {
         return { success: false, resultObject: err , errorMessage: `Error in upsert relation. error - ${err}`};
     }
