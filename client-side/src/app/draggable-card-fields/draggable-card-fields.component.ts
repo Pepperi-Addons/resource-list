@@ -12,7 +12,6 @@ import { ICardEditor } from './cards.model';
 
 export class DraggableCardFieldsComponent {
     public title: string;
-    private eventsSubscription: Subscription;
     showContentOfField = false;
     @Input() field: any
     @Input() items: any[]
