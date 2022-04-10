@@ -2,7 +2,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { IPepGenericListDataSource, IPepGenericListInitData, IPepGenericListTableInputs, PepGenericListService } from '@pepperi-addons/ngx-composite-lib/generic-list';
 import { IPepListSortingChangeEvent } from '@pepperi-addons/ngx-lib/list';
-import { BlockService } from './block.service' 
+import { UDCService } from '../services/udc-service';
 import { PepMenuItem } from "@pepperi-addons/ngx-lib/menu";
 import { DIMXComponent } from '@pepperi-addons/ngx-composite-lib/dimx-export';
 import { UDCUUID } from '../addon.config';
@@ -33,8 +33,8 @@ export class BlockComponent implements OnInit {
     @Output() hostEvents: EventEmitter<any> = new EventEmitter<any>();
 
     constructor(private translate: TranslateService,
-        private genericListService: PepGenericListService, private blockService: BlockService) {
-          this.blockService.pluginUUID = config.AddonUUID
+        private genericListService: PepGenericListService, private udcService: UDCService) {
+          this.udcService.pluginUUID = config.AddonUUID
     }
     ngOnInit(): void {
       this.init()
@@ -67,7 +67,7 @@ export class BlockComponent implements OnInit {
     updateResourceNameAndItemsIfChanged(){
       if(this.hostObject?.configuration?.resourceName != this.resourceName){
         this.resourceName = this.hostObject?.configuration?.resourceName || this.resourceName
-        this.blockService.getItems(this.resourceName).then(items => {
+        this.udcService.getItems(this.resourceName).then(items => {
           this.items = items
           this.datasource = new DataSource(this.translate, items, this.fields, this.widthArray)
         })
@@ -108,7 +108,7 @@ export class BlockComponent implements OnInit {
       }
     }
     onDIMXProcessDone($event){
-        this.blockService.getItems(this.resourceName).then(items => {
+        this.udcService.getItems(this.resourceName).then(items => {
           this.datasource = new DataSource(this.translate, items, this.fields)
         })
     }

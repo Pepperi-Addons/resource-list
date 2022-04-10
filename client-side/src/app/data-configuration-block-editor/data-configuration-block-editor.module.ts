@@ -6,6 +6,8 @@ import { PepAddonService } from '@pepperi-addons/ngx-lib';
 import { config } from '../addon.config';
 import { PepNgxCompositeLibModule } from '@pepperi-addons/ngx-composite-lib';
 import { DataConfigurationBlockEditorComponent } from './data-configuration-block-editor.component'
+import { PepSelectModule } from '@pepperi-addons/ngx-lib/select';
+import { MatTabsModule } from '@angular/material/tabs';
 
 
 export const routes: Routes = [
@@ -20,6 +22,8 @@ export const routes: Routes = [
     imports: [
         CommonModule,
         PepNgxCompositeLibModule,
+        PepSelectModule,
+        MatTabsModule,
         TranslateModule.forChild({
             loader: {
                 provide: TranslateLoader,

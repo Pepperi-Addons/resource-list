@@ -1,18 +1,19 @@
 import { TranslateService } from '@ngx-translate/core';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { BlockEditorService } from './block-editor.service'
-import { CdkDragDrop, CdkDragEnd, CdkDragStart, moveItemInArray, transferArrayItem} from '@angular/cdk/drag-drop';
-import { ICardEditor, IContent, IContentEditor } from '../draggable-card-fields/cards.model'
+import { UDCService } from '../services/udc-service'
+import { CdkDragDrop, CdkDragEnd, CdkDragStart, moveItemInArray} from '@angular/cdk/drag-drop';
+import { ICardEditor, IContent } from '../draggable-card-fields/cards.model'
 import { CardsService } from '../draggable-card-fields/cards.service'
 import { config } from '../addon.config'
 import { TypeMap, HashMap } from '../type-map'
+import { SelectOption } from '../../../../shared/entities';
 @Component({
     selector: 'block-editor',
     templateUrl: './block-editor.component.html',
     styleUrls: ['./block-editor.component.scss']
 })
 export class BlockEditorComponent implements OnInit {
-    resourcesNames: {'key': string, 'value': string}[] = []
+    resourcesNames: SelectOption[] = []
     resources: any[] = []
     resource: any
     currentResourceName: string
@@ -32,7 +33,7 @@ export class BlockEditorComponent implements OnInit {
         return this._configuration;
     }
     constructor(private translate: TranslateService,
-                private blockEditorService: BlockEditorService,
+                private udcService: UDCService,
                 private cardsService: CardsService
                ) {
     }
@@ -92,8 +93,8 @@ export class BlockEditorComponent implements OnInit {
         return this.cardsList.filter((card) => !(set.has(card.name)))
     }
     async initResources(){
-        this.blockEditorService.pluginUUID = config.AddonUUID
-        const resources = await this.blockEditorService.getCollections()
+        this.udcService.pluginUUID = config.AddonUUID
+        const resources = await this.udcService.getCollections()
         this.resources = resources;
         this.resourcesNames = resources.map(resource => {
             return {'key': resource.Name, 'value': resource.Name}})

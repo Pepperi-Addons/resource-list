@@ -1,1 +1,22 @@
-<p>data-configuration-block-editor works!</p>
+<mat-tab-group #tabgroutp class="editor-tabs">
+    <mat-tab label= "General">
+        <div>
+            <pep-select 
+                    [value]="currentResourceName"
+                    label="select a resource"
+                    type="select"
+                    mandatory = "true"
+                    [options] = "resourcesNames"
+                    (valueChange)="onResourceChanged($event)"
+                ></pep-select>
+                <pep-select 
+                    [value]="currentEditMode"
+                    label="choose an edit mode"
+                    type="select"
+                    mandatory = "true"
+                    [options] = "editModeOptions"
+                    (valueChange)="onEditModeChanged($event)"
+            ></pep-select>
+        </div>
+    </mat-tab>
+</mat-tab-group>
