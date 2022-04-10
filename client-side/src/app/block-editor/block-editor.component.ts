@@ -61,7 +61,7 @@ export class BlockEditorComponent implements OnInit {
         this.resourceFieldsMap[fieldID] = {'FieldID': fieldID, 'Type': type, 'Title': this.translate.instant(title), 'Mandatory': mandatory, 'ReadOnly': true}
     }
     genereateMapFromResourceFields(){
-        this.addToResourceFieldsMap('CreationDateTime', 'DateAndTime', 'CrationDateTime', false)
+        this.addToResourceFieldsMap('CreationDateTime', 'DateAndTime', 'CreationDateTime', false)
         this.addToResourceFieldsMap('ModificationDateTime', 'DateAndTime', 'ModificationDateTime', false)
         for(let fieldKey of Object.keys(this.resourceFields)){
             const key = fieldKey
