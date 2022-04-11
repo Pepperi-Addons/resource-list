@@ -49,20 +49,20 @@
     <mat-tab cdkDropListGroup label= "Content">
         <h3>Fields</h3>
         <div (cdkDropListDropped)="drop($event)"  cdkDropList> 
-        <draggable-card-fields  
-        *ngFor="let card of cardsList"
-        [showActions] = "true" [isDraggable] = "true"
-        (hostEvents)='onHostObjectChange($event)'
-        (editClick)='onCardEditClick($event);'
-        (removeClick)='onCardRemoveClick($event);'
-        (fieldSelected) = 'onSelectField($event)'
-        (insertWidth) = 'onWidthChange()'
-        [configuration]="configuration"
-        [field] ="card.name"
-        [card] = "card"
-        [items] = "resourceFieldsKeys"
-        cdkDrag [cdkDragDisabled]="false"  style="cursor: grab;" (cdkDragStarted)="onDragStart($event)" (cdkDragEnded)="onDragEnd($event)">
-        </draggable-card-fields>
+        <data-configuration-draggable-fields  
+            *ngFor="let card of cardsList"
+            [showActions] = "true" [isDraggable] = "true"
+            (hostEvents)='onHostObjectChange($event)'
+            (editClick)='onCardEditClick($event);'
+            (removeClick)='onCardRemoveClick($event);'
+            (fieldSelected) = 'onSelectField($event)'
+            (insertWidth) = 'onWidthChange()'
+            [configuration]="configuration"
+            [field] ="card.name"
+            [card] = "card"
+            [items] = "resourceFieldsKeys"
+            cdkDrag [cdkDragDisabled]="false"  style="cursor: grab;" (cdkDragStarted)="onDragStart($event)" (cdkDragEnded)="onDragEnd($event)">
+        </data-configuration-draggable-fields>
     </div>
     <pep-button class="add-content-button" value="Add" styleType="regular"  
     (buttonClick)="addNewCardClick()"></pep-button>

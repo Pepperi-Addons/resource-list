@@ -34,7 +34,7 @@ export class UDCService{
             return await this.getCollections()
         }
     }
-    async getItems(resourceName: string){
+    async getItems(resourceName: string): Promise<any[]>{
         if(resourceName){
             return await this.papiClient.userDefinedCollections.schemes.name(resourceName).get();
         }

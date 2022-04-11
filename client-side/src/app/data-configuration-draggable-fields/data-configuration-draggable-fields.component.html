@@ -1,0 +1,18 @@
+<div class="card-editor-container">
+    <div>
+        <pep-button classNames="lock-events" sizeType="xs"  ></pep-button>
+    </div>
+    <div *ngIf="title !== ''" class="title-container">
+        <span class="body-sm ellipsis">&nbsp;</span>
+        <span class="body-sm color-link bold ellipsis" title="">{{field}}</span>
+    </div>
+    <div class="actions" >
+        <pep-button classNames="caution" sizeType="xs" iconName="system_bin" (buttonClick)="onRemoveClick();"></pep-button>
+        <pep-button *ngIf="!showContentOfField" sizeType="xs" iconName="arrow_down" (buttonClick)="onEditClick();"></pep-button>
+        <pep-button *ngIf="showContentOfField" sizeType="xs" iconName="arrow_up" (buttonClick)="onEditClick();"></pep-button>
+    </div>
+    <div class="editorCont" *ngIf = "showContentOfField">
+        <!--here will be the fields-->
+        <!--Key(DropDown), Label(Text), Readonly(checkbox), Mandatory(checkbox), DefaultValue(?)-->
+    </div>
+</div>

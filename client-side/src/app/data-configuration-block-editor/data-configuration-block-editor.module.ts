@@ -8,6 +8,7 @@ import { PepNgxCompositeLibModule } from '@pepperi-addons/ngx-composite-lib';
 import { DataConfigurationBlockEditorComponent } from './data-configuration-block-editor.component'
 import { PepSelectModule } from '@pepperi-addons/ngx-lib/select';
 import { MatTabsModule } from '@angular/material/tabs';
+import { DataConfigurationDraggableFieldsModule } from '../data-configuration-draggable-fields/data-configuration-draggable-fields.module';
 
 
 export const routes: Routes = [
@@ -24,6 +25,7 @@ export const routes: Routes = [
         PepNgxCompositeLibModule,
         PepSelectModule,
         MatTabsModule,
+        DataConfigurationDraggableFieldsModule,
         TranslateModule.forChild({
             loader: {
                 provide: TranslateLoader,

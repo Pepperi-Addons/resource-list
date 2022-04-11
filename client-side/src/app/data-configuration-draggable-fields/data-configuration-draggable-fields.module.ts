@@ -15,10 +15,10 @@ import { PepGroupButtonsModule } from '@pepperi-addons/ngx-lib/group-buttons';
 import { PepImageModule } from '@pepperi-addons/ngx-lib/image';
 import { PepSelectModule } from '@pepperi-addons/ngx-lib/select';
 import { PepTextareaModule } from '@pepperi-addons/ngx-lib/textarea';
-import { DraggableCardFieldsComponent } from './draggable-card-fields.component'
+import { DataConfigurationDraggableFieldsComponent } from './data-configuration-draggable-fields.component'
 
 @NgModule({
-    declarations: [DraggableCardFieldsComponent],
+    declarations: [DataConfigurationDraggableFieldsComponent],
     imports: [
         CommonModule,
         DragDropModule,
@@ -43,6 +43,6 @@ import { DraggableCardFieldsComponent } from './draggable-card-fields.component'
             }, isolate: false
         }),
     ],
-    exports: [DraggableCardFieldsComponent]
+    exports: [DataConfigurationDraggableFieldsComponent]
 })
-export class DraggableCardFieldsModule { }
+export class DataConfigurationDraggableFieldsModule { }

@@ -3,6 +3,8 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { UDCService } from '../services/udc-service';
 import { config } from '../addon.config';
 import { SelectOption } from '../../../../shared/entities'
+import { CdkDragDrop, CdkDragEnd, CdkDragStart, moveItemInArray} from '@angular/cdk/drag-drop';
+import { ICardEditor } from '../draggable-card-fields/cards.model';
 
 @Component({
     selector: 'data-configuration-block-editor',
@@ -17,6 +19,8 @@ export class DataConfigurationBlockEditorComponent implements OnInit {
     resources: any[] = [];
     currentEditMode: string
     editModeOptions : SelectOption[] = []
+    cardsList : ICardEditor[] = []
+    currentResourceFields: string[] = ["CreationDateTime", "ModificationDateTime"];
 
     @Output() hostEvents: EventEmitter<any> = new EventEmitter<any>();
 
@@ -28,6 +32,17 @@ export class DataConfigurationBlockEditorComponent implements OnInit {
         this.editModeOptions = [{'key': 'readOnly', 'value': this.translate.instant('Read Only')}, {'key': 'modifiable', 'value': this.translate.instant('Modifiable')}]
         this.loadVariablesFromHostObject();
         this.initResources()
+        .then(() =>{
+            this.initCurrentResourceFields()
+        })
+    
+    }
+    async initCurrentResourceFields(){
+        this.currentResourceFields = [... await this.getFieldsFromResource(), ...this.currentResourceFields]
+    }
+    async getFieldsFromResource(): Promise<string[]>{
+        const fields = await this.udcService.getItems(this.currentResourceName)
+        return [];
     }
     loadVariablesFromHostObject(){
         this.currentResourceName = this.hostObject?.resorceName;
@@ -48,5 +63,11 @@ export class DataConfigurationBlockEditorComponent implements OnInit {
     }
     onEditModeChanged($event){
         this.currentEditMode = $event
+    }
+    drop(event: CdkDragDrop<string[]>){
+        if (event.previousContainer === event.container) {
+            moveItemInArray(this.cardsList, event.previousIndex, event.currentIndex);
+           }
+        // this.updateAllConfigurationObject() 
     }
 }
