@@ -38,11 +38,11 @@ export class DataConfigurationBlockEditorComponent implements OnInit {
     
     }
     async initCurrentResourceFields(){
-        this.currentResourceFields = [... await this.getFieldsFromResource(), ...this.currentResourceFields]
+        this.currentResourceFields = [... await this.getFieldsFromResource(), ...this.currentResourceFields];
     }
     async getFieldsFromResource(): Promise<string[]>{
         const fields = await this.udcService.getItems(this.currentResourceName)
-        return [];
+        return fields.map(field => field.Name);
     }
     loadVariablesFromHostObject(){
         this.currentResourceName = this.hostObject?.resorceName;
