@@ -6,7 +6,7 @@ import { ICardEditor, IContent, IContentEditor } from '../draggable-card-fields/
 import { CardsService } from '../draggable-card-fields/cards.service'
 import { config } from '../addon.config'
 import { TypeMap, HashMap } from '../type-map'
-import { DataViewFieldTypes } from '@pepperi-addons/papi-sdk';
+import { DataViewFieldType, DataViewFieldTypes } from '@pepperi-addons/papi-sdk';
 
 @Component({
     selector: 'block-editor',
@@ -56,19 +56,18 @@ export class BlockEditorComponent implements OnInit {
         this.genereateMapFromResourceFields()
         this.resourceFieldsKeys = Object.keys(this.resourceFieldsMap)
     }
-    addToResourceFieldsMap(fieldID: string, type:string, title: string, mandatory: boolean){
+    addToResourceFieldsMap(fieldID: string, type: DataViewFieldType, title: string, mandatory: boolean){
         this.resourceFieldsMap[fieldID] = {'FieldID': fieldID, 'Type': type, 'Title': this.translate.instant(title), 'Mandatory': mandatory, 'ReadOnly': true}
     }
     genereateMapFromResourceFields(){
         this.addToResourceFieldsMap('CreationDateTime', 'DateAndTime', 'CrationDateTime', false)
         this.addToResourceFieldsMap('ModificationDateTime', 'DateAndTime', 'ModificationDateTime', false)
         for(let fieldKey of Object.keys(this.resourceFields)){
-            const key = fieldKey
             const title = fieldKey
             const mandatory = this.resourceFields[fieldKey]?.Mandatory
             const optionalValues = this.resourceFields[fieldKey]?.OptionalValues
-            const type = this.typeMap.get(this.resourceFields[key]?.Type, optionalValues)
-            this.addToResourceFieldsMap(key, type, title, mandatory)
+            const type = this.typeMap.get(this.resourceFields[fieldKey]?.Type, optionalValues)
+            this.addToResourceFieldsMap(fieldKey, type, fieldKey, mandatory)
         }
     }
     validateCardsListCompatibleToFieldsAndUpdate(){
@@ -86,16 +85,12 @@ export class BlockEditorComponent implements OnInit {
         })
     }
     getCardsToDelete(set: Set<string>): ICardEditor[]{
-        if(!this.cardsList){
-            return []
-        }
-        return this.cardsList.filter((card) => !(set.has(card.name)))
+        return this.cardsList? [] : this.cardsList.filter((card) => !(set.has(card.name)))
     }
     async initResources(){
         this.blockEditorService.pluginUUID = config.AddonUUID
-        const resources = await this.blockEditorService.getCollections()
-        this.resources = resources;
-        this.resourcesNames = resources.map(resource => {
+       this.resources = await this.blockEditorService.getCollections()
+        this.resourcesNames = this.resources.map(resource => {
             return {'key': resource.Name, 'value': resource.Name}})
     }
     loadVariablesFromHostObject(){
@@ -106,7 +101,7 @@ export class BlockEditorComponent implements OnInit {
         this.cardsList = this.hostObject?.configuration?.cardsList
     }
     initCardsList(){
-        this.cardsList = this.hostObject?.configuration?.cardsList
+        // this.cardsList = this.hostObject?.configuration?.cardsList
         if(this.cardsList && this.cardsList.length == 0){
             this.generateCardsListFromFields()
         }
@@ -119,7 +114,7 @@ export class BlockEditorComponent implements OnInit {
         this.cardsList = []
         const resourceFieldKeys = this.resourceFieldsMap? Object.keys(this.resourceFieldsMap): []
         resourceFieldKeys.map(resourceFieldKey => {
-            this.addNewCard(this.cardsList.length, resourceFieldKey, this.resourceFieldsMap[resourceFieldKey])
+            this.addNewCard(resourceFieldKey, this.resourceFieldsMap[resourceFieldKey])
         })
     }
     onAllowExportChange($event){
@@ -136,7 +131,7 @@ export class BlockEditorComponent implements OnInit {
     }
     async onResourceChanged($event){
         this.restoreData()
-        this.resource = this.getResourceByName($event)
+        this.resource = this.resources?.find((resource) => resource.Name == $event)
         await this.initCurrentResource()
         this.generateCardsListFromFields()
         this.updateAllConfigurationObject()  
@@ -162,19 +157,6 @@ export class BlockEditorComponent implements OnInit {
             }
         })
     }
-    getFieldsByResourceName(resourceName: string){
-        return this.resources.find(resource => resourceName == resource.Key).Fields
-    }
-    getResourceByName(resourceName: string){
-        return this.resources?.find((resource) => resource.Name == resourceName)
-    }
-    updateConfigurationObjectField(key: string, value: any) {
-        this.hostEvents.emit({
-            action: 'set-configuration-field',
-            key: key, 
-            value: value
-        });
-    }
     drop(event: CdkDragDrop<string[]>){
         if (event.previousContainer === event.container) {
             moveItemInArray(this.cardsList, event.previousIndex, event.currentIndex);
@@ -192,18 +174,17 @@ export class BlockEditorComponent implements OnInit {
         this.updateAllConfigurationObject()
     }
     addNewCardClick(){
-        const id = this.cardsList?.length
-        const name = this.resourceFieldsKeys.length > 0 ? this.resourceFieldsKeys[id % this.resourceFieldsKeys.length] : undefined
+        const name = this.resourceFieldsKeys.length > 0 ? this.resourceFieldsKeys[0] : undefined
         const value = name? this.resourceFieldsMap[name]: undefined
-        this.addNewCard(id, name, value)
+        this.addNewCard(name, value)
         this.updateAllConfigurationObject()
     }
-    addNewCard(id: number, name: string, value: any){
+    addNewCard( name: string, value: any){
         let card = new ICardEditor();
-        card.id = id
+        card.id = this.cardsList.length
         card.name = name
         card.value = value
-        card.width = 0
+        card.width = 0 
         this.cardsList.push(card);
         return card
     }

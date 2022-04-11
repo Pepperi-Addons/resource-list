@@ -94,7 +94,7 @@ export class BlockComponent implements OnInit {
             DIMXExportFormat: "csv",
             DIMXExportIncludeDeleted: false,
             DIMXExportFileName: this.resourceName,
-            DIMXExportFields: ['Key','CreationDateTime', 'ModificationDateTime'].join(),
+            DIMXExportFields: this.fields.map((field) => field.FieldID).join(),
             DIMXExportDelimiter: ","
           });
           break;
@@ -113,7 +113,7 @@ export class BlockComponent implements OnInit {
         })
     }
     getMenuItems() {
-      return this.menuDisabled? [] :  [
+      return[
           {
             key:'Export',
             text: this.translate.instant('Export'),
