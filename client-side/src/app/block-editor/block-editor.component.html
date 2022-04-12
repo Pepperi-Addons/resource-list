@@ -2,13 +2,14 @@
     <mat-tab label= "General">
         <div>
             <pep-select 
-                [value]="currentResourceName"
+                [value]="resource?.Name"
                 label="select a resource"
                 type="select"
                 mandatory = "true"
                 [options] = "resourcesNames"
                 [showTitle]="true"
                 (valueChange)="onResourceChanged($event)"
+                [emptyOption]="false"
             ></pep-select>
             <pep-textbox
                 [value]="title"
@@ -49,20 +50,20 @@
     <mat-tab cdkDropListGroup label= "Content">
         <h3>Fields</h3>
         <div (cdkDropListDropped)="drop($event)"  cdkDropList> 
-        <data-configuration-draggable-fields  
-            *ngFor="let card of cardsList"
-            [showActions] = "true" [isDraggable] = "true"
-            (hostEvents)='onHostObjectChange($event)'
-            (editClick)='onCardEditClick($event);'
-            (removeClick)='onCardRemoveClick($event);'
-            (fieldSelected) = 'onSelectField($event)'
-            (insertWidth) = 'onWidthChange()'
-            [configuration]="configuration"
-            [field] ="card.name"
-            [card] = "card"
-            [items] = "resourceFieldsKeys"
-            cdkDrag [cdkDragDisabled]="false"  style="cursor: grab;" (cdkDragStarted)="onDragStart($event)" (cdkDragEnded)="onDragEnd($event)">
-        </data-configuration-draggable-fields>
+        <draggable-card-fields  
+        *ngFor="let card of cardsList"
+        [showActions] = "true" [isDraggable] = "true"
+        (hostEvents)='onHostObjectChange($event)'
+        (editClick)='onCardEditClick($event);'
+        (removeClick)='onCardRemoveClick($event);'
+        (fieldSelected) = 'onSelectField($event)'
+        (insertWidth) = 'onWidthChange()'
+        [configuration]="configuration"
+        [field] ="card.name"
+        [card] = "card"
+        [items] = "getResourceFieldsKeys()"
+        cdkDrag [cdkDragDisabled]="false"  style="cursor: grab;" (cdkDragStarted)="onDragStart($event)" (cdkDragEnded)="onDragEnd($event)">
+        </draggable-card-fields>
     </div>
     <pep-button class="add-content-button" value="Add" styleType="regular"  
     (buttonClick)="addNewCardClick()"></pep-button>

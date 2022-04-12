@@ -1,8 +1,10 @@
+import { DataViewFieldType } from "@pepperi-addons/papi-sdk";
+
 export interface HashMap<T>{
     [key:string]:T;
 } 
 export class TypeMap{
-    private map: HashMap<string> = {};
+    private map: HashMap<DataViewFieldType> = {};
     init(){
         this.map['String'] = "TextBox"
         this.map['Integer'] = 'NumberInteger'
@@ -11,7 +13,7 @@ export class TypeMap{
         this.map['DateTime'] = "DateAndTime"
         return this
     }
-    get(key:string, optionalValues = []){
+    get(key:string, optionalValues = []): DataViewFieldType{
         if(key == 'Array'){
             return optionalValues.length > 0? "MultiTickBox" : "TextArea"
         }
@@ -19,6 +21,6 @@ export class TypeMap{
             return "ComboBox"
         }
         const result = this.map[key]
-        return result? result: "DateViewFieldType"  
+        return result; 
     }
 }

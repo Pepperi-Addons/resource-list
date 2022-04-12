@@ -7,6 +7,7 @@ import { CardsService } from '../draggable-card-fields/cards.service'
 import { config } from '../addon.config'
 import { TypeMap, HashMap } from '../type-map'
 import { SelectOption } from '../../../../shared/entities';
+import { DataViewFieldType } from '@pepperi-addons/papi-sdk';
 @Component({
     selector: 'block-editor',
     templateUrl: './block-editor.component.html',
@@ -16,16 +17,12 @@ export class BlockEditorComponent implements OnInit {
     resourcesNames: SelectOption[] = []
     resources: any[] = []
     resource: any
-    currentResourceName: string
     title: string
-    resourceFields: any = {}
     resourceFieldsMap: HashMap<any> = {}
-    resourceFieldsKeys: string[] = [] 
     allowExport: boolean = false;
     allowImport: boolean = false;
     @Input() hostObject: any;
     @Output() hostEvents: EventEmitter<any> = new EventEmitter<any>();
-    currentCardindex: number;
     typeMap: TypeMap 
     private _configuration: IContent;
     public cardsList: BlockEditorCard[] = []
@@ -52,31 +49,27 @@ export class BlockEditorComponent implements OnInit {
             this.resource = this.resources?.length > 0? this.resources[0] : undefined
             this.updateAllConfigurationObject()
         }
-        this.currentResourceName = this.resource?.Name
-        this.resourceFields = this.resource? this.resource.Fields : {}
         this.genereateMapFromResourceFields()
-        this.resourceFieldsKeys = Object.keys(this.resourceFieldsMap)
     }
-    addToResourceFieldsMap(fieldID: string, type:string, title: string, mandatory: boolean){
+    addToResourceFieldsMap(fieldID: string, type: DataViewFieldType, title: string, mandatory: boolean){
         this.resourceFieldsMap[fieldID] = {'FieldID': fieldID, 'Type': type, 'Title': this.translate.instant(title), 'Mandatory': mandatory, 'ReadOnly': true}
     }
     genereateMapFromResourceFields(){
         this.addToResourceFieldsMap('CreationDateTime', 'DateAndTime', 'CreationDateTime', false)
         this.addToResourceFieldsMap('ModificationDateTime', 'DateAndTime', 'ModificationDateTime', false)
-        for(let fieldKey of Object.keys(this.resourceFields)){
-            const key = fieldKey
+        for(let fieldKey of Object.keys(this.resource.Fields)){
             const title = fieldKey
-            const mandatory = this.resourceFields[fieldKey]?.Mandatory
-            const optionalValues = this.resourceFields[fieldKey]?.OptionalValues
-            const type = this.typeMap.get(this.resourceFields[key]?.Type, optionalValues)
-            this.addToResourceFieldsMap(key, type, title, mandatory)
+            const mandatory = this.resource.Fields[fieldKey]?.Mandatory
+            const optionalValues = this.resource.Fields[fieldKey]?.OptionalValues
+            const type = this.typeMap.get(this.resource.Fields[fieldKey]?.Type, optionalValues)
+            this.addToResourceFieldsMap(fieldKey, type, fieldKey, mandatory)
         }
     }
     validateCardsListCompatibleToFieldsAndUpdate(){
-        if(!this.resourceFieldsKeys || !this.cardsList){
+        if(!this.cardsList){
             return
         }
-        const fieldsKeysSet: Set<string> = new Set(this.resourceFieldsKeys)
+        const fieldsKeysSet: Set<string> = new Set(this.getResourceFieldsKeys())
         const cardsToDelete = this.getCardsToDelete(fieldsKeysSet)
         this.deleteCards(cardsToDelete)
         this.updateAllConfigurationObject()
@@ -87,16 +80,12 @@ export class BlockEditorComponent implements OnInit {
         })
     }
     getCardsToDelete(set: Set<string>): BlockEditorCard[]{
-        if(!this.cardsList){
-            return []
-        }
-        return this.cardsList.filter((card) => !(set.has(card.name)))
+        return this.cardsList? [] : this.cardsList.filter((card) => !(set.has(card.name)))
     }
     async initResources(){
         this.udcService.pluginUUID = config.AddonUUID
-        const resources = await this.udcService.getCollections()
-        this.resources = resources;
-        this.resourcesNames = resources.map(resource => {
+       this.resources = await this.udcService.getCollections()
+        this.resourcesNames = this.resources.map(resource => {
             return {'key': resource.Name, 'value': resource.Name}})
     }
     loadVariablesFromHostObject(){
@@ -107,7 +96,6 @@ export class BlockEditorComponent implements OnInit {
         this.cardsList = this.hostObject?.configuration?.cardsList
     }
     initCardsList(){
-        this.cardsList = this.hostObject?.configuration?.cardsList
         if(this.cardsList && this.cardsList.length == 0){
             this.generateCardsListFromFields()
         }
@@ -118,9 +106,8 @@ export class BlockEditorComponent implements OnInit {
     }
     generateCardsListFromFields(){
         this.cardsList = []
-        const resourceFieldKeys = this.resourceFieldsMap? Object.keys(this.resourceFieldsMap): []
-        resourceFieldKeys.map(resourceFieldKey => {
-            this.addNewCard(this.cardsList.length, resourceFieldKey, this.resourceFieldsMap[resourceFieldKey])
+       this.getResourceFieldsKeys().map(resourceFieldKey => {
+            this.addNewCard(resourceFieldKey, this.resourceFieldsMap[resourceFieldKey])
         })
     }
     onAllowExportChange($event){
@@ -137,8 +124,7 @@ export class BlockEditorComponent implements OnInit {
     }
     async onResourceChanged($event){
         this.restoreData()
-        this.currentResourceName = $event
-        this.resource = this.getResourceByName(this.currentResourceName)
+        this.resource = this.resources?.find((resource) => resource.Name == $event)
         await this.initCurrentResource()
         this.generateCardsListFromFields()
         this.updateAllConfigurationObject()  
@@ -146,7 +132,6 @@ export class BlockEditorComponent implements OnInit {
     restoreData(){
         this.cardsList = []
         this.resource = undefined
-        this.currentResourceName = undefined
         this.allowExport = false;
         this.allowImport = false
         this.title = ""
@@ -161,22 +146,9 @@ export class BlockEditorComponent implements OnInit {
                 allowExport: this.allowExport,
                 allowImport: this.allowImport,
                 cardsList: this.cardsList,
-                resourceName: this.currentResourceName
+                resourceName: this.resource?.Name
             }
         })
-    }
-    getFieldsByResourceName(resourceName: string){
-        return this.resources.find(resource => resourceName == resource.Key).Fields
-    }
-    getResourceByName(resourceName: string){
-        return this.resources?.find((resource) => resource.Name == resourceName)
-    }
-    updateConfigurationObjectField(key: string, value: any) {
-        this.hostEvents.emit({
-            action: 'set-configuration-field',
-            key: key, 
-            value: value
-        });
     }
     drop(event: CdkDragDrop<string[]>){
         if (event.previousContainer === event.container) {
@@ -195,18 +167,22 @@ export class BlockEditorComponent implements OnInit {
         this.updateAllConfigurationObject()
     }
     addNewCardClick(){
-        const id = this.cardsList?.length
-        const name = this.resourceFieldsKeys.length > 0 ? this.resourceFieldsKeys[id % this.resourceFieldsKeys.length] : undefined
+        const resourceFieldsKeys = this.getResourceFieldsKeys()
+        const name = resourceFieldsKeys.length > 0 ? resourceFieldsKeys[0] : undefined
         const value = name? this.resourceFieldsMap[name]: undefined
-        this.addNewCard(id, name, value)
+        this.addNewCard(name, value)
         this.updateAllConfigurationObject()
     }
-    addNewCard(id: number, name: string, value: any){
+    getResourceFieldsKeys(): string[]{
+        return this.resourceFieldsMap ? Object.keys(this.resourceFieldsMap) : [];
+        
+    }
+    addNewCard( name: string, value: any){
         let card = new BlockEditorCard();
-        card.id = id
+        card.id = this.cardsList.length
         card.name = name
         card.value = value
-        card.width = 0
+        card.width = 0 
         this.cardsList.push(card);
         return card
     }

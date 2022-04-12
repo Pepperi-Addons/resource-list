@@ -23,7 +23,6 @@ class MyService {
     upsertRelation(relation): Promise<any> {
         return this.papiClient.post('/addons/data/relations', relation);
     }
-
     getAddons(): Promise<InstalledAddon[]> {
         return this.papiClient.addons.installedAddons.find({});
     }
@@ -31,7 +30,7 @@ class MyService {
         return this.papiClient.userDefinedCollections.schemes.find()
     }
     getCollectionDataByName(collectionName: string){
-        return this.papiClient.get(`/user_defined_collections/${collectionName}`)
+        return this.papiClient.userDefinedCollections.documents(collectionName).find()
     }
 
     

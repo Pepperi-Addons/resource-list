@@ -29,7 +29,7 @@ export class DraggableCardFieldsComponent {
         this.field = event.field?.currentValue? event.field.currentValue : this.field
         this.items = event.items?.currentValue? event.items.currentValue : this.items
         this.title = event.title?.currentValue? event.title.currentValue : this.title
-        this.title = event.card?.currentValue? event.card.currentValue : this.card
+        this.card = event.card?.currentValue? event.card.currentValue : this.card
         if(event.items?.currentValue){
             this.setItemOptions()
         }

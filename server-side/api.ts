@@ -9,7 +9,7 @@ export async function get_all_collections(client: Client, request: Request){
 export async function get_collection_data(client: Client, request: Request){
     validateRequest('GET', request)
     if(!request?.query?.collectionName){
-        throw new Error('collection name must be exist in request body, instead request query =  ' + request.query);
+        throw new Error('collection name must be exist in request query, instead request query =  ' + request.query);
     }
     const service = new MyService(client)
     return await service.getCollectionDataByName(request.query.collectionName)
