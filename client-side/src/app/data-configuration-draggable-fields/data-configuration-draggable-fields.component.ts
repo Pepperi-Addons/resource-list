@@ -4,9 +4,9 @@ import { ICardEditor } from '../draggable-card-fields/cards.model';
 
 
 @Component({
-  selector: 'draggable-card-fields',
-  templateUrl: './draggable-card-fields.component.html',
-  styleUrls: ['./draggable-card-fields.component.scss']
+  selector: 'data-configuration-draggable-fields',
+  templateUrl: './data-configuration-draggable-fields.component.html',
+  styleUrls: ['./data-configuration-draggable-fields.component.scss']
 })
 
 export class DataConfigurationDraggableFieldsComponent {
