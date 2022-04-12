@@ -1,1 +1,21 @@
-Block works...
+<ng-container pep-main-area>
+    <pep-generic-list class="generic-list"
+        [showTopBar]="true"
+        [dataSource]="datasource"
+        [showSearch]="true"
+        [title] = "title">
+        <ng-container right-buttons>
+            <pep-menu
+                classNames="pep-spacing-element"
+                iconName="system_menu"
+                type="action"
+                styleType="strong"
+                sizeType="md"
+                [items]="menuItems"
+                [disabled]="menuDisabled"
+                (menuItemClick)="onMenuItemClick($event)"
+            ></pep-menu>
+        </ng-container>
+    </pep-generic-list>
+</ng-container>
+<pep-dimx #dimx [DIMXAddonUUID]="udcUUID" [DIMXResource]="resourceName" (DIMXProcessDone)='onDIMXProcessDone($event);'></pep-dimx>

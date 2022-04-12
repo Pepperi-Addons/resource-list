@@ -2,15 +2,28 @@ import { TranslateLoader, TranslateModule, TranslateService, TranslateStore } fr
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PepAddonService } from '@pepperi-addons/ngx-lib';
-
+import { MatTabsModule } from '@angular/material/tabs';
 import { BlockEditorComponent } from './index';
-
 import { config } from '../addon.config';
+import { PepSelectModule } from '@pepperi-addons/ngx-lib/select';
+import { BlockEditorService } from './block-editor.service';
+import { PepTextboxModule } from '@pepperi-addons/ngx-lib/textbox';
+import { PepCheckboxModule } from '@pepperi-addons/ngx-lib/checkbox';
+import { DraggableCardFieldsModule } from '../draggable-card-fields/draggable-card-fields.module';
+import { PepButtonModule } from '@pepperi-addons/ngx-lib/button';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 @NgModule({
     declarations: [BlockEditorComponent],
     imports: [
         CommonModule,
+        MatTabsModule,
+        PepSelectModule,
+        PepTextboxModule,
+        DragDropModule,
+        PepCheckboxModule,
+        DraggableCardFieldsModule,
+        PepButtonModule,
         TranslateModule.forChild({
             loader: {
                 provide: TranslateLoader,
@@ -23,7 +36,7 @@ import { config } from '../addon.config';
     exports: [BlockEditorComponent],
     providers: [
         TranslateStore,
-        // Add here all used services.
+        BlockEditorService
     ]
 })
 export class BlockEditorModule {

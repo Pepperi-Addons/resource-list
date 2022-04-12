@@ -3,15 +3,19 @@ import { NgModule } from '@angular/core';
 import { AppComponent } from './app.component';
 import { BlockModule } from './block/block.module';
 import { BlockEditorModule } from './block-editor/block-editor.module';
+import { DraggableCardFieldsModule } from './draggable-card-fields/draggable-card-fields.module';
+
 
 @NgModule({
     imports: [
         BrowserModule,
         BlockModule,
-        BlockEditorModule
+        BlockEditorModule,
+        DraggableCardFieldsModule
+
     ],
     declarations: [
-        AppComponent
+        AppComponent,
     ],
     providers: [],
     bootstrap: [
