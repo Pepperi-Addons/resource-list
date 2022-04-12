@@ -7,7 +7,7 @@ import { PepMenuItem } from "@pepperi-addons/ngx-lib/menu";
 import { DIMXComponent } from '@pepperi-addons/ngx-composite-lib/dimx-export';
 import { UDCUUID } from '../addon.config';
 import { config } from '../addon.config'
-import { ICardEditor } from '../draggable-card-fields/cards.model';
+import { BlockEditorCard } from '../draggable-card-fields/cards.model';
 import { GridDataViewColumn } from '@pepperi-addons/papi-sdk';
 
 @Component({
@@ -27,7 +27,7 @@ export class BlockComponent implements OnInit {
     allowImport: boolean = false;
     menuDisabled: boolean = false;
     widthArray: GridDataViewColumn[] = []
-    cardsList: ICardEditor[] = []
+    cardsList: BlockEditorCard[] = []
     fields: any[] = []
     items: any[] = []
     @Output() hostEvents: EventEmitter<any> = new EventEmitter<any>();

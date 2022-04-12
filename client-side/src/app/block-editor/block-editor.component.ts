@@ -2,7 +2,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { UDCService } from '../services/udc-service'
 import { CdkDragDrop, CdkDragEnd, CdkDragStart, moveItemInArray} from '@angular/cdk/drag-drop';
-import { ICardEditor, IContent } from '../draggable-card-fields/cards.model'
+import { BlockEditorCard, IContent } from '../draggable-card-fields/cards.model'
 import { CardsService } from '../draggable-card-fields/cards.service'
 import { config } from '../addon.config'
 import { TypeMap, HashMap } from '../type-map'
@@ -28,7 +28,7 @@ export class BlockEditorComponent implements OnInit {
     currentCardindex: number;
     typeMap: TypeMap 
     private _configuration: IContent;
-    public cardsList: ICardEditor[] = []
+    public cardsList: BlockEditorCard[] = []
     get configuration(): IContent {
         return this._configuration;
     }
@@ -81,12 +81,12 @@ export class BlockEditorComponent implements OnInit {
         this.deleteCards(cardsToDelete)
         this.updateAllConfigurationObject()
     }
-    deleteCards(cradToDelete: ICardEditor[]){
+    deleteCards(cradToDelete: BlockEditorCard[]){
         cradToDelete.forEach((card) => {
             this.removeCard(card.id)
         })
     }
-    getCardsToDelete(set: Set<string>): ICardEditor[]{
+    getCardsToDelete(set: Set<string>): BlockEditorCard[]{
         if(!this.cardsList){
             return []
         }
@@ -202,7 +202,7 @@ export class BlockEditorComponent implements OnInit {
         this.updateAllConfigurationObject()
     }
     addNewCard(id: number, name: string, value: any){
-        let card = new ICardEditor();
+        let card = new BlockEditorCard();
         card.id = id
         card.name = name
         card.value = value

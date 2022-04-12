@@ -34,10 +34,10 @@ export class UDCService{
             return await this.getCollections()
         }
     }
-    async getItems(resourceName: string): Promise<any[]>{
+    async getItems(resourceName: string): Promise<any>{
         if(resourceName){
-            return await this.papiClient.userDefinedCollections.schemes.name(resourceName).get();
+            return await this.papiClient.userDefinedCollections.documents(resourceName).find();
         }
-        return [];
+        return {};
     }
 }

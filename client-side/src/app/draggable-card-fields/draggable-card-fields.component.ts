@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { ICardEditor } from './cards.model';
+import { BlockEditorCard, ICardEditor } from './cards.model';
 
 
 @Component({
@@ -14,7 +14,7 @@ export class DraggableCardFieldsComponent {
     showContentOfField = false;
     @Input() field: any
     @Input() items: any[]
-    @Input() card: ICardEditor
+    @Input() card: BlockEditorCard
     width: number
     itemsOptions: {key: string, value:string}[]
     @Output() removeClick: EventEmitter<any> = new EventEmitter();

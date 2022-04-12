@@ -4,7 +4,7 @@ import { UDCService } from '../services/udc-service';
 import { config } from '../addon.config';
 import { SelectOption } from '../../../../shared/entities'
 import { CdkDragDrop, CdkDragEnd, CdkDragStart, moveItemInArray} from '@angular/cdk/drag-drop';
-import { ICardEditor } from '../draggable-card-fields/cards.model';
+import { DataConfigurationCard } from '../draggable-card-fields/cards.model';
 
 @Component({
     selector: 'data-configuration-block-editor',
@@ -14,12 +14,13 @@ import { ICardEditor } from '../draggable-card-fields/cards.model';
 
 export class DataConfigurationBlockEditorComponent implements OnInit {
     @Input() hostObject: any;
-    currentResourceName: string
+    // currentResourceName: string
+    currentResource: any;
     resourcesNames: SelectOption[] = []
     resources: any[] = [];
     currentEditMode: string
     editModeOptions : SelectOption[] = []
-    cardsList : ICardEditor[] = []
+    cardsList : DataConfigurationCard[] = []
     currentResourceFields: string[] = ["CreationDateTime", "ModificationDateTime"];
 
     @Output() hostEvents: EventEmitter<any> = new EventEmitter<any>();
@@ -34,18 +35,46 @@ export class DataConfigurationBlockEditorComponent implements OnInit {
         this.initResources()
         .then(() =>{
             this.initCurrentResourceFields()
+            this.initCardsList()
+            debugger
         })
     
     }
-    async initCurrentResourceFields(){
-        this.currentResourceFields = [... await this.getFieldsFromResource(), ...this.currentResourceFields];
+    initCardsList(){
+        if(this.cardsList.length > 0){
+            return;
+        }
+        this.generateCardsListFromFields()
     }
-    async getFieldsFromResource(): Promise<string[]>{
-        const fields = await this.udcService.getItems(this.currentResourceName)
-        return fields.map(field => field.Name);
+    generateCardsListFromFields(){
+        const fields = this.getResourceFields(this.currentResource);
+        let counter = 0;
+        this.currentResourceFields.map(field => {
+            this.addNewCard(counter,field,false,false)
+            counter++;
+        })
+
+    }
+    addNewCard(id: number, key: string, readOnly: boolean, mandatory: boolean){
+        const newCard = new DataConfigurationCard()
+        newCard.id = id
+        newCard.key = key
+        newCard.label = key
+        newCard.readOnly = readOnly
+        newCard.mandatory = mandatory
+        this.cardsList.push(newCard)
+    }
+    async initCurrentResourceFields(){
+        this.currentResourceFields = [...this.getResourceFields(this.currentResource), ...this.currentResourceFields];
+    }
+    getResourceFields(resource: any){
+        if(resource){
+            return Object.keys(resource.Fields);
+        }
+        return [];
     }
     loadVariablesFromHostObject(){
-        this.currentResourceName = this.hostObject?.resorceName;
+        this.currentResource = this.hostObject?.currentResource;
         this.resourcesNames = this.hostObject.resorceNames || [];
         this.currentEditMode = this.hostObject.currentEditMode || this.editModeOptions[0].key;
     }
@@ -54,12 +83,12 @@ export class DataConfigurationBlockEditorComponent implements OnInit {
         this.resources = resources;
         this.resourcesNames = resources.map(resource => {
             return {'key': resource.Name, 'value': resource.Name}})
-        if(this.resourcesNames.length > 0 && !this.currentResourceName){
-            this.currentResourceName = this.resourcesNames[0].value
+        if(this.resources.length > 0 && !this.currentResource){
+            this.currentResource = this.resources[0]
         }
     }
     onResourceChanged($event){
-        this.currentResourceName = $event
+        this.currentResource = this.resources.find((resource) => resource.Name == $event)
     }
     onEditModeChanged($event){
         this.currentEditMode = $event
