@@ -47,13 +47,9 @@ export class DataConfigurationBlockEditorComponent implements OnInit {
         this.generateCardsListFromFields()
     }
     generateCardsListFromFields(){
-        const fields = this.getResourceFields(this.currentResource);
-        let counter = 0;
-        this.currentResourceFields.map(field => {
-            this.addNewCard(counter,field,false,false)
-            counter++;
+        this.currentResourceFields.map((field, index) => {
+            this.addNewCard(index,field,false,false)
         })
-
     }
     addNewCard(id: number, key: string, readOnly: boolean, mandatory: boolean, showContent: boolean = false){
         const newCard = new DataConfigurationCard()
@@ -80,9 +76,8 @@ export class DataConfigurationBlockEditorComponent implements OnInit {
         this.cardsList = this.hostObject?.configuration?.cardsList || []
     }
     async initResources(){
-        const resources = await this.udcService.getCollections()
-        this.resources = resources;
-        this.resourcesNames = resources.map(resource => {
+        this.resources= await this.udcService.getCollections()
+        this.resourcesNames = this.resources.map(resource => {
             return {'key': resource.Name, 'value': resource.Name}})
         if(this.resources.length > 0 && !this.currentResource){
             this.currentResource = this.resources[0]
