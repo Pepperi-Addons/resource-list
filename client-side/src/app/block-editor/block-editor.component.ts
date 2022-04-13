@@ -25,7 +25,7 @@ export class BlockEditorComponent implements OnInit {
     @Input() hostObject: any;
     @Output() hostEvents: EventEmitter<any> = new EventEmitter<any>();
     typeMap: TypeMap 
-    public cardsList: BlockEditorCard[] = []
+    cardsList: BlockEditorCard[]
     constructor(private translate: TranslateService,
                 private udcService: UDCService,
                 private cardsService: CardsService
@@ -94,7 +94,7 @@ export class BlockEditorComponent implements OnInit {
         this.cardsList = this.hostObject?.configuration?.cardsList
     }
     initCardsList(){
-        if(this.cardsList && this.cardsList.length == 0){
+        if(!this.cardsList){
             this.generateCardsListFromFields()
         }
         else{
@@ -121,7 +121,6 @@ export class BlockEditorComponent implements OnInit {
         this.updateAllConfigurationObject()
     }
     async onResourceChanged($event){
-        debugger
         this.restoreData()
         this.resource = this.resources?.find((resource) => resource.Name == $event)
         await this.initCurrentResource()
@@ -129,7 +128,7 @@ export class BlockEditorComponent implements OnInit {
         this.updateAllConfigurationObject()  
     }
     restoreData(){
-        this.cardsList = []
+        this.cardsList = undefined
         this.resource = undefined
         this.allowExport = false;
         this.allowImport = false
