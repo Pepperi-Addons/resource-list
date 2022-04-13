@@ -14,7 +14,7 @@
     <div class="editorCont" *ngIf = "card.showContent">
         <pep-select 
             [value]="card.key"
-            label="select a field"
+            label="Key"
             type="select"
             [mandatory]="false"
             [disabled]="false"
@@ -26,7 +26,7 @@
         ></pep-select>
         <pep-textbox
             [value]="card.label"
-            label="label"
+            label="Label"
             type="text"
             [mandatory]="false"
             [disabled]="false"
@@ -41,7 +41,7 @@
         ></pep-textbox>
         <pep-checkbox
             [value]="card.readOnly"
-            label="read only"
+            label="Read only"
             type="checkbox"
             [mandatory]="false"
             [disabled]="false"
@@ -53,7 +53,7 @@
         ></pep-checkbox>
         <pep-checkbox
             [value]="card.mandatory"
-            label="mandatory"
+            label="Mandatory"
             type="checkbox"
             [mandatory]="false"
             [disabled]="false"

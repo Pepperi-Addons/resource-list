@@ -20,6 +20,7 @@ export class DataConfigurationDraggableFieldsComponent {
     @Output() removeClick: EventEmitter<any> = new EventEmitter();
     @Output() fieldSelected: EventEmitter<any> = new EventEmitter()
     @Output() insertWidth: EventEmitter<any> = new EventEmitter();
+    @Output() saveCardsList: EventEmitter<void> = new EventEmitter();
     
     constructor(private translate: TranslateService) {
     }
@@ -35,22 +36,25 @@ export class DataConfigurationDraggableFieldsComponent {
     }
     onRemoveClick(): void {
       this.removeClick.emit({id: this.card.id})
-      this.field = undefined
     }
     onEditClick(): void{
         this.card.showContent = !this.card.showContent
     }
     onSelectKey($event):void{
       this.card.key = $event
+      this.saveCardsList.emit()
     }
     onLabelChange($event){
       this.card.label = $event
+      this.saveCardsList.emit()
     }
     onReadOnlyChange($event){
       this.card.readOnly = $event
+      this.saveCardsList.emit()
     }
     onMandatoryChange($event){
       this.card.mandatory = $event
+      this.saveCardsList.emit()
     }
     
     

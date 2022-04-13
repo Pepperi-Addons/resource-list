@@ -76,9 +76,9 @@ export class DataConfigurationBlockEditorComponent implements OnInit {
         return [];
     }
     loadVariablesFromHostObject(){
-        this.currentResource = this.hostObject?.currentResource;
-        this.resourcesNames = this.hostObject.resorceNames || [];
-        this.currentEditMode = this.hostObject.currentEditMode || this.editModeOptions[0].key;
+        this.currentResource = this.hostObject?.configuration?.currentResource;
+        this.currentEditMode = this.hostObject?.configuration?.currentEditMode || this.editModeOptions[0].key;
+        this.cardsList = this.hostObject?.configuration?.cardsList || []
     }
     async initResources(){
         const resources = await this.udcService.getCollections()
@@ -90,32 +90,58 @@ export class DataConfigurationBlockEditorComponent implements OnInit {
         }
     }
     onResourceChanged($event){
+        this.restoreData()
+        debugger
         this.currentResource = this.resources.find((resource) => resource.Name == $event)
+        this.initCurrentResourceFields()
+        this.initCardsList()
+        this.updateAllConfigurationObject()
     }
     onEditModeChanged($event){
         this.currentEditMode = $event
+        this.updateAllConfigurationObject()
     }
     drop(event: CdkDragDrop<string[]>){
         debugger
         if (event.previousContainer === event.container) {
             moveItemInArray(this.cardsList, event.previousIndex, event.currentIndex);
-            debugger
            }
-        // this.updateAllConfigurationObject() 
+        this.updateAllConfigurationObject() 
     }
     addNewCardClick(){
         const key = this.currentResourceFields.length > 0? this.currentResourceFields[0] : undefined
         this.addNewCard(this.cardsList.length,key, false,false, true);
+        this.updateAllConfigurationObject()
     }
     onCardRemoveClick($event){
         this.cardsList = this.cardsList.filter((card) => card.id != $event.id)
+        this.updateAllConfigurationObject()
     }
     onDragStart(event: CdkDragStart) {
-        debugger
         this.cardsService.changeCursorOnDragStart();
     }
     onDragEnd(event: CdkDragEnd) {
         this.cardsService.changeCursorOnDragEnd();
+    }
+    updateAllConfigurationObject(){
+        this.hostEvents.emit({
+            action: 'set-configuration',
+            configuration: {
+                currentResource: this.currentResource,
+                currentEditMode: this.currentEditMode,
+                cardsList: this.cardsList
+            }
+        })
+    }
+    restoreData(){
+        this.cardsList = []
+        this.currentResource = undefined
+        this.currentEditMode = undefined;
+        this.currentResourceFields =["CreationDateTime", "ModificationDateTime"];
+        this.updateAllConfigurationObject()
+    }
+    onSaveCardsList(){
+        this.updateAllConfigurationObject()
     }
 
 }
