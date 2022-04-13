@@ -82,7 +82,7 @@ export class BlockEditorComponent implements OnInit {
     }
     async initResources(){
         this.udcService.pluginUUID = config.AddonUUID
-       this.resources = await this.udcService.getCollections()
+        this.resources = await this.udcService.getCollections()
         this.resourcesNames = this.resources.map(resource => {
             return {'key': resource.Name, 'value': resource.Name}})
     }
@@ -121,6 +121,7 @@ export class BlockEditorComponent implements OnInit {
         this.updateAllConfigurationObject()
     }
     async onResourceChanged($event){
+        debugger
         this.restoreData()
         this.resource = this.resources?.find((resource) => resource.Name == $event)
         await this.initCurrentResource()
@@ -133,6 +134,7 @@ export class BlockEditorComponent implements OnInit {
         this.allowExport = false;
         this.allowImport = false
         this.title = ""
+        this.resourceFieldsMap = {}
         this.updateAllConfigurationObject()
     }
     updateAllConfigurationObject(){
