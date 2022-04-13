@@ -16,6 +16,7 @@ import { PepImageModule } from '@pepperi-addons/ngx-lib/image';
 import { PepSelectModule } from '@pepperi-addons/ngx-lib/select';
 import { PepTextareaModule } from '@pepperi-addons/ngx-lib/textarea';
 import { DataConfigurationDraggableFieldsComponent } from './data-configuration-draggable-fields.component'
+import { config } from '../addon.config';
 
 @NgModule({
     declarations: [DataConfigurationDraggableFieldsComponent],
@@ -37,9 +38,9 @@ import { DataConfigurationDraggableFieldsComponent } from './data-configuration-
         TranslateModule.forChild({
             loader: {
                 provide: TranslateLoader,
-                useFactory: (http: HttpClient, fileService: PepFileService, addonService: PepAddonService) => 
-                    PepAddonService.createDefaultMultiTranslateLoader(http, fileService, addonService),
-                deps: [HttpClient, PepFileService, PepAddonService],
+                useFactory: (addonService: PepAddonService) => 
+                    PepAddonService.createMultiTranslateLoader(addonService, ['ngx-lib', 'ngx-composite-lib'], config.AddonUUID),
+                deps: [PepAddonService]
             }, isolate: false
         }),
     ],
