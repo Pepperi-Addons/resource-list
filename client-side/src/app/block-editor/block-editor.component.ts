@@ -21,14 +21,11 @@ export class BlockEditorComponent implements OnInit {
     resourceFieldsMap: HashMap<any> = {}
     allowExport: boolean = false;
     allowImport: boolean = false;
+    resourceFieldsKeys: string[] = []
     @Input() hostObject: any;
     @Output() hostEvents: EventEmitter<any> = new EventEmitter<any>();
     typeMap: TypeMap 
-    private _configuration: IContent;
     public cardsList: BlockEditorCard[] = []
-    get configuration(): IContent {
-        return this._configuration;
-    }
     constructor(private translate: TranslateService,
                 private udcService: UDCService,
                 private cardsService: CardsService
@@ -49,6 +46,7 @@ export class BlockEditorComponent implements OnInit {
             this.resource = this.resources?.length > 0? this.resources[0] : undefined
             this.updateAllConfigurationObject()
         }
+        
         this.genereateMapFromResourceFields()
     }
     addToResourceFieldsMap(fieldID: string, type: DataViewFieldType, title: string, mandatory: boolean){
@@ -58,18 +56,18 @@ export class BlockEditorComponent implements OnInit {
         this.addToResourceFieldsMap('CreationDateTime', 'DateAndTime', 'CreationDateTime', false)
         this.addToResourceFieldsMap('ModificationDateTime', 'DateAndTime', 'ModificationDateTime', false)
         for(let fieldKey of Object.keys(this.resource.Fields)){
-            const title = fieldKey
             const mandatory = this.resource.Fields[fieldKey]?.Mandatory
             const optionalValues = this.resource.Fields[fieldKey]?.OptionalValues
             const type = this.typeMap.get(this.resource.Fields[fieldKey]?.Type, optionalValues)
             this.addToResourceFieldsMap(fieldKey, type, fieldKey, mandatory)
         }
+        this.resourceFieldsKeys = Object.keys(this.resourceFieldsMap)
     }
     validateCardsListCompatibleToFieldsAndUpdate(){
         if(!this.cardsList){
             return
         }
-        const fieldsKeysSet: Set<string> = new Set(this.getResourceFieldsKeys())
+        const fieldsKeysSet: Set<string> = new Set(this.resourceFieldsKeys)
         const cardsToDelete = this.getCardsToDelete(fieldsKeysSet)
         this.deleteCards(cardsToDelete)
         this.updateAllConfigurationObject()
@@ -106,7 +104,7 @@ export class BlockEditorComponent implements OnInit {
     }
     generateCardsListFromFields(){
         this.cardsList = []
-       this.getResourceFieldsKeys().map(resourceFieldKey => {
+       this.resourceFieldsKeys.map(resourceFieldKey => {
             this.addNewCard(resourceFieldKey, this.resourceFieldsMap[resourceFieldKey])
         })
     }
@@ -167,21 +165,22 @@ export class BlockEditorComponent implements OnInit {
         this.updateAllConfigurationObject()
     }
     addNewCardClick(){
-        const resourceFieldsKeys = this.getResourceFieldsKeys()
-        const name = resourceFieldsKeys.length > 0 ? resourceFieldsKeys[0] : undefined
+        debugger
+        const name = this.resourceFieldsKeys.length > 0 ? this.resourceFieldsKeys[0] : undefined
         const value = name? this.resourceFieldsMap[name]: undefined
-        this.addNewCard(name, value)
+        this.addNewCard(name, value, true)
         this.updateAllConfigurationObject()
     }
     getResourceFieldsKeys(): string[]{
         return this.resourceFieldsMap ? Object.keys(this.resourceFieldsMap) : [];
         
     }
-    addNewCard( name: string, value: any){
+    addNewCard(name: string, value: any, showContent = false){
         let card = new BlockEditorCard();
         card.id = this.cardsList.length
         card.name = name
         card.value = value
+        card.showContent = showContent
         card.width = 0 
         this.cardsList.push(card);
         return card

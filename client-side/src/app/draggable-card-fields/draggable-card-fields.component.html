@@ -8,10 +8,10 @@
     </div>
     <div class="actions" >
         <pep-button classNames="caution" sizeType="xs" iconName="system_bin" (buttonClick)="onRemoveClick();"></pep-button>
-        <pep-button *ngIf="!showContentOfField" sizeType="xs" iconName="arrow_down" (buttonClick)="onEditClick();"></pep-button>
-        <pep-button *ngIf="showContentOfField" sizeType="xs" iconName="arrow_up" (buttonClick)="onEditClick();"></pep-button>
+        <pep-button *ngIf="!card.showContent" sizeType="xs" iconName="arrow_down" (buttonClick)="onEditClick();"></pep-button>
+        <pep-button *ngIf="card.showContent" sizeType="xs" iconName="arrow_up" (buttonClick)="onEditClick();"></pep-button>
     </div>
-    <div class="editorCont" *ngIf = "showContentOfField">
+    <div class="editorCont" *ngIf = "card.showContent">
         <pep-select 
             [value]="field"
             label="select a field"

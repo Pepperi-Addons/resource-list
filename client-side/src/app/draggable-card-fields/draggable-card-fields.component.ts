@@ -11,7 +11,6 @@ import { BlockEditorCard, ICardEditor } from './cards.model';
 
 export class DraggableCardFieldsComponent {
     public title: string;
-    showContentOfField = false;
     @Input() field: any
     @Input() items: any[]
     @Input() card: BlockEditorCard
@@ -42,7 +41,7 @@ export class DraggableCardFieldsComponent {
     this.field = undefined
     }
     onEditClick() {
-        this.showContentOfField = !this.showContentOfField
+        this.card.showContent = !this.card.showContent
     }
     onWidthChange($event){
         const width = Number($event)

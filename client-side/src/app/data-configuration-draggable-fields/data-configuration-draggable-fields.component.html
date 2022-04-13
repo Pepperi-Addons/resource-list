@@ -4,15 +4,64 @@
     </div>
     <div *ngIf="title !== ''" class="title-container">
         <span class="body-sm ellipsis">&nbsp;</span>
-        <span class="body-sm color-link bold ellipsis" title="">{{field}}</span>
+        <span class="body-sm color-link bold ellipsis" title="">{{card?.label}}</span>
     </div>
     <div class="actions" >
         <pep-button classNames="caution" sizeType="xs" iconName="system_bin" (buttonClick)="onRemoveClick();"></pep-button>
-        <pep-button *ngIf="!showContentOfField" sizeType="xs" iconName="arrow_down" (buttonClick)="onEditClick();"></pep-button>
-        <pep-button *ngIf="showContentOfField" sizeType="xs" iconName="arrow_up" (buttonClick)="onEditClick();"></pep-button>
+        <pep-button *ngIf="!card.showContent" sizeType="xs" iconName="arrow_down" (buttonClick)="onEditClick();"></pep-button>
+        <pep-button *ngIf="card.showContent" sizeType="xs" iconName="arrow_up" (buttonClick)="onEditClick();"></pep-button>
     </div>
-    <div class="editorCont" *ngIf = "showContentOfField">
-        <!--here will be the fields-->
-        <!--Key(DropDown), Label(Text), Readonly(checkbox), Mandatory(checkbox), DefaultValue(?)-->
+    <div class="editorCont" *ngIf = "card.showContent">
+        <pep-select 
+            [value]="card.key"
+            label="select a field"
+            type="select"
+            [mandatory]="false"
+            [disabled]="false"
+            xAlignment="left"
+            [options]="keyOptions"
+            [showTitle]="true"
+            (valueChange)="onSelectKey($event)"
+            [emptyOption]="false"
+        ></pep-select>
+        <pep-textbox
+            [value]="card.label"
+            label="label"
+            type="text"
+            [mandatory]="false"
+            [disabled]="false"
+            maxFieldCharacters="undefined"
+            textColor=""
+            xAlignment="left"
+            [showTitle]="true"
+            [renderTitle]="true"
+            [renderError]="true"
+            [renderSymbol]="true"
+            (valueChange)="onLabelChange($event)"
+        ></pep-textbox>
+        <pep-checkbox
+            [value]="card.readOnly"
+            label="read only"
+            type="checkbox"
+            [mandatory]="false"
+            [disabled]="false"
+            xAlignment="left"
+            [showTitle]="true"
+            [renderTitle]="true"
+            [visible]="true"
+            (valueChange)="onReadOnlyChange($event)"
+        ></pep-checkbox>
+        <pep-checkbox
+            [value]="card.mandatory"
+            label="mandatory"
+            type="checkbox"
+            [mandatory]="false"
+            [disabled]="false"
+            xAlignment="left"
+            [showTitle]="true"
+            [renderTitle]="true"
+            [visible]="true"
+            (valueChange)="onMandatoryChange($event)"
+        ></pep-checkbox>
     </div>
 </div>

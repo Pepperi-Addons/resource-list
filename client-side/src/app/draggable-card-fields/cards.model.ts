@@ -46,6 +46,7 @@ export class ICardEditor {
     id: number;
     name: string;
     value: any
+    showContent: boolean
 }
 export class BlockEditorCard extends ICardEditor{
     width: number;
@@ -55,4 +56,5 @@ export class DataConfigurationCard extends ICardEditor{
     label: string
     readOnly: boolean
     mandatory: boolean  
+
 }
