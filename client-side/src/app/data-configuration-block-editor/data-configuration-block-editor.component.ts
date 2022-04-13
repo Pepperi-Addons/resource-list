@@ -37,7 +37,6 @@ export class DataConfigurationBlockEditorComponent implements OnInit {
         .then(() =>{
             this.initCurrentResourceFields()
             this.initCardsList()
-            debugger
         })
     
     }
@@ -91,7 +90,6 @@ export class DataConfigurationBlockEditorComponent implements OnInit {
     }
     onResourceChanged($event){
         this.restoreData()
-        debugger
         this.currentResource = this.resources.find((resource) => resource.Name == $event)
         this.initCurrentResourceFields()
         this.initCardsList()
@@ -102,7 +100,6 @@ export class DataConfigurationBlockEditorComponent implements OnInit {
         this.updateAllConfigurationObject()
     }
     drop(event: CdkDragDrop<string[]>){
-        debugger
         if (event.previousContainer === event.container) {
             moveItemInArray(this.cardsList, event.previousIndex, event.currentIndex);
            }

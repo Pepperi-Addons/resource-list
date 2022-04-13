@@ -165,7 +165,6 @@ export class BlockEditorComponent implements OnInit {
         this.updateAllConfigurationObject()
     }
     addNewCardClick(){
-        debugger
         const name = this.resourceFieldsKeys.length > 0 ? this.resourceFieldsKeys[0] : undefined
         const value = name? this.resourceFieldsMap[name]: undefined
         this.addNewCard(name, value, true)
