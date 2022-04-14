@@ -32,7 +32,6 @@ export class DataConfigurationDraggableFieldsComponent {
       if(this.resourceFields && this.resourceFields.length > 0){
         this.keyOptions = this.resourceFields.map((field) => {return {key: field, value: field}})
       }
-
     }
     onRemoveClick(): void {
       this.removeClick.emit({id: this.card.id})
@@ -57,6 +56,4 @@ export class DataConfigurationDraggableFieldsComponent {
       this.card.mandatory = $event
       this.saveCardsList.emit()
     }
-    
-    
 }
