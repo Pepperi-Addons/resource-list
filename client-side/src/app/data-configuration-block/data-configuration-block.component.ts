@@ -1,5 +1,8 @@
 import { TranslateService } from '@ngx-translate/core';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Inject, Input, OnInit, Output } from '@angular/core';
+import { DataSource } from '../data-source/data-source';
+import { PepMenuItem } from '@pepperi-addons/ngx-lib/menu';
+import { AddonData } from '@pepperi-addons/papi-sdk';
 
 @Component({
     selector: 'data-configuration-block',
@@ -8,6 +11,11 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 })
 export class DataConfigurationBlockComponent implements OnInit {
     @Input() hostObject: any;
+    datasource: DataSource;
+    menuItems: PepMenuItem[] = [];
+    item: AddonData = {};
+    dataView: any
+    //needs cardslist, fields from editor
 
     @Output() hostEvents: EventEmitter<any> = new EventEmitter<any>();
 
@@ -18,5 +26,8 @@ export class DataConfigurationBlockComponent implements OnInit {
     }
 
     ngOnChanges(e: any): void {
+    }
+    onValueChanged($event){
+
     }
 }

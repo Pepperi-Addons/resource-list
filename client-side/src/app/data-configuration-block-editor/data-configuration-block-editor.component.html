@@ -29,6 +29,7 @@
                 [showActions] = "true" [isDraggable] = "true"
                 (editClick)='onCardEditClick($event);'
                 (removeClick)='onCardRemoveClick($event);'
+                (saveCardsList) = 'onSaveCardsList()'
                 (fieldSelected) = 'onSelectField($event)'
                 [configuration]="configuration"
                 [card] = "card"
