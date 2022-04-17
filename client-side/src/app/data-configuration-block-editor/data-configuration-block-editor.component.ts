@@ -6,6 +6,7 @@ import { SelectOption } from '../../../../shared/entities'
 import { CdkDragDrop, CdkDragEnd, CdkDragStart, moveItemInArray} from '@angular/cdk/drag-drop';
 import { DataConfigurationCard } from '../draggable-card-fields/cards.model';
 import { CardsService } from '../draggable-card-fields/cards.service';
+import { TypeMap } from '../type-map';
 
 @Component({
     selector: 'data-configuration-block-editor',
@@ -15,11 +16,11 @@ import { CardsService } from '../draggable-card-fields/cards.service';
 
 export class DataConfigurationBlockEditorComponent implements OnInit {
     @Input() hostObject: any;
-    // currentResourceName: string
     currentResource: any;
     resourcesNames: SelectOption[] = []
     resources: any[] = [];
     currentEditMode: string
+    typeMap: TypeMap
     editModeOptions : SelectOption[] = []
     cardsList : DataConfigurationCard[] = []
     currentResourceFields: string[] = ["CreationDateTime", "ModificationDateTime"];
@@ -28,6 +29,8 @@ export class DataConfigurationBlockEditorComponent implements OnInit {
 
     constructor(private translate: TranslateService, private udcService: UDCService, private cardsService: CardsService){
         this.udcService.pluginUUID = config.AddonUUID
+        this.typeMap = new TypeMap()
+        this.typeMap.init()
     }
 
     ngOnInit(): void {
@@ -56,13 +59,14 @@ export class DataConfigurationBlockEditorComponent implements OnInit {
         newCard.id = id
         newCard.key = key
         newCard.label = key
+        newCard.type = key == 'CreationDateTime' || key == 'ModificationDateTime' ? 'DateAndTime' :this.typeMap.get(this.currentResource.Fields[key].Type, this.currentResource.Fields[key].OptionalValues) 
         newCard.readOnly = readOnly
         newCard.mandatory = mandatory
         newCard.showContent = showContent
         this.cardsList.push(newCard)
     }
     async initCurrentResourceFields(){
-        this.currentResourceFields = [...this.currentResourceFields, ...this.getResourceFields(this.currentResource),];
+        this.currentResourceFields = [...this.currentResourceFields, ...this.getResourceFields(this.currentResource)];
     }
     getResourceFields(resource: any){
         if(resource){
