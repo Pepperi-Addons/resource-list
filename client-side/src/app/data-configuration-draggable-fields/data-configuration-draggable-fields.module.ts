@@ -5,7 +5,7 @@ import { PepButtonModule } from '@pepperi-addons/ngx-lib/button';
 import { PepMenuModule } from '@pepperi-addons/ngx-lib/menu';
 import { PepCheckboxModule } from '@pepperi-addons/ngx-lib/checkbox';
 import { PepTextboxModule } from '@pepperi-addons/ngx-lib/textbox';
-import { TranslateModule, TranslateLoader} from '@ngx-translate/core';
+import { TranslateModule, TranslateLoader, TranslateService} from '@ngx-translate/core';
 import { HttpClient } from '@angular/common/http';
 import { PepSliderModule} from '@pepperi-addons/ngx-lib/slider';
 import { PepFileService, PepAddonService, PepNgxLibModule } from '@pepperi-addons/ngx-lib';
@@ -46,4 +46,11 @@ import { config } from '../addon.config';
     ],
     exports: [DataConfigurationDraggableFieldsComponent]
 })
-export class DataConfigurationDraggableFieldsModule { }
+export class DataConfigurationDraggableFieldsModule {
+    constructor(
+        translate: TranslateService,
+        private pepAddonService: PepAddonService
+    ) {
+        this.pepAddonService.setDefaultTranslateLang(translate);
+    }
+ }

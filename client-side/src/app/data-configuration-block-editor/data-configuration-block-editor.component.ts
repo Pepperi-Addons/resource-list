@@ -15,7 +15,6 @@ import { CardsService } from '../draggable-card-fields/cards.service';
 
 export class DataConfigurationBlockEditorComponent implements OnInit {
     @Input() hostObject: any;
-    // currentResourceName: string
     currentResource: any;
     resourcesNames: SelectOption[] = []
     resources: any[] = [];
@@ -52,13 +51,14 @@ export class DataConfigurationBlockEditorComponent implements OnInit {
         })
     }
     addNewCard(id: number, key: string, readOnly: boolean, mandatory: boolean, showContent: boolean = false){
-        const newCard = new DataConfigurationCard()
-        newCard.id = id
-        newCard.key = key
-        newCard.label = key
-        newCard.readOnly = readOnly
-        newCard.mandatory = mandatory
-        newCard.showContent = showContent
+        const newCard: DataConfigurationCard = {
+            id : id,
+            key : key,
+            label : key,
+            readOnly : readOnly,
+            mandatory : mandatory,
+            showContent : showContent,
+        }
         this.cardsList.push(newCard)
     }
     async initCurrentResourceFields(){

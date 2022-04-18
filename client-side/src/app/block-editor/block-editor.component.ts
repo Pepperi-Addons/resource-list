@@ -176,12 +176,13 @@ export class BlockEditorComponent implements OnInit {
         
     }
     addNewCard(name: string, value: any, showContent = false){
-        let card = new BlockEditorCard();
-        card.id = this.cardsList.length
-        card.name = name
-        card.value = value
-        card.showContent = showContent
-        card.width = 0 
+        const card: BlockEditorCard = {
+            id : this.cardsList.length,
+            name : name,
+            value : value,
+            showContent : showContent,
+            width : 10
+        }
         this.cardsList.push(card);
         return card
     }
