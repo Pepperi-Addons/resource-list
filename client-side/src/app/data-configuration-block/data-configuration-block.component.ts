@@ -14,7 +14,7 @@ export class DataConfigurationBlockComponent implements OnInit {
     datasource: DataSource;
     menuItems: PepMenuItem[] = [];
     typeMap: any;
-    item: any = {'Title': "WORKS!!", 'Value': "value"};
+    item = {} //temporary
     fields: any[] = []
     dataView =  {
         Type: "Form",
