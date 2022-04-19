@@ -42,9 +42,19 @@ export class IContentEditor {
     roundCornersSize: PepSizeType = 'md';
 }
 
-export class ICardEditor {
+export interface ICardEditor {
     id: number;
+    showContent: boolean
+}
+export interface BlockEditorCard extends ICardEditor{
     name: string;
     value: any
-    width: number
+    width: number;
+}
+export interface DataConfigurationCard extends ICardEditor{
+    key:string
+    label: string
+    readOnly: boolean
+    mandatory: boolean  
+
 }

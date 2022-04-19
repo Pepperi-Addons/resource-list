@@ -1,0 +1,43 @@
+<mat-tab-group #tabgroutp class="editor-tabs">
+    <mat-tab label= "General">
+        <div>
+            <pep-select 
+                [value]="currentResource?.Name"
+                label="select a resource"
+                type="select"
+                mandatory = "true"
+                [options] = "resourcesNames"
+                (valueChange)="onResourceChanged($event)"
+                [emptyOption]="false"
+            ></pep-select>
+            <pep-select 
+                [value]="currentEditMode"
+                label="choose an edit mode"
+                type="select"
+                mandatory = "true"
+                [options] = "editModeOptions"
+                (valueChange)="onEditModeChanged($event)"
+                [emptyOption]="false"
+            ></pep-select>
+        </div>
+    </mat-tab>
+    <mat-tab cdkDropListGroup label="Content">
+        <h2><b>Fields</b></h2>
+        <div (cdkDropListDropped)="drop($event)"  cdkDropList> 
+            <data-configuration-draggable-fields  
+                *ngFor="let card of cardsList"
+                [showActions] = "true" [isDraggable] = "true"
+                (editClick)='onCardEditClick($event);'
+                (removeClick)='onCardRemoveClick($event);'
+                (fieldSelected) = 'onSelectField($event)'
+                [configuration]="configuration"
+                [card] = "card"
+                [resourceFields] = "currentResourceFields"
+                cdkDrag [cdkDragDisabled]="false"  style="cursor: grab;" (cdkDragStarted)="onDragStart($event)" (cdkDragEnded)="onDragEnd($event)">
+            </data-configuration-draggable-fields>
+        </div>
+
+        <pep-button class="add-content-button" value="Add" styleType="regular"  
+        (buttonClick)="addNewCardClick()"></pep-button>
+    </mat-tab>
+</mat-tab-group>

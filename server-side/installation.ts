@@ -13,9 +13,7 @@ import { Relation } from '@pepperi-addons/papi-sdk'
 import MyService from './my.service';
 
 export async function install(client: Client, request: Request): Promise<any> {
-    // For page block template uncomment this.
     await createPageBlockRelation(client);
-    // return res;
     return {success:true,resultObject:{}}
 }
 
@@ -24,6 +22,7 @@ export async function uninstall(client: Client, request: Request): Promise<any> 
 }
 
 export async function upgrade(client: Client, request: Request): Promise<any> {
+    createPageBlockRelation(client)
     return {success:true,resultObject:{}}
 }
 
@@ -31,16 +30,12 @@ export async function downgrade(client: Client, request: Request): Promise<any> 
     return {success:true,resultObject:{}}
 }
 
-
 async function createPageBlockRelation(client: Client): Promise<any> {
     try {
-        // TODO: change to block name (this is the unique relation name and the description that will be on the page builder editor in Blocks section).
-        const blockName = 'DataViewerBlock';
+        let blockName = 'DataViewerBlock';
+        let filename = 'data_viewer_block';
 
-        // TODO: Change to fileName that declared in webpack.config.js
-        const filename = 'data_viewer_block';
-
-        const pageComponentRelation: Relation = {
+        const dataViewerRelation: Relation = {
             RelationName: "PageBlock",
             Name: blockName,
             Description: `data viewer`,
@@ -53,10 +48,26 @@ async function createPageBlockRelation(client: Client): Promise<any> {
             EditorComponentName: `BlockEditorComponent`, // This is should be the block editor component name (from the client-side)
             EditorModuleName: `BlockEditorModule` // This is should be the block editor module name (from the client-side)
         };
-
         const service = new MyService(client);
-        const result = await service.upsertRelation(pageComponentRelation);
-        return { success:true, resultObject: result };
+        const dataViewerResult = await service.upsertRelation(dataViewerRelation);
+        
+        filename = 'data_configuration_block';
+        blockName = 'DataConfigurationBlock';
+        const dataConfigurationBlockRelation: Relation = {
+            RelationName: "PageBlock",
+            Name: blockName,
+            Description: `data configuration`,
+            Type: "NgComponent",
+            SubType: "NG11",
+            AddonUUID: client.AddonUUID,
+            AddonRelativeURL: filename,
+            ComponentName: `DataConfigurationBlockComponent`, // This is should be the block component name (from the client-side)
+            ModuleName: `DataConfigurationBlockModule`, // This is should be the block module name (from the client-side)
+            EditorComponentName: `DataConfigurationBlockEditorComponent`, // This is should be the block editor component name (from the client-side)
+            EditorModuleName: `DataConfigurationBlockEditorModule` // This is should be the block editor module name (from the client-side)
+        };
+        const dataConfigurationResult = await service.upsertRelation(dataConfigurationBlockRelation);
+        return { success:true, resultObject: {dataViewerResult, dataConfigurationResult}};
     } catch(err) {
         return { success: false, resultObject: err , errorMessage: `Error in upsert relation. error - ${err}`};
     }

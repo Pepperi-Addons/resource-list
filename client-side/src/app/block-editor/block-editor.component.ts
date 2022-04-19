@@ -1,36 +1,33 @@
 import { TranslateService } from '@ngx-translate/core';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { BlockEditorService } from './block-editor.service'
-import { CdkDragDrop, CdkDragEnd, CdkDragStart, moveItemInArray, transferArrayItem} from '@angular/cdk/drag-drop';
-import { ICardEditor, IContent } from '../draggable-card-fields/cards.model'
+import { UDCService } from '../services/udc-service'
+import { CdkDragDrop, CdkDragEnd, CdkDragStart, moveItemInArray} from '@angular/cdk/drag-drop';
+import { BlockEditorCard, IContent } from '../draggable-card-fields/cards.model'
 import { CardsService } from '../draggable-card-fields/cards.service'
 import { config } from '../addon.config'
 import { TypeMap, HashMap } from '../type-map'
+import { SelectOption } from '../../../../shared/entities';
 import { DataViewFieldType } from '@pepperi-addons/papi-sdk';
-
 @Component({
     selector: 'block-editor',
     templateUrl: './block-editor.component.html',
     styleUrls: ['./block-editor.component.scss']
 })
 export class BlockEditorComponent implements OnInit {
-    resourcesNames: {'key': string, 'value': string}[] = []
+    resourcesNames: SelectOption[] = []
     resources: any[] = []
     resource: any
     title: string
     resourceFieldsMap: HashMap<any> = {}
     allowExport: boolean = false;
     allowImport: boolean = false;
+    resourceFieldsKeys: string[] = []
     @Input() hostObject: any;
     @Output() hostEvents: EventEmitter<any> = new EventEmitter<any>();
     typeMap: TypeMap 
-    private _configuration: IContent;
-    public cardsList: ICardEditor[] = []
-    get configuration(): IContent {
-        return this._configuration;
-    }
+    cardsList: BlockEditorCard[]
     constructor(private translate: TranslateService,
-                private blockEditorService: BlockEditorService,
+                private udcService: UDCService,
                 private cardsService: CardsService
                ) {
     }
@@ -49,42 +46,43 @@ export class BlockEditorComponent implements OnInit {
             this.resource = this.resources?.length > 0? this.resources[0] : undefined
             this.updateAllConfigurationObject()
         }
+        
         this.genereateMapFromResourceFields()
     }
     addToResourceFieldsMap(fieldID: string, type: DataViewFieldType, title: string, mandatory: boolean){
         this.resourceFieldsMap[fieldID] = {'FieldID': fieldID, 'Type': type, 'Title': this.translate.instant(title), 'Mandatory': mandatory, 'ReadOnly': true}
     }
     genereateMapFromResourceFields(){
-        this.addToResourceFieldsMap('CreationDateTime', 'DateAndTime', 'CrationDateTime', false)
+        this.addToResourceFieldsMap('CreationDateTime', 'DateAndTime', 'CreationDateTime', false)
         this.addToResourceFieldsMap('ModificationDateTime', 'DateAndTime', 'ModificationDateTime', false)
         for(let fieldKey of Object.keys(this.resource.Fields)){
-            const title = fieldKey
             const mandatory = this.resource.Fields[fieldKey]?.Mandatory
             const optionalValues = this.resource.Fields[fieldKey]?.OptionalValues
             const type = this.typeMap.get(this.resource.Fields[fieldKey]?.Type, optionalValues)
             this.addToResourceFieldsMap(fieldKey, type, fieldKey, mandatory)
         }
+        this.resourceFieldsKeys = Object.keys(this.resourceFieldsMap)
     }
     validateCardsListCompatibleToFieldsAndUpdate(){
         if(!this.cardsList){
             return
         }
-        const fieldsKeysSet: Set<string> = new Set(this.getResourceFieldsKeys())
+        const fieldsKeysSet: Set<string> = new Set(this.resourceFieldsKeys)
         const cardsToDelete = this.getCardsToDelete(fieldsKeysSet)
         this.deleteCards(cardsToDelete)
         this.updateAllConfigurationObject()
     }
-    deleteCards(cradToDelete: ICardEditor[]){
+    deleteCards(cradToDelete: BlockEditorCard[]){
         cradToDelete.forEach((card) => {
             this.removeCard(card.id)
         })
     }
-    getCardsToDelete(set: Set<string>): ICardEditor[]{
+    getCardsToDelete(set: Set<string>): BlockEditorCard[]{
         return this.cardsList? [] : this.cardsList.filter((card) => !(set.has(card.name)))
     }
     async initResources(){
-        this.blockEditorService.pluginUUID = config.AddonUUID
-       this.resources = await this.blockEditorService.getCollections()
+        this.udcService.pluginUUID = config.AddonUUID
+        this.resources = await this.udcService.getCollections()
         this.resourcesNames = this.resources.map(resource => {
             return {'key': resource.Name, 'value': resource.Name}})
     }
@@ -96,7 +94,7 @@ export class BlockEditorComponent implements OnInit {
         this.cardsList = this.hostObject?.configuration?.cardsList
     }
     initCardsList(){
-        if(this.cardsList && this.cardsList.length == 0){
+        if(!this.cardsList){
             this.generateCardsListFromFields()
         }
         else{
@@ -106,7 +104,7 @@ export class BlockEditorComponent implements OnInit {
     }
     generateCardsListFromFields(){
         this.cardsList = []
-       this.getResourceFieldsKeys().map(resourceFieldKey => {
+       this.resourceFieldsKeys.map(resourceFieldKey => {
             this.addNewCard(resourceFieldKey, this.resourceFieldsMap[resourceFieldKey])
         })
     }
@@ -130,11 +128,12 @@ export class BlockEditorComponent implements OnInit {
         this.updateAllConfigurationObject()  
     }
     restoreData(){
-        this.cardsList = []
+        this.cardsList = undefined
         this.resource = undefined
         this.allowExport = false;
         this.allowImport = false
         this.title = ""
+        this.resourceFieldsMap = {}
         this.updateAllConfigurationObject()
     }
     updateAllConfigurationObject(){
@@ -167,22 +166,23 @@ export class BlockEditorComponent implements OnInit {
         this.updateAllConfigurationObject()
     }
     addNewCardClick(){
-        const resourceFieldsKeys = this.getResourceFieldsKeys()
-        const name = resourceFieldsKeys.length > 0 ? resourceFieldsKeys[0] : undefined
+        const name = this.resourceFieldsKeys.length > 0 ? this.resourceFieldsKeys[0] : undefined
         const value = name? this.resourceFieldsMap[name]: undefined
-        this.addNewCard(name, value)
+        this.addNewCard(name, value, true)
         this.updateAllConfigurationObject()
     }
     getResourceFieldsKeys(): string[]{
         return this.resourceFieldsMap ? Object.keys(this.resourceFieldsMap) : [];
         
     }
-    addNewCard( name: string, value: any){
-        let card = new ICardEditor();
-        card.id = this.cardsList.length
-        card.name = name
-        card.value = value
-        card.width = 0 
+    addNewCard(name: string, value: any, showContent = false){
+        const card: BlockEditorCard = {
+            id : this.cardsList.length,
+            name : name,
+            value : value,
+            showContent : showContent,
+            width : 10
+        }
         this.cardsList.push(card);
         return card
     }

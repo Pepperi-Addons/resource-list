@@ -4,7 +4,7 @@
     </div>
     <div *ngIf="title !== ''" class="title-container">
         <span class="body-sm ellipsis">&nbsp;</span>
-        <span class="body-sm color-link bold ellipsis" title="">{{field}}</span>
+        <span class="body-sm color-link bold ellipsis" title="">{{card?.label}}</span>
     </div>
     <div class="actions" >
         <pep-button classNames="caution" sizeType="xs" iconName="system_bin" (buttonClick)="onRemoveClick();"></pep-button>
@@ -13,32 +13,55 @@
     </div>
     <div class="editorCont" *ngIf = "card.showContent">
         <pep-select 
-            [value]="field"
-            label="select a field"
+            [value]="card.key"
+            label="Key"
             type="select"
             [mandatory]="false"
             [disabled]="false"
             xAlignment="left"
-            [options]="itemsOptions"
+            [options]="keyOptions"
             [showTitle]="true"
-            (valueChange)="onSelectField($event)"
+            (valueChange)="onSelectKey($event)"
+            [emptyOption]="false"
         ></pep-select>
-
         <pep-textbox
-            [value] = width
-            label="int"
-            type="int"
+            [value]="card.label"
+            label="Label"
+            type="text"
             [mandatory]="false"
             [disabled]="false"
+            maxFieldCharacters="undefined"
             textColor=""
             xAlignment="left"
             [showTitle]="true"
             [renderTitle]="true"
             [renderError]="true"
             [renderSymbol]="true"
-            minValue = "0"
-            maxValue = "100"
-            (valueChange)="onWidthChange($event)"
+            (valueChange)="onLabelChange($event)"
         ></pep-textbox>
+        <pep-checkbox
+            [value]="card.readOnly"
+            label="Read only"
+            type="checkbox"
+            [mandatory]="false"
+            [disabled]="false"
+            xAlignment="left"
+            [showTitle]="true"
+            [renderTitle]="true"
+            [visible]="true"
+            (valueChange)="onReadOnlyChange($event)"
+        ></pep-checkbox>
+        <pep-checkbox
+            [value]="card.mandatory"
+            label="Mandatory"
+            type="checkbox"
+            [mandatory]="false"
+            [disabled]="false"
+            xAlignment="left"
+            [showTitle]="true"
+            [renderTitle]="true"
+            [visible]="true"
+            (valueChange)="onMandatoryChange($event)"
+        ></pep-checkbox>
     </div>
 </div>

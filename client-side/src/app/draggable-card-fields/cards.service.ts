@@ -1,5 +1,4 @@
 import { Injectable } from "@angular/core";
-import { PepColorSettings } from "@pepperi-addons/ngx-composite-lib/color-settings";
 import { PepColorService } from "@pepperi-addons/ngx-lib";
 
 @Injectable({

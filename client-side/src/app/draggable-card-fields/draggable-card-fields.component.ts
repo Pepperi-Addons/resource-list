@@ -1,7 +1,6 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { Observable, Subscription } from 'rxjs';
-import { ICardEditor } from './cards.model';
+import { BlockEditorCard, ICardEditor } from './cards.model';
 
 
 @Component({
@@ -12,11 +11,9 @@ import { ICardEditor } from './cards.model';
 
 export class DraggableCardFieldsComponent {
     public title: string;
-    private eventsSubscription: Subscription;
-    showContentOfField = false;
     @Input() field: any
     @Input() items: any[]
-    @Input() card: ICardEditor
+    @Input() card: BlockEditorCard
     width: number
     itemsOptions: {key: string, value:string}[]
     @Output() removeClick: EventEmitter<any> = new EventEmitter();
@@ -44,7 +41,7 @@ export class DraggableCardFieldsComponent {
     this.field = undefined
     }
     onEditClick() {
-        this.showContentOfField = !this.showContentOfField
+        this.card.showContent = !this.card.showContent
     }
     onWidthChange($event){
         const width = Number($event)

@@ -15,10 +15,11 @@ import { PepGroupButtonsModule } from '@pepperi-addons/ngx-lib/group-buttons';
 import { PepImageModule } from '@pepperi-addons/ngx-lib/image';
 import { PepSelectModule } from '@pepperi-addons/ngx-lib/select';
 import { PepTextareaModule } from '@pepperi-addons/ngx-lib/textarea';
-import { DraggableCardFieldsComponent } from './draggable-card-fields.component'
+import { DataConfigurationDraggableFieldsComponent } from './data-configuration-draggable-fields.component'
+import { config } from '../addon.config';
 
 @NgModule({
-    declarations: [DraggableCardFieldsComponent],
+    declarations: [DataConfigurationDraggableFieldsComponent],
     imports: [
         CommonModule,
         DragDropModule,
@@ -37,19 +38,19 @@ import { DraggableCardFieldsComponent } from './draggable-card-fields.component'
         TranslateModule.forChild({
             loader: {
                 provide: TranslateLoader,
-                useFactory: (http: HttpClient, fileService: PepFileService, addonService: PepAddonService) => 
-                    PepAddonService.createDefaultMultiTranslateLoader(http, fileService, addonService),
-                deps: [HttpClient, PepFileService, PepAddonService],
+                useFactory: (addonService: PepAddonService) => 
+                    PepAddonService.createMultiTranslateLoader(addonService, ['ngx-lib', 'ngx-composite-lib'], config.AddonUUID),
+                deps: [PepAddonService]
             }, isolate: false
         }),
     ],
-    exports: [DraggableCardFieldsComponent]
+    exports: [DataConfigurationDraggableFieldsComponent]
 })
-export class DraggableCardFieldsModule { 
+export class DataConfigurationDraggableFieldsModule {
     constructor(
         translate: TranslateService,
         private pepAddonService: PepAddonService
     ) {
         this.pepAddonService.setDefaultTranslateLang(translate);
     }
-}
+ }

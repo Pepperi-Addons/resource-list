@@ -13,11 +13,12 @@ sharedMappings.register(
 
 // TODO: Change block_file_name to block name (lowercase and if it more then one word put '_' between them),
 // this name should be the same as AddonRelativeURL that declared on the relation object (search for runMigration function in installation.ts file).
-const filename = 'data_viewer_block'; // block_file_name
-
+// const filename = 'resource_list'; // block_file_name
+const dataViewerConfiguration = 'data_configuration_block'
+const dataViewer = 'data_viewer_block'
 module.exports = {
     output: {
-        uniqueName: `${filename}`,
+        uniqueName: `${dataViewer}`,
         publicPath: "auto"
     },
     optimization: {
@@ -29,10 +30,11 @@ module.exports = {
         ...sharedMappings.getAliases(),
         }
     },
+
     plugins: [
         new ModuleFederationPlugin({
-            name: `${filename}`,
-            filename: `${filename}.js`,
+            name: `${dataViewer}`,
+            filename: `${dataViewer}.js`,
             exposes: {
                 './BlockModule': './src/app/block/index.ts',
                 './BlockEditorModule': './src/app/block-editor/index.ts',
@@ -42,7 +44,23 @@ module.exports = {
                 "@angular/common": { eager: true, singleton: true, strictVersion: true, requiredVersion: 'auto' }, 
                 "@angular/common/http": { eager: true, singleton: true, strictVersion: true, requiredVersion: 'auto' }, 
                 "@angular/router": { eager: true, singleton: true, strictVersion: true, requiredVersion: 'auto' },
-                
+            
+                ...sharedMappings.getDescriptors()
+            })
+        }),
+        new ModuleFederationPlugin({
+            name: `${dataViewerConfiguration}`,
+            filename: `${dataViewerConfiguration}.js`,
+            exposes: {
+                './DataConfigurationBlockModule': './src/app/data-configuration-block/index.ts',
+                './DataConfigurationBlockEditorModule': './src/app/data-configuration-block-editor/index.ts',
+            },
+            shared: share({
+                "@angular/core": { eager: true, singleton: true, strictVersion: true, requiredVersion: 'auto' }, 
+                "@angular/common": { eager: true, singleton: true, strictVersion: true, requiredVersion: 'auto' }, 
+                "@angular/common/http": { eager: true, singleton: true, strictVersion: true, requiredVersion: 'auto' }, 
+                "@angular/router": { eager: true, singleton: true, strictVersion: true, requiredVersion: 'auto' },
+            
                 ...sharedMappings.getDescriptors()
             })
         }),
