@@ -4,8 +4,8 @@ import { AppComponent } from './app.component';
 import { BlockModule } from './block/block.module';
 import { BlockEditorModule } from './block-editor/block-editor.module';
 import { DraggableCardFieldsModule } from './draggable-card-fields/draggable-card-fields.module';
-import { DataConfigurationBlockModule } from './data-configuration-block/data-configuration-block.module';
-import { DataConfigurationBlockEditorModule } from './data-configuration-block-editor/data-configuration-block-editor.module';
+import { DataConfigurationBlockModule } from './data-configuration-block';
+import { DataConfigurationBlockEditorModule } from './data-configuration-block-editor';
 
 @NgModule({
     imports: [

@@ -25,8 +25,6 @@
     "files": [
         "src/main.ts",
         "src/polyfills.ts",
-        "src/app/data-configuration-block-editor/index.ts", //figure out why 
-        "src/app/data-configuration-block/index.ts",
     ],
     "include": [
         "src/**/*.d.ts"
