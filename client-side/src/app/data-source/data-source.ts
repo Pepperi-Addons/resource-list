@@ -5,6 +5,13 @@ import { IPepListSortingChangeEvent } from "@pepperi-addons/ngx-lib/list";
 
 export class DataSource implements IPepGenericListDataSource{
     items: any[] = []
+    inputs?: IPepGenericListTableInputs = 
+    {
+      pager:{
+      type: 'scroll'
+      },
+    }
+  selectionType: 'multi'
     constructor(private translate: TranslateService, items: any[], private fields: any[], private widthArray: GridDataViewColumn[] = []){
       this.items = items
     }
@@ -27,12 +34,12 @@ export class DataSource implements IPepGenericListDataSource{
             items: this.items
           }; 
     }
-    async inputs?(): Promise<IPepGenericListTableInputs> {
-        return {
-            pager: {
-                type: 'scroll'
-            },
-            selectionType: 'multi'
-        }
-      }
+    // async inputs?(): Promise<IPepGenericListTableInputs> {
+    //     return {
+    //         pager:{
+    //             type: 'scroll'
+    //         },
+    //         selectionType: 'multi'
+    //     }
+    //   }
 }
