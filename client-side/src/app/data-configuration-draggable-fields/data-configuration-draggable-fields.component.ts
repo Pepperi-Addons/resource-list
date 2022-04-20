@@ -38,22 +38,26 @@ export class DataConfigurationDraggableFieldsComponent {
     }
     onEditClick(): void{
       this.card.showContent = !this.card.showContent
-      this.saveCardsList.emit()
+      this.emitSaveEvent()
     }
     onSelectKey($event):void{
       this.card.key = $event
-      this.saveCardsList.emit()
+      this.emitSaveEvent()
     }
     onLabelChange($event){
       this.card.label = $event
-      this.saveCardsList.emit()
+      this.emitSaveEvent()
     }
     onReadOnlyChange($event){
       this.card.readOnly = $event
-      this.saveCardsList.emit()
+      this.emitSaveEvent()
     }
     onMandatoryChange($event){
       this.card.mandatory = $event
+      this.emitSaveEvent()
+    }
+
+    emitSaveEvent(){
       this.saveCardsList.emit()
     }
 }

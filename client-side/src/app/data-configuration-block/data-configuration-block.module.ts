@@ -21,7 +21,6 @@ export const routes: Routes = [
     imports: [
         CommonModule,
         PepNgxCompositeLibModule,
-        PepGenericFormModule,
         TranslateModule.forChild({
             loader: {
                 provide: TranslateLoader,
