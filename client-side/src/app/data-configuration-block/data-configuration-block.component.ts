@@ -35,9 +35,19 @@ export class DataConfigurationBlockComponent implements OnInit {
     }
     ngOnChanges(e: any): void {
       if(this.hostObject?.configuration?.cardsList){
-        this.fields = this.generateDataViewFormFields()
-        this.dataView.Fields = this.fields
+        this.rebuildDataview()
       }
+    }
+    rebuildDataview() : void{
+      this.dataView =  {
+        Type: "Form",
+        Fields: this.generateDataViewFormFields(),
+        Context: {
+          Name: "",
+          Profile: {},
+          ScreenSize: 'Tablet'
+        }
+      };
     }
     generateDataViewFormFields(): DataView[]{
       return this.fields = this.hostObject.configuration.cardsList.map(card => {
