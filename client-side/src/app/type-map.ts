@@ -15,9 +15,9 @@ export class TypeMap{
     }
     get(key:string, optionalValues = []): DataViewFieldType{
         if(key == 'Array'){
-            return optionalValues.length > 0? "MultiTickBox" : "TextArea"
+            return optionalValues?.length > 0? "MultiTickBox" : "TextArea"
         }
-        if(optionalValues.length > 0){
+        if(optionalValues?.length > 0){
             return "ComboBox"
         }
         const result = this.map[key]

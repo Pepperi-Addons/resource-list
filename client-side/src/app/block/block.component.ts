@@ -1,7 +1,7 @@
 import { TranslateService } from '@ngx-translate/core';
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { IPepGenericListDataSource, IPepGenericListInitData, IPepGenericListTableInputs, PepGenericListService } from '@pepperi-addons/ngx-composite-lib/generic-list';
-import { IPepListSortingChangeEvent } from '@pepperi-addons/ngx-lib/list';
+// import { IPepGenericListDataSource, IPepGenericListInitData, IPepGenericListTableInputs, PepGenericListService } from '@pepperi-addons/ngx-composite-lib/generic-list';
+// import { IPepListSortingChangeEvent } from '@pepperi-addons/ngx-lib/list';
 import { UDCService } from '../services/udc-service';
 import { PepMenuItem } from "@pepperi-addons/ngx-lib/menu";
 import { DIMXComponent } from '@pepperi-addons/ngx-composite-lib/dimx-export';
@@ -34,7 +34,7 @@ export class BlockComponent implements OnInit {
     @Output() hostEvents: EventEmitter<any> = new EventEmitter<any>();
 
     constructor(private translate: TranslateService,
-        private genericListService: PepGenericListService, private udcService: UDCService) {
+         private udcService: UDCService) {
           this.udcService.pluginUUID = config.AddonUUID
     }
     ngOnInit(): void {
@@ -47,7 +47,7 @@ export class BlockComponent implements OnInit {
     }
     loadGenericList(){
       if(this.widthArray.length > 0 && this.items){
-        this.datasource = new DataSource(this.translate, this.items, this.fields, this.widthArray)
+        this.datasource = new DataSource(this.items, this.fields, this.widthArray)
     }
     }
     init(){
@@ -70,7 +70,7 @@ export class BlockComponent implements OnInit {
         this.resourceName = this.hostObject?.configuration?.resourceName || this.resourceName
         this.udcService.getItems(this.resourceName).then(items => {
           this.items = items
-          this.datasource = new DataSource(this.translate, items, this.fields, this.widthArray)
+          this.datasource = new DataSource(items, this.fields, this.widthArray)
         })
       }
     }
@@ -88,31 +88,32 @@ export class BlockComponent implements OnInit {
       const returnVal = this.cardsList.map(card => card.value);
       return returnVal
     }
-    onMenuItemClick($event){  
+    onMenuItemClick($event){ 
       switch ($event.source.key){
         case 'Export':
-          this.dimx?.DIMXExportRun({
-            DIMXExportFormat: "csv",
-            DIMXExportIncludeDeleted: false,
-            DIMXExportFileName: this.resourceName,
-            DIMXExportFields: this.fields.map((field) => field.FieldID).join(),
-            DIMXExportDelimiter: ","
-          });
+          // this.dimx?.DIMXExportRun({
+          //   DIMXExportFormat: "csv",
+          //   DIMXExportIncludeDeleted: false,
+          //   DIMXExportFileName: this.resourceName,
+          //   DIMXExportFields: this.fields.map((field) => field.FieldID).join(),
+          //   DIMXExportDelimiter: ","
+          // });
           break;
         case 'Import':
-          this.dimx?.uploadFile({
-            OverwriteOBject: true,
-            Delimiter: ",",
-            OwnerID: UDCUUID
-          });
+          // this.dimx?.uploadFile({
+          //   OverwriteOBject: true,
+          //   Delimiter: ",",
+          //   OwnerID: UDCUUID
+          // });
           break;    
-      }
+      // }
     }
-    onDIMXProcessDone($event){
-        this.udcService.getItems(this.resourceName).then(items => {
-          this.datasource = new DataSource(this.translate, items, this.fields)
-        })
-    }
+    } 
+    // onDIMXProcessDone($event){
+    //     this.udcService.getItems(this.resourceName).then(items => {
+    //       this.datasource = new DataSource(this.translate, items, this.fields)
+    //     })
+    // }
     getMenuItems() {
       return[
           {

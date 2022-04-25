@@ -50,15 +50,7 @@ export class DataConfigurationBlockComponent implements OnInit {
       };
     }
     generateDataViewFormFields(): DataView[]{
-      return this.fields = this.hostObject.configuration.cardsList.map(card => {
-        return {
-          FieldID : card.key,
-          Type: card.type,
-          Title: card.label,
-          ReadOnly: card.readOnly,
-          Mandatory: card.mandatory,
-        }
-      })
+      return this.fields = this.hostObject.configuration.cardsList.map(card => card.value)
     }
     onValueChanged($event){
 

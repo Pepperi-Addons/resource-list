@@ -7,6 +7,7 @@ import { CdkDragDrop, CdkDragEnd, CdkDragStart, moveItemInArray} from '@angular/
 import { DataConfigurationCard } from '../draggable-card-fields/cards.model';
 import { CardsService } from '../draggable-card-fields/cards.service';
 import { TypeMap } from '../type-map';
+import { ResourceMap } from '../resource-map';
 
 @Component({
     selector: 'data-configuration-block-editor',
@@ -19,6 +20,7 @@ export class DataConfigurationBlockEditorComponent implements OnInit {
     currentResource: any;
     resourcesNames: SelectOption[] = []
     resources: any[] = [];
+    resourceMap: ResourceMap
     currentEditMode: string
     typeMap: TypeMap
     editModeOptions : SelectOption[] = []
@@ -31,6 +33,17 @@ export class DataConfigurationBlockEditorComponent implements OnInit {
         this.udcService.pluginUUID = config.AddonUUID
         this.typeMap = new TypeMap()
         this.typeMap.init()
+        this.resourceMap = new ResourceMap()
+    }
+
+    setResourceToPageParams(){
+        this.hostEvents.emit({
+            action: 'set-parameter',
+            key: 'resource_name',
+            value: this.currentResource.Name 
+        })
+    }
+    initPageParams(){
     }
 
     ngOnInit(): void {
@@ -38,10 +51,12 @@ export class DataConfigurationBlockEditorComponent implements OnInit {
         this.loadVariablesFromHostObject();
         this.initResources()
         .then(() =>{
+            debugger
+            this.resourceMap.initMapFromResource(this.currentResource, this.translate)
             this.initCurrentResourceFields()
             this.initCardsList()
+            this.updateAllConfigurationObject()
         })
-    
     }
     initCardsList(){
         if(this.cardsList.length > 0){
@@ -51,10 +66,11 @@ export class DataConfigurationBlockEditorComponent implements OnInit {
     }
     generateCardsListFromFields(){
         this.currentResourceFields.map((field, index) => {
-            this.addNewCard(index,field,false,false)
+            debugger
+            this.addNewCard(this.resourceMap.get(field), index,field,false,false)
         })
     }
-    addNewCard(id: number, key: string, readOnly: boolean, mandatory: boolean, showContent: boolean = false){
+    addNewCard(value, id: number, key: string, readOnly: boolean, mandatory: boolean, showContent: boolean = false){
         const newCard: DataConfigurationCard = {
             id : id,
             key : key,
@@ -62,11 +78,12 @@ export class DataConfigurationBlockEditorComponent implements OnInit {
             readOnly : readOnly,
             mandatory : mandatory,
             showContent : showContent,
+            value: value
         }
         this.cardsList.push(newCard)
     }
     async initCurrentResourceFields(){
-        this.currentResourceFields = [...this.currentResourceFields, ...this.getResourceFields(this.currentResource),];
+        this.currentResourceFields = [...this.currentResourceFields, ...this.getResourceFields(this.currentResource)];
     }
     getResourceFields(resource: any){
         if(resource){
@@ -90,6 +107,7 @@ export class DataConfigurationBlockEditorComponent implements OnInit {
     onResourceChanged($event){
         this.restoreData()
         this.currentResource = this.resources.find((resource) => resource.Name == $event)
+        this.resourceMap.initMapFromResource(this.currentResource, this.translate)
         this.initCurrentResourceFields()
         this.initCardsList()
         this.updateAllConfigurationObject()
@@ -106,7 +124,7 @@ export class DataConfigurationBlockEditorComponent implements OnInit {
     }
     addNewCardClick(){
         const key = this.currentResourceFields.length > 0? this.currentResourceFields[0] : undefined
-        this.addNewCard(this.cardsList.length,key, false,false, true);
+        this.addNewCard(this.resourceMap.get(key) ,this.cardsList.length,key, false,false, true);
         this.updateAllConfigurationObject()
     }
     onCardRemoveClick($event){
@@ -134,6 +152,7 @@ export class DataConfigurationBlockEditorComponent implements OnInit {
         this.currentResource = undefined
         this.currentEditMode = undefined;
         this.currentResourceFields =["CreationDateTime", "ModificationDateTime"];
+        this.resourceMap = new ResourceMap()
         this.updateAllConfigurationObject()
     }
     onSaveCardsList(){

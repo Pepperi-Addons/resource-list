@@ -12,7 +12,7 @@ export class DataSource implements IPepGenericListDataSource{
       },
     }
   selectionType: 'multi'
-    constructor(private translate: TranslateService, items: any[], private fields: any[], private widthArray: GridDataViewColumn[] = []){
+    constructor( items: any[], private fields: any[], private widthArray: GridDataViewColumn[] = []){
       this.items = items
     }
     async init(params: { searchString?: string; filter?: any; sorting?: IPepListSortingChangeEvent; fromIndex: number; toIndex: number; }): Promise<IPepGenericListInitData> {
@@ -24,6 +24,7 @@ export class DataSource implements IPepGenericListDataSource{
                 ScreenSize: 'Landscape'
               },
               Type: 'Grid',
+              
               Title: 'Block',
               Fields: this.fields,
               Columns: this.widthArray,
