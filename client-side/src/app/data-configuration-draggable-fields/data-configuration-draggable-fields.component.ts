@@ -42,6 +42,7 @@ export class DataConfigurationDraggableFieldsComponent {
     }
     onSelectKey($event):void{
       this.card.key = $event
+      this.card.label = $event
       this.emitSaveEvent()
     }
     onLabelChange($event){
@@ -54,6 +55,10 @@ export class DataConfigurationDraggableFieldsComponent {
     }
     onMandatoryChange($event){
       this.card.mandatory = $event
+      this.emitSaveEvent()
+    }
+    onDefaultValueChange($event){
+      this.card.defaultValue = $event
       this.emitSaveEvent()
     }
 

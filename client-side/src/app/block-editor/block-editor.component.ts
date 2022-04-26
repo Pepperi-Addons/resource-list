@@ -5,9 +5,9 @@ import { CdkDragDrop, CdkDragEnd, CdkDragStart, moveItemInArray} from '@angular/
 import { BlockEditorCard, IContent } from '../draggable-card-fields/cards.model'
 import { CardsService } from '../draggable-card-fields/cards.service'
 import { config } from '../addon.config'
-import { TypeMap, HashMap } from '../type-map'
+import { TypeMap } from '../type-map'
 import { SelectOption } from '../../../../shared/entities';
-import { DataViewFieldType } from '@pepperi-addons/papi-sdk';
+import { ResourceMap } from '../resource-map'
 @Component({
     selector: 'block-editor',
     templateUrl: './block-editor.component.html',
@@ -18,7 +18,7 @@ export class BlockEditorComponent implements OnInit {
     resources: any[] = []
     resource: any
     title: string
-    resourceFieldsMap: HashMap<any> = {}
+    resourceMap: ResourceMap;
     allowExport: boolean = false;
     allowImport: boolean = false;
     resourceFieldsKeys: string[] = []
@@ -30,6 +30,7 @@ export class BlockEditorComponent implements OnInit {
                 private udcService: UDCService,
                 private cardsService: CardsService
                ) {
+                   this.resourceMap = new ResourceMap();
     }
     ngOnInit(): void {
         this.typeMap = new TypeMap()
@@ -46,22 +47,11 @@ export class BlockEditorComponent implements OnInit {
             this.resource = this.resources?.length > 0? this.resources[0] : undefined
             this.updateAllConfigurationObject()
         }
-        
         this.genereateMapFromResourceFields()
     }
-    addToResourceFieldsMap(fieldID: string, type: DataViewFieldType, title: string, mandatory: boolean){
-        this.resourceFieldsMap[fieldID] = {'FieldID': fieldID, 'Type': type, 'Title': this.translate.instant(title), 'Mandatory': mandatory, 'ReadOnly': true}
-    }
     genereateMapFromResourceFields(){
-        this.addToResourceFieldsMap('CreationDateTime', 'DateAndTime', 'CreationDateTime', false)
-        this.addToResourceFieldsMap('ModificationDateTime', 'DateAndTime', 'ModificationDateTime', false)
-        for(let fieldKey of Object.keys(this.resource.Fields)){
-            const mandatory = this.resource.Fields[fieldKey]?.Mandatory
-            const optionalValues = this.resource.Fields[fieldKey]?.OptionalValues
-            const type = this.typeMap.get(this.resource.Fields[fieldKey]?.Type, optionalValues)
-            this.addToResourceFieldsMap(fieldKey, type, fieldKey, mandatory)
-        }
-        this.resourceFieldsKeys = Object.keys(this.resourceFieldsMap)
+        this.resourceMap.initMapFromResource(this.resource, this.translate)
+        this.resourceFieldsKeys = this.resourceMap.getKeys()
     }
     validateCardsListCompatibleToFieldsAndUpdate(){
         if(!this.cardsList){
@@ -104,8 +94,8 @@ export class BlockEditorComponent implements OnInit {
     }
     generateCardsListFromFields(){
         this.cardsList = []
-       this.resourceFieldsKeys.map(resourceFieldKey => {
-            this.addNewCard(resourceFieldKey, this.resourceFieldsMap[resourceFieldKey])
+        this.resourceFieldsKeys.map(resourceFieldKey => {
+            this.addNewCard(resourceFieldKey, this.resourceMap.get(resourceFieldKey))
         })
     }
     onAllowExportChange($event){
@@ -133,7 +123,7 @@ export class BlockEditorComponent implements OnInit {
         this.allowExport = false;
         this.allowImport = false
         this.title = ""
-        this.resourceFieldsMap = {}
+        this.resourceMap = new ResourceMap()
         this.updateAllConfigurationObject()
     }
     updateAllConfigurationObject(){
@@ -162,17 +152,18 @@ export class BlockEditorComponent implements OnInit {
         this.cardsService.changeCursorOnDragEnd();
     }
     onSelectField($event){
-        $event.card.value = this.resourceFieldsMap[$event.card.name]
+        $event.card.value = this.resourceMap.get($event.card.name)
         this.updateAllConfigurationObject()
     }
     addNewCardClick(){
         const name = this.resourceFieldsKeys.length > 0 ? this.resourceFieldsKeys[0] : undefined
-        const value = name? this.resourceFieldsMap[name]: undefined
+        const value = name? this.resourceMap.get(name): undefined
         this.addNewCard(name, value, true)
         this.updateAllConfigurationObject()
     }
     getResourceFieldsKeys(): string[]{
-        return this.resourceFieldsMap ? Object.keys(this.resourceFieldsMap) : [];
+        const keys = this.resourceMap.getKeys();
+        return keys ? keys: [];
         
     }
     addNewCard(name: string, value: any, showContent = false){
