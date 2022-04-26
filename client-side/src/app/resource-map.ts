@@ -10,11 +10,11 @@ export class ResourceMap{
     }
     add(fieldID: string, type: DataViewFieldType, title: string, mandatory: boolean, optionalValues?){
         this.resourceFieldsMap[fieldID] = {
-            'FieldID': fieldID,
-            'Type': this.typeMap.get(type, optionalValues) || type,
-            'Title': title,
-            'Mandatory': mandatory,
-            'ReadOnly': true
+            FieldID : fieldID,
+            Type : this.typeMap.get(type, optionalValues) || type,
+            Title : title,
+            Mandatory : mandatory,
+            ReadOnly : true
         }
     }
     get(key: string){

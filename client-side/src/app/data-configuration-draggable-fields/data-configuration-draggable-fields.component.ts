@@ -57,7 +57,7 @@ export class DataConfigurationDraggableFieldsComponent {
       this.card.mandatory = $event
       this.emitSaveEvent()
     }
-    onDefaultValueChangeds($event){
+    onDefaultValueChange($event){
       this.card.defaultValue = $event
       this.emitSaveEvent()
     }
