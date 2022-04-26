@@ -30,6 +30,7 @@
                 (editClick)='onCardEditClick($event);'
                 (removeClick)='onCardRemoveClick($event);'
                 (saveCardsList) = 'onSaveCardsList()'
+                (changeKey) = 'onCardKeyChanged($event)'
                 (fieldSelected) = 'onSelectField($event)'
                 [configuration]="configuration"
                 [card] = "card"

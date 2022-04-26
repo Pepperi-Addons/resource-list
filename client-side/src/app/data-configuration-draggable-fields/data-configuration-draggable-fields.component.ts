@@ -21,6 +21,7 @@ export class DataConfigurationDraggableFieldsComponent {
     @Output() fieldSelected: EventEmitter<any> = new EventEmitter()
     @Output() insertWidth: EventEmitter<any> = new EventEmitter();
     @Output() saveCardsList: EventEmitter<void> = new EventEmitter();
+    @Output() changeKey: EventEmitter<DataConfigurationCard> = new EventEmitter();
     
     constructor(private translate: TranslateService) {
     }
@@ -43,7 +44,7 @@ export class DataConfigurationDraggableFieldsComponent {
     onSelectKey($event):void{
       this.card.key = $event
       this.card.label = $event
-      this.emitSaveEvent()
+      this.changeKey.emit(this.card)
     }
     onLabelChange($event){
       this.card.label = $event

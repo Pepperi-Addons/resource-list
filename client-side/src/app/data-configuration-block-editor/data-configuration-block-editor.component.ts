@@ -147,4 +147,8 @@ export class DataConfigurationBlockEditorComponent implements OnInit {
     onSaveCardsList(){
         this.updateAllConfigurationObject()
     }
+    onCardKeyChanged($event: DataConfigurationCard){
+        this.cardsList[$event.id].value = this.resourceMap.get($event.key)
+        this.updateAllConfigurationObject()
+    }
 }
