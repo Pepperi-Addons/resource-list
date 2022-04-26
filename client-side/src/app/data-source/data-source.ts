@@ -4,7 +4,6 @@ import { GridDataViewColumn } from "@pepperi-addons/papi-sdk";
 import { IPepListSortingChangeEvent } from "@pepperi-addons/ngx-lib/list";
 
 export class DataSource implements IPepGenericListDataSource{
-    items: any[] = []
     inputs?: IPepGenericListTableInputs = 
     {
       pager:{
@@ -12,8 +11,7 @@ export class DataSource implements IPepGenericListDataSource{
       },
     }
   selectionType: 'multi'
-    constructor( items: any[], private fields: any[], private widthArray: GridDataViewColumn[] = []){
-      this.items = items
+    constructor(private items: any[], private fields: any[], private widthArray: GridDataViewColumn[] = []){
     }
     async init(params: { searchString?: string; filter?: any; sorting?: IPepListSortingChangeEvent; fromIndex: number; toIndex: number; }): Promise<IPepGenericListInitData> {
         return {
