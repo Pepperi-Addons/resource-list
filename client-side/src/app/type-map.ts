@@ -17,7 +17,7 @@ export class TypeMap{
         if(key == 'Array'){
             return optionalValues?.length > 0? "MultiTickBox" : "TextArea"
         }
-        if(optionalValues?.length > 0){
+        if(optionalValues.length > 0){
             return "ComboBox"
         }
         const result = this.map[key]

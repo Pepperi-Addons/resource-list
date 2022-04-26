@@ -35,12 +35,4 @@ export class DataSource implements IPepGenericListDataSource{
             items: this.items
           }; 
     }
-    // async inputs?(): Promise<IPepGenericListTableInputs> {
-    //     return {
-    //         pager:{
-    //             type: 'scroll'
-    //         },
-    //         selectionType: 'multi'
-    //     }
-    //   }
 }
