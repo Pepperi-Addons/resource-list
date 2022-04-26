@@ -63,5 +63,20 @@
             [visible]="true"
             (valueChange)="onMandatoryChange($event)"
         ></pep-checkbox>
+        <pep-textbox
+            [value]="card.defaultValue"
+            label="Deafult Value"
+            type="text"
+            [mandatory]="false"
+            [disabled]="false"
+            maxFieldCharacters="undefined"
+            textColor=""
+            xAlignment="left"
+            [showTitle]="true"
+            [renderTitle]="true"
+            [renderError]="true"
+            [renderSymbol]="true"
+            (valueChange)="onDefaultValueChangeds($event)"
+    ></pep-textbox>
     </div>
 </div>

@@ -55,6 +55,7 @@ export interface DataConfigurationCard extends ICardEditor{
     key:string
     label: string
     readOnly: boolean
-    mandatory: boolean  
+    mandatory: boolean
+    defaultValue: string  
 
 }

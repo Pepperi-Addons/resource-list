@@ -66,7 +66,8 @@ export class DataConfigurationBlockEditorComponent implements OnInit {
             readOnly : readOnly,
             mandatory : mandatory,
             showContent : showContent,
-            value: value
+            value: value,
+            defaultValue: "" 
         }
         this.cardsList.push(newCard)
     }
