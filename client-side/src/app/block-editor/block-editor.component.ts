@@ -5,7 +5,7 @@ import { CdkDragDrop, CdkDragEnd, CdkDragStart, moveItemInArray} from '@angular/
 import { BlockEditorCard, IContent } from '../draggable-card-fields/cards.model'
 import { CardsService } from '../draggable-card-fields/cards.service'
 import { config } from '../addon.config'
-import { TypeMap, HashMap } from '../type-map'
+import { TypeMap } from '../type-map'
 import { SelectOption } from '../../../../shared/entities';
 import { ResourceMap } from '../resource-map'
 @Component({
@@ -47,7 +47,6 @@ export class BlockEditorComponent implements OnInit {
             this.resource = this.resources?.length > 0? this.resources[0] : undefined
             this.updateAllConfigurationObject()
         }
-        
         this.genereateMapFromResourceFields()
     }
     genereateMapFromResourceFields(){

@@ -1,7 +1,5 @@
 import { TranslateService } from '@ngx-translate/core';
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
-// import { IPepGenericListDataSource, IPepGenericListInitData, IPepGenericListTableInputs, PepGenericListService } from '@pepperi-addons/ngx-composite-lib/generic-list';
-// import { IPepListSortingChangeEvent } from '@pepperi-addons/ngx-lib/list';
 import { UDCService } from '../services/udc-service';
 import { PepMenuItem } from "@pepperi-addons/ngx-lib/menu";
 import { DIMXComponent } from '@pepperi-addons/ngx-composite-lib/dimx-export';

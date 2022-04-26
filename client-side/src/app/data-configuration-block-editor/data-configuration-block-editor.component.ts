@@ -35,29 +35,18 @@ export class DataConfigurationBlockEditorComponent implements OnInit {
         this.typeMap.init()
         this.resourceMap = new ResourceMap()
     }
-
-    setResourceToPageParams(){
-        this.hostEvents.emit({
-            action: 'set-parameter',
-            key: 'resource_name',
-            value: this.currentResource.Name 
-        })
-    }
-    initPageParams(){
-    }
-
     ngOnInit(): void {
         this.editModeOptions = [{'key': 'readOnly', 'value': this.translate.instant('Read Only')}, {'key': 'modifiable', 'value': this.translate.instant('Modifiable')}]
         this.loadVariablesFromHostObject();
         this.initResources()
         .then(() =>{
-            debugger
             this.resourceMap.initMapFromResource(this.currentResource, this.translate)
             this.initCurrentResourceFields()
             this.initCardsList()
             this.updateAllConfigurationObject()
         })
     }
+
     initCardsList(){
         if(this.cardsList.length > 0){
             return;
@@ -66,7 +55,6 @@ export class DataConfigurationBlockEditorComponent implements OnInit {
     }
     generateCardsListFromFields(){
         this.currentResourceFields.map((field, index) => {
-            debugger
             this.addNewCard(this.resourceMap.get(field), index,field,false,false)
         })
     }
@@ -158,5 +146,4 @@ export class DataConfigurationBlockEditorComponent implements OnInit {
     onSaveCardsList(){
         this.updateAllConfigurationObject()
     }
-
 }

@@ -32,8 +32,10 @@ export class DataConfigurationBlockComponent implements OnInit {
       this.typeMap.init()
     }
     ngOnInit(): void {
+      debugger
     }
     ngOnChanges(e: any): void {
+      debugger
       if(this.hostObject?.configuration?.cardsList){
         this.rebuildDataview()
       }
@@ -53,6 +55,5 @@ export class DataConfigurationBlockComponent implements OnInit {
       return this.fields = this.hostObject.configuration.cardsList.map(card => card.value)
     }
     onValueChanged($event){
-
     }
 }
