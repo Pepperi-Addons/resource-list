@@ -66,4 +66,7 @@ export class DataConfigurationBlockComponent implements OnInit {
       this.item = items.find(item => item.Key == key)
       this.rebuildDataview()
     }
+    onValueChanged($event){
+      
+    }
 }
