@@ -155,9 +155,9 @@ export class DataConfigurationBlockEditorComponent implements OnInit {
             pageConfiguration: {
                 Parameters: [
                     {
-                        Key: "resource_name",
-                        Type: "string",
-                        Consume: true
+                        Key: "resource_key",
+                        Type: "String",
+                        Consume: true,
                     }
                 ]
             }

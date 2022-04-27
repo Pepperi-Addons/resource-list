@@ -3,7 +3,8 @@ import { Component, EventEmitter, Inject, Input, OnInit, Output } from '@angular
 import { DataSource } from '../data-source/data-source';
 import { PepMenuItem } from '@pepperi-addons/ngx-lib/menu';
 import { TypeMap } from '../type-map';
-
+import { UDCService } from '../services/udc-service';
+import { config } from '../addon.config';
 @Component({
     selector: 'data-configuration-block',
     templateUrl: './data-configuration-block.component.html',
@@ -14,7 +15,8 @@ export class DataConfigurationBlockComponent implements OnInit {
     datasource: DataSource;
     menuItems: PepMenuItem[] = [];
     typeMap: any;
-    item = {} //temporary
+    currentResourceName: string = ""
+    item = {} 
     fields: any[] = []
     dataView =  {
         Type: "Form",
@@ -27,11 +29,18 @@ export class DataConfigurationBlockComponent implements OnInit {
       };
     @Output() hostEvents: EventEmitter<any> = new EventEmitter<any>();
 
-    constructor(private translate: TranslateService) {
+    constructor(private translate: TranslateService, private udcService: UDCService) {
+      this.udcService.pluginUUID = config.AddonUUID
       this.typeMap = new TypeMap()
       this.typeMap.init()
     }
     ngOnInit(): void {
+      if(this.hostObject?.parameters){
+        const resourceAndKey = this.hostObject?.parameters['resource_key'] || "";
+        const [resourceName, key] = resourceAndKey.split(" ")
+        this.updateItem(resourceName, key)
+      }
+
     }
     ngOnChanges(e: any): void {
       if(this.hostObject?.configuration?.cardsList){
@@ -53,5 +62,11 @@ export class DataConfigurationBlockComponent implements OnInit {
       return this.fields = this.hostObject.configuration.cardsList.map(card => card.value)
     }
     onValueChanged($event){
+    }
+
+    async updateItem(resourceName: string, key: string){
+      const items = await this.udcService.getItems(resourceName)
+      this.item = items.find(item => item.Key == key)
+      this.rebuildDataview()
     }
 }
