@@ -151,4 +151,12 @@ export class DataConfigurationBlockEditorComponent implements OnInit {
         this.cardsList[$event.id].value = this.resourceMap.get($event.key)
         this.updateAllConfigurationObject()
     }
+    onSelectKey($event){
+        debugger
+        this.cardsList[$event.id].key= $event.key
+        this.cardsList[$event.id].label= $event.key
+        this.cardsList[$event.id].value.FieldID= $event.key
+        this.cardsList[$event.id].value.Title= this.translate.instant($event.key)
+        this.updateAllConfigurationObject()
+    }
 }

@@ -18,7 +18,7 @@ export class DataConfigurationDraggableFieldsComponent {
     @Input() card: DataConfigurationCard
     @Input() resourceFields: string[]
     @Output() removeClick: EventEmitter<any> = new EventEmitter();
-    @Output() fieldSelected: EventEmitter<any> = new EventEmitter()
+    @Output() keySelected: EventEmitter<any> = new EventEmitter()
     @Output() insertWidth: EventEmitter<any> = new EventEmitter();
     @Output() saveCardsList: EventEmitter<void> = new EventEmitter();
     @Output() changeKey: EventEmitter<DataConfigurationCard> = new EventEmitter();
