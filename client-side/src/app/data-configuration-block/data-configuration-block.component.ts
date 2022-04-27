@@ -67,5 +67,6 @@ export class DataConfigurationBlockComponent implements OnInit {
       this.rebuildDataview()
     }
     onValueChanged($event){
+      
     }
 }
