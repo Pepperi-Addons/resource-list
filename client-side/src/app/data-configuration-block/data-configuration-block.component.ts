@@ -61,9 +61,6 @@ export class DataConfigurationBlockComponent implements OnInit {
     generateDataViewFormFields(): DataView[]{
       return this.fields = this.hostObject.configuration.cardsList.map(card => card.value)
     }
-    onValueChanged($event){
-    }
-
     async updateItem(resourceName: string, key: string){
       const items = await this.udcService.getItems(resourceName)
       this.item = items.find(item => item.Key == key)
