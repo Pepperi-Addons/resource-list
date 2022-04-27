@@ -37,6 +37,7 @@ export class DataConfigurationBlockEditorComponent implements OnInit {
     }
     ngOnInit(): void {
         this.editModeOptions = [{'key': 'readOnly', 'value': this.translate.instant('Read Only')}, {'key': 'modifiable', 'value': this.translate.instant('Modifiable')}]
+        this.setPageConfiguration()
         this.loadVariablesFromHostObject();
         this.initResources()
         .then(() =>{
@@ -146,5 +147,20 @@ export class DataConfigurationBlockEditorComponent implements OnInit {
     }
     onSaveCardsList(){
         this.updateAllConfigurationObject()
+    }
+    setPageConfiguration(){
+        this.hostEvents.emit({
+            action: 'set-page-configuration',
+            
+            pageConfiguration: {
+                Parameters: [
+                    {
+                        Key: "resource_name",
+                        Type: "string",
+                        Consume: true
+                    }
+                ]
+            }
+        })
     }
 }
