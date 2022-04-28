@@ -37,7 +37,6 @@ export class DataConfigurationBlockEditorComponent implements OnInit {
         this.resourceMap = new ResourceMap()
     }
     ngOnInit(): void {
-        this.restoreData()
         this.editModeOptions = [{'key': 'readOnly', 'value': this.translate.instant('Read Only')}, {'key': 'modifiable', 'value': this.translate.instant('Modifiable')}]
         this.loadVariablesFromHostObject();
         this.initResources()

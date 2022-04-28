@@ -39,7 +39,6 @@ export class DataConfigurationDraggableFieldsComponent {
     }
     onEditClick(): void{
       this.card.showContent = !this.card.showContent
-      // this.emitSaveEvent()
     }
     onSelectKey($event):void{
       this.card.key = $event
