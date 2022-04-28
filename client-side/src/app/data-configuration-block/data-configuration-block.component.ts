@@ -38,13 +38,10 @@ export class DataConfigurationBlockComponent implements OnInit {
     ngOnInit(): void {
       this.currentResourceName = this.hostObject?.configuration?.currentResourceName
       if(this.hostObject?.parameters){
-        const resourceAndKey = this.hostObject?.parameters['resource_key'] || "";
-        //split to two words, with first underscore the seperator between them.
-        const [type, key] = resourceAndKey.split(/_(.*)/s, 2)
-        if(type === 'collection'){
+        const key = this.hostObject?.parameters[`${this.currentResourceName}_key`];
+        if(key){
           this.updateItem(key)
         }
-
       }
     }
     ngOnChanges(e: any): void {
