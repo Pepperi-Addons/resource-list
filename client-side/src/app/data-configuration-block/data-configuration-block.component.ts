@@ -37,10 +37,10 @@ export class DataConfigurationBlockComponent implements OnInit {
     ngOnInit(): void {
       if(this.hostObject?.parameters){
         const resourceAndKey = this.hostObject?.parameters['resource_key'] || "";
-        const [resourceName, key] = resourceAndKey.split(" ")
+        //split to two words, with first underscore the seperator between them.
+        const [resourceName, key] = resourceAndKey.split(/_(.*)/s, 2)
         this.updateItem(resourceName, key)
       }
-
     }
     ngOnChanges(e: any): void {
       if(this.hostObject?.configuration?.cardsList){
