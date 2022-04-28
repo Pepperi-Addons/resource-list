@@ -21,6 +21,7 @@ export class DataConfigurationDraggableFieldsComponent {
     @Output() keySelected: EventEmitter<any> = new EventEmitter()
     @Output() insertWidth: EventEmitter<any> = new EventEmitter();
     @Output() saveCardsList: EventEmitter<void> = new EventEmitter();
+    @Output() readOnlyChanged: EventEmitter<any> = new EventEmitter();
     
     constructor(private translate: TranslateService) {
     }
@@ -38,7 +39,7 @@ export class DataConfigurationDraggableFieldsComponent {
     }
     onEditClick(): void{
       this.card.showContent = !this.card.showContent
-      this.emitSaveEvent()
+      // this.emitSaveEvent()
     }
     onSelectKey($event):void{
       this.card.key = $event
@@ -51,7 +52,7 @@ export class DataConfigurationDraggableFieldsComponent {
     }
     onReadOnlyChange($event){
       this.card.readOnly = $event
-      this.emitSaveEvent()
+      this.readOnlyChanged.emit({'readOnly': $event, 'id': this.card.id})
     }
     onMandatoryChange($event){
       this.card.mandatory = $event

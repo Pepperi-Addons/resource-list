@@ -36,6 +36,7 @@ export class DataConfigurationBlockEditorComponent implements OnInit {
         this.resourceMap = new ResourceMap()
     }
     ngOnInit(): void {
+        this.restoreData()
         this.editModeOptions = [{'key': 'readOnly', 'value': this.translate.instant('Read Only')}, {'key': 'modifiable', 'value': this.translate.instant('Modifiable')}]
         this.setPageConfiguration()
         this.loadVariablesFromHostObject();
@@ -90,7 +91,7 @@ export class DataConfigurationBlockEditorComponent implements OnInit {
         this.resources= await this.udcService.getCollections()
         this.resourcesNames = this.resources.map(resource => {
             return {'key': resource.Name, 'value': resource.Name}})
-        if(this.resources.length > 0 && !this.currentResource){
+        if(this.resources.length > 0 && !this.currentResource ){
             this.currentResource = this.resources[0]
         }
     }
@@ -133,7 +134,8 @@ export class DataConfigurationBlockEditorComponent implements OnInit {
             configuration: {
                 currentResource: this.currentResource,
                 currentEditMode: this.currentEditMode,
-                cardsList: this.cardsList
+                cardsList: this.cardsList,
+                currentResourceName: this.currentResource?.Name
             }
         })
     }
@@ -169,5 +171,10 @@ export class DataConfigurationBlockEditorComponent implements OnInit {
         this.cardsList[$event.id].value.FieldID= $event.key
         this.cardsList[$event.id].value.Title= $event.key
         this.updateAllConfigurationObject()
+    }
+    onReadOnlyChange($event){
+        this.cardsList[$event.id].readOnly = $event.readOnly;
+        this.cardsList[$event.id].value.ReadOnly = $event.readOnly
+        this.updateAllConfigurationObject();
     }
 }

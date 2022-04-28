@@ -33,13 +33,18 @@ export class DataConfigurationBlockComponent implements OnInit {
       this.udcService.pluginUUID = config.AddonUUID
       this.typeMap = new TypeMap()
       this.typeMap.init()
+      
     }
     ngOnInit(): void {
+      this.currentResourceName = this.hostObject?.configuration?.currentResourceName
       if(this.hostObject?.parameters){
         const resourceAndKey = this.hostObject?.parameters['resource_key'] || "";
         //split to two words, with first underscore the seperator between them.
-        const [resourceName, key] = resourceAndKey.split(/_(.*)/s, 2)
-        this.updateItem(resourceName, key)
+        const [type, key] = resourceAndKey.split(/_(.*)/s, 2)
+        if(type === 'collection'){
+          this.updateItem(key)
+        }
+
       }
     }
     ngOnChanges(e: any): void {
@@ -61,8 +66,8 @@ export class DataConfigurationBlockComponent implements OnInit {
     generateDataViewFormFields(): DataView[]{
       return this.fields = this.hostObject.configuration.cardsList.map(card => card.value)
     }
-    async updateItem(resourceName: string, key: string){
-      const items = await this.udcService.getItems(resourceName)
+    async updateItem(key: string){
+      const items = await this.udcService.getItems(this.currentResourceName)
       this.item = items.find(item => item.Key == key)
       this.rebuildDataview()
     }
