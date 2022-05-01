@@ -44,7 +44,6 @@ export class UDCService{
     async postItem(resourceName, item){
         try{
             const res = await this.papiClient.userDefinedCollections.documents(resourceName).upsert(item)
-            debugger
             return res
         }
         catch(e){
