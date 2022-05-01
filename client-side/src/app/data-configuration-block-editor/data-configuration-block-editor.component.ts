@@ -88,15 +88,19 @@ export class DataConfigurationBlockEditorComponent implements OnInit {
         this.cardsList = this.hostObject?.configuration?.cardsList || []
     }
     async initResources(){
-        this.resources= await this.udcService.getCollections()
-        this.resourcesNames = this.resources.map(resource => {
-            return {'key': resource.Name, 'value': resource.Name}
-        });
-         this.currentResource = this.resources.find((resource) => resource.Name == this.currentResourceName)
+        this.resources= await this.udcService.getCollections();
+        this.resourcesNames = []
+        this.currentResource = undefined
+        this.resources.forEach(resource => {
+            if(resource.Name === this.currentResourceName){
+                this.currentResource = resource;
+            }
+            this.resourcesNames.push({'key': resource.Name, 'value': resource.Name})
+        })
         if(this.resources.length > 0 && !this.currentResource){
             this.currentResource = this.resources[0]
-            this.currentResourceName = this.currentResource.Name
         }
+        this.currentResourceName = this.currentResource?.Name
     }
     onResourceChanged($event){
         this.restoreData()
