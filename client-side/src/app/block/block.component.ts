@@ -131,11 +131,11 @@ export class BlockComponent implements OnInit {
      getActionsCallBack(){
       return async (data: PepSelectionData) => {
           const actions = []
-          if (data && data.rows.length == 1 && this.hostObject?.configuration?.allowEdit && this.hostObject?.configuration?.currentSlug) {
+          if (data && data.rows.length == 1 && this.hostObject?.configuration?.allowEdit && this.hostObject.configuration.currentSlug) {
                 actions.push({
                     title: this.translate.instant('Navigate'),
-                    handler: async (objs) => {
-                      //navigate here.
+                    handler: async () => {
+                      window.location.href = this.hostObject.configuration.currentSlug
                     }
                 })
           }
