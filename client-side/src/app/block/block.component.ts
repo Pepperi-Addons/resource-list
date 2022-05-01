@@ -3,11 +3,12 @@ import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angu
 import { UDCService } from '../services/udc-service';
 import { PepMenuItem } from "@pepperi-addons/ngx-lib/menu";
 import { DIMXComponent } from '@pepperi-addons/ngx-composite-lib/dimx-export';
-import { UDCUUID } from '../addon.config';
+import { UDC_UUID } from '../addon.config';
 import { config } from '../addon.config'
 import { BlockEditorCard } from '../draggable-card-fields/cards.model';
 import { GridDataViewColumn } from '@pepperi-addons/papi-sdk';
 import { DataSource } from '../data-source/data-source'
+import { PepSelectionData } from '@pepperi-addons/ngx-lib/list';
 
 @Component({
     selector: 'block',
@@ -20,7 +21,7 @@ export class BlockComponent implements OnInit {
     datasource: DataSource
     resourceName: string
     title: string
-    udcUUID: string = UDCUUID
+    udcUUID: string = UDC_UUID
     menuItems: PepMenuItem[] = []
     allowExport: boolean = false;
     allowImport: boolean = false;
@@ -29,11 +30,13 @@ export class BlockComponent implements OnInit {
     cardsList: BlockEditorCard[] = []
     fields: any[] = []
     items: any[] = []
+    actions: any = {}
     @Output() hostEvents: EventEmitter<any> = new EventEmitter<any>();
 
     constructor(private translate: TranslateService,
          private udcService: UDCService) {
           this.udcService.pluginUUID = config.AddonUUID
+          this.actions.get = this.getActionsCallBack()
     }
     ngOnInit(): void {
       this.init()
@@ -101,7 +104,7 @@ export class BlockComponent implements OnInit {
           // this.dimx?.uploadFile({
           //   OverwriteOBject: true,
           //   Delimiter: ",",
-          //   OwnerID: UDCUUID
+          //   OwnerID: UDC_UUID
           // });
           break;    
       // }
@@ -125,5 +128,18 @@ export class BlockComponent implements OnInit {
             hidden: !this.allowImport
           }]
     }
-}
-
+     getActionsCallBack(){
+      return async (data: PepSelectionData) => {
+          const actions = []
+          if (data && data.rows.length == 1 && this.hostObject?.configuration?.allowEdit && this.hostObject?.configuration?.currentSlug) {
+                actions.push({
+                    title: this.translate.instant('Navigate'),
+                    handler: async (objs) => {
+                      //navigate here.
+                    }
+                })
+          }
+          return actions
+      }
+      }
+  }

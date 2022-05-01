@@ -45,6 +45,29 @@
                 [visible]="true"
                 (valueChange)="onAllowImportChange($event)"
             ></pep-checkbox>
+            <pep-checkbox
+                [value]="allowEdit"
+                label="Allow edit"
+                type="checkbox"
+                [mandatory]="false"
+                [disabled]="false"
+                xAlignment="left"
+                [showTitle]="true"
+                [renderTitle]="true"
+                [visible]="true"
+                (valueChange)="onAllowEditChange($event)"
+            ></pep-checkbox>
+            <pep-select 
+                [value]="currentSlug"
+                label="Editor"
+                type="select"
+                [mandatory] = "allowEdit"
+                [options] = "slugsList"
+                [showTitle]="true"
+                (valueChange)="onSlugChange($event)"
+                [emptyOption]="true"
+                [disabled] = "!allowEdit"
+            ></pep-select>
         </div>
     </mat-tab>
     <mat-tab cdkDropListGroup label= "Content">

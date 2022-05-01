@@ -26,6 +26,9 @@ export class BlockEditorComponent implements OnInit {
     @Output() hostEvents: EventEmitter<any> = new EventEmitter<any>();
     typeMap: TypeMap 
     cardsList: BlockEditorCard[]
+    allowEdit: boolean = false;
+    currentSlug: string;
+    slugsList: SelectOption[] = []
     constructor(private translate: TranslateService,
                 private udcService: UDCService,
                 private cardsService: CardsService
@@ -36,11 +39,26 @@ export class BlockEditorComponent implements OnInit {
         this.typeMap = new TypeMap()
         this.typeMap.init()
         this.loadVariablesFromHostObject()
+        this.initSlugs()
         this.initResources()
         .then(() => {
             this.initCurrentResource()
             this.initCardsList()
         })
+    }
+    async initSlugs(){
+        //get slugs
+        const slugs = await this.udcService.getSlugs()
+        //init slugs option list
+        this.slugsList = slugs.map(slug => {
+            return {
+                key: slug.Slug,
+                value: slug.Name
+            }
+        })
+        //if slugs is not empty and is not on the slugs list, slug should be "".
+        this.currentSlug = this.slugsList.find((slug) => slug.key == this.currentSlug)?.key || "";
+        this.updateAllConfigurationObject();
     }
     initCurrentResource(){
         if(!this.resource){
@@ -82,6 +100,8 @@ export class BlockEditorComponent implements OnInit {
         this.allowExport = this.hostObject?.configuration?.allowExport
         this.allowImport = this.hostObject?.configuration?.allowImport
         this.cardsList = this.hostObject?.configuration?.cardsList
+        this.allowEdit = this.hostObject?.configuration?.allowEdit
+        this.currentSlug = this.hostObject?.configuration?.currentSlug || ""
     }
     initCardsList(){
         if(!this.cardsList){
@@ -135,7 +155,9 @@ export class BlockEditorComponent implements OnInit {
                 allowExport: this.allowExport,
                 allowImport: this.allowImport,
                 cardsList: this.cardsList,
-                resourceName: this.resource?.Name
+                resourceName: this.resource?.Name,
+                allowEdit: this.allowEdit,
+                currentSlug: this.currentSlug
             }
         })
     }
@@ -186,6 +208,14 @@ export class BlockEditorComponent implements OnInit {
         this.updateAllConfigurationObject()
     }
     onWidthChange(){
+        this.updateAllConfigurationObject()
+    }
+    onAllowEditChange($event){
+        this.allowEdit = $event
+        this.updateAllConfigurationObject()
+    }
+    onSlugChange($event){
+        this.currentSlug = $event
         this.updateAllConfigurationObject()
     }
 }
