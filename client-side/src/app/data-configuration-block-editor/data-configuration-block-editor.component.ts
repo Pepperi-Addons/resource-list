@@ -26,6 +26,7 @@ export class DataConfigurationBlockEditorComponent implements OnInit {
     editModeOptions : SelectOption[] = []
     cardsList : DataConfigurationCard[] = []
     currentResourceFields: string[] = ["CreationDateTime", "ModificationDateTime"];
+    currentResourceName: string;
 
     @Output() hostEvents: EventEmitter<any> = new EventEmitter<any>();
 
@@ -37,13 +38,13 @@ export class DataConfigurationBlockEditorComponent implements OnInit {
     }
     ngOnInit(): void {
         this.editModeOptions = [{'key': 'readOnly', 'value': this.translate.instant('Read Only')}, {'key': 'modifiable', 'value': this.translate.instant('Modifiable')}]
-        this.setPageConfiguration()
         this.loadVariablesFromHostObject();
         this.initResources()
         .then(() =>{
             this.resourceMap.initMapFromResource(this.currentResource, this.translate)
             this.initCurrentResourceFields()
             this.initCardsList()
+            this.setPageConfiguration()
             this.updateAllConfigurationObject()
         })
     }
@@ -82,21 +83,29 @@ export class DataConfigurationBlockEditorComponent implements OnInit {
         return [];
     }
     loadVariablesFromHostObject(){
-        this.currentResource = this.hostObject?.configuration?.currentResource;
+        this.currentResourceName = this.hostObject?.configuration?.currentResourceName;
         this.currentEditMode = this.hostObject?.configuration?.currentEditMode || this.editModeOptions[0].key;
         this.cardsList = this.hostObject?.configuration?.cardsList || []
     }
     async initResources(){
-        this.resources= await this.udcService.getCollections()
-        this.resourcesNames = this.resources.map(resource => {
-            return {'key': resource.Name, 'value': resource.Name}})
+        this.resources= await this.udcService.getCollections();
+        this.resourcesNames = []
+        this.currentResource = undefined
+        this.resources.forEach(resource => {
+            if(resource.Name === this.currentResourceName){
+                this.currentResource = resource;
+            }
+            this.resourcesNames.push({'key': resource.Name, 'value': resource.Name})
+        })
         if(this.resources.length > 0 && !this.currentResource){
             this.currentResource = this.resources[0]
         }
+        this.currentResourceName = this.currentResource?.Name
     }
     onResourceChanged($event){
         this.restoreData()
         this.currentResource = this.resources.find((resource) => resource.Name == $event)
+        this.currentResourceName = this.currentResource.Name
         this.resourceMap.initMapFromResource(this.currentResource, this.translate)
         this.initCurrentResourceFields()
         this.initCardsList()
@@ -131,9 +140,9 @@ export class DataConfigurationBlockEditorComponent implements OnInit {
         this.hostEvents.emit({
             action: 'set-configuration',
             configuration: {
-                currentResource: this.currentResource,
                 currentEditMode: this.currentEditMode,
-                cardsList: this.cardsList
+                cardsList: this.cardsList,
+                currentResourceName: this.currentResource?.Name
             }
         })
     }
@@ -141,6 +150,7 @@ export class DataConfigurationBlockEditorComponent implements OnInit {
         this.cardsList = []
         this.currentResource = undefined
         this.currentEditMode = undefined;
+        this.currentResourceName = undefined
         this.currentResourceFields =["CreationDateTime", "ModificationDateTime"];
         this.resourceMap = new ResourceMap()
         this.updateAllConfigurationObject()
@@ -155,7 +165,7 @@ export class DataConfigurationBlockEditorComponent implements OnInit {
             pageConfiguration: {
                 Parameters: [
                     {
-                        Key: "resource_key",
+                        Key: this.currentResource?.Name + '_key',
                         Type: "String",
                         Consume: true,
                     }
@@ -169,5 +179,10 @@ export class DataConfigurationBlockEditorComponent implements OnInit {
         this.cardsList[$event.id].value.FieldID= $event.key
         this.cardsList[$event.id].value.Title= $event.key
         this.updateAllConfigurationObject()
+    }
+    onReadOnlyChange($event){
+        this.cardsList[$event.id].readOnly = $event.readOnly;
+        this.cardsList[$event.id].value.ReadOnly = $event.readOnly
+        this.updateAllConfigurationObject();
     }
 }
