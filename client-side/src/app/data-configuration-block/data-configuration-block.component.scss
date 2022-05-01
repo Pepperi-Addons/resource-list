@@ -3,6 +3,11 @@ html {
         cursor: inherit !important;
     }
 }
+.buttons-holder{
+    float: right;
+    display: flex;
+    
+}
 
 .editor-tabs {
     height: 100%;

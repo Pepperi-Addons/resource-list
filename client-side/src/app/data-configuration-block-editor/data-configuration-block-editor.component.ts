@@ -89,7 +89,6 @@ export class DataConfigurationBlockEditorComponent implements OnInit {
     }
     async initResources(){
         this.resources= await this.udcService.getCollections();
-        debugger
         this.resourcesNames = []
         this.currentResource = undefined
         this.resources.forEach(resource => {
@@ -101,6 +100,7 @@ export class DataConfigurationBlockEditorComponent implements OnInit {
         if(this.resources.length > 0 && !this.currentResource){
             this.currentResource = this.resources[0]
         }
+        this.currentResourceName = this.currentResource?.Name
     }
     onResourceChanged($event){
         this.restoreData()
@@ -110,6 +110,7 @@ export class DataConfigurationBlockEditorComponent implements OnInit {
         this.initCurrentResourceFields()
         this.initCardsList()
         this.updateAllConfigurationObject()
+        this.setPageConfiguration()
     }
     onEditModeChanged($event){
         this.currentEditMode = $event
@@ -165,7 +166,7 @@ export class DataConfigurationBlockEditorComponent implements OnInit {
             pageConfiguration: {
                 Parameters: [
                     {
-                        Key: this.currentResource?.Name + '_key',
+                        Key: this.currentResourceName + '_key',
                         Type: "String",
                         Consume: true,
                     }
