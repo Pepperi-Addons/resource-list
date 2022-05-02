@@ -31,6 +31,8 @@ export class BlockComponent implements OnInit {
     fields: any[] = []
     items: any[] = []
     actions: any = {}
+    minHeight: number
+    relativeHeight: number
     @Output() hostEvents: EventEmitter<any> = new EventEmitter<any>();
 
     constructor(private translate: TranslateService,
@@ -64,6 +66,8 @@ export class BlockComponent implements OnInit {
       this.allowExport = Boolean(this.hostObject?.configuration?.allowExport)
       this.allowImport = Boolean(this?.hostObject?.configuration?.allowImport)
       this.cardsList = this.hostObject?.configuration?.cardsList
+      this.minHeight = this.hostObject?.configuration?.minHeight || 20;
+      this.relativeHeight = this.hostObject?.configuration?.relativeHeight || 0
       this.updateResourceNameAndItemsIfChanged()
     }
     updateResourceNameAndItemsIfChanged(){

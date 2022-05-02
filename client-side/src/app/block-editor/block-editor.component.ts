@@ -29,6 +29,8 @@ export class BlockEditorComponent implements OnInit {
     allowEdit: boolean = false;
     currentSlug: string;
     slugsList: SelectOption[] = []
+    minHeight: number
+    relativeHeight: number
     constructor(private translate: TranslateService,
                 private udcService: UDCService,
                 private cardsService: CardsService
@@ -102,6 +104,8 @@ export class BlockEditorComponent implements OnInit {
         this.cardsList = this.hostObject?.configuration?.cardsList
         this.allowEdit = this.hostObject?.configuration?.allowEdit
         this.currentSlug = this.hostObject?.configuration?.currentSlug || ""
+        this.minHeight = this.hostObject?.configuration?.minHeight || 20
+        this.relativeHeight = this.hostObject?.configuration?.relativeHeight || 0
     }
     initCardsList(){
         if(!this.cardsList){
@@ -144,6 +148,9 @@ export class BlockEditorComponent implements OnInit {
         this.allowImport = false
         this.title = ""
         this.resourceMap = new ResourceMap()
+        this.minHeight = 20
+        this.relativeHeight = 0
+        this.allowEdit = false
         this.updateAllConfigurationObject()
     }
     updateAllConfigurationObject(){
@@ -157,7 +164,9 @@ export class BlockEditorComponent implements OnInit {
                 cardsList: this.cardsList,
                 resourceName: this.resource?.Name,
                 allowEdit: this.allowEdit,
-                currentSlug: this.currentSlug
+                currentSlug: this.currentSlug,
+                minHeight: this.minHeight,
+                relativeHeight: this.relativeHeight
             }
         })
     }
@@ -217,5 +226,12 @@ export class BlockEditorComponent implements OnInit {
     onSlugChange($event){
         this.currentSlug = $event
         this.updateAllConfigurationObject()
+    }
+    onMinHeightChange($event){
+        this.minHeight = $event
+        this.updateAllConfigurationObject()
+    }
+    onRelativeHeightChange($event){
+        this.relativeHeight = $event
     }
 }

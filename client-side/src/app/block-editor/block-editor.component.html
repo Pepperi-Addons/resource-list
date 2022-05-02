@@ -20,6 +20,35 @@
                 showTitle="true"
                 (valueChange)="onTitleChanged($event)"
             ></pep-textbox>
+            <h3>Design</h3>
+            <pep-textbox
+                [value]="minHeight"
+                label="Min height(rem)"
+                type="real"
+                [mandatory]="false"
+                [disabled]="false"
+                textColor=""
+                xAlignment="left"
+                [showTitle]="true"
+                [renderTitle]="true"
+                [renderError]="true"
+                [renderSymbol]="true"
+                (valueChange)="onMinHeightChange($event)"
+            ></pep-textbox>
+            <pep-textbox
+                [value]="relativeHeight"
+                label="Relative Height(%)"
+                type="percentage"
+                [mandatory]="false"
+                [disabled]="false"
+                textColor=""
+                xAlignment="left"
+                [showTitle]="true"
+                [renderTitle]="true"
+                [renderError]="true"
+                [renderSymbol]="true"
+                (valueChange)="onRelativeHeightChange($event)"
+            ></pep-textbox>
             <h3>Menu Settings</h3>
             <pep-checkbox
                 [value]="allowExport"
