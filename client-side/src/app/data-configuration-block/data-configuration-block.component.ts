@@ -48,6 +48,10 @@ export class DataConfigurationBlockComponent implements OnInit {
       if(this.hostObject?.configuration?.cardsList){
         this.rebuildDataview()
       }
+      if(this.hostObject?.configuration?.currentResourceName && this.hostObject?.configuration?.currentResourceName != this.currentResourceName){
+        this.item = {}
+        this.currentResourceName = this.hostObject.configuration.currentResourceName
+      }
     }
     rebuildDataview() : void{
       this.dataView =  {
@@ -65,10 +69,18 @@ export class DataConfigurationBlockComponent implements OnInit {
     }
     async updateItem(key: string){
       const items = await this.udcService.getItems(this.currentResourceName)
-      this.item = items.find(item => item.Key == key)
+      this.item = items.find(item => item.Key == key) || {}
       this.rebuildDataview()
     }
     onValueChanged($event){
-      
+    }
+    onSaveButtonClick(){
+     this.udcService.postItem(this.currentResourceName, this.item)
+     .then(res => {
+     }) 
+    }
+    onCancelClick(){
+      this.item = {}
+      this.rebuildDataview()
     }
 }

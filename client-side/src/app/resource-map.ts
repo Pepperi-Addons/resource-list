@@ -14,7 +14,7 @@ export class ResourceMap{
             Type : this.typeMap.get(type, optionalValues) || type,
             Title : title,
             Mandatory : mandatory,
-            ReadOnly : true
+            ReadOnly : false
         }
     }
     get(key: string){

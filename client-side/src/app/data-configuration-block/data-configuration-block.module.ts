@@ -7,6 +7,8 @@ import { config } from '../addon.config';
 import { PepNgxCompositeLibModule } from '@pepperi-addons/ngx-composite-lib';
 import { DataConfigurationBlockComponent } from './data-configuration-block.component'
 import { PepGenericFormModule } from '@pepperi-addons/ngx-composite-lib/generic-form';
+import { PepButtonModule } from '@pepperi-addons/ngx-lib/button';
+
 
 
 export const routes: Routes = [
@@ -22,6 +24,8 @@ export const routes: Routes = [
         CommonModule,
         PepNgxCompositeLibModule,
         PepGenericFormModule,
+        PepButtonModule,
+        
         TranslateModule.forChild({
             loader: {
                 provide: TranslateLoader,

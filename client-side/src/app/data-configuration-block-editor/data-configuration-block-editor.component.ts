@@ -110,6 +110,7 @@ export class DataConfigurationBlockEditorComponent implements OnInit {
         this.initCurrentResourceFields()
         this.initCardsList()
         this.updateAllConfigurationObject()
+        this.setPageConfiguration()
     }
     onEditModeChanged($event){
         this.currentEditMode = $event
@@ -165,7 +166,7 @@ export class DataConfigurationBlockEditorComponent implements OnInit {
             pageConfiguration: {
                 Parameters: [
                     {
-                        Key: this.currentResource?.Name + '_key',
+                        Key: this.currentResourceName + '_key',
                         Type: "String",
                         Consume: true,
                     }
