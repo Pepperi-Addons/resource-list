@@ -53,4 +53,13 @@ export class UDCService{
             console.error(`try to post item:\n${item}\n to resource:\n${resourceName}\nin UDC, end with error:\n ${e}`)
         }
     }
+    async postItem(resourceName, item){
+        try{
+            const res = await this.papiClient.userDefinedCollections.documents(resourceName).upsert(item)
+            return res
+        }
+        catch(e){
+            console.error(`try to post item:\n${item}\n to resource:\n${resourceName}\nin UDC, end with error:\n ${e}`)
+        }
+    }
 }
