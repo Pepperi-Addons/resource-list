@@ -143,7 +143,7 @@ export class BlockComponent implements OnInit {
                     handler : async (selectedRows) => {
                       const key = `collection_${this.resourceName}`
                       const val = selectedRows.rows[0]
-                      this.router.navigate([this.hostObject.configuration.currentSlug +'?' + key + ':' + val])
+                      this.router.navigate([this.hostObject.configuration.currentSlug], { queryParams: { [key]: val } })
                     }
                 })
           }
