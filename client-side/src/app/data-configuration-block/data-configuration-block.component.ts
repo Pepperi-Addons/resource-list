@@ -16,6 +16,8 @@ export class DataConfigurationBlockComponent implements OnInit {
     menuItems: PepMenuItem[] = [];
     typeMap: any;
     currentResourceName: string = ""
+    minHeight: number
+    relativeHeight: number
     item = {} 
     fields: any[] = []
     dataView =  {
@@ -35,8 +37,13 @@ export class DataConfigurationBlockComponent implements OnInit {
       this.typeMap.init()
       
     }
-    ngOnInit(): void {
+    loadVariablesFromHostObject(){
       this.currentResourceName = this.hostObject?.configuration?.currentResourceName
+      this.minHeight = this.hostObject?.configuration?.minHeight || 20
+      this.relativeHeight = this.hostObject?.configuration?.relativeHeight || 100
+    }
+    ngOnInit(): void {
+      this.loadVariablesFromHostObject()
       if(this.hostObject?.parameters){
         const key = this.hostObject?.parameters[`${this.currentResourceName}_key`];
         if(key){
@@ -50,7 +57,7 @@ export class DataConfigurationBlockComponent implements OnInit {
       }
       if(this.hostObject?.configuration?.currentResourceName && this.hostObject?.configuration?.currentResourceName != this.currentResourceName){
         this.item = {}
-        this.currentResourceName = this.hostObject.configuration.currentResourceName
+        this.loadVariablesFromHostObject()
       }
     }
     rebuildDataview() : void{

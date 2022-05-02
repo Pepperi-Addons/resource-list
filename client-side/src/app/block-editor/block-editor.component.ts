@@ -105,7 +105,7 @@ export class BlockEditorComponent implements OnInit {
         this.allowEdit = this.hostObject?.configuration?.allowEdit
         this.currentSlug = this.hostObject?.configuration?.currentSlug || ""
         this.minHeight = this.hostObject?.configuration?.minHeight || 20
-        this.relativeHeight = this.hostObject?.configuration?.relativeHeight || 0
+        this.relativeHeight = this.hostObject?.configuration?.relativeHeight || 100
     }
     initCardsList(){
         if(!this.cardsList){
@@ -149,7 +149,7 @@ export class BlockEditorComponent implements OnInit {
         this.title = ""
         this.resourceMap = new ResourceMap()
         this.minHeight = 20
-        this.relativeHeight = 0
+        this.relativeHeight = 100
         this.allowEdit = false
         this.updateAllConfigurationObject()
     }
@@ -233,5 +233,6 @@ export class BlockEditorComponent implements OnInit {
     }
     onRelativeHeightChange($event){
         this.relativeHeight = $event
+        this.updateAllConfigurationObject()
     }
 }

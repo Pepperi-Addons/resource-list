@@ -27,6 +27,8 @@ export class DataConfigurationBlockEditorComponent implements OnInit {
     cardsList : DataConfigurationCard[] = []
     currentResourceFields: string[] = ["CreationDateTime", "ModificationDateTime"];
     currentResourceName: string;
+    relativeHeight: number;
+    minHeight: number;
 
     @Output() hostEvents: EventEmitter<any> = new EventEmitter<any>();
 
@@ -86,6 +88,8 @@ export class DataConfigurationBlockEditorComponent implements OnInit {
         this.currentResourceName = this.hostObject?.configuration?.currentResourceName;
         this.currentEditMode = this.hostObject?.configuration?.currentEditMode || this.editModeOptions[0].key;
         this.cardsList = this.hostObject?.configuration?.cardsList || []
+        this.relativeHeight = this.hostObject?.configuration?.relativeHeight || 100
+        this.minHeight = this.hostObject?.configuration?.minHeight || 20
     }
     async initResources(){
         this.resources= await this.udcService.getCollections();
@@ -143,7 +147,9 @@ export class DataConfigurationBlockEditorComponent implements OnInit {
             configuration: {
                 currentEditMode: this.currentEditMode,
                 cardsList: this.cardsList,
-                currentResourceName: this.currentResource?.Name
+                currentResourceName: this.currentResource?.Name,
+                minHeight: this.minHeight,
+                relativeHeight: this.relativeHeight
             }
         })
     }
@@ -154,6 +160,8 @@ export class DataConfigurationBlockEditorComponent implements OnInit {
         this.currentResourceName = undefined
         this.currentResourceFields =["CreationDateTime", "ModificationDateTime"];
         this.resourceMap = new ResourceMap()
+        this.minHeight = 20
+        this.relativeHeight = 100;
         this.updateAllConfigurationObject()
     }
     onSaveCardsList(){
@@ -185,5 +193,13 @@ export class DataConfigurationBlockEditorComponent implements OnInit {
         this.cardsList[$event.id].readOnly = $event.readOnly;
         this.cardsList[$event.id].value.ReadOnly = $event.readOnly
         this.updateAllConfigurationObject();
+    }
+    onMinHeightChange($event){
+        this.minHeight = $event
+        this.updateAllConfigurationObject()
+    }
+    onRelativeHeightChange($event){
+        this.relativeHeight = $event
+        this.updateAllConfigurationObject()
     }
 }

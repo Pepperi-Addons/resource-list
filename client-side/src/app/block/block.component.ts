@@ -67,7 +67,7 @@ export class BlockComponent implements OnInit {
       this.allowImport = Boolean(this?.hostObject?.configuration?.allowImport)
       this.cardsList = this.hostObject?.configuration?.cardsList
       this.minHeight = this.hostObject?.configuration?.minHeight || 20;
-      this.relativeHeight = this.hostObject?.configuration?.relativeHeight || 0
+      this.relativeHeight = this.hostObject?.configuration?.relativeHeight || 100
       this.updateResourceNameAndItemsIfChanged()
     }
     updateResourceNameAndItemsIfChanged(){
