@@ -9,6 +9,7 @@ import { BlockEditorCard } from '../draggable-card-fields/cards.model';
 import { GridDataViewColumn } from '@pepperi-addons/papi-sdk';
 import { DataSource } from '../data-source/data-source'
 import { PepSelectionData } from '@pepperi-addons/ngx-lib/list';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'block',
@@ -36,7 +37,8 @@ export class BlockComponent implements OnInit {
     @Output() hostEvents: EventEmitter<any> = new EventEmitter<any>();
 
     constructor(private translate: TranslateService,
-         private udcService: UDCService) {
+         private udcService: UDCService,
+         private router: Router) {
           this.udcService.pluginUUID = config.AddonUUID
           this.actions.get = this.getActionsCallBack()
     }
@@ -138,8 +140,10 @@ export class BlockComponent implements OnInit {
           if (data && data.rows.length == 1 && this.hostObject?.configuration?.allowEdit && this.hostObject.configuration.currentSlug) {
                 actions.push({
                     title: this.translate.instant('Navigate'),
-                    handler: async () => {
-                      window.location.href = this.hostObject.configuration.currentSlug
+                    handler : async (selectedRows) => {
+                      const key = `collection_${this.resourceName}`
+                      const val = selectedRows.rows[0]
+                      this.router.navigate([this.hostObject.configuration.currentSlug +'?' + key + ':' + val])
                     }
                 })
           }
