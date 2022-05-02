@@ -45,7 +45,7 @@ export class DataConfigurationBlockComponent implements OnInit {
     ngOnInit(): void {
       this.loadVariablesFromHostObject()
       if(this.hostObject?.parameters){
-        const key = this.hostObject?.parameters[`${this.currentResourceName}_key`];
+        const key = this.hostObject?.parameters[`collection_${this.currentResourceName}`];
         if(key){
           this.updateItem(key)
         }
