@@ -136,8 +136,10 @@ export class BlockComponent implements OnInit {
           if (data && data.rows.length == 1 && this.hostObject?.configuration?.allowEdit && this.hostObject.configuration.currentSlug) {
                 actions.push({
                     title: this.translate.instant('Navigate'),
-                    handler: async () => {
-                      this.router.navigate([this.hostObject.configuration.currentSlug])
+                    handler : async (selectedRows) => {
+                      const key = `collection_${this.resourceName}`
+                      const val = selectedRows.rows[0]
+                      this.router.navigate([this.hostObject.configuration.currentSlug], { queryParams: { [key]: val } })
                     }
                 })
           }
