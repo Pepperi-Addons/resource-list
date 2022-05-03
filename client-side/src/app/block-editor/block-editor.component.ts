@@ -31,6 +31,8 @@ export class BlockEditorComponent implements OnInit {
     slugsList: SelectOption[] = []
     minHeight: number
     relativeHeight: number
+    currentOpenMode: string
+    openModes: SelectOption[]
     constructor(private translate: TranslateService,
                 private udcService: UDCService,
                 private cardsService: CardsService
@@ -40,6 +42,7 @@ export class BlockEditorComponent implements OnInit {
     ngOnInit(): void {
         this.typeMap = new TypeMap()
         this.typeMap.init()
+        this.initOpenModes()
         this.loadVariablesFromHostObject()
         this.initSlugs()
         this.initResources()
@@ -82,6 +85,9 @@ export class BlockEditorComponent implements OnInit {
         this.deleteCards(cardsToDelete)
         this.updateAllConfigurationObject()
     }
+    initOpenModes(){
+        this.openModes = [{key: 'replace', value: this.translate.instant('Replace the current page')}, {key: 'samePage', value: this.translate.instant('The editor is in the same page')}]
+    }
     deleteCards(cradToDelete: BlockEditorCard[]){
         cradToDelete.forEach((card) => {
             this.removeCard(card.id)
@@ -106,6 +112,7 @@ export class BlockEditorComponent implements OnInit {
         this.currentSlug = this.hostObject?.configuration?.currentSlug || ""
         this.minHeight = this.hostObject?.configuration?.minHeight || 20
         this.relativeHeight = this.hostObject?.configuration?.relativeHeight || 100
+        this.currentOpenMode = this.hostObject?.configuration?.currentOpenMode || 'replace'
     }
     initCardsList(){
         if(!this.cardsList){
@@ -151,6 +158,7 @@ export class BlockEditorComponent implements OnInit {
         this.minHeight = 20
         this.relativeHeight = 100
         this.allowEdit = false
+        this.currentOpenMode = ""
         this.updateAllConfigurationObject()
     }
     updateAllConfigurationObject(){
@@ -166,7 +174,8 @@ export class BlockEditorComponent implements OnInit {
                 allowEdit: this.allowEdit,
                 currentSlug: this.currentSlug,
                 minHeight: this.minHeight,
-                relativeHeight: this.relativeHeight
+                relativeHeight: this.relativeHeight,
+                currentOpenMode: this.currentOpenMode
             }
         })
     }
@@ -233,6 +242,10 @@ export class BlockEditorComponent implements OnInit {
     }
     onRelativeHeightChange($event){
         this.relativeHeight = $event
+        this.updateAllConfigurationObject()
+    }
+    onOpenModeChange($event){
+        this.currentOpenMode = $event
         this.updateAllConfigurationObject()
     }
 }

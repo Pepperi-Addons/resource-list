@@ -86,16 +86,27 @@
                 [visible]="true"
                 (valueChange)="onAllowEditChange($event)"
             ></pep-checkbox>
+            <!-- select for open mode -->
+            <pep-select 
+                [value]="currentOpenMode"
+                label="Editor open mode"
+                type="select"
+                [options] = "openModes"
+                [showTitle]="true"
+                (valueChange)="onOpenModeChange($event)"
+                [emptyOption]="false"
+                [disabled] = "!allowEdit"
+            ></pep-select>
             <pep-select 
                 [value]="currentSlug"
                 label="Editor"
                 type="select"
-                [mandatory] = "allowEdit"
+                [mandatory] = "currentOpenMode != 'samePage && allowEdit'"
                 [options] = "slugsList"
                 [showTitle]="true"
                 (valueChange)="onSlugChange($event)"
                 [emptyOption]="true"
-                [disabled] = "!allowEdit"
+                [disabled] = "currentOpenMode == 'samePage' || !allowEdit"
             ></pep-select>
         </div>
     </mat-tab>

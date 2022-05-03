@@ -9,7 +9,7 @@ import { BlockEditorCard } from '../draggable-card-fields/cards.model';
 import { GridDataViewColumn } from '@pepperi-addons/papi-sdk';
 import { DataSource } from '../data-source/data-source'
 import { PepSelectionData } from '@pepperi-addons/ngx-lib/list';
-import { Router } from '@angular/router';
+import { Params, Router } from '@angular/router';
 
 @Component({
     selector: 'block',
@@ -137,13 +137,24 @@ export class BlockComponent implements OnInit {
      getActionsCallBack(){
       return async (data: PepSelectionData) => {
           const actions = []
-          if (data && data.rows.length == 1 && this.hostObject?.configuration?.allowEdit && this.hostObject.configuration.currentSlug) {
+          if (data && data.rows.length == 1 && this.hostObject?.configuration?.allowEdit) {
                 actions.push({
                     title: this.translate.instant('Navigate'),
                     handler : async (selectedRows) => {
-                      const key = `collection_${this.resourceName}`
-                      const val = selectedRows.rows[0]
-                      this.router.navigate([this.hostObject.configuration.currentSlug], { queryParams: { [key]: val } })
+                      this.router.onSameUrlNavigation = 'reload';
+                      const queryParams: Params = {
+                       [`collection_${this.resourceName}`]: `\"${selectedRows.rows[0]}\"`
+                      }
+                      const route = (this.hostObject.configuration.currentOpenMode == 'replace' ? [this.hostObject.configuration.currentSlug]: []) || []
+                      console.log(`navigating to route: ${route} with params: ${queryParams}`)
+                      this.router.navigate(route,
+                        {
+                          queryParams: queryParams
+                        }).then(() => {
+                          if(this.hostObject.configuration.currentOpenMode != 'replace'){
+                            window.location.reload()
+                          }
+                        })
                     }
                 })
           }
