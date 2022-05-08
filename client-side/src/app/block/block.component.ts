@@ -141,20 +141,26 @@ export class BlockComponent implements OnInit {
                 actions.push({
                     title: this.translate.instant('Navigate'),
                     handler : async (selectedRows) => {
-                      this.router.onSameUrlNavigation = 'reload';
-                      const queryParams: Params = {
-                       [`collection_${this.resourceName}`]: `\"${selectedRows.rows[0]}\"`
+                      const key = `collection_${this.resourceName}`
+                      const value = selectedRows.rows[0]
+                      if(this.hostObject.configuration.currentOpenMode == 'replace'){
+                        const queryParams: Params = {
+                          [key]: `\"${value}\"`
+                         }
+                        const route = [this.hostObject.configuration.currentSlug]
+                        this.router.navigate(route,
+                          {
+                            queryParams: queryParams
+                          })
                       }
-                      const route = (this.hostObject.configuration.currentOpenMode == 'replace' ? [this.hostObject.configuration.currentSlug]: []) || []
-                      console.log(`navigating to route: ${route} with params: ${queryParams}`)
-                      this.router.navigate(route,
-                        {
-                          queryParams: queryParams
-                        }).then(() => {
-                          if(this.hostObject.configuration.currentOpenMode != 'replace'){
-                            window.location.reload()
-                          }
-                        })
+                      else{
+                        this.hostEvents.emit({
+                          action: 'set-parameter',
+                          key: key,
+                          value: value 
+                      })
+                      }
+      
                     }
                 })
           }

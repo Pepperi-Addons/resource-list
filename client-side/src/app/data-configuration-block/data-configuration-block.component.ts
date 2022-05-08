@@ -45,15 +45,21 @@ export class DataConfigurationBlockComponent implements OnInit {
     ngOnInit(): void {
       this.loadVariablesFromHostObject()
       if(this.hostObject?.parameters){
+        this.loadObjectFromPageParam()
+      }
+    }
+    loadObjectFromPageParam(){
         const key = this.hostObject?.parameters[`collection_${this.currentResourceName}`];
         if(key){
           this.updateItem(key)
         }
-      }
     }
     ngOnChanges(e: any): void {
       if(this.hostObject?.configuration?.cardsList){
         this.rebuildDataview()
+      }
+      if(this.hostObject?.parameters){
+        this.loadObjectFromPageParam()
       }
       if(this.hostObject?.configuration?.currentResourceName && this.hostObject?.configuration?.currentResourceName != this.currentResourceName){
         this.item = {}
