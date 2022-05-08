@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { PepJwtHelperService, PepSessionService } from "@pepperi-addons/ngx-lib";
 import { PapiClient } from "@pepperi-addons/papi-sdk";
-import { SLUGS_UUID } from "../addon.config";
+
 
 
 @Injectable({ providedIn: 'root' })
@@ -40,9 +40,6 @@ export class UDCService{
             return await this.papiClient.userDefinedCollections.documents(resourceName).find();
         }
         return {};
-    }
-    async getSlugs(){
-        return await this.papiClient.addons.api.uuid(SLUGS_UUID).file('api').func('slugs').get()
     }
     async postItem(resourceName, item){
         try{

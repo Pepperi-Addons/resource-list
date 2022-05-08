@@ -2,12 +2,13 @@ import { TranslateService } from '@ngx-translate/core';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { UDCService } from '../services/udc-service'
 import { CdkDragDrop, CdkDragEnd, CdkDragStart, moveItemInArray} from '@angular/cdk/drag-drop';
-import { BlockEditorCard, IContent } from '../draggable-card-fields/cards.model'
+import { BlockEditorCard } from '../draggable-card-fields/cards.model'
 import { CardsService } from '../draggable-card-fields/cards.service'
 import { config } from '../addon.config'
 import { TypeMap } from '../type-map'
 import { SelectOption } from '../../../../shared/entities';
 import { ResourceMap } from '../resource-map'
+import { SlugsService } from '../services/slugs-service' 
 @Component({
     selector: 'block-editor',
     templateUrl: './block-editor.component.html',
@@ -35,7 +36,8 @@ export class BlockEditorComponent implements OnInit {
     openModes: SelectOption[]
     constructor(private translate: TranslateService,
                 private udcService: UDCService,
-                private cardsService: CardsService
+                private cardsService: CardsService,
+                private slugsService: SlugsService
                ) {
                    this.resourceMap = new ResourceMap();
     }
@@ -53,7 +55,7 @@ export class BlockEditorComponent implements OnInit {
     }
     async initSlugs(){
         //get slugs
-        const slugs = await this.udcService.getSlugs()
+        const slugs = await this.slugsService.getSlugs()
         //init slugs option list
         this.slugsList = slugs.map(slug => {
             return {
