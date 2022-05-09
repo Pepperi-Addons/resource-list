@@ -31,7 +31,7 @@ export class DataConfigurationDraggableFieldsComponent {
     }
     initKeyOptions(): void{
       if(this.resourceFields && this.resourceFields.length > 0){
-        this.keyOptions = this.resourceFields.map((field) => {return {key: field, value: field}})
+        this.keyOptions = this.resourceFields.map((field) => {return {key: field, value: field}}).sort((a, b) => a.key.localeCompare(b.key))
       }
     }
     onRemoveClick(): void {

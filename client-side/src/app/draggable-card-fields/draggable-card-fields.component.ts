@@ -34,7 +34,7 @@ export class DraggableCardFieldsComponent {
         }
     }
     setItemOptions(){
-        this.itemsOptions = this.items?.map((item) => {return {key: item, value: item}})
+        this.itemsOptions = this.items?.map((item) => {return {key: item, value: item}}).sort((a, b) => a.key.localeCompare(b.key))
     }
     onRemoveClick() {
     this.removeClick.emit({id: this.card.id})
