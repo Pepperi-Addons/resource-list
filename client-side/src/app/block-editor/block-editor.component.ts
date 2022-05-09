@@ -135,14 +135,6 @@ export class BlockEditorComponent implements OnInit {
         this.allowExport = $event
         this.updateAllConfigurationObject()
     }
-    // onAllowImportChange($event){
-    //     this.allowImport = $event
-    //     this.updateAllConfigurationObject()
-    // }
-    // onTitleChanged($event):void{
-    //     this.title = $event;
-    //     this.updateAllConfigurationObject()
-    // }
     async onResourceChanged($event){
         this.restoreData()
         this.resource = this.resources?.find((resource) => resource.Name == $event)
@@ -238,16 +230,4 @@ export class BlockEditorComponent implements OnInit {
         this.currentSlug = $event
         this.updateAllConfigurationObject()
     }
-    // onMinHeightChange($event){
-    //     this.minHeight = $event
-    //     this.updateAllConfigurationObject()
-    // }
-    // onRelativeHeightChange($event){
-    //     this.relativeHeight = $event
-    //     this.updateAllConfigurationObject()
-    // }
-    // onOpenModeChange($event){
-    //     this.currentOpenMode = $event
-    //     this.updateAllConfigurationObject()
-    // }
 }

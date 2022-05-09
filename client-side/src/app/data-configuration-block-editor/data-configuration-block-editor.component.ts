@@ -116,10 +116,6 @@ export class DataConfigurationBlockEditorComponent implements OnInit {
         this.updateAllConfigurationObject()
         this.setPageConfiguration()
     }
-    // onEditModeChanged($event){
-    //     this.currentEditMode = $event
-    //     this.updateAllConfigurationObject()
-    // }
     drop(event: CdkDragDrop<string[]>){
         if (event.previousContainer === event.container) {
             moveItemInArray(this.cardsList, event.previousIndex, event.currentIndex);
@@ -194,12 +190,4 @@ export class DataConfigurationBlockEditorComponent implements OnInit {
         this.cardsList[$event.id].value.ReadOnly = $event.readOnly
         this.updateAllConfigurationObject();
     }
-    // onMinHeightChange($event){
-    //     this.minHeight = $event
-    //     this.updateAllConfigurationObject()
-    // }
-    // onRelativeHeightChange($event){
-    //     this.relativeHeight = $event
-    //     this.updateAllConfigurationObject()
-    // }
 }
