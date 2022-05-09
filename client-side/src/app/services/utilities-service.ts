@@ -5,7 +5,7 @@ import { SLUGS_UUID } from "../addon.config";
 
 
 @Injectable({ providedIn: 'root' })
-export class SlugsService{
+export class UtilitiesService{
     accessToken = '';
     parsedToken: any
     papiBaseURL = 'https://staging.pepperi.com'

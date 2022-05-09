@@ -8,7 +8,7 @@ import { config } from '../addon.config'
 import { TypeMap } from '../type-map'
 import { SelectOption } from '../../../../shared/entities';
 import { ResourceMap } from '../resource-map'
-import { SlugsService } from '../services/slugs-service' 
+import { UtilitiesService } from '../services/utilities-service' 
 @Component({
     selector: 'block-editor',
     templateUrl: './block-editor.component.html',
@@ -37,7 +37,7 @@ export class BlockEditorComponent implements OnInit {
     constructor(private translate: TranslateService,
                 private udcService: UDCService,
                 private cardsService: CardsService,
-                private slugsService: SlugsService
+                private utilitiesService: UtilitiesService
                ) {
                    this.resourceMap = new ResourceMap();
     }
@@ -55,7 +55,7 @@ export class BlockEditorComponent implements OnInit {
     }
     async initSlugs(){
         //get slugs
-        const slugs = await this.slugsService.getSlugs()
+        const slugs = await this.utilitiesService.getSlugs()
         //init slugs option list
         this.slugsList = slugs.map(slug => {
             return {
@@ -135,14 +135,14 @@ export class BlockEditorComponent implements OnInit {
         this.allowExport = $event
         this.updateAllConfigurationObject()
     }
-    onAllowImportChange($event){
-        this.allowImport = $event
-        this.updateAllConfigurationObject()
-    }
-    onTitleChanged($event):void{
-        this.title = $event;
-        this.updateAllConfigurationObject()
-    }
+    // onAllowImportChange($event){
+    //     this.allowImport = $event
+    //     this.updateAllConfigurationObject()
+    // }
+    // onTitleChanged($event):void{
+    //     this.title = $event;
+    //     this.updateAllConfigurationObject()
+    // }
     async onResourceChanged($event){
         this.restoreData()
         this.resource = this.resources?.find((resource) => resource.Name == $event)
@@ -238,16 +238,16 @@ export class BlockEditorComponent implements OnInit {
         this.currentSlug = $event
         this.updateAllConfigurationObject()
     }
-    onMinHeightChange($event){
-        this.minHeight = $event
-        this.updateAllConfigurationObject()
-    }
-    onRelativeHeightChange($event){
-        this.relativeHeight = $event
-        this.updateAllConfigurationObject()
-    }
-    onOpenModeChange($event){
-        this.currentOpenMode = $event
-        this.updateAllConfigurationObject()
-    }
+    // onMinHeightChange($event){
+    //     this.minHeight = $event
+    //     this.updateAllConfigurationObject()
+    // }
+    // onRelativeHeightChange($event){
+    //     this.relativeHeight = $event
+    //     this.updateAllConfigurationObject()
+    // }
+    // onOpenModeChange($event){
+    //     this.currentOpenMode = $event
+    //     this.updateAllConfigurationObject()
+    // }
 }

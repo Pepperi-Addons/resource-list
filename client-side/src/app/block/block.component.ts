@@ -144,13 +144,11 @@ export class BlockComponent implements OnInit {
                       const key = `collection_${this.resourceName}`
                       const value = selectedRows.rows[0]
                       if(this.hostObject.configuration.currentOpenMode == 'replace'){
-                        const queryParams: Params = {
-                          [key]: `\"${value}\"`
-                         }
-                        const route = [this.hostObject.configuration.currentSlug]
-                        this.router.navigate(route,
+                        this.router.navigate([this.hostObject.configuration.currentSlug],
                           {
-                            queryParams: queryParams
+                            queryParams: {
+                              [key]: `\"${value}\"`
+                            }
                           })
                       }
                       else{
@@ -160,7 +158,6 @@ export class BlockComponent implements OnInit {
                           value: value 
                       })
                       }
-      
                     }
                 })
           }

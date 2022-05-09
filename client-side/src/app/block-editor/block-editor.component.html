@@ -12,17 +12,17 @@
                 [emptyOption]="false"
             ></pep-select>
             <pep-textbox
-                [value]="title"
+                [(value)]="title"
                 label="Title"
                 type="text"
                 mandatory="true"
                 xAlignment="left"
                 showTitle="true"
-                (valueChange)="onTitleChanged($event)"
+                (valueChange)="updateAllConfigurationObject()"
             ></pep-textbox>
             <h3>Design</h3>
             <pep-textbox
-                [value]="minHeight"
+                [(value)]="minHeight"
                 label="Min height(rem)"
                 type="real"
                 [mandatory]="false"
@@ -33,10 +33,10 @@
                 [renderTitle]="true"
                 [renderError]="true"
                 [renderSymbol]="true"
-                (valueChange)="onMinHeightChange($event)"
+                (valueChange)="updateAllConfigurationObject()"
             ></pep-textbox>
             <pep-textbox
-                [value]="relativeHeight"
+                [(value)]="relativeHeight"
                 label="Relative Height(%)"
                 type="percentage"
                 [mandatory]="false"
@@ -47,11 +47,11 @@
                 [renderTitle]="true"
                 [renderError]="true"
                 [renderSymbol]="true"
-                (valueChange)="onRelativeHeightChange($event)"
+                (valueChange)="updateAllConfigurationObject()"
             ></pep-textbox>
             <h3>Menu Settings</h3>
             <pep-checkbox
-                [value]="allowExport"
+                [(value)]="allowExport"
                 label="Allow data export"
                 type="checkbox"
                 [mandatory]="false"
@@ -60,10 +60,10 @@
                 [showTitle]="true"
                 [renderTitle]="true"
                 [visible]="true"
-                (valueChange)="onAllowExportChange($event)"
+                (valueChange)="updateAllConfigurationObject()"
             ></pep-checkbox>
             <pep-checkbox
-                [value]="allowImport"
+                [(value)]="allowImport"
                 label="Allow data import"
                 type="checkbox"
                 [mandatory]="false"
@@ -72,10 +72,10 @@
                 [showTitle]="true"
                 [renderTitle]="true"
                 [visible]="true"
-                (valueChange)="onAllowImportChange($event)"
+                (valueChange)="updateAllConfigurationObject()"
             ></pep-checkbox>
             <pep-checkbox
-                [value]="allowEdit"
+                [(value)]="allowEdit"
                 label="Allow edit"
                 type="checkbox"
                 [mandatory]="false"
@@ -84,27 +84,27 @@
                 [showTitle]="true"
                 [renderTitle]="true"
                 [visible]="true"
-                (valueChange)="onAllowEditChange($event)"
+                (valueChange)="updateAllConfigurationObject()"
             ></pep-checkbox>
             <!-- select for open mode -->
             <pep-select 
-                [value]="currentOpenMode"
+                [(value)]="currentOpenMode"
                 label="Editor open mode"
                 type="select"
                 [options] = "openModes"
                 [showTitle]="true"
-                (valueChange)="onOpenModeChange($event)"
+                (valueChange)="updateAllConfigurationObject()"
                 [emptyOption]="false"
                 [disabled] = "!allowEdit"
             ></pep-select>
             <pep-select 
-                [value]="currentSlug"
+                [(value)]="currentSlug"
                 label="Editor"
                 type="select"
-                [mandatory] = "currentOpenMode != 'samePage && allowEdit'"
+                [mandatory] = "true"
                 [options] = "slugsList"
                 [showTitle]="true"
-                (valueChange)="onSlugChange($event)"
+                (valueChange)="updateAllConfigurationObject()"
                 [emptyOption]="true"
                 [disabled] = "currentOpenMode == 'samePage' || !allowEdit"
             ></pep-select>
