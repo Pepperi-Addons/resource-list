@@ -11,6 +11,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { DataConfigurationDraggableFieldsModule } from '../data-configuration-draggable-fields/data-configuration-draggable-fields.module';
 import { PepButtonModule } from '@pepperi-addons/ngx-lib/button';
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { PepTextboxModule } from '@pepperi-addons/ngx-lib/textbox';
 
 
 export const routes: Routes = [
@@ -30,6 +31,7 @@ export const routes: Routes = [
         DataConfigurationDraggableFieldsModule,
         PepButtonModule,
         DragDropModule,
+        PepTextboxModule,
         TranslateModule.forChild({
             loader: {
                 provide: TranslateLoader,

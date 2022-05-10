@@ -12,7 +12,6 @@ import { DataConfigurationCard } from '../draggable-card-fields/cards.model';
 
 export class DataConfigurationDraggableFieldsComponent {
     public title: string;
-    // showContentOfField = false;
     keyOptions: SelectOption[] = []
     @Input() field: any
     @Input() card: DataConfigurationCard

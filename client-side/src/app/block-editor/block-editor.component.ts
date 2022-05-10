@@ -2,12 +2,13 @@ import { TranslateService } from '@ngx-translate/core';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { UDCService } from '../services/udc-service'
 import { CdkDragDrop, CdkDragEnd, CdkDragStart, moveItemInArray} from '@angular/cdk/drag-drop';
-import { BlockEditorCard, IContent } from '../draggable-card-fields/cards.model'
+import { BlockEditorCard } from '../draggable-card-fields/cards.model'
 import { CardsService } from '../draggable-card-fields/cards.service'
 import { config } from '../addon.config'
 import { TypeMap } from '../type-map'
 import { SelectOption } from '../../../../shared/entities';
 import { ResourceMap } from '../resource-map'
+import { UtilitiesService } from '../services/utilities-service' 
 @Component({
     selector: 'block-editor',
     templateUrl: './block-editor.component.html',
@@ -26,21 +27,45 @@ export class BlockEditorComponent implements OnInit {
     @Output() hostEvents: EventEmitter<any> = new EventEmitter<any>();
     typeMap: TypeMap 
     cardsList: BlockEditorCard[]
+    allowEdit: boolean = false;
+    currentSlug: string;
+    slugsList: SelectOption[] = []
+    minHeight: number
+    relativeHeight: number
+    currentOpenMode: string
+    openModes: SelectOption[]
     constructor(private translate: TranslateService,
                 private udcService: UDCService,
-                private cardsService: CardsService
+                private cardsService: CardsService,
+                private utilitiesService: UtilitiesService
                ) {
                    this.resourceMap = new ResourceMap();
     }
     ngOnInit(): void {
         this.typeMap = new TypeMap()
         this.typeMap.init()
+        this.initOpenModes()
         this.loadVariablesFromHostObject()
+        this.initSlugs()
         this.initResources()
         .then(() => {
             this.initCurrentResource()
             this.initCardsList()
         })
+    }
+    async initSlugs(){
+        //get slugs
+        const slugs = await this.utilitiesService.getSlugs()
+        //init slugs option list
+        this.slugsList = slugs.map(slug => {
+            return {
+                key: slug.Slug,
+                value: slug.Name
+            }
+        })
+        //if slugs is not empty and is not on the slugs list, slug should be "".
+        this.currentSlug = this.slugsList.find((slug) => slug.key == this.currentSlug)?.key || "";
+        this.updateAllConfigurationObject();
     }
     initCurrentResource(){
         if(!this.resource){
@@ -62,6 +87,9 @@ export class BlockEditorComponent implements OnInit {
         this.deleteCards(cardsToDelete)
         this.updateAllConfigurationObject()
     }
+    initOpenModes(){
+        this.openModes = [{key: 'replace', value: this.translate.instant('Replace the current page')}, {key: 'samePage', value: this.translate.instant('The editor is in the same page')}]
+    }
     deleteCards(cradToDelete: BlockEditorCard[]){
         cradToDelete.forEach((card) => {
             this.removeCard(card.id)
@@ -82,6 +110,11 @@ export class BlockEditorComponent implements OnInit {
         this.allowExport = this.hostObject?.configuration?.allowExport
         this.allowImport = this.hostObject?.configuration?.allowImport
         this.cardsList = this.hostObject?.configuration?.cardsList
+        this.allowEdit = this.hostObject?.configuration?.allowEdit
+        this.currentSlug = this.hostObject?.configuration?.currentSlug || ""
+        this.minHeight = this.hostObject?.configuration?.minHeight || 20
+        this.relativeHeight = this.hostObject?.configuration?.relativeHeight || 100
+        this.currentOpenMode = this.hostObject?.configuration?.currentOpenMode || 'replace'
     }
     initCardsList(){
         if(!this.cardsList){
@@ -102,14 +135,6 @@ export class BlockEditorComponent implements OnInit {
         this.allowExport = $event
         this.updateAllConfigurationObject()
     }
-    onAllowImportChange($event){
-        this.allowImport = $event
-        this.updateAllConfigurationObject()
-    }
-    onTitleChanged($event):void{
-        this.title = $event;
-        this.updateAllConfigurationObject()
-    }
     async onResourceChanged($event){
         this.restoreData()
         this.resource = this.resources?.find((resource) => resource.Name == $event)
@@ -124,6 +149,10 @@ export class BlockEditorComponent implements OnInit {
         this.allowImport = false
         this.title = ""
         this.resourceMap = new ResourceMap()
+        this.minHeight = 20
+        this.relativeHeight = 100
+        this.allowEdit = false
+        this.currentOpenMode = ""
         this.updateAllConfigurationObject()
     }
     updateAllConfigurationObject(){
@@ -135,7 +164,12 @@ export class BlockEditorComponent implements OnInit {
                 allowExport: this.allowExport,
                 allowImport: this.allowImport,
                 cardsList: this.cardsList,
-                resourceName: this.resource?.Name
+                resourceName: this.resource?.Name,
+                allowEdit: this.allowEdit,
+                currentSlug: this.currentSlug,
+                minHeight: this.minHeight,
+                relativeHeight: this.relativeHeight,
+                currentOpenMode: this.currentOpenMode
             }
         })
     }
@@ -186,6 +220,14 @@ export class BlockEditorComponent implements OnInit {
         this.updateAllConfigurationObject()
     }
     onWidthChange(){
+        this.updateAllConfigurationObject()
+    }
+    onAllowEditChange($event){
+        this.allowEdit = $event
+        this.updateAllConfigurationObject()
+    }
+    onSlugChange($event){
+        this.currentSlug = $event
         this.updateAllConfigurationObject()
     }
 }

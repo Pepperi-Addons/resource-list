@@ -3,11 +3,13 @@ import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angu
 import { UDCService } from '../services/udc-service';
 import { PepMenuItem } from "@pepperi-addons/ngx-lib/menu";
 import { DIMXComponent } from '@pepperi-addons/ngx-composite-lib/dimx-export';
-import { UDCUUID } from '../addon.config';
+import { UDC_UUID } from '../addon.config';
 import { config } from '../addon.config'
 import { BlockEditorCard } from '../draggable-card-fields/cards.model';
 import { GridDataViewColumn } from '@pepperi-addons/papi-sdk';
 import { DataSource } from '../data-source/data-source'
+import { PepSelectionData } from '@pepperi-addons/ngx-lib/list';
+import { Params, Router } from '@angular/router';
 
 @Component({
     selector: 'block',
@@ -20,7 +22,7 @@ export class BlockComponent implements OnInit {
     datasource: DataSource
     resourceName: string
     title: string
-    udcUUID: string = UDCUUID
+    udcUUID: string = UDC_UUID
     menuItems: PepMenuItem[] = []
     allowExport: boolean = false;
     allowImport: boolean = false;
@@ -29,11 +31,16 @@ export class BlockComponent implements OnInit {
     cardsList: BlockEditorCard[] = []
     fields: any[] = []
     items: any[] = []
+    actions: any = {}
+    minHeight: number
+    relativeHeight: number
     @Output() hostEvents: EventEmitter<any> = new EventEmitter<any>();
 
     constructor(private translate: TranslateService,
-         private udcService: UDCService) {
+         private udcService: UDCService,
+         private router: Router) {
           this.udcService.pluginUUID = config.AddonUUID
+          this.actions.get = this.getActionsCallBack()
     }
     ngOnInit(): void {
       this.init()
@@ -61,6 +68,8 @@ export class BlockComponent implements OnInit {
       this.allowExport = Boolean(this.hostObject?.configuration?.allowExport)
       this.allowImport = Boolean(this?.hostObject?.configuration?.allowImport)
       this.cardsList = this.hostObject?.configuration?.cardsList
+      this.minHeight = this.hostObject?.configuration?.minHeight || 20;
+      this.relativeHeight = this.hostObject?.configuration?.relativeHeight || 100
       this.updateResourceNameAndItemsIfChanged()
     }
     updateResourceNameAndItemsIfChanged(){
@@ -101,7 +110,7 @@ export class BlockComponent implements OnInit {
           // this.dimx?.uploadFile({
           //   OverwriteOBject: true,
           //   Delimiter: ",",
-          //   OwnerID: UDCUUID
+          //   OwnerID: UDC_UUID
           // });
           break;    
       // }
@@ -125,5 +134,34 @@ export class BlockComponent implements OnInit {
             hidden: !this.allowImport
           }]
     }
-}
-
+     getActionsCallBack(){
+      return async (data: PepSelectionData) => {
+          const actions = []
+          if (data && data.rows.length == 1 && this.hostObject?.configuration?.allowEdit) {
+                actions.push({
+                    title: this.translate.instant('Navigate'),
+                    handler : async (selectedRows) => {
+                      const key = `collection_${this.resourceName}`
+                      const value = selectedRows.rows[0]
+                      if(this.hostObject.configuration.currentOpenMode == 'replace'){
+                        this.router.navigate([this.hostObject.configuration.currentSlug],
+                          {
+                            queryParams: {
+                              [key]: `\"${value}\"`
+                            }
+                          })
+                      }
+                      else{
+                        this.hostEvents.emit({
+                          action: 'set-parameter',
+                          key: key,
+                          value: value 
+                      })
+                      }
+                    }
+                })
+          }
+          return actions
+      }
+      }
+  }

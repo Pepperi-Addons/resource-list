@@ -27,6 +27,8 @@ export class DataConfigurationBlockEditorComponent implements OnInit {
     cardsList : DataConfigurationCard[] = []
     currentResourceFields: string[] = ["CreationDateTime", "ModificationDateTime"];
     currentResourceName: string;
+    relativeHeight: number;
+    minHeight: number;
 
     @Output() hostEvents: EventEmitter<any> = new EventEmitter<any>();
 
@@ -86,6 +88,8 @@ export class DataConfigurationBlockEditorComponent implements OnInit {
         this.currentResourceName = this.hostObject?.configuration?.currentResourceName;
         this.currentEditMode = this.hostObject?.configuration?.currentEditMode || this.editModeOptions[0].key;
         this.cardsList = this.hostObject?.configuration?.cardsList || []
+        this.relativeHeight = this.hostObject?.configuration?.relativeHeight || 100
+        this.minHeight = this.hostObject?.configuration?.minHeight || 20
     }
     async initResources(){
         this.resources= await this.udcService.getCollections();
@@ -111,10 +115,6 @@ export class DataConfigurationBlockEditorComponent implements OnInit {
         this.initCardsList()
         this.updateAllConfigurationObject()
         this.setPageConfiguration()
-    }
-    onEditModeChanged($event){
-        this.currentEditMode = $event
-        this.updateAllConfigurationObject()
     }
     drop(event: CdkDragDrop<string[]>){
         if (event.previousContainer === event.container) {
@@ -143,7 +143,9 @@ export class DataConfigurationBlockEditorComponent implements OnInit {
             configuration: {
                 currentEditMode: this.currentEditMode,
                 cardsList: this.cardsList,
-                currentResourceName: this.currentResource?.Name
+                currentResourceName: this.currentResource?.Name,
+                minHeight: this.minHeight,
+                relativeHeight: this.relativeHeight
             }
         })
     }
@@ -154,6 +156,8 @@ export class DataConfigurationBlockEditorComponent implements OnInit {
         this.currentResourceName = undefined
         this.currentResourceFields =["CreationDateTime", "ModificationDateTime"];
         this.resourceMap = new ResourceMap()
+        this.minHeight = 20
+        this.relativeHeight = 100;
         this.updateAllConfigurationObject()
     }
     onSaveCardsList(){
@@ -166,7 +170,7 @@ export class DataConfigurationBlockEditorComponent implements OnInit {
             pageConfiguration: {
                 Parameters: [
                     {
-                        Key: this.currentResourceName + '_key',
+                        Key: 'collection_' + this.currentResourceName,
                         Type: "String",
                         Consume: true,
                     }

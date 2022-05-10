@@ -16,6 +16,8 @@ export class DataConfigurationBlockComponent implements OnInit {
     menuItems: PepMenuItem[] = [];
     typeMap: any;
     currentResourceName: string = ""
+    minHeight: number
+    relativeHeight: number
     item = {} 
     fields: any[] = []
     dataView =  {
@@ -35,22 +37,33 @@ export class DataConfigurationBlockComponent implements OnInit {
       this.typeMap.init()
       
     }
-    ngOnInit(): void {
+    loadVariablesFromHostObject(){
       this.currentResourceName = this.hostObject?.configuration?.currentResourceName
+      this.minHeight = this.hostObject?.configuration?.minHeight || 20
+      this.relativeHeight = this.hostObject?.configuration?.relativeHeight || 100
+    }
+    ngOnInit(): void {
+      this.loadVariablesFromHostObject()
       if(this.hostObject?.parameters){
-        const key = this.hostObject?.parameters[`${this.currentResourceName}_key`];
+        this.loadObjectFromPageParam()
+      }
+    }
+    loadObjectFromPageParam(){
+        const key = this.hostObject?.parameters[`collection_${this.currentResourceName}`];
         if(key){
           this.updateItem(key)
         }
-      }
     }
     ngOnChanges(e: any): void {
       if(this.hostObject?.configuration?.cardsList){
         this.rebuildDataview()
       }
+      if(this.hostObject?.parameters){
+        this.loadObjectFromPageParam()
+      }
       if(this.hostObject?.configuration?.currentResourceName && this.hostObject?.configuration?.currentResourceName != this.currentResourceName){
         this.item = {}
-        this.currentResourceName = this.hostObject.configuration.currentResourceName
+        this.loadVariablesFromHostObject()
       }
     }
     rebuildDataview() : void{
