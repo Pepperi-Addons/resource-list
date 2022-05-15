@@ -163,5 +163,12 @@ export class BlockComponent implements OnInit {
           }
           return actions
       }
+    }
+    onAddClick(){
+      if(this.hostObject?.configuration?.allowEdit){
+        if(this.hostObject.configuration.currentOpenMode == 'replace'){
+            this.router.navigate([this.hostObject.configuration.currentSlug])
+          }
       }
-  }
+   }
+}

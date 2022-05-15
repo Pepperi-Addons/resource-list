@@ -8,6 +8,18 @@
             [actions] = "actions"
             uuidMapping = 'Key'>
             <ng-container right-buttons>
+
+                <pep-button
+                    value="Add"
+                    styleType="strong"
+                    styleStateType="system"
+                    sizeType="md"
+                    classNames=""
+                    [disabled]="false"
+                    iconPosition="end"
+                    [visible]="true"
+                    (buttonClick)="onAddClick()"
+                ></pep-button>
                 <pep-menu
                     classNames="pep-spacing-element"
                     iconName="system_menu"
