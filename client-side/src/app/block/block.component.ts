@@ -137,29 +137,48 @@ export class BlockComponent implements OnInit {
      getActionsCallBack(){
       return async (data: PepSelectionData) => {
           const actions = []
-          if (data && data.rows.length == 1 && this.hostObject?.configuration?.allowEdit) {
-                actions.push({
-                    title: this.translate.instant('Navigate'),
-                    handler : async (selectedRows) => {
-                      const key = `collection_${this.resourceName}`
-                      const value = selectedRows.rows[0]
-                      if(this.hostObject.configuration.currentOpenMode == 'replace'){
-                        this.router.navigate([this.hostObject.configuration.currentSlug],
-                          {
-                            queryParams: {
-                              [key]: `\"${value}\"`
-                            }
-                          })
-                      }
-                      else{
-                        this.hostEvents.emit({
-                          action: 'set-parameter',
-                          key: key,
-                          value: value 
-                      })
-                      }
+          if(data && data.rows.length == 1){
+            actions.push({
+                title: this.translate.instant('Delete'),
+                handler: async (selectedRows) => {
+                  let itemToDelete;
+                  this.items = this.items.filter(item => {
+                    if(item.Key == selectedRows.rows[0]){
+                      itemToDelete = item
+                      return false;
                     }
-                })
+                    return true
+                  })
+                  itemToDelete.Hidden = true;
+                  await this.udcService.postItem(this.resourceName, itemToDelete)
+                  this.loadGenericList()
+                }
+              
+            })
+            if (this.hostObject?.configuration?.allowEdit) {
+                  actions.push({
+                      title: this.translate.instant('Edit'),
+                      handler : async (selectedRows) => {
+                        const key = `collection_${this.resourceName}`
+                        const value = selectedRows.rows[0]
+                        if(this.hostObject.configuration.currentOpenMode == 'replace'){
+                          this.router.navigate([this.hostObject.configuration.currentSlug],
+                            {
+                              queryParams: {
+                                [key]: `\"${value}\"`
+                              }
+                            })
+                        }
+                        else{
+                          this.hostEvents.emit({
+                            action: 'set-parameter',
+                            key: key,
+                            value: value 
+                        })
+                        }
+                      }
+                  })
+            }
           }
           return actions
       }
