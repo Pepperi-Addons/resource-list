@@ -34,6 +34,7 @@ export class BlockComponent implements OnInit {
     actions: any = {}
     minHeight: number
     relativeHeight: number
+    allowEdit:boolean = false;
     @Output() hostEvents: EventEmitter<any> = new EventEmitter<any>();
 
     constructor(private translate: TranslateService,
@@ -70,6 +71,7 @@ export class BlockComponent implements OnInit {
       this.cardsList = this.hostObject?.configuration?.cardsList
       this.minHeight = this.hostObject?.configuration?.minHeight || 20;
       this.relativeHeight = this.hostObject?.configuration?.relativeHeight || 100
+      this.allowEdit = this.hostObject?.configuration?.allowEdit
       this.updateResourceNameAndItemsIfChanged()
     }
     updateResourceNameAndItemsIfChanged(){
@@ -152,11 +154,7 @@ export class BlockComponent implements OnInit {
                           })
                       }
                       else{
-                        this.hostEvents.emit({
-                          action: 'set-parameter',
-                          key: key,
-                          value: value 
-                      })
+                        this.sendObjectToEditor(key,value)
                       }
                     }
                 })
@@ -164,11 +162,24 @@ export class BlockComponent implements OnInit {
           return actions
       }
     }
+    sendObjectToEditor(key: string, value: string){
+      this.hostEvents.emit({
+        action: 'set-parameter',
+        key: key,
+        value: value 
+      })
+      console.log(this.hostObject)
+
+
+    }
     onAddClick(){
       if(this.hostObject?.configuration?.allowEdit){
         if(this.hostObject.configuration.currentOpenMode == 'replace'){
             this.router.navigate([this.hostObject.configuration.currentSlug])
-          }
+        }
+        else{
+          this.sendObjectToEditor("","")
+        }
       }
    }
 }
