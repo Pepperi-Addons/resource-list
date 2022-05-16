@@ -141,16 +141,8 @@ export class BlockComponent implements OnInit {
             actions.push({
                 title: this.translate.instant('Delete'),
                 handler: async (selectedRows) => {
-                  let itemToDelete;
-                  this.items = this.items.filter(item => {
-                    if(item.Key == selectedRows.rows[0]){
-                      itemToDelete = item
-                      return false;
-                    }
-                    return true
-                  })
-                  itemToDelete.Hidden = true;
-                  await this.udcService.postItem(this.resourceName, itemToDelete)
+                  await this.udcService.postItem(this.resourceName, {Key: selectedRows.rows[0], Hidden: true})
+                  this.items = await this.udcService.getItems(this.resourceName)
                   this.loadGenericList()
                 }
               
