@@ -166,7 +166,6 @@ export class DataConfigurationBlockEditorComponent implements OnInit {
     setPageConfiguration(){
         this.hostEvents.emit({
             action: 'set-page-configuration',
-            
             pageConfiguration: {
                 Parameters: [
                     {
