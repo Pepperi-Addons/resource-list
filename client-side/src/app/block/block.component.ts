@@ -43,6 +43,7 @@ export class BlockComponent implements OnInit {
           this.actions.get = this.getActionsCallBack()
     }
     ngOnInit(): void {
+      debugger
       this.init()
     }
     ngOnChanges(e: any): void {
