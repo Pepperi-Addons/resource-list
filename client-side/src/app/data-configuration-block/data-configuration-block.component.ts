@@ -44,15 +44,11 @@ export class DataConfigurationBlockComponent implements OnInit {
     }
     ngOnInit(): void {
       this.loadVariablesFromHostObject()
-      if(this.hostObject?.parameters){
-        this.loadObjectFromPageParam()
-      }
+      this.loadObjectFromPageParam()
     }
     loadObjectFromPageParam(){
-        const key = this.hostObject?.parameters[`collection_${this.currentResourceName}`];
-        if(key){
-          this.updateItem(key)
-        }
+      const key = this.hostObject?.parameters? this.hostObject?.parameters[`collection_${this.currentResourceName}`] : undefined;
+      this.updateItem(key)
     }
     ngOnChanges(e: any): void {
       if(this.hostObject?.configuration?.cardsList){
@@ -85,12 +81,8 @@ export class DataConfigurationBlockComponent implements OnInit {
       this.item = items.find(item => item.Key == key) || {}
       this.rebuildDataview()
     }
-    onValueChanged($event){
-    }
     onSaveButtonClick(){
-     this.udcService.postItem(this.currentResourceName, this.item)
-     .then(res => {
-     }) 
+      this.udcService.postItem(this.currentResourceName, this.item)
     }
     onCancelClick(){
       this.item = {}

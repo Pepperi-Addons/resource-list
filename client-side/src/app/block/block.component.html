@@ -8,14 +8,13 @@
             [actions] = "actions"
             uuidMapping = 'Key'>
             <ng-container right-buttons>
-
                 <pep-button
                     value="Add"
                     styleType="strong"
                     styleStateType="system"
                     sizeType="md"
                     classNames=""
-                    [disabled]="false"
+                    [disabled]="!allowEdit"
                     iconPosition="end"
                     [visible]="true"
                     (buttonClick)="onAddClick()"
