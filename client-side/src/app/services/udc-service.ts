@@ -24,7 +24,7 @@ export class UDCService{
         if(resourceName){
             return await this.utilitiesService.papiClient.userDefinedCollections.documents(resourceName).find();
         }
-        return {};
+        return [];
     }
     async postItem(resourceName, item){
         try{
