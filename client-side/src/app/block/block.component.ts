@@ -50,10 +50,9 @@ export class BlockComponent implements OnInit {
         this.init()
       }
     }
-    loadGenericList(){
-      if(this.widthArray.length > 0 && this.items){
-        this.datasource = new DataSource(this.items, this.fields, this.widthArray)
-    }
+    async loadGenericList(){
+    this.items = await  this.udcService.getItems(this.resourceName);
+    this.datasource = new DataSource(this.items, this.fields, this.widthArray)
     }
     init(){
       this.loadVariablesFromHostObject()
@@ -142,7 +141,6 @@ export class BlockComponent implements OnInit {
                 title: this.translate.instant('Delete'),
                 handler: async (selectedRows) => {
                   await this.udcService.postItem(this.resourceName, {Key: selectedRows.rows[0], Hidden: true})
-                  this.items = await this.udcService.getItems(this.resourceName)
                   this.loadGenericList()
                 }
               
