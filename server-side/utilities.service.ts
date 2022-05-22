@@ -1,7 +1,10 @@
-import { PapiClient, InstalledAddon } from '@pepperi-addons/papi-sdk'
+import { PapiClient, InstalledAddon, FindOptions } from '@pepperi-addons/papi-sdk'
 import { Client } from '@pepperi-addons/debug-server';
+import { isView, View, viewsTable } from './metadata'
+import { v4 as uuidv4 } from 'uuid';
+import { debug } from 'console';
 
-class MyService {
+class UtilitiesService {
 
     papiClient: PapiClient
 
@@ -32,8 +35,24 @@ class MyService {
     getCollectionDataByName(collectionName: string){
         return this.papiClient.userDefinedCollections.documents(collectionName).find()
     }
+    async createViewsTable(){
+        return await this.papiClient.addons.data.schemes.post(viewsTable);
+    }
+    async getView(options: any){
+        if(!options){
+            throw new Error(`must send Key in order to get view`);
+        }
+        return await this.papiClient.addons.data.uuid(this.client.AddonUUID).table(viewsTable.Name).find(options);
+    }
+    async postView(view: any){
+        view.Key =  uuidv4()
+        if(!isView(view)){
+            throw new Error(`must send object with type of View inside the body, body: ${view}`)
+        }
+        return await this.papiClient.addons.data.uuid(this.client.AddonUUID).table(viewsTable.Name).upsert(view)
+    }
 
     
 }
 
-export default MyService;
+export default UtilitiesService;
