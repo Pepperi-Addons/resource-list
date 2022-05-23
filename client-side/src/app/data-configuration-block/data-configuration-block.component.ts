@@ -43,7 +43,6 @@ export class DataConfigurationBlockComponent implements OnInit {
       this.relativeHeight = this.hostObject?.configuration?.relativeHeight || 100
     }
     ngOnInit(): void {
-      debugger
       this.loadVariablesFromHostObject()
       this.loadObjectFromPageParam()
     }
