@@ -50,7 +50,23 @@ export class BlockEditorComponent implements OnInit {
         this.initResources()
         .then(() => {
             this.initCurrentResource()
+            this.setPageConfiguration()
             this.initCardsList()
+        })
+    }
+
+    setPageConfiguration(){
+        this.hostEvents.emit({
+            action: 'set-page-configuration',
+            pageConfiguration: {
+                Parameters: [
+                    {
+                        Key: 'collection_' + this.resource,
+                        Type: "String",
+                        Produce: true,
+                    }
+                ]
+            }
         })
     }
     async initSlugs(){
@@ -141,6 +157,7 @@ export class BlockEditorComponent implements OnInit {
         await this.initCurrentResource()
         this.generateCardsListFromFields()
         this.updateAllConfigurationObject()  
+        this.setPageConfiguration()
     }
     restoreData(){
         this.cardsList = undefined

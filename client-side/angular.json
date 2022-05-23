@@ -30,7 +30,9 @@
                         "styles": [],
                         "scripts": [],
                         "customWebpackConfig": {
-                            "path": "webpack.config.js"
+                            "path": "webpack.config.js",
+                            "libraryName": "client-side",
+                            "libraryTarget": "umd"
                         }
                     },
                     "configurations": {

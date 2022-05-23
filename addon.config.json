@@ -1,6 +1,6 @@
 {
   "AddonUUID": "0e2ae61b-a26a-4c26-81fe-13bdd2e4aaa3",
-  "AddonVersion": "0.0.88",
+  "AddonVersion": "0.0.101",
   "DebugPort": 4500,
   "WebappBaseUrl": "https://app.sandbox.pepperi.com",
   "DefaultEditor": "main",
@@ -15,9 +15,9 @@
     "ClientStack": "ng10",
     "Editors": [
       {
-        "ParentPackageName": "CHANGE_TO_ADDON_CONTAINER_NAME",
-        "PackageName": "CHANGE_TO_ADDON_PATH",
-        "Description": "CHANGE_TO_ADDON_DESCRIPTION"
+        "ParentPackageName": "Views&Editors",
+        "PackageName": "views_and_editors",
+        "Description": "views and editors"
       }
     ],
     "Dependencies": {},
