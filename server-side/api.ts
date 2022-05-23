@@ -19,7 +19,7 @@ function validateRequest(method: string, request: Request){
         throw new Error(`expected to recive ${method} method, but instead recived ' + ${request.method}`);
     }
 }
-export async function view(client: Client, request: Request){
+export async function views(client: Client, request: Request){
     const service = new UtilitiesService(client)
     if(request.method =='POST'){
         if(!request.body){
@@ -28,10 +28,10 @@ export async function view(client: Client, request: Request){
         return await service.postView(request.body)
     }
     else if(request.method === 'GET'){
-        return await service.getView(request.query)
+        return await service.getViews(request.query)
     }
     else{
         throw new Error(`expected to recive GET/POST method, but instead recived ' + ${request.method}`);
     }
-    
 }
+

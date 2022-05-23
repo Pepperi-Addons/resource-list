@@ -38,7 +38,7 @@ class UtilitiesService {
     async createViewsTable(){
         return await this.papiClient.addons.data.schemes.post(viewsTable);
     }
-    async getView(options: any){
+    async getViews(options: any){
         if(!options){
             throw new Error(`must send Key in order to get view`);
         }
@@ -51,8 +51,6 @@ class UtilitiesService {
         }
         return await this.papiClient.addons.data.uuid(this.client.AddonUUID).table(viewsTable.Name).upsert(view)
     }
-
-    
 }
 
 export default UtilitiesService;
