@@ -2,7 +2,7 @@ import { PapiClient, InstalledAddon, FindOptions } from '@pepperi-addons/papi-sd
 import { Client } from '@pepperi-addons/debug-server';
 
 
-class AddonsService {
+class AddonService {
 
     papiClient: PapiClient
 
@@ -29,4 +29,4 @@ class AddonsService {
     }
 }
 
-export default AddonsService;
+export default AddonService;
