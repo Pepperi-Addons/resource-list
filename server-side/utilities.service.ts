@@ -1,8 +1,8 @@
 import { PapiClient, InstalledAddon, FindOptions } from '@pepperi-addons/papi-sdk'
 import { Client } from '@pepperi-addons/debug-server';
-import { isView, View, viewsTable } from './metadata'
+import { isView } from '../shared/entities'
+import { viewsTable } from './metadata'
 import { v4 as uuidv4 } from 'uuid';
-import { debug } from 'console';
 
 class UtilitiesService {
 

@@ -9,7 +9,10 @@ import { DataConfigurationBlockEditorModule } from './data-configuration-block-e
 import { ViewsAndEditorsModule } from './views-and-editors'
 import { TranslateLoader, TranslateModule, TranslateStore } from '@ngx-translate/core';
 import { PepAddonService } from '@pepperi-addons/ngx-lib';
-import { AppRoutingModule } from './app.route'
+import { AppRoutingModule } from './app.route';
+import { ViewsEditorComponent } from './views-editor/views-editor.component'
+import { PepButtonModule } from '@pepperi-addons/ngx-lib/button';
+import { MatTabsModule } from '@angular/material/tabs';
 
 @NgModule({
     imports: [
@@ -21,6 +24,8 @@ import { AppRoutingModule } from './app.route'
         DataConfigurationBlockEditorModule,
         ViewsAndEditorsModule,
         AppRoutingModule,
+        PepButtonModule,
+        MatTabsModule,
         TranslateModule.forRoot({
             loader: {
                 provide: TranslateLoader,
@@ -31,6 +36,7 @@ import { AppRoutingModule } from './app.route'
     ],
     declarations: [
         AppComponent,
+        ViewsEditorComponent,
     ],
     providers: [
         TranslateStore
