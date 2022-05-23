@@ -15,4 +15,7 @@ export class ViewsService{
     async getViews(key = undefined): Promise<View[]>{
         return await this.utilitiesService.papiClient.addons.api.uuid(config.AddonUUID).file('api').func('views').get({Key: key})
     }
+    async updateView(view: View){
+        return await this.utilitiesService.papiClient.addons.api.uuid(config.AddonUUID).file('api').func('views').post(undefined,view)
+    }
 }

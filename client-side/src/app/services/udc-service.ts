@@ -15,11 +15,6 @@ export class UDCService{
     async getCollections(): Promise<any[]>{
         return await this.utilitiesService.papiClient.addons.api.uuid(this.pluginUUID).file('api').func('get_all_collections').get()
     }
-    async getAllResources(resourceType: string){
-        if(resourceType == 'UDC'){
-            return await this.getCollections()
-        }
-    }
     async getItems(resourceName: string): Promise<any>{
         if(resourceName){
             return await this.utilitiesService.papiClient.userDefinedCollections.documents(resourceName).find();
