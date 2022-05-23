@@ -10,7 +10,7 @@ The error Message is importent! it will be written in the audit log and help the
 
 import { Client, Request } from '@pepperi-addons/debug-server'
 import { Relation } from '@pepperi-addons/papi-sdk'
-import UtilitiesService from './addons.service';
+import AddonService from './addon.service';
 import { ViewsService } from './views.service';
 
 export async function install(client: Client, request: Request): Promise<any> {
@@ -50,7 +50,7 @@ async function createPageBlockRelation(client: Client): Promise<any> {
             EditorComponentName: `BlockEditorComponent`, // This is should be the block editor component name (from the client-side)
             EditorModuleName: `BlockEditorModule` // This is should be the block editor module name (from the client-side)
         };
-        const service = new UtilitiesService(client);
+        const service = new AddonService(client);
         const dataViewerResult = await service.upsertRelation(dataViewerRelation);
         
         filename = 'data_configuration_block';
