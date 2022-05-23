@@ -1,10 +1,7 @@
 {
     "Block_Title": "Block title",
-    "TABS": {
-        "GENERAL": "General",
-        "VIEWS": "Views"
-    },
-    "VIEWS_EDITOR_FIRST_LINE" : "Define the new content",
-    "VIEWS_AND_EDITORS_TITLE" : "Views & Editors",
-    "VIEWS_LIST_TITLE" : "Views"
+    "DATA_VIEWER_TABS": {
+        "GENERAL": "GENERAL"
+    }
+
 }

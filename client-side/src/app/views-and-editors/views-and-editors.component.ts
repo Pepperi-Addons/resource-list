@@ -2,8 +2,6 @@ import { DataSource } from '../data-source/data-source';
 import { Component, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { ViewsService } from '../services/views.service'
-import { PepSelectionData } from '@pepperi-addons/ngx-lib/list';
-import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-views-and-editors',
@@ -13,16 +11,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 export class ViewsAndEditorsComponent implements OnInit {
   datasource: DataSource
   items: any[] = []
-  actions: any = {}
 
   constructor(
     private translate: TranslateService,
-    private viewsService: ViewsService,
-    private router: Router,
-    private route: ActivatedRoute
-  ) {
-    this.actions.get = this.getActionsCallBack()
-   }
+    private viewsService: ViewsService
+  ) { }
 
   
   ngOnInit(): void {
@@ -74,18 +67,4 @@ export class ViewsAndEditorsComponent implements OnInit {
       }
     })
   }
-  getActionsCallBack(){
-    return async (data: PepSelectionData) => {
-        const actions = []
-        if(data && data.rows.length == 1){
-          actions.push({
-              title: this.translate.instant('Edit'),
-              handler: async (selectedRows) => {
-                this.router.navigate([`${selectedRows.rows[0]}`], {relativeTo : this.route})
-              }
-          })
-        }
-        return actions
-      }
-    }
 }
