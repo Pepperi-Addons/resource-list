@@ -10,11 +10,12 @@ The error Message is importent! it will be written in the audit log and help the
 
 import { Client, Request } from '@pepperi-addons/debug-server'
 import { Relation } from '@pepperi-addons/papi-sdk'
-import UtilitiesService from './utilities.service';
+import UtilitiesService from './addons.service';
+import { ViewsService } from './views.service';
 
 export async function install(client: Client, request: Request): Promise<any> {
     await createPageBlockRelation(client);
-    const service = new UtilitiesService(client)
+    const service = new ViewsService(client)
     await service.createViewsTable()
     return {success:true,resultObject:{}}
 }
