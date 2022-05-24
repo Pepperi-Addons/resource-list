@@ -27,10 +27,10 @@ export class ViewsAndEditorsComponent implements OnInit {
   
   ngOnInit(): void {
     this.setItems().then(() => {
-      this.datasource = new DataSource(this.items, this.genreateFields(), this.generateWidthArray())
+      this.datasource = new DataSource(this.items, this.generateFields(), this.generateWidthArray())
     })
   }
-  genreateFields(){
+  generateFields(){
     return [{
         FieldID: 'Name',
         Mandatory: true,

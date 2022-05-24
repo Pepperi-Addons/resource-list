@@ -1,4 +1,5 @@
 import { AddonDataScheme } from "@pepperi-addons/papi-sdk"
+import {Resource, Sorting } from '../shared/entities'
 
 
 export interface ViewsScheme{
@@ -8,25 +9,6 @@ export interface ViewsScheme{
     Resource: Resource,
     Filter: any,
     Sorting: Sorting,
-}
-
-export interface Resource{
-    AddonUUID: string,
-    Name: string
-}
-
-export interface Sorting{
-    FieldKey: string,
-    Ascending: boolean
-}
-
-export interface View{
-    Key: string,
-    Name: string,
-    Description: string,
-    Resource: Resource,
-    Filter?: any,
-    Sorting?: Sorting,
 }
 
 export const viewsTable: AddonDataScheme = {
