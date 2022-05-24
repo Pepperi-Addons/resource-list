@@ -1,7 +1,8 @@
-import { PapiClient, InstalledAddon } from '@pepperi-addons/papi-sdk'
+import { PapiClient, InstalledAddon, FindOptions } from '@pepperi-addons/papi-sdk'
 import { Client } from '@pepperi-addons/debug-server';
 
-class MyService {
+
+class AddonService {
 
     papiClient: PapiClient
 
@@ -26,14 +27,6 @@ class MyService {
     getAddons(): Promise<InstalledAddon[]> {
         return this.papiClient.addons.installedAddons.find({});
     }
-    getAllUDCCollections(): Promise<any>{
-        return this.papiClient.userDefinedCollections.schemes.find()
-    }
-    getCollectionDataByName(collectionName: string){
-        return this.papiClient.userDefinedCollections.documents(collectionName).find()
-    }
-
-    
 }
 
-export default MyService;
+export default AddonService;
