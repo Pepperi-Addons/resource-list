@@ -74,7 +74,6 @@ export class DataConfigurationBlockComponent implements OnInit {
       };
     }
     generateDataViewFormFields(): DataView[]{
-      debugger
       return this.fields = this.hostObject.configuration.cardsList.map(card => card.value)
     }
     async updateItem(key: string){
