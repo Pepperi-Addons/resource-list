@@ -10,6 +10,18 @@
             [showSearch]="true"
             title = "{{'VIEWS_LIST_TITLE' | translate}}"
             uuidMapping = 'Key'>
+            <ng-container right-buttons>
+                <pep-button
+                    value="Add"
+                    styleType="strong"
+                    styleStateType="system"
+                    sizeType="md"
+                    classNames=""
+                    iconPosition="end"
+                    [visible]="true"
+                    (buttonClick)="onAddClick()"
+                ></pep-button>
+            </ng-container>
         </pep-generic-list>
     </mat-tab>
 </mat-tab-group>

@@ -12,7 +12,6 @@ import { config } from '../addon.config';
   styleUrls: ['./views-editor.component.scss']
 })
 export class ViewsEditorComponent implements OnInit {
-  private key: string
   view: View
   dataSource: any = {}
   dataView: any = {
@@ -36,12 +35,26 @@ export class ViewsEditorComponent implements OnInit {
     }
 
   ngOnInit(): void {
-    this.key = this.route.snapshot.paramMap.get('key')
-    this.viewsService.getViews(this.key).then(views => {
-      this.view = views[0]
+    this.initView(this.route.snapshot.paramMap.get('key')).then( () => {
       this.initDataSource();
       this.initDataView()
     })
+  }
+  async initView(key: string){
+    if(key === "new"){
+      this.view = {
+        Key: "",
+        Name: "",
+        Description: "",
+        Resource: {
+          AddonUUID: "",
+          Name: ""
+        }
+      }
+    }
+    else{
+      this.view = (await this.viewsService.getViews(key))[0]
+    }
 
   }
   initDataSource(){
