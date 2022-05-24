@@ -4,6 +4,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { ViewsService } from '../services/views.service'
 import { PepSelectionData } from '@pepperi-addons/ngx-lib/list';
 import { ActivatedRoute, Router } from '@angular/router';
+import { IPepGenericListActions } from '@pepperi-addons/ngx-composite-lib/generic-list';
 
 @Component({
   selector: 'app-views-and-editors',
@@ -13,7 +14,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 export class ViewsAndEditorsComponent implements OnInit {
   datasource: DataSource
   items: any[] = []
-  actions: any = {}
+  actions: IPepGenericListActions
 
   constructor(
     private translate: TranslateService,
@@ -21,11 +22,11 @@ export class ViewsAndEditorsComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute
   ) {
-    this.actions.get = this.getActionsCallBack()
    }
 
   
   ngOnInit(): void {
+    this.initGenericListActions()
     this.setItems().then(() => {
       this.datasource = new DataSource(this.items, this.generateFields(), this.generateWidthArray())
     })
@@ -74,8 +75,9 @@ export class ViewsAndEditorsComponent implements OnInit {
       }
     })
   }
-  getActionsCallBack(){
-    return async (data: PepSelectionData) => {
+  initGenericListActions(){
+    this.actions = {
+      get: async (data: PepSelectionData) => {
         const actions = []
         if(data && data.rows.length == 1){
           actions.push({
@@ -88,4 +90,5 @@ export class ViewsAndEditorsComponent implements OnInit {
         return actions
       }
     }
+  }
 }
