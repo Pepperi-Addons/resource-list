@@ -4,6 +4,9 @@ import { ViewsAndEditorsComponent } from './views-and-editors.component';
 import { RouterModule, Routes } from '@angular/router';
 import { TranslateLoader, TranslateModule, TranslateService, TranslateStore } from '@ngx-translate/core';
 import { PepAddonService } from '@pepperi-addons/ngx-lib';
+import { MatTabsModule } from '@angular/material/tabs';
+import { PepGenericListModule } from '@pepperi-addons/ngx-composite-lib/generic-list';
+
 
 
 export const routes: Routes = [
@@ -19,6 +22,8 @@ export const routes: Routes = [
   ],
   imports: [
     CommonModule,
+    MatTabsModule,
+    PepGenericListModule,
     TranslateModule.forChild({
       loader: {
           provide: TranslateLoader,

@@ -1,1 +1,11 @@
-<p>views-and-editors works!</p>
+<h2> Views & Editors </h2>
+<hr>
+<br>
+<mat-tab-group #tabgroup class="editor-tabs">
+    <mat-tab label= "Views">
+        <pep-generic-list class="generic-list" 
+            [showTopBar]="true"
+            [dataSource]="datasource"
+            [showSearch]="true"
+            title = "Views"
+            uuidMapping = 'Key'>

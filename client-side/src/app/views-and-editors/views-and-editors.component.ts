@@ -1,4 +1,7 @@
+import { DataSource } from '../data-source/data-source';
 import { Component, OnInit } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
+import { ViewsService } from '../services/views.service'
 
 @Component({
   selector: 'app-views-and-editors',
@@ -6,10 +9,62 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./views-and-editors.component.scss']
 })
 export class ViewsAndEditorsComponent implements OnInit {
+  datasource: DataSource
+  items: any[] = []
 
-  constructor() { }
+  constructor(
+    private translate: TranslateService,
+    private viewsService: ViewsService
+  ) { }
 
+  
   ngOnInit(): void {
+    this.setItems().then(() => {
+      this.datasource = new DataSource(this.items, this.generateFields(), this.generateWidthArray())
+    })
   }
-
+  generateFields(){
+    return [{
+        FieldID: 'Name',
+        Mandatory: true,
+        ReadOnly: false,
+        Title: this.translate.instant('Name'),
+        Type: 'TextBox'
+      },
+      {
+        FieldID: 'Description',
+        Mandatory: true,
+        ReadOnly: true,
+        Title: this.translate.instant('Description'),
+        Type: 'TextBox'
+      },
+      {
+        FieldID: 'Resource',
+        Mandatory: true,
+        ReadOnly: true,
+        Title: this.translate.instant('Resource'),
+        Type: 'TextBox'
+      },
+    ]
+  }
+  generateWidthArray(){
+    const width = {
+      Width: 0
+    }
+    return [
+      width,
+      width,
+      width
+    ]
+  }
+  async setItems(){
+    const items = await this.viewsService.getViews()
+    this.items = items.map((item) => {
+      return {
+        Name: item.Name,
+        Description: item.Description,
+        Resource: item.Resource.Name
+      }
+    })
+  }
 }

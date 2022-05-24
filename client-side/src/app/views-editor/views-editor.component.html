@@ -1,0 +1,19 @@
+<div class="header">
+    <h4>Edit - {{view?.Name}}</h4>
+        <pep-button
+        value="Back to list"
+        styleType="weak"
+        styleStateType="system"
+        sizeType="md"
+        classNames=""
+        iconPosition="end"
+        [visible]="true"
+        (buttonClick)="onBackToList()"
+        ></pep-button>
+</div>
+<hr>
+<mat-tab-group #tabgroup class="editor-tabs">
+    <mat-tab label= "{{'TABS.GENERAL' | translate}}">
+        <h5> {{'VIEWS_EDITOR_FIRST_LINE' | translate}}</h5>
+    </mat-tab>
+</mat-tab-group>

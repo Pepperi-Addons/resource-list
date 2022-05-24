@@ -34,5 +34,5 @@ export async function views(client: Client, request: Request){
     else{
         throw new Error(`expected to receive GET/POST method, but instead received ' + ${request.method}`);
     }
-    
 }
+
