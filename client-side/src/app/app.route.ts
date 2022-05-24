@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { Component } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { ViewsAndEditorsComponent } from './views-and-editors/views-and-editors.component';
+import { ViewsEditorComponent } from './views-editor/views-editor.component';
 
 // Important for single spa
 @Component({
@@ -15,11 +16,15 @@ const routes: Routes = [
         path: `settings/:addon_uuid`,
         children: [
             {
-                path: ':views_and_editors',
-                component: ViewsAndEditorsComponent
+                path: 'views_and_editors',
+                component: ViewsAndEditorsComponent,
                 // TODO: solve routing
                 // path: '**',
                 // loadChildren: () => import('./addon/addon.module').then(m => m.AddonModule)
+            },
+            {
+                path: 'views_and_editors/:key',
+                component: ViewsEditorComponent
             }
         ]
     },
