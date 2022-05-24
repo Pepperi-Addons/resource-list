@@ -26,7 +26,7 @@ export class ViewsAndEditorsComponent implements OnInit {
 
   
   ngOnInit(): void {
-    this.initGerericListActions()
+    this.initGenericListActions()
     this.setItems().then(() => {
       this.datasource = new DataSource(this.items, this.generateFields(), this.generateWidthArray())
     })
@@ -75,7 +75,7 @@ export class ViewsAndEditorsComponent implements OnInit {
       }
     })
   }
-  initGerericListActions(){
+  initGenericListActions(){
     this.actions = {
       get: async (data: PepSelectionData) => {
         const actions = []
