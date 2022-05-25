@@ -12,7 +12,11 @@ export class ViewsService{
         private utilitiesService: UtilitiesService,
     ){
     }
-    async getViews(key = undefined): Promise<View[]>{
-        return await this.utilitiesService.papiClient.addons.api.uuid(config.AddonUUID).file('api').func('views').get({Key: key})
+    async getViews(key: string = undefined): Promise<View[]>{
+        const query = key? {where:'Key=' + '"' + key + '"'} : undefined 
+        return await this.utilitiesService.papiClient.addons.api.uuid(config.AddonUUID).file('api').func('views').get(query)
+    }
+    async upsertView(view: View){
+        return await this.utilitiesService.papiClient.addons.api.uuid(config.AddonUUID).file('api').func('views').post(undefined,view)
     }
 }

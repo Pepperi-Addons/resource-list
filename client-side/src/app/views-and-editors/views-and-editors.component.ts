@@ -35,7 +35,7 @@ export class ViewsAndEditorsComponent implements OnInit {
     return [{
         FieldID: 'Name',
         Mandatory: true,
-        ReadOnly: false,
+        ReadOnly: true,
         Title: this.translate.instant('Name'),
         Type: 'TextBox'
       },
@@ -71,7 +71,8 @@ export class ViewsAndEditorsComponent implements OnInit {
       return {
         Name: item.Name,
         Description: item.Description,
-        Resource: item.Resource.Name
+        Resource: item.Resource.Name,
+        Key: item.Key
       }
     })
   }
