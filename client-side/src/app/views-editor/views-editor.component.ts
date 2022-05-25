@@ -58,7 +58,7 @@ export class ViewsEditorComponent implements OnInit {
     this.view.Name = this.dataSource?.Name
     this.view.Description = this.dataSource?.Description
     this.view.Resource.Name = this.dataSource?.Resource
-    this.viewsService.updateView(this.view)
+    this.viewsService.upsertView(this.view)
   }
   async initDataView(){
     this.dataView =  {
