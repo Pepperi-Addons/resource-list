@@ -1,10 +1,10 @@
 <div class="card-editor-container">
     <div>
-        <pep-button classNames="lock-events" sizeType="xs"  ></pep-button>
+        <pep-button classNames="lock-events" sizeType="xs" iconName="system_move"></pep-button>
     </div>
-    <div *ngIf="title !== ''" class="title-container">
+    <div class="title-container">
         <span class="body-sm ellipsis">&nbsp;</span>
-        <span class="body-sm color-link bold ellipsis" title="">{{field}}</span>
+        <span class="body-sm color-link bold ellipsis" >{{card.view.value}}</span>
     </div>
     <div class="actions" >
         <pep-button classNames="caution" sizeType="xs" iconName="system_bin" (buttonClick)="onRemoveClick();"></pep-button>
@@ -13,33 +13,16 @@
     </div>
     <div class="editorCont" *ngIf = "card.showContent">
         <pep-select 
-            [value]="field"
-            label="select a field"
+            [value]="card.view.key"
+            label="select view"
             type="select"
             [mandatory]="false"
             [disabled]="false"
             xAlignment="left"
-            [options]="itemsOptions"
+            [options]="card.views"
             [showTitle]="true"
-            (valueChange)="onSelectField($event)"
+            (valueChange)="updateCardsList($event)"
             [emptyOption]="false"
         ></pep-select>
-
-        <pep-textbox
-            [value] = width
-            label="int"
-            type="int"
-            [mandatory]="false"
-            [disabled]="false"
-            textColor=""
-            xAlignment="left"
-            [showTitle]="true"
-            [renderTitle]="true"
-            [renderError]="true"
-            [renderSymbol]="true"
-            minValue = "0"
-            maxValue = "100"
-            (valueChange)="onWidthChange($event)"
-        ></pep-textbox>
     </div>
 </div>

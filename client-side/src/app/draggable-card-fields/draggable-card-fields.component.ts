@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { BlockEditorCard, ICardEditor } from './cards.model';
+import {ICardEditor, ViewsCard } from './cards.model';
 
 
 @Component({
@@ -10,51 +10,24 @@ import { BlockEditorCard, ICardEditor } from './cards.model';
 })
 
 export class DraggableCardFieldsComponent {
-    public title: string;
-    @Input() field: any
-    @Input() items: any[]
-    @Input() card: BlockEditorCard
-    width: number
-    itemsOptions: {key: string, value:string}[]
+    @Input() card: ViewsCard
     @Output() removeClick: EventEmitter<any> = new EventEmitter();
-    @Output() fieldSelected: EventEmitter<any> = new EventEmitter()
-    @Output() insertWidth: EventEmitter<any> = new EventEmitter();
+    @Output() updateCard: EventEmitter<ViewsCard> = new EventEmitter
 
     constructor(private translate: TranslateService) {
 
     }
     ngOnChanges(event){
-        this.width = this.card.width
-        this.field = event.field?.currentValue? event.field.currentValue : this.field
-        this.items = event.items?.currentValue? event.items.currentValue : this.items
-        this.title = event.title?.currentValue? event.title.currentValue : this.title
-        this.card = event.card?.currentValue? event.card.currentValue : this.card
-        if(event.items?.currentValue){
-            this.setItemOptions()
-        }
-    }
-    setItemOptions(){
-        this.itemsOptions = this.items?.map((item) => {return {key: item, value: item}}).sort((a, b) => a.key.localeCompare(b.key))
     }
     onRemoveClick() {
     this.removeClick.emit({id: this.card.id})
-    this.field = undefined
     }
     onEditClick() {
         this.card.showContent = !this.card.showContent
+        this.updateCard.emit(this.card)
     }
-    onWidthChange($event){
-        const width = Number($event)
-        if(width < 0 || width > 100){
-            return
-        }
-        this.card.width = width
-        this.width = width
-        this.insertWidth.emit()
-    }
-    onSelectField($event){
-        this.field = $event
-        this.card.name = this.field
-        this.fieldSelected.emit({card: this.card})
+    updateCardsList(key){
+        this.card.view = this.card.views.find((view) => key === view.key) 
+        this.updateCard.emit(this.card)
     }
 }

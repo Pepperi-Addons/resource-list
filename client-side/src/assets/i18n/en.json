@@ -6,5 +6,7 @@
     },
     "VIEWS_EDITOR_FIRST_LINE" : "Define the new content",
     "VIEWS_AND_EDITORS_TITLE" : "Views & Editors",
-    "VIEWS_LIST_TITLE" : "Views"
+    "VIEWS_LIST_TITLE" : "Views",
+    "BlOCK_EDITOR_FIRST_LINE": "Select the views to show. If no views are define then all the views allowed to the user profile will be shown"
+    
 }
