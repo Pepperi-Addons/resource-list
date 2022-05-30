@@ -2,7 +2,8 @@
     "Block_Title": "Block title",
     "TABS": {
         "GENERAL": "General",
-        "VIEWS": "Views"
+        "VIEWS": "Views",
+        "EDITORS": "Editors"
     },
     "VIEWS_EDITOR_FIRST_LINE" : "Define the new content",
     "VIEWS_AND_EDITORS_TITLE" : "Views & Editors",

@@ -19,6 +19,14 @@ export interface View{
     Sorting?: Sorting,
 }
 
+export interface Editor{
+    Key: string,
+    Name: string,
+    Description: string,
+    Resource: Resource,
+    OpenMode: OpenMode
+}
+
 type Popup = "popup"
 type SamePage = "same-page"
 export type OpenMode = Popup | SamePage

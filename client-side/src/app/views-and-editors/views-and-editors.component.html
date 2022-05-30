@@ -2,7 +2,7 @@
 <hr>
 <br>
 <mat-tab-group #tabgroup class="editor-tabs">
-    <mat-tab label= "Views">
+    <mat-tab label= "{{'TABS.VIEWS' | translate}}">
         <pep-generic-list class="generic-list" 
             [showTopBar]="true"
             [dataSource]="datasource"
@@ -24,5 +24,16 @@
             </ng-container>
         </pep-generic-list>
     </mat-tab>
+    <mat-tab label= "{{'TABS.EDITORS' | translate}}">
+        <pep-generic-list class="generic-list" 
+        [showTopBar]="true"
+        [dataSource]="editorsDatasource"
+        [actions] = "editorsActions"
+        [showSearch]="true"
+        title = "{{'TABS.EDITORS' | translate}}"
+        uuidMapping = 'Key'>
+        </pep-generic-list>
+    </mat-tab>
+
 </mat-tab-group>
             

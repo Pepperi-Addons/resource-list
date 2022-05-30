@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { ViewsService } from '../services/views.service'
 import { PepSelectionData } from '@pepperi-addons/ngx-lib/list';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Data, Router } from '@angular/router';
 import { IPepGenericListActions } from '@pepperi-addons/ngx-composite-lib/generic-list';
 
 @Component({
@@ -13,8 +13,11 @@ import { IPepGenericListActions } from '@pepperi-addons/ngx-composite-lib/generi
 })
 export class ViewsAndEditorsComponent implements OnInit {
   datasource: DataSource
+  editorsDatasource: DataSource
   items: any[] = []
+  editorsItems: any[] = []
   actions: IPepGenericListActions
+  editorsActions: IPepGenericListActions
 
   constructor(
     private translate: TranslateService,
@@ -26,10 +29,18 @@ export class ViewsAndEditorsComponent implements OnInit {
 
   
   ngOnInit(): void {
+    this.initEditrosActions()
+    this.setEditorsItems()
+    .then(() => {
+      this.editorsDatasource = new DataSource(this.editorsItems, this.generateFields(), this.generateWidthArray())
+    })
     this.initGenericListActions()
     this.setItems().then(() => {
       this.datasource = new DataSource(this.items, this.generateFields(), this.generateWidthArray())
     })
+  }
+  initEditrosActions(){
+
   }
   generateFields(){
     return [{
@@ -64,6 +75,17 @@ export class ViewsAndEditorsComponent implements OnInit {
       width,
       width
     ]
+  }
+  async setEditorsItems(){
+    const editorsItems = await this.viewsService.getEditors()
+    editorsItems.map((editor) => {
+      return {
+        Name: editor.Name,
+        Description: editor.Description,
+        Resource: editor.Resource.Name,
+        Key: editor.Key
+      }
+    })
   }
   async setItems(){
     const items = await this.viewsService.getViews()
