@@ -14,9 +14,8 @@ export interface ViewsScheme{
 export const viewsTable: AddonDataScheme = {
     Name: "VIEWS_TABLE",
     Type: 'meta_data',
-    Fields: {
-        Name: {
-            Type: "String"
-        }
-    }
+}
+export const editorsTable: AddonDataScheme = {
+    Name: "EDITORS_TABLE",
+    Type: 'meta_data',
 }
