@@ -92,4 +92,8 @@ export class ViewsAndEditorsComponent implements OnInit {
       }
     }
   }
+  onAddClick(){
+    this.router.navigate(["new"], {relativeTo : this.route})
+
+  }
 }
