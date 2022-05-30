@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Component } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+import { EditorsEditorComponent } from './editors-editor/editors-editor.component';
 import { ViewsAndEditorsComponent } from './views-and-editors/views-and-editors.component';
 import { ViewsEditorComponent } from './views-editor/views-editor.component';
 
@@ -25,6 +26,10 @@ const routes: Routes = [
             {
                 path: 'views_and_editors/:key',
                 component: ViewsEditorComponent
+            },
+            {
+                path: 'views_and_editors/editor/:key',
+                component: EditorsEditorComponent
             }
         ]
     },
