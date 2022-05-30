@@ -19,6 +19,10 @@ export interface View{
     Sorting?: Sorting,
 }
 
+type Popup = "popup"
+type SamePage = "same-page"
+export type OpenMode = Popup | SamePage
+
 export interface Resource{
     AddonUUID: string,
     Name: string
