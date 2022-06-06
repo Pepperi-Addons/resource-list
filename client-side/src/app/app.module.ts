@@ -17,6 +17,9 @@ import { PepGenericFormModule } from '@pepperi-addons/ngx-composite-lib/generic-
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { EditorsEditorComponent } from './editors-editor/editors-editor.component';
 import { PepSelectModule } from '@pepperi-addons/ngx-lib/select';
+import { PepProfileDataViewsListModule } from '@pepperi-addons/ngx-lib/profile-data-views-list';
+import { PepPageLayoutModule } from '@pepperi-addons/ngx-lib/page-layout';
+
 
 @NgModule({
     imports: [
@@ -33,6 +36,9 @@ import { PepSelectModule } from '@pepperi-addons/ngx-lib/select';
         PepGenericFormModule,
         BrowserAnimationsModule,
         PepSelectModule,
+        PepProfileDataViewsListModule,
+        PepPageLayoutModule,
+        BrowserAnimationsModule,
         TranslateModule.forRoot({
             loader: {
                 provide: TranslateLoader,

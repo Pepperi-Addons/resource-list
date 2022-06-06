@@ -34,10 +34,37 @@ html {
                         flex-direction: column;
                         padding-inline: 0;
                         row-gap: 1rem;
-
+                        padding: 0 !important;
+                        margin-top: -0.25rem;
+                        .profile-data-views-list-container {
+                            padding-top: 0.25rem;
+                        }
                     }
                 }
             }
         }
     }
 }
+// .mat-tab-group {
+
+//     height: inherit;
+
+//     ::ng-deep {
+//         .mat-tab-body-wrapper {
+//             height: inherit;
+//         }
+//         .mat-tab-body-content {
+//             padding: 0 !important;
+//             margin-top: -0.25rem;
+            
+//             .profile-data-views-list-container {
+//                 padding-top: 0.25rem;
+//             }
+//         }
+//     }
+// }
+
+// // ::ng-deep .pep-button.strong:focus{
+// //     box-shadow: none !important;
+// // }
+

@@ -1,12 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { View } from "../../../../shared/entities"
 import { ViewsService } from '../services/views.service';
 import { UDCService } from '../services/udc-service';
 import { config } from '../addon.config';
 import { ViewEditor } from '../editors/view-editor'
 import { Location } from '@angular/common';
+import { ProfileService } from '../services/profile-service'
+import { IPepProfileDataViewsCard, IPepProfile, IPepProfileDataViewClickEvent, IPepProfileDataView } from '@pepperi-addons/ngx-lib/profile-data-views-list';
 
 @Component({
   selector: 'app-views-editor',
@@ -26,6 +27,9 @@ export class ViewsEditorComponent implements OnInit {
   };
   viewEditor: ViewEditor
   viewName: string
+  availableProfiles: Array<IPepProfile> = [];
+  defaultProfileId: string = '0';
+  profileDataViewsList: Array<IPepProfileDataViewsCard> = [];
 
   constructor(
     private router: Router,
@@ -33,7 +37,8 @@ export class ViewsEditorComponent implements OnInit {
     private viewsService: ViewsService,
     private translate: TranslateService,
     private udcService: UDCService,
-    private location: Location
+    private location: Location,
+    private profileService: ProfileService
     ){ 
       this.udcService.pluginUUID = config.AddonUUID
     }
@@ -50,6 +55,24 @@ export class ViewsEditorComponent implements OnInit {
       this.viewName = this.viewEditor.getName()
       this.dataSource = this.viewEditor.getDataSource()
       this.dataView = this.viewEditor.getDataView()
+      this.profileService.getProfiles().then((profiles) => {
+        this.availableProfiles = profiles
+        this.profileDataViewsList = profiles.map(profile => {
+          return {
+              profileId: profile.id,
+              title: profile.name,
+              dataViews: [
+                {
+                  dataViewId: profile.id,
+                  fields: [
+                    this.viewEditor.getName()
+                  ]
+                }
+              ]
+            }
+        })
+
+      })
     })
   }
 
@@ -58,5 +81,14 @@ export class ViewsEditorComponent implements OnInit {
   }
   onUpdate(){
     this.viewEditor.update()
+  }
+  onDataViewDeleteClicked($event){
+
+  }
+  onSaveNewProfileClicked($event){
+
+  }
+  onDataViewEditClicked($event){
+
   }
 }

@@ -9,6 +9,8 @@ import { PepGenericListModule } from '@pepperi-addons/ngx-composite-lib/generic-
 import { PepButtonModule } from '@pepperi-addons/ngx-lib/button';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
+import { PepTopBarModule } from '@pepperi-addons/ngx-lib/top-bar';
+import { PepPageLayoutModule } from '@pepperi-addons/ngx-lib/page-layout';
 
 
 export const routes: Routes = [
@@ -28,6 +30,8 @@ export const routes: Routes = [
     PepGenericListModule,
     PepButtonModule,
     BrowserAnimationsModule,
+    PepTopBarModule,
+    PepPageLayoutModule,
     TranslateModule.forChild({
       loader: {
           provide: TranslateLoader,
