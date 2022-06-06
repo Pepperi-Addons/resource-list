@@ -1,134 +1,31 @@
-<mat-tab-group #tabgroup class="editor-tabs">
-    <mat-tab label= "General">
-        <div>
-            <pep-select 
-                [value]="resource?.Name"
-                label="select a resource"
-                type="select"
-                mandatory = "true"
-                [options] = "resourcesNames"
-                [showTitle]="true"
-                (valueChange)="onResourceChanged($event)"
-                [emptyOption]="false"
-            ></pep-select>
-            <pep-textbox
-                [(value)]="title"
-                label="Title"
-                type="text"
-                mandatory="true"
-                xAlignment="left"
-                showTitle="true"
-                (valueChange)="updateAllConfigurationObject()"
-            ></pep-textbox>
-            <h3>Design</h3>
-            <pep-textbox
-                [(value)]="minHeight"
-                label="Min height(rem)"
-                type="real"
-                [mandatory]="false"
-                [disabled]="false"
-                textColor=""
-                xAlignment="left"
-                [showTitle]="true"
-                [renderTitle]="true"
-                [renderError]="true"
-                [renderSymbol]="true"
-                (valueChange)="updateAllConfigurationObject()"
-            ></pep-textbox>
-            <pep-textbox
-                [(value)]="relativeHeight"
-                label="Relative Height(%)"
-                type="percentage"
-                [mandatory]="false"
-                [disabled]="false"
-                textColor=""
-                xAlignment="left"
-                [showTitle]="true"
-                [renderTitle]="true"
-                [renderError]="true"
-                [renderSymbol]="true"
-                (valueChange)="updateAllConfigurationObject()"
-            ></pep-textbox>
-            <h3>Menu Settings</h3>
-            <pep-checkbox
-                [(value)]="allowExport"
-                label="Allow data export"
-                type="checkbox"
-                [mandatory]="false"
-                [disabled]="false"
-                xAlignment="left"
-                [showTitle]="true"
-                [renderTitle]="true"
-                [visible]="true"
-                (valueChange)="updateAllConfigurationObject()"
-            ></pep-checkbox>
-            <pep-checkbox
-                [(value)]="allowImport"
-                label="Allow data import"
-                type="checkbox"
-                [mandatory]="false"
-                [disabled]="false"
-                xAlignment="left"
-                [showTitle]="true"
-                [renderTitle]="true"
-                [visible]="true"
-                (valueChange)="updateAllConfigurationObject()"
-            ></pep-checkbox>
-            <pep-checkbox
-                [(value)]="allowEdit"
-                label="Allow edit"
-                type="checkbox"
-                [mandatory]="false"
-                [disabled]="false"
-                xAlignment="left"
-                [showTitle]="true"
-                [renderTitle]="true"
-                [visible]="true"
-                (valueChange)="updateAllConfigurationObject()"
-            ></pep-checkbox>
-            <!-- select for open mode -->
-            <pep-select 
-                [(value)]="currentOpenMode"
-                label="Editor open mode"
-                type="select"
-                [options] = "openModes"
-                [showTitle]="true"
-                (valueChange)="updateAllConfigurationObject()"
-                [emptyOption]="false"
-                [disabled] = "!allowEdit"
-            ></pep-select>
-            <pep-select 
-                [(value)]="currentSlug"
-                label="Editor"
-                type="select"
-                [mandatory] = "true"
-                [options] = "slugsList"
-                [showTitle]="true"
-                (valueChange)="updateAllConfigurationObject()"
-                [emptyOption]="true"
-                [disabled] = "currentOpenMode == 'samePage' || !allowEdit"
-            ></pep-select>
-        </div>
-    </mat-tab>
-    <mat-tab cdkDropListGroup label= "Content">
-        <h3>Fields</h3>
-        <div (cdkDropListDropped)="drop($event)"  cdkDropList> 
-            <draggable-card-fields  
-            *ngFor="let card of cardsList"
-            [showActions] = "true" [isDraggable] = "true"
-            (hostEvents)='onHostObjectChange($event)'
-            (editClick)='onCardEditClick($event);'
-            (removeClick)='onCardRemoveClick($event);'
-            (fieldSelected) = 'onSelectField($event)'
-            (insertWidth) = 'onWidthChange()'
-            [field] ="card.name"
-            [card] = "card"
-            [items] = "resourceFieldsKeys"
-            cdkDrag [cdkDragDisabled]="false"  style="cursor: grab;" (cdkDragStarted)="onDragStart($event)" (cdkDragEnded)="onDragEnd($event)">
-            </draggable-card-fields>
-        </div>
-    <pep-button class="add-content-button" value="Add" styleType="regular"  
-    (buttonClick)="addNewCardClick()"></pep-button>
-    </mat-tab>
-</mat-tab-group>
+<h2>Resource</h2>
+<pep-select 
+    [value]="resource"
+    label="Resource"
+    type="select"
+    mandatory = "true"
+    [options] = "resourcesNames"
+    [showTitle]="true"
+    (valueChange)="onResourceChanged($event)"
+    [emptyOption]="false"
+></pep-select>
+<h3>Views</h3>
+<p>{{'BlOCK_EDITOR_FIRST_LINE' | translate}}</p>
+<div cdkDropListGroup (cdkDropListDropped)="drop($event)"  cdkDropList>
+    <draggable-card-fields  
+        *ngFor="let card of cardsList"
+        [showActions] = "true" [isDraggable] = "true"
+        (hostEvents)='onHostObjectChange($event)'
+        (editClick)='onCardEditClick($event);'
+        (removeClick)='onCardRemoveClick($event);'
+        (updateCard) = "updateConfigurationField('cardsList', this.cardsList)"
+        (insertWidth) = 'onWidthChange()'
+        [card] = "card"
+        cdkDrag [cdkDragDisabled]="false"  style="cursor: grab;" (cdkDragStarted)="onDragStart($event)" (cdkDragEnded)="onDragEnd($event)">
+    </draggable-card-fields>
+</div>
+<pep-button class="add-content-button" value="Add" styleType="regular"  
+(buttonClick)="addNewCardClick()"></pep-button>
+
+
 
