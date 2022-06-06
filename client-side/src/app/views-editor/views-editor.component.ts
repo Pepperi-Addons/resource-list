@@ -55,24 +55,24 @@ export class ViewsEditorComponent implements OnInit {
       this.viewName = this.viewEditor.getName()
       this.dataSource = this.viewEditor.getDataSource()
       this.dataView = this.viewEditor.getDataView()
-      this.profileService.getProfiles().then((profiles) => {
-        this.availableProfiles = profiles
-        this.profileDataViewsList = profiles.map(profile => {
-          return {
-              profileId: profile.id,
-              title: profile.name,
-              dataViews: [
-                {
-                  dataViewId: profile.id,
-                  fields: [
-                    this.viewEditor.getName()
-                  ]
-                }
-              ]
-            }
-        })
-
-      })
+      this.initProfileDataViews()
+    })
+  }
+  async initProfileDataViews(){
+    this.availableProfiles = await  this.profileService.getProfiles()
+    this.profileDataViewsList = this.availableProfiles.map(profile => {
+      return {
+        profileId: profile.id,
+        title: profile.name,
+        dataViews: [
+          {
+            dataViewId: profile.id,
+            fields: [
+              this.viewEditor.getName()
+            ]
+          }
+        ]
+      }
     })
   }
 
