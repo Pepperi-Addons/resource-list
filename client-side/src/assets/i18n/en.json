@@ -10,5 +10,6 @@
     "VIEWS_LIST_TITLE" : "Views",
     "ADD": "Add",
     "UPDATE": "Update",
-    "BACK_TO_LIST": "Back to list"
+    "BACK_TO_LIST": "Back to list",
+    "BlOCK_EDITOR_FIRST_LINE": "Select the views to show. If no views are define then all the views allowed to the user profile will be shown"
 }
