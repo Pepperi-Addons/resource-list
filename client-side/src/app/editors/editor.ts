@@ -16,7 +16,7 @@ export abstract class AbstractEditor{
           ScreenSize: 'Tablet'
         }
     }
-    content: View | Editor
+    abstract content: View | Editor
     constructor(
         private router: Router,
         private route: ActivatedRoute,
@@ -29,8 +29,7 @@ export abstract class AbstractEditor{
     async init(){
         await this.initView(this.route.snapshot.paramMap.get('key'))
         this.initDataSource();
-        this.initDataView()
-        debugger
+        await this.initDataView()
     }
     abstract initView(key: string):Promise<any>;
 
@@ -119,5 +118,9 @@ export abstract class AbstractEditor{
     }
     getDataView(){
         return this.dataView
+    }
+    abstract update()
+    getName(){
+        return this.content.Name
     }
 }

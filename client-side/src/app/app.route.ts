@@ -31,7 +31,7 @@ const routes: Routes = [
                 path: 'views_and_editors/editor/:key',
                 component: EditorsEditorComponent
             }
-        ]
+        ],
     },
     {
         path: '**',
