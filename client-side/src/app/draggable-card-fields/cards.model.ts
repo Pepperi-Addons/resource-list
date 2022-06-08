@@ -1,7 +1,6 @@
 import { PepHorizontalAlignment, PepSizeType} from "@pepperi-addons/ngx-lib";
 import { PepShadowSettings} from "@pepperi-addons/ngx-composite-lib/shadow-settings";
 import { PepColorSettings } from "@pepperi-addons/ngx-composite-lib/color-settings";
-import { SelectOption, View } from "../../../../shared/entities";
 export type textColor = 'system-primary' | 'dimmed' | 'invert' | 'strong';
 export type verticalAlignment = 'start' | 'center' | 'end';
 export type textPositionStyling = 'overlyed' | 'separated';
@@ -46,11 +45,11 @@ export class IContentEditor {
 export interface ICardEditor {
     id: number;
     showContent: boolean
+    value: any
 }
-export interface ViewsCard extends ICardEditor{
-    views: SelectOption[]
-    title: string
-    view: SelectOption
+export interface BlockEditorCard extends ICardEditor{
+    name: string;
+    width: number;
 }
 export interface DataConfigurationCard extends ICardEditor{
     key:string
@@ -58,4 +57,5 @@ export interface DataConfigurationCard extends ICardEditor{
     readOnly: boolean
     mandatory: boolean
     defaultValue: string  
+
 }

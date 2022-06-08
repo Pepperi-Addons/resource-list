@@ -17,7 +17,6 @@ import { PepSelectModule } from '@pepperi-addons/ngx-lib/select';
 import { PepTextareaModule } from '@pepperi-addons/ngx-lib/textarea';
 import { DraggableCardFieldsComponent } from './draggable-card-fields.component'
 
-
 @NgModule({
     declarations: [DraggableCardFieldsComponent],
     imports: [
