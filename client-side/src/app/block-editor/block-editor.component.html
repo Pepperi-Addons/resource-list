@@ -13,19 +13,19 @@
 <p>{{'BlOCK_EDITOR_FIRST_LINE' | translate}}</p>
 <div cdkDropListGroup (cdkDropListDropped)="drop($event)"  cdkDropList>
     <draggable-card-fields  
-        *ngFor="let card of cardsList"
+        *ngFor="let card of viewsList"
         [showActions] = "true" [isDraggable] = "true"
         (hostEvents)='onHostObjectChange($event)'
         (editClick)='onCardEditClick($event);'
         (removeClick)='onCardRemoveClick($event);'
-        (updateCard) = "updateConfigurationField('cardsList', this.cardsList)"
+        (updateCard) = "updateConfigurationField('viewsList', this.viewsList)"
         (insertWidth) = 'onWidthChange()'
         [card] = "card"
         cdkDrag [cdkDragDisabled]="false"  style="cursor: grab;" (cdkDragStarted)="onDragStart($event)" (cdkDragEnded)="onDragEnd($event)">
     </draggable-card-fields>
 </div>
 <pep-button class="add-content-button" value="Add" styleType="regular"  
-(buttonClick)="addNewCardClick()"></pep-button>
+(buttonClick)="addNewCardClick()" [disabled]="currentViews?.length == 0"></pep-button>
 
 
 
