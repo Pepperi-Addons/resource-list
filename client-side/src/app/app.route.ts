@@ -4,6 +4,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { EditorsEditorComponent } from './editors-editor/editors-editor.component';
 import { ViewsAndEditorsComponent } from './views-and-editors/views-and-editors.component';
 import { ViewsEditorComponent } from './views-editor/views-editor.component';
+import { EditorProfileComponent } from './editor-profile/editor-profile.component'
 
 // Important for single spa
 @Component({
@@ -30,7 +31,12 @@ const routes: Routes = [
             {
                 path: 'views_and_editors/editor/:key',
                 component: EditorsEditorComponent
+            },
+            {
+                path: 'views_and_editor/profile_editor/:data_view_id',
+                component: EditorProfileComponent
             }
+            
         ],
     },
     {

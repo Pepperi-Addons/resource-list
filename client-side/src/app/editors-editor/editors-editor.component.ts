@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { Editor } from '../../../../shared/entities';
@@ -9,6 +9,7 @@ import { EditorEditor } from '../editors/editor-editor'
 import {Location} from '@angular/common';
 import { IPepOption, PepSelectField } from '@pepperi-addons/ngx-lib';
 import { OpenMode } from '../../../../shared/entities'
+import { GenericFormComponent } from '@pepperi-addons/ngx-composite-lib/generic-form';
 
 @Component({
   selector: 'app-editors-editor',
@@ -16,6 +17,7 @@ import { OpenMode } from '../../../../shared/entities'
   styleUrls: ['./editors-editor.component.scss']
 })
 export class EditorsEditorComponent implements OnInit {
+  @ViewChild(GenericFormComponent) genericForm! : GenericFormComponent
   editor: Editor
   dataSource: any = {}
   dataView: any = {
@@ -59,7 +61,8 @@ export class EditorsEditorComponent implements OnInit {
       this.route,
       this.translate,
       this.udcService,
-      this.viewsService
+      this.viewsService,
+      // this.genericForm
     )
     this.editorEditor.init().then(() => {
       this.editorName = this.editorEditor.getName()

@@ -1,10 +1,10 @@
-import { IPepGenericListDataSource, IPepGenericListInitData, IPepGenericListTableInputs } from "@pepperi-addons/ngx-composite-lib/generic-list";
+import { IPepGenericListDataSource, IPepGenericListInitData, IPepGenericListListInputs } from "@pepperi-addons/ngx-composite-lib/generic-list";
 import { TranslateService } from '@ngx-translate/core';
 import { GridDataViewColumn } from "@pepperi-addons/papi-sdk";
 import { IPepListSortingChangeEvent } from "@pepperi-addons/ngx-lib/list";
 
 export class DataSource implements IPepGenericListDataSource{
-    inputs?: IPepGenericListTableInputs = 
+    inputs?: IPepGenericListListInputs = 
     {
       pager:{
       type: 'scroll'
@@ -13,6 +13,7 @@ export class DataSource implements IPepGenericListDataSource{
   selectionType: 'multi'
     constructor(private items: any[], private fields: any[], private widthArray: GridDataViewColumn[] = []){
     }
+    
     async init(params: { searchString?: string; filter?: any; sorting?: IPepListSortingChangeEvent; fromIndex: number; toIndex: number; }): Promise<IPepGenericListInitData> {
         return {
             dataView: {

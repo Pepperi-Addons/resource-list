@@ -4,9 +4,10 @@ import { ViewsService } from '../services/views.service';
 import { UDCService } from '../services/udc-service';
 import { config } from '../addon.config';
 import { View, Editor } from '../../../../shared/entities';
+import { GenericFormComponent, IPepGenericFormFieldUpdate } from '@pepperi-addons/ngx-composite-lib/generic-form';
 
 export abstract class AbstractEditor{
-    dataSource: any
+    public dataSource: any
     dataView: any = {
         Type: "Form",
         Fields: [],
@@ -18,11 +19,12 @@ export abstract class AbstractEditor{
     }
     abstract content: View | Editor
     constructor(
-        private router: Router,
-        private route: ActivatedRoute,
-        private translate: TranslateService,
-        private udcService: UDCService,
+        protected router: Router,
+        protected route: ActivatedRoute,
+        protected translate: TranslateService,
+        protected udcService: UDCService,
         protected service: ViewsService,
+        // protected genericForm: GenericFormComponent
         ){ 
           this.udcService.pluginUUID = config.AddonUUID
         }
@@ -40,7 +42,7 @@ export abstract class AbstractEditor{
             Resource: this.content.Resource.Name
           }
     }
-    async initDataView(){
+    protected async initDataView(){
         this.dataView =  {
           Type: "Form",
           Fields: await this.getFields(),
@@ -88,22 +90,22 @@ export abstract class AbstractEditor{
             }
             },
             {
-            ReadOnly: false,
-            Title: this.translate.instant('Resource'),
-            Type: 'ComboBox',
-            FieldID: "Resource",
-            Mandatory: false,
-            OptionalValues: await this.getResourcesNames(),
-            Layout: {
-                Origin: {
-                X: 0,
-                Y:1
-                },
-                Size: {
-                Width: 1,
-                Height: 0
+                ReadOnly: false,
+                Title: this.translate.instant('Resource'),
+                Type: 'ComboBox',
+                FieldID: "Resource",
+                Mandatory: false,
+                OptionalValues: await this.getResourcesNames(),
+                Layout: {
+                    Origin: {
+                    X: 0,
+                    Y:1
+                    },
+                    Size: {
+                    Width: 1,
+                    Height: 0
+                    }
                 }
-            }
             }
         ]
     }
@@ -123,4 +125,7 @@ export abstract class AbstractEditor{
     getName(){
         return this.content.Name
     }
+    // updateFields(fields: IPepGenericFormFieldUpdate[]){
+    //     this.genericForm.updateFields(fields)
+    // }
 }

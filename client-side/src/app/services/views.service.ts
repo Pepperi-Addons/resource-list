@@ -23,6 +23,10 @@ export class ViewsService{
         const query = key? {where:'Key=' + '"' + key + '"'} : undefined
         return await this.utilitiesService.papiClient.addons.api.uuid(config.AddonUUID).file('api').func('editors').get(query)
     }
+    // async getViewEditor(editorKey: string){
+    //     const query = editorKey? {where:'EditorKey=' + '"' + editorKey + '"'} : undefined
+    //     return await this.utilitiesService.papiClient.addons.api.uuid(config.AddonUUID).file('api').func('editors').get(query)
+    // }
     async upsertEditor(editor: Editor){
         return await this.utilitiesService.papiClient.addons.api.uuid(config.AddonUUID).file('api').func('editors').post(undefined,editor)
     }

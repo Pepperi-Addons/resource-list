@@ -33,7 +33,8 @@
                 <h5> {{'VIEWS_EDITOR_FIRST_LINE' | translate}}</h5>
                 <pep-generic-form
                 [dataSource]="dataSource"
-                [dataView]="dataView" 
+                [dataView]="dataView"
+                (valueChange) = "onValueChange($event)" 
                 ></pep-generic-form>
             </mat-tab>
             <mat-tab label = "{{'TABS.FORM' | translate}}">

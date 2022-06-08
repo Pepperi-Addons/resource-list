@@ -19,6 +19,7 @@ import { EditorsEditorComponent } from './editors-editor/editors-editor.componen
 import { PepSelectModule } from '@pepperi-addons/ngx-lib/select';
 import { PepProfileDataViewsListModule } from '@pepperi-addons/ngx-lib/profile-data-views-list';
 import { PepPageLayoutModule } from '@pepperi-addons/ngx-lib/page-layout';
+import { EditorProfileComponent } from './editor-profile/editor-profile.component';
 
 
 @NgModule({
@@ -51,6 +52,7 @@ import { PepPageLayoutModule } from '@pepperi-addons/ngx-lib/page-layout';
         AppComponent,
         ViewsEditorComponent,
         EditorsEditorComponent,
+        EditorProfileComponent,
     ],
     providers: [
         TranslateStore

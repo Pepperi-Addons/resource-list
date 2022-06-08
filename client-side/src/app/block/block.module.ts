@@ -8,7 +8,7 @@ import { config } from '../addon.config';
 import { PepNgxCompositeLibModule } from '@pepperi-addons/ngx-composite-lib';
 import { PepGenericListModule } from '@pepperi-addons/ngx-composite-lib/generic-list';
 import { PepMenuModule } from '@pepperi-addons/ngx-lib/menu';
-import { PepDIMXModule } from '@pepperi-addons/ngx-composite-lib/dimx-export';
+// import { PepDIMXModule } from '@pepperi-addons/ngx-composite-lib/dimx-export';
 import { PepButtonModule } from '@pepperi-addons/ngx-lib/button';
 
 
@@ -26,7 +26,7 @@ export const routes: Routes = [
         PepGenericListModule,
         PepNgxCompositeLibModule,
         PepMenuModule,
-        PepDIMXModule,
+        // PepDIMXModule,
         PepButtonModule,
         TranslateModule.forChild({
             loader: {
