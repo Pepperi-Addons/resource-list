@@ -17,7 +17,6 @@ export async function install(client: Client, request: Request): Promise<any> {
     await createPageBlockRelation(client);
     const service = new ViewsService(client)
     await service.createViewsTable()
-    await service.createEditorsTable()
     return {success:true,resultObject:{}}
 }
 export async function uninstall(client: Client, request: Request): Promise<any> {
