@@ -36,3 +36,19 @@ export async function views(client: Client, request: Request){
     }
 }
 
+export async function editors(client: Client, request: Request){
+    const service = new ViewsService(client);
+    if(request.method === 'POST'){
+        if(!request.body){
+            throw new Error('body must be exist when posting editor, body: ' + request.body)
+        }
+        return await service.postEditor(request.body)
+    }
+    else if(request.method === 'GET'){
+        return await service.getEditors(request.query)
+    }
+    else{
+        throw new Error(`expected to receive GET/POST method, but instead received ' + ${request.method}`);
+    }
+}
+

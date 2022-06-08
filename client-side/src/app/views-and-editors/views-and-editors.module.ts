@@ -7,6 +7,7 @@ import { PepAddonService } from '@pepperi-addons/ngx-lib';
 import { MatTabsModule } from '@angular/material/tabs';
 import { PepGenericListModule } from '@pepperi-addons/ngx-composite-lib/generic-list';
 import { PepButtonModule } from '@pepperi-addons/ngx-lib/button';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 
 
@@ -26,6 +27,7 @@ export const routes: Routes = [
     MatTabsModule,
     PepGenericListModule,
     PepButtonModule,
+    BrowserAnimationsModule,
     TranslateModule.forChild({
       loader: {
           provide: TranslateLoader,
