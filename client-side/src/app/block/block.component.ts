@@ -2,7 +2,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { UDCService } from '../services/udc-service';
 import { PepMenuItem } from "@pepperi-addons/ngx-lib/menu";
-import { DIMXComponent } from '@pepperi-addons/ngx-composite-lib/dimx-export';
+// import { DIMXComponent } from '@pepperi-addons/ngx-composite-lib/dimx-export';
 import { UDC_UUID } from '../addon.config';
 import { config } from '../addon.config'
 import { ViewsCard } from '../draggable-card-fields/cards.model';
@@ -17,7 +17,7 @@ import { Params, Router } from '@angular/router';
     styleUrls: ['./block.component.scss']
 })
 export class BlockComponent implements OnInit {
-    @ViewChild('dimx') dimx:DIMXComponent | undefined;
+    // @ViewChild('dimx') dimx:DIMXComponent | undefined;
     @Input() hostObject: any;
     datasource: DataSource
     resourceName: string
