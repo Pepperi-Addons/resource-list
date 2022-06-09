@@ -68,7 +68,7 @@ export class ViewsEditorComponent implements OnInit {
           {
             dataViewId: profile.id,
             fields: [
-              this.viewEditor.getName()
+              // this.viewEditor.getName()
             ]
           }
         ]
@@ -83,12 +83,26 @@ export class ViewsEditorComponent implements OnInit {
     this.viewEditor.update()
   }
   onDataViewDeleteClicked($event){
-
+    this.profileDataViewsList = this.profileDataViewsList.filter(profile => profile.profileId != $event.dataViewId)
   }
   onSaveNewProfileClicked($event){
-
+    const profile = this.availableProfiles?.find(profile => profile.id == $event)
+    this.profileDataViewsList.push({
+      profileId: profile.id,
+      title: profile.name,
+      dataViews: [
+        {
+          dataViewId: profile.id,
+          fields: []
+        }
+      ]
+    })
   }
   onDataViewEditClicked($event){
+    this.router.navigate([`../profile/` ,$event.dataViewId],
+    {
+      relativeTo: this.route
+    })
 
   }
 }

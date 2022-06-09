@@ -4,7 +4,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { EditorsEditorComponent } from './editors-editor/editors-editor.component';
 import { ViewsAndEditorsComponent } from './views-and-editors/views-and-editors.component';
 import { ViewsEditorComponent } from './views-editor/views-editor.component';
-
+import { ProfileDataViewEditorComponent } from './profile-data-view-editor/profile-data-view-editor.component'
 // Important for single spa
 @Component({
     selector: 'app-empty-route',
@@ -30,6 +30,10 @@ const routes: Routes = [
             {
                 path: 'views_and_editors/editor/:key',
                 component: EditorsEditorComponent
+            },
+            {
+                path: 'views_and_editors/profile/:data_view_id',
+                component: ProfileDataViewEditorComponent
             }
         ],
     },

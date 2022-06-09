@@ -21,7 +21,6 @@ export class EditorEditor extends AbstractEditor{
       }
   }
   async update() {
-    debugger
     this.content.Name = this.dataSource.Name
     this.content.Description = this.dataSource.Description
     this.content.Resource.Name = this.dataSource.Resource
@@ -29,7 +28,6 @@ export class EditorEditor extends AbstractEditor{
     this.service.upsertEditor(this.content)
   }
   setOpenMode(openMode: OpenMode){
-    debugger
     this.dataSource.OpenMode = openMode
   }
 }
