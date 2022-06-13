@@ -176,7 +176,6 @@ export class ViewsEditorComponent implements OnInit {
       })
     })
   }
-  
   sortFields(){
     this.resourceFields.sort((a,b) => {
       if(a.key < b.key){
