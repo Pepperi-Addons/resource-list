@@ -1,0 +1,12 @@
+<pep-select
+    class="fields-wrapper"
+    label= "{{mappedField.field}}"
+    [options]='resourceFields' [value]="mappedField.field" [emptyOption]="false"
+    (valueChange)="onResourceFieldChange($event, mappedField)">
+</pep-select>
+
+<pep-button
+    class="del-button"
+    iconName="system_bin" 
+    (buttonClick)="onDeleteMappedField($event, mappedField)">
+</pep-button>

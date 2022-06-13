@@ -19,7 +19,9 @@ import { EditorsEditorComponent } from './editors-editor/editors-editor.componen
 import { PepSelectModule } from '@pepperi-addons/ngx-lib/select';
 import { PepProfileDataViewsListModule } from '@pepperi-addons/ngx-lib/profile-data-views-list';
 import { PepPageLayoutModule } from '@pepperi-addons/ngx-lib/page-layout';
-import { ProfileDataViewEditorComponent } from './profile-data-view-editor/profile-data-view-editor.component';
+import { PepDraggableItemsModule } from '@pepperi-addons/ngx-lib/draggable-items';
+import { DragDropModule } from '@angular/cdk/drag-drop';
+import { MappedFieldComponent } from './mapped-field/mapped-field.component';
 
 
 @NgModule({
@@ -35,11 +37,12 @@ import { ProfileDataViewEditorComponent } from './profile-data-view-editor/profi
         PepButtonModule,
         MatTabsModule,
         PepGenericFormModule,
-        BrowserAnimationsModule,
         PepSelectModule,
         PepProfileDataViewsListModule,
         PepPageLayoutModule,
         BrowserAnimationsModule,
+        PepDraggableItemsModule,
+        DragDropModule,
         TranslateModule.forRoot({
             loader: {
                 provide: TranslateLoader,
@@ -52,7 +55,7 @@ import { ProfileDataViewEditorComponent } from './profile-data-view-editor/profi
         AppComponent,
         ViewsEditorComponent,
         EditorsEditorComponent,
-        ProfileDataViewEditorComponent,
+        MappedFieldComponent,
     ],
     providers: [
         TranslateStore
