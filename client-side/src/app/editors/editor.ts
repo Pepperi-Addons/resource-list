@@ -6,6 +6,7 @@ import { config } from '../addon.config';
 import { View, Editor } from '../../../../shared/entities';
 
 export abstract class AbstractEditor{
+    key: string
     dataSource: any
     dataView: any = {
         Type: "Form",
@@ -26,8 +27,8 @@ export abstract class AbstractEditor{
         ){ 
           this.udcService.pluginUUID = config.AddonUUID
         }
-    async init(){
-        await this.initView(this.route.snapshot.paramMap.get('key'))
+    async init(key){
+        await this.initView(key)
         this.initDataSource();
         await this.initDataView()
     }

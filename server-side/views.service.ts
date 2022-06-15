@@ -14,7 +14,8 @@ export class ViewsService {
     }
     async postView(view: any){
         if(!view.Key){
-            view.Key =  uuidv4()
+            view.Key =  uuidv4().replace(/-/g, '')
+            debugger
         }
         return await this.addonService.papiClient.addons.data.uuid(this.client.AddonUUID).table(viewsTable.Name).upsert(view)
     }

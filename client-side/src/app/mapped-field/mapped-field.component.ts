@@ -9,21 +9,14 @@ import { IMappedField } from '../views-editor/views-editor.component';
 })
 export class MappedFieldComponent implements OnInit {
   @Input() mappedField: IMappedField
-  @Input() resourceFields: IPepOption[]
   @Output() removeClick: EventEmitter<IMappedField> = new EventEmitter();
   resourceField: string
   constructor() { }
 
   ngOnInit(): void {
-    //sortFields
   }
-
-  onResourceFieldChange($event, mappedField){
-    mappedField.field = $event
-  }
-
   onDeleteMappedField($event, mappedField){
-    this.removeClick.emit(mappedField)
+    this.removeClick.emit(mappedField.id)
   }
 
 }

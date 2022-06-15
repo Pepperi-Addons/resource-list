@@ -30,4 +30,7 @@ export class UDCService{
             console.error(`try to post item:\n${item}\n to resource:\n${resourceName}\nin UDC, end with error:\n ${e}`)
         }
     }
+    async getCollection(name: string){
+        return await this.utilitiesService.papiClient.userDefinedCollections.schemes.name(name).get()
+    }
 }

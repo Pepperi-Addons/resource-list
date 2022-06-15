@@ -28,7 +28,7 @@
         <hr>
     </ng-container>
     <ng-container pep-main-area>  
-        <mat-tab-group #tabgroup class="editor-tabs" [selectedIndex] = "currentTabIndex" (selectedTabChange) = "onTabChanged($event)">
+        <mat-tab-group #tabgroup class="editor-tabs">
             <mat-tab label= "{{'TABS.GENERAL' | translate}}">
                 <h5> {{'VIEWS_EDITOR_FIRST_LINE' | translate}}</h5>
                 <pep-generic-form
@@ -36,27 +36,40 @@
                 [dataView]="dataView" 
                 ></pep-generic-form>
             </mat-tab>
-            <mat-tab label = "{{'TABS.FORM' | translate}}">
+            <mat-tab *ngIf="loadCompleted" label = "{{'TABS.FORM' | translate}}">
                 <ng-container *ngIf="!editCard; then cardsTemplate;else cardEditor" ></ng-container>
                 <ng-template #cardsTemplate>
                     <pep-profile-data-views-list [profileDataViewsList]="profileDataViewsList"
                     [availableProfiles]="availableProfiles"
-                    [defaultProfileId]="defaultProfileId" (dataViewEditClick)="onDataViewEditClicked($event)"
+                    [defaultProfileId]="defaultProfileId" (dataViewEditClick)="onDataViewEditClicked($event, event2)"
                     (dataViewDeleteClick)="onDataViewDeleteClicked($event)" (saveNewProfileClick)="onSaveNewProfileClicked($event)">
                     </pep-profile-data-views-list>
                 </ng-template>
                 <ng-template #cardEditor>
-                    <pep-button
-                    class="buttons-holder"
-                    value="Back"
-                    styleType="weak"
-                    styleStateType="system"
-                    sizeType="md"
-                    classNames=""
-                    iconPosition="end"
-                    [visible]="editCard"
-                    (buttonClick)="backFromCardsTemplate()"
-                    ></pep-button>
+                    <div class="buttons-holder">
+                        <pep-button
+                            class="buttons-holder"
+                            value="Back"
+                            styleType="weak"
+                            styleStateType="system"
+                            sizeType="md"
+                            classNames=""
+                            iconPosition="end"
+                            [visible]="editCard"
+                            (buttonClick)="backFromCardsTemplate()"
+                        ></pep-button>
+                        <pep-button
+                            class="buttons-holder"
+                            value="Save"
+                            styleType="strong"
+                            styleStateType="system"
+                            sizeType="md"
+                            classNames=""
+                            iconPosition="end"
+                            [visible]="editCard"
+                            (buttonClick)="onSaveDataView()"
+                        ></pep-button>
+                    </div>
                     <div class="mapped-fields-container">
                         <div class="available-fields-side-area">
                             <pep-draggable-items [items]="sideCardsList" [title]="'Cards List'" titleType="with-bottom-border" titleSizeType="md"

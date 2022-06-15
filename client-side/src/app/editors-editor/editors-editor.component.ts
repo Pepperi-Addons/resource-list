@@ -17,6 +17,7 @@ import { OpenMode } from '../../../../shared/entities'
 })
 export class EditorsEditorComponent implements OnInit {
   editor: Editor
+  editorKey: string
   dataSource: any = {}
   dataView: any = {
     Type: "Form",
@@ -44,6 +45,7 @@ export class EditorsEditorComponent implements OnInit {
     }
 
   ngOnInit(): void {
+    this.editorKey = this.route.snapshot.paramMap.get('key')
     this.openModes = [
       {
         key: "same-page",
@@ -61,7 +63,7 @@ export class EditorsEditorComponent implements OnInit {
       this.udcService,
       this.viewsService
     )
-    this.editorEditor.init().then(() => {
+    this.editorEditor.init(this.editorKey).then(() => {
       this.editorName = this.editorEditor.getName()
       this.dataSource = this.editorEditor.getDataSource()
       this.dataView = this.editorEditor.getDataView()
