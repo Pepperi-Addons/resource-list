@@ -18,4 +18,8 @@ export class DataViewService{
         const result =  await this.utilitiesService.papiClient.metaData.dataViews.upsert(dataView)
         return result
     }
+    async getRepDataView(viewKey: string){
+        const query = {where: `Context.Name="GV_${viewKey}_View" AND Context.Profile.Name="Rep"`}
+        return await this.utilitiesService.papiClient.metaData.dataViews.find(query)
+    }
 }

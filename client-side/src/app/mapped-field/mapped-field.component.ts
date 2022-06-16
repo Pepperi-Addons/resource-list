@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { IPepOption } from '@pepperi-addons/ngx-lib';
-import { IMappedField } from '../views-editor/views-editor.component';
+import { IMappedField } from '../metadata'
 
 @Component({
   selector: 'app-mapped-field',
