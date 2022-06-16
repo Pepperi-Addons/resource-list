@@ -102,6 +102,7 @@ export class ViewsEditorComponent implements OnInit {
     dataViews.forEach(dataView => {
       if(dataView.Context?.Profile?.Name == 'Rep'){
         repFound = true
+        this.repDataViewID = dataView.InternalID.toString()
       }
       this.dataViewsMap.set(dataView.InternalID.toString(), dataView)
       notAvilablesProfiles.add(dataView.Context.Profile.InternalID.toString())
@@ -182,16 +183,19 @@ export class ViewsEditorComponent implements OnInit {
   }
   //add profile card to the page
   async onSaveNewProfileClicked($event){
-    const repMappedFields = await this.getRepMappedFields()
+    // debugger
+    // const repMappedFields = await this.getRepMappedFields()
+    const repFields = this.dataViewsMap.get(this.repDataViewID)?.Fields || []
+    debugger
     const profile = this.availableProfiles?.find(profile => profile.id == $event)
-    const dataView = await this.postNewDataViewAndSaveOnMap(profile, repMappedFields)
+    const dataView = await this.postNewDataViewAndSaveOnMap(profile, repFields)
     this.profileDataViewsList.push({
       profileId: profile.id,
       title: profile.name,
       dataViews: [
         {
           dataViewId: dataView.InternalID.toString(),
-          fields: repMappedFields.map(field => field.Title)
+          fields: repFields.map(field => field.Title)
         }
       ]
     })
@@ -199,12 +203,15 @@ export class ViewsEditorComponent implements OnInit {
   }
   onDataViewEditClicked($event){
     this.currentDataView = this.dataViewsMap.get($event.dataViewId)
+    const mappedFieldsIDSet = new Set<string>()
     this.mappedFields = this.currentDataView.Fields.map(field => {
+      mappedFieldsIDSet.add(field.FieldID)
       return {
         id: uuid.v4(),
         field: field
       }
     }) || []
+    this.sideCardsList = this.sideCardsList.filter(card => !mappedFieldsIDSet.has(card.data.FieldID))
     this.editCard = true
   }
   //------------------------------------------------------------------------
@@ -292,44 +299,43 @@ export class ViewsEditorComponent implements OnInit {
       }
      };
     this.mappedFields.splice(index, 0, mappedField);
+    this.sideCardsList = this.sideCardsList.filter(field => field.data.FieldID != draggableItem.data.FieldID)
   }
   onCardRemoveClick(id){
     const index = this.mappedFields.findIndex( ms => ms.id === id);
     if (index > -1) {
-        this.mappedFields.splice(index, 1);
+      this.sideCardsList.push({
+        title: this.translate.instant(this.mappedFields[index].field.Title),
+        data: {key: undefined, ...this.mappedFields[index].field}
+      })
+      this.mappedFields.splice(index, 1);
     }
   }
-  onSaveDataView(){
-    this.dataViewService.postDataView({
-      Type: 'Grid',
-      Hidden: false,
-      Fields: this.mappedFields.map((mappedField, index) => {
-        const field = mappedField.field
-        field["Layout"] = {
-          Origin: {
-            X: index,
-            Y: 0
-          }
+  async onSaveDataView(){
+    const fields = this.mappedFields.map((mappedField, index) => {
+      const field = mappedField.field
+      field["Layout"] = {
+        Origin: {
+          X: index,
+          Y: 0
         }
-        field["Style"] = {
-          Alignment: {
-            Vertical: "Center",
-            Horizontal: "Stretch"
-          }
-        }
-        return field
-      }),
-      Columns: this.mappedFields.map(_ => {
-        return { Width: 10}
-      }),
-      Context: {
-        Name: `GV_${this.viewKey}_View`,
-        ScreenSize: 'Tablet',
-        Profile:{
-          InternalID: Number(this.currentDataView.Context.Profile.InternalID),
-        },
       }
+      field["Style"] = {
+        Alignment: {
+          Vertical: "Center",
+          Horizontal: "Stretch"
+        }
+      }
+      return field
     })
+    const dataView = await this.postNewDataViewAndSaveOnMap(
+      {
+        id: this.currentDataView.Context.Profile.InternalID.toString(),
+        name: this.currentDataView.Context.Profile.Name
+      },
+      fields
+    )
+    this.dataViewsMap.set(dataView.InternalID.toString(), dataView)
     const currentProfileCard = this.profileDataViewsList.find(profile => profile.profileId == this.currentDataView.Context.Profile.InternalID.toString());
     currentProfileCard.dataViews[0].fields = this.mappedFields.map(field => field.field.Title)
   }
