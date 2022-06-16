@@ -98,11 +98,13 @@ export class ViewsEditorComponent implements OnInit {
   }
   async initDataViewsMap(dataViews: DataView[]){
     let repFound = false;
+    const notAvilablesProfiles = new Set<string>()
     dataViews.forEach(dataView => {
       if(dataView.Context?.Profile?.Name == 'Rep'){
         repFound = true
       }
       this.dataViewsMap.set(dataView.InternalID.toString(), dataView)
+      notAvilablesProfiles.add(dataView.Context.Profile.InternalID.toString())
     })
     //if rep not found then this is the first time the user edit the form, rep should always wxist so we are creating rep dataview.
     if(!repFound){
@@ -110,6 +112,8 @@ export class ViewsEditorComponent implements OnInit {
       const dataView = await this.postNewDataViewAndSaveOnMap(repProfile)
       this.repDataViewID = dataView.InternalID.toString()
     }
+    //if profile is in not available set then the profile card already exist!
+    this.availableProfiles = this.availableProfiles.filter(availableProfile => !notAvilablesProfiles.has(availableProfile.id))
   }
   initProfilesCardsByDataViews(){
     this.profileDataViewsList = []
@@ -148,6 +152,10 @@ export class ViewsEditorComponent implements OnInit {
     this.dataViewService.postDataView(currentDataView)
     this.profileDataViewsList = this.profileDataViewsList.filter(profile => profile.profileId != currentDataView.Context.Profile.InternalID.toString())
     this.dataViewsMap.delete(currentDataView.InternalID.toString())
+    this.availableProfiles.push({
+      id: currentDataView.Context.Profile.InternalID.toString(),
+      name: currentDataView.Context.Profile.Name
+    })
   }
   async postNewDataViewAndSaveOnMap(profile: IPepProfile, fields = []){
     const dataView = await this.dataViewService.postDataView({
@@ -187,9 +195,9 @@ export class ViewsEditorComponent implements OnInit {
         }
       ]
     })
+    this.availableProfiles = this.availableProfiles.filter(availableProfile => availableProfile.id != profile.id)
   }
   onDataViewEditClicked($event){
-    debugger
     this.currentDataView = this.dataViewsMap.get($event.dataViewId)
     this.mappedFields = this.currentDataView.Fields.map(field => {
       return {
