@@ -150,7 +150,6 @@ export class ViewsEditorComponent implements OnInit {
     this.dataViewsMap.delete(currentDataView.InternalID.toString())
   }
   async postNewDataViewAndSaveOnMap(profile: IPepProfile, fields = []){
-    debugger
     const dataView = await this.dataViewService.postDataView({
       Type: 'Grid',
       Hidden: false,
