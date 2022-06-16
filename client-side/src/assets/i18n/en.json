@@ -1,15 +1,15 @@
 {
     "Block_Title": "Block title",
-    "TABS": {
-        "GENERAL": "General",
-        "VIEWS": "Views",
-        "EDITORS": "Editors"
+    "Tabs": {
+        "General": "General",
+        "Views": "Views",
+        "Editors": "Editors"
     },
-    "VIEWS_EDITOR_FIRST_LINE" : "Define the new content",
-    "VIEWS_AND_EDITORS_TITLE" : "Views & Editors",
-    "VIEWS_LIST_TITLE" : "Views",
-    "ADD": "Add",
-    "UPDATE": "Update",
-    "BACK_TO_LIST": "Back to list",
-    "BlOCK_EDITOR_FIRST_LINE": "Select the views to show. If no views are define then all the views allowed to the user profile will be shown"
+    "Views_Editor_First_Line" : "Define the new content",
+    "Views_And_Editors_Title" : "Views & Editors",
+    "Views_List_Title" : "Views",
+    "Add": "Add",
+    "Update": "Update",
+    "Back_To_List": "Back to list",
+    "Block_Editor_First_Line": "Select the views to show. If no views are define then all the views allowed to the user profile will be shown"
 }

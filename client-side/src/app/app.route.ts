@@ -24,14 +24,15 @@ const routes: Routes = [
                 // loadChildren: () => import('./addon/addon.module').then(m => m.AddonModule)
             },
             {
+                path: 'views_and_editors/editor/:key',
+                component: EditorsEditorComponent
+            },
+            {
                 path: 'views_and_editors/:key',
                 component: ViewsEditorComponent
             },
-            {
-                path: 'views_and_editors/editor/:key',
-                component: EditorsEditorComponent
-            }
-        ],
+
+        ]
     },
     {
         path: '**',

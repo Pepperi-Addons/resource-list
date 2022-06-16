@@ -27,9 +27,7 @@ export interface Editor{
     OpenMode: OpenMode
 }
 
-type Popup = "popup"
-type SamePage = "same-page"
-export type OpenMode = Popup | SamePage
+export type OpenMode = "popup" | "same-page"
 
 export interface Resource{
     AddonUUID: string,

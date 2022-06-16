@@ -2,7 +2,7 @@
     <h4>Edit - {{viewName}}</h4>
     <div class="buttons-holder">
         <pep-button
-        value="{{'BACK_TO_LIST' | translate}}"
+        value="{{'Back_To_List' | translate}}"
         styleType="weak"
         styleStateType="system"
         sizeType="md"
@@ -12,7 +12,7 @@
         (buttonClick)="onBackToList()"
         ></pep-button>
         <pep-button
-        value="{{'UPDATE' | translate}}"
+        value="{{'Update' | translate}}"
         styleType="strong"
         styleStateType="system"
         sizeType="md"
@@ -25,8 +25,8 @@
 </div>
 <hr>
 <mat-tab-group #tabgroup class="editor-tabs">
-    <mat-tab label= "{{'TABS.GENERAL' | translate}}">
-        <h5> {{'VIEWS_EDITOR_FIRST_LINE' | translate}}</h5>
+    <mat-tab label= "{{'Tabs.General' | translate}}">
+        <h5> {{'Views_Editor_First_Line' | translate}}</h5>
         <pep-generic-form
         [dataSource]="dataSource"
         [dataView]="dataView" 
