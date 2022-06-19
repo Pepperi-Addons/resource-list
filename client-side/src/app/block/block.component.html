@@ -1,5 +1,18 @@
-<div [ngStyle]="{'min-height': minHeight+'rem', 'height': relativeHeight + '%'}">
-    <ng-container pep-main-area>
+
+<ng-container pep-main-area>
+    <div class="list">
+        <pep-select *ngIf="dropDownOfViews.length > 0"
+            class="buttons-holder"
+            [value]="currentViewKey"
+            label="select view"
+            type="select"
+            [mandatory]="false"
+            xAlignment="left"
+            [options]="dropDownOfViews"
+            [showTitle]="true"
+            (valueChange)="onViewChange($event)"
+            [emptyOption]="false"
+        ></pep-select>
         <pep-generic-list class="generic-list" 
             [showTopBar]="true"
             [dataSource]="datasource"
@@ -8,7 +21,7 @@
             [actions] = "actions"
             uuidMapping = 'Key'>
             <ng-container right-buttons>
-                <pep-button
+                <!-- <pep-button
                     value="Add"
                     styleType="strong"
                     styleStateType="system"
@@ -18,8 +31,8 @@
                     iconPosition="end"
                     [visible]="true"
                     (buttonClick)="onAddClick()"
-                ></pep-button>
-                <pep-menu
+                ></pep-button> -->
+                <!-- <pep-menu
                     classNames="pep-spacing-element"
                     iconName="system_menu"
                     type="action"
@@ -28,9 +41,10 @@
                     [items]="menuItems"
                     [disabled]="menuDisabled"
                     (menuItemClick)="onMenuItemClick($event)"
-                ></pep-menu>
+                ></pep-menu> -->
             </ng-container>
         </pep-generic-list>
-    </ng-container>
-</div>
+    </div>  
+</ng-container>
+
 <!-- <pep-dimx #dimx [DIMXAddonUUID]="udcUUID" [DIMXResource]="resourceName" (DIMXProcessDone)='onDIMXProcessDone($event);'></pep-dimx> -->

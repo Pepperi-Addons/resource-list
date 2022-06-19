@@ -18,8 +18,8 @@ export class DataViewService{
         const result =  await this.utilitiesService.papiClient.metaData.dataViews.upsert(dataView)
         return result as GridDataView
     }
-    async getRepDataView(viewKey: string){
+    async getDataViewsByProfile(viewKey: string, profileName: string){
         const query = {where: `Context.Name="GV_${viewKey}_View" AND Context.Profile.Name="Rep"`}
-        return await this.utilitiesService.papiClient.metaData.dataViews.find(query)
+        return await this.utilitiesService.papiClient.metaData.dataViews.find(query) as GridDataView[]
     }
 }

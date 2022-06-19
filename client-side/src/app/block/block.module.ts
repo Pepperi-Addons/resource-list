@@ -10,6 +10,7 @@ import { PepGenericListModule } from '@pepperi-addons/ngx-composite-lib/generic-
 import { PepMenuModule } from '@pepperi-addons/ngx-lib/menu';
 // import { PepDIMXModule } from '@pepperi-addons/ngx-composite-lib/dimx-export';
 import { PepButtonModule } from '@pepperi-addons/ngx-lib/button';
+import { PepSelectModule } from '@pepperi-addons/ngx-lib/select';
 
 
 export const routes: Routes = [
@@ -28,6 +29,7 @@ export const routes: Routes = [
         PepMenuModule,
         // PepDIMXModule,
         PepButtonModule,
+        PepSelectModule,
         TranslateModule.forChild({
             loader: {
                 provide: TranslateLoader,

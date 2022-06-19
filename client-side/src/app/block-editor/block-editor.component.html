@@ -25,7 +25,7 @@
     </draggable-card-fields>
 </div>
 <pep-button class="add-content-button" value="Add" styleType="regular"  
-(buttonClick)="addNewCardClick()"></pep-button>
+(buttonClick)="addNewCardClick()" [disabled] = "!currentViews || currentViews.length == 0"></pep-button>
 
 
 

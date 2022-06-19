@@ -6,10 +6,12 @@ import { PepMenuItem } from "@pepperi-addons/ngx-lib/menu";
 import { UDC_UUID } from '../addon.config';
 import { config } from '../addon.config'
 import { ViewsCard } from '../draggable-card-fields/cards.model';
-import { GridDataViewColumn } from '@pepperi-addons/papi-sdk';
+import { GridDataView, GridDataViewColumn } from '@pepperi-addons/papi-sdk';
 import { DataSource } from '../data-source/data-source'
 import { PepSelectionData } from '@pepperi-addons/ngx-lib/list';
 import { Params, Router } from '@angular/router';
+import { SelectOption } from '../../../../shared/entities';
+import { DataViewService } from '../services/data-view-service';
 
 @Component({
     selector: 'block',
@@ -35,22 +37,72 @@ export class BlockComponent implements OnInit {
     minHeight: number
     relativeHeight: number
     allowEdit:boolean = false;
+
+    //new page block
+    dropDownOfViews: SelectOption[] = []
+    currentViewKey : string
+    resource: string   
+
     @Output() hostEvents: EventEmitter<any> = new EventEmitter<any>();
 
     constructor(private translate: TranslateService,
          private udcService: UDCService,
-         private router: Router) {
+         private router: Router,
+         private dataViewService: DataViewService) {
           this.udcService.pluginUUID = config.AddonUUID
           this.actions.get = this.getActionsCallBack()
     }
     ngOnInit(): void {
-      this.init()
+      this.loadBlock()
     }
-    ngOnChanges(e: any): void {
-      if(this.hostObject?.configuration){
-        this.init()
+
+    loadBlock(){
+      this.cardsList = this.hostObject?.configuration?.cardsList || []
+      this.resource = this.hostObject.configuration?.resource || ""
+      this.createDropDownOfViews()
+      this.currentViewKey = this.dropDownOfViews?.length > 0? this.dropDownOfViews[0].key : undefined
+      this.DisplayViewInList(this.currentViewKey)
+    }
+    async DisplayViewInList(viewKey){
+      const dataViews = await this.dataViewService.getDataViewsByProfile(viewKey, "Rep");
+      if(dataViews.length > 0){
+        this.loadList(dataViews[0])
+      }
+      //if there is no dataview we will display an empty list
+      else{
+        this.datasource = new DataSource([],[],[])
       }
     }
+    onViewChange($event){
+      this.currentViewKey = $event
+      this.DisplayViewInList(this.currentViewKey)
+
+    }
+    async loadList(dataView: GridDataView){
+      const fields = dataView.Fields || []
+      const columns = dataView.Columns || []
+      const items = await this.udcService.getItems(this.resource)
+      this.datasource = new DataSource(items, fields,columns)
+
+    }
+
+    createDropDownOfViews(){
+      this.dropDownOfViews = this.cardsList.map(card => {
+        return {
+          key: card.view.key,
+          value: card.view.value
+        }
+      })
+    }
+
+    ngOnChanges(e: any): void {
+      this.loadBlock()
+    }
+
+    //-------------------------------------------------------------------------------
+    //---------------------------Old Page Block Functions ---------------------------
+    //-------------------------------------------------------------------------------
+
     async loadGenericList(){
     this.items = await  this.udcService.getItems(this.resourceName);
     this.datasource = new DataSource(this.items, this.fields, this.widthArray)

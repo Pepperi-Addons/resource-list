@@ -28,20 +28,19 @@ export class BlockEditorComponent implements OnInit {
                 this.udcService.pluginUUID = config.AddonUUID
     }
     ngOnInit(): void {
-        this.resource = this.hostObject.configuration.resource;
         this.cardsList = this.hostObject.configuration.cardsList || []
         Promise.all([this.setResourcesNames(), this.viewsService.getViews()])
         .then(([_, views]) => {
-            if(!this.resource){
-                this.resource = this.resourcesNames.length > 0? this.resourcesNames[0].value : undefined
-            }
+            this.resource = this.hostObject.configuration.resource ||  this.resourcesNames.length > 0? this.resourcesNames[0].value : undefined
             this.views = views
             this.setViewsByResource();
+            this.updateConfigurationField('resource', this.resource)
         })   
     }
     setViewsByResource(){
+        this.currentViews = []
         this.views.forEach(view =>{
-            if(view.Resource?.Name == this.hostObject.configuration.resource){
+            if(view.Resource?.Name == this.resource){
                 this.currentViews.push({
                     value: view.Name,
                     key: view.Key
@@ -68,9 +67,11 @@ export class BlockEditorComponent implements OnInit {
         })
     }
     restoreData(){
-        this.cardsList = undefined
+        this.cardsList = []
         this.resource = undefined
         this.currentViews = undefined
+        this.updateConfigurationField('cardsList', this.cardsList)
+        this.updateConfigurationField('resource', this.resource)
     }
     drop(event: CdkDragDrop<string[]>){
         if (event.previousContainer === event.container) {
@@ -90,7 +91,7 @@ export class BlockEditorComponent implements OnInit {
             views: this.currentViews,
             showContent: true,
             title: "Grid",
-            view: this.currentViews.length > 0? this.currentViews[0] : undefined
+            view: this.currentViews[0]
         }
         this.cardsList.push(card)
         this.updateConfigurationField('cardsList', this.cardsList)
