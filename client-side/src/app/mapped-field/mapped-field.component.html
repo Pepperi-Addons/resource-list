@@ -1,3 +1,25 @@
+
+
+<pep-textbox
+  [value]="mappedField.width"
+  label="Width"
+  type="int"
+  [mandatory]="false"
+  [disabled]="false"
+  xAlignment="left"
+  (valueChange)="onWidthChange($event)"
+></pep-textbox>
+
+
+<pep-textbox
+  [(value)]="mappedField.field.Title"
+  label="Label"
+  type="text"
+  [mandatory]="false"
+  [disabled]="false"
+  xAlignment="left"
+></pep-textbox>
+
 <pep-button
     class="del-button"
     iconName="system_bin" 

@@ -10,7 +10,7 @@ import { IMappedField } from '../metadata'
 export class MappedFieldComponent implements OnInit {
   @Input() mappedField: IMappedField
   @Output() removeClick: EventEmitter<IMappedField> = new EventEmitter();
-  resourceField: string
+  width: number
   constructor() { }
 
   ngOnInit(): void {
@@ -19,4 +19,7 @@ export class MappedFieldComponent implements OnInit {
     this.removeClick.emit(mappedField.id)
   }
 
+  onWidthChange($event){
+    this.mappedField.width = Number($event)
+  }
 }

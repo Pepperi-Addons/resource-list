@@ -22,6 +22,7 @@ import { PepPageLayoutModule } from '@pepperi-addons/ngx-lib/page-layout';
 import { PepDraggableItemsModule } from '@pepperi-addons/ngx-lib/draggable-items';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { MappedFieldComponent } from './mapped-field/mapped-field.component';
+import { PepTextboxModule } from '@pepperi-addons/ngx-lib/textbox';
 
 
 @NgModule({
@@ -43,6 +44,7 @@ import { MappedFieldComponent } from './mapped-field/mapped-field.component';
         BrowserAnimationsModule,
         PepDraggableItemsModule,
         DragDropModule,
+        PepTextboxModule,
         TranslateModule.forRoot({
             loader: {
                 provide: TranslateLoader,

@@ -13,5 +13,6 @@ export interface IMappedField {
       Type: DataViewFieldType;
       ReadOnly: boolean
       Mandatory: boolean
-    }
+    },
+    width: number
   }

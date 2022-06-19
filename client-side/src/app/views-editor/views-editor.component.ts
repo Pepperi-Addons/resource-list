@@ -12,7 +12,7 @@ import { IPepDraggableItem } from '@pepperi-addons/ngx-lib/draggable-items';
 import { CdkDragDrop, CdkDragEnd, CdkDragStart, moveItemInArray } from '@angular/cdk/drag-drop';
 import {CREATION_DATE_TIME_ID, MODIFICATION_DATE_TIME_ID, CREATION_DATE_TIME_TITLE, MODIFICATION_DATE_TIME_TITLE} from '../metadata'
 import { DataViewService } from '../services/data-view-service'
-import { Collection, DataView } from '@pepperi-addons/papi-sdk';
+import { Collection, DataView, DataViewField, GridDataView, GridDataViewField } from '@pepperi-addons/papi-sdk';
 import { IMappedField } from '../metadata';
 import * as uuid from 'uuid';
 
@@ -45,9 +45,9 @@ export class ViewsEditorComponent implements OnInit {
   currentResourceField: string = undefined
   viewKey: string
   collectionFields: Collection
-  currentDataView: DataView
+  currentDataView: GridDataView
   loadCompleted: boolean = false
-  dataViewsMap: Map<string, DataView> = new Map()
+  dataViewsMap: Map<string, GridDataView> = new Map()
   repDataViewID: string
 
   constructor(
@@ -79,7 +79,11 @@ export class ViewsEditorComponent implements OnInit {
         this.loadCompleted = true
       })
   }
-  //----------------------- Init Functions ----------------------- 
+
+  // -------------------------------------------------------------
+  //                        Init Functions                        
+  // -------------------------------------------------------------
+
   async initViewEditor(key: string){
     await this.viewEditor.init(this.viewKey)
     this.viewName = this.viewEditor.getName()
@@ -96,7 +100,7 @@ export class ViewsEditorComponent implements OnInit {
     this.initSideCardsListAndFields(this.collectionFields)
     this.initProfilesCardsByDataViews()
   }
-  async initDataViewsMap(dataViews: DataView[]){
+  async initDataViewsMap(dataViews: GridDataView[]){
     let repFound = false;
     const notAvilablesProfiles = new Set<string>()
     dataViews.forEach(dataView => {
@@ -131,9 +135,6 @@ export class ViewsEditorComponent implements OnInit {
       })
     }
   }
-  async getRepMappedFields(){
-    return (await this.dataViewService.getRepDataView(this.viewKey))[0].Fields || []
-  }
   onBackToList(){
     this.location.back()
   }
@@ -141,8 +142,11 @@ export class ViewsEditorComponent implements OnInit {
   onUpdate(){
     this.viewEditor.update()
   }
+
   //-----------------------------------------------------------------------
-  //----------------------- Profiles Cards Function ----------------------- 
+  //                        Profiles Cards Function
+  //-----------------------------------------------------------------------
+
   //remove profile card from the page
   onDataViewDeleteClicked($event){
     const currentDataView = this.dataViewsMap.get($event.dataViewId)
@@ -158,14 +162,12 @@ export class ViewsEditorComponent implements OnInit {
       name: currentDataView.Context.Profile.Name
     })
   }
-  async postNewDataViewAndSaveOnMap(profile: IPepProfile, fields = []){
+  async postNewDataViewAndSaveOnMap(profile: IPepProfile, fields: GridDataViewField[] = [], columns: {Width: number}[] = []){
     const dataView = await this.dataViewService.postDataView({
       Type: 'Grid',
       Hidden: false,
       Fields: fields,
-      Columns: fields.map(_ => {
-        return {Width: 10}
-      }),
+      Columns: columns,
       Context: {
         Name: `GV_${this.viewKey}_View`,
         ScreenSize: 'Tablet',
@@ -183,12 +185,11 @@ export class ViewsEditorComponent implements OnInit {
   }
   //add profile card to the page
   async onSaveNewProfileClicked($event){
-    // debugger
-    // const repMappedFields = await this.getRepMappedFields()
-    const repFields = this.dataViewsMap.get(this.repDataViewID)?.Fields || []
-    debugger
+    const repDataview = this.dataViewsMap.get(this.repDataViewID)
+    const repFields = repDataview?.Fields || []
+    const repColumns = repDataview?.Columns || []
     const profile = this.availableProfiles?.find(profile => profile.id == $event)
-    const dataView = await this.postNewDataViewAndSaveOnMap(profile, repFields)
+    const dataView = await this.postNewDataViewAndSaveOnMap(profile, repFields, repColumns)
     this.profileDataViewsList.push({
       profileId: profile.id,
       title: profile.name,
@@ -204,18 +205,23 @@ export class ViewsEditorComponent implements OnInit {
   onDataViewEditClicked($event){
     this.currentDataView = this.dataViewsMap.get($event.dataViewId)
     const mappedFieldsIDSet = new Set<string>()
-    this.mappedFields = this.currentDataView.Fields.map(field => {
+    //you can use for here, and also put the width on same loop.
+    this.mappedFields = this.currentDataView.Fields.map((field, index) => {
       mappedFieldsIDSet.add(field.FieldID)
-      return {
-        id: uuid.v4(),
-        field: field
-      }
+      return this.fieldToMappedField(field, this.currentDataView.Columns[index].Width)
+      // return {
+      //   id: uuid.v4(),
+      //   field: field,
+      //   width: 10
+      // }
     }) || []
     this.sideCardsList = this.sideCardsList.filter(card => !mappedFieldsIDSet.has(card.data.FieldID))
     this.editCard = true
   }
-  //------------------------------------------------------------------------
-  //-----------------------  Mapping Fields Functions -----------------------
+
+  //-------------------------------------------------------------------------
+  //                         Mapping Fields Functions 
+  //-------------------------------------------------------------------------
 
   initSideCardsListAndFields(resourcefields: any){
     this.sideCardsList = [
@@ -296,47 +302,84 @@ export class ViewsEditorComponent implements OnInit {
         Mandatory: draggableItem.data.Mandatory,
         ReadOnly: draggableItem.data.ReadOnly,
         Type: draggableItem.data.Type,
-      }
+      },
+      width : 10
      };
     this.mappedFields.splice(index, 0, mappedField);
     this.sideCardsList = this.sideCardsList.filter(field => field.data.FieldID != draggableItem.data.FieldID)
   }
   onCardRemoveClick(id){
-    const index = this.mappedFields.findIndex( ms => ms.id === id);
+    const index = this.mappedFields.findIndex(ms => ms.id === id);
     if (index > -1) {
+      this.mappedFields[index].field.Title = this.mappedFields[index].field.FieldID
       this.sideCardsList.push({
-        title: this.translate.instant(this.mappedFields[index].field.Title),
+        title: this.translate.instant(this.mappedFields[index].field.FieldID),
         data: {key: undefined, ...this.mappedFields[index].field}
       })
       this.mappedFields.splice(index, 1);
     }
   }
   async onSaveDataView(){
-    const fields = this.mappedFields.map((mappedField, index) => {
-      const field = mappedField.field
-      field["Layout"] = {
-        Origin: {
-          X: index,
-          Y: 0
-        }
-      }
-      field["Style"] = {
-        Alignment: {
-          Vertical: "Center",
-          Horizontal: "Stretch"
-        }
-      }
-      return field
+    const fields = this.mappedFieldsToDataViewFields(this.mappedFields)
+    const columns = this.mappedFields.map(mappedField =>{
+      return { Width: mappedField.width }
     })
     const dataView = await this.postNewDataViewAndSaveOnMap(
       {
         id: this.currentDataView.Context.Profile.InternalID.toString(),
         name: this.currentDataView.Context.Profile.Name
       },
-      fields
+      fields,
+      columns
     )
     this.dataViewsMap.set(dataView.InternalID.toString(), dataView)
     const currentProfileCard = this.profileDataViewsList.find(profile => profile.profileId == this.currentDataView.Context.Profile.InternalID.toString());
     currentProfileCard.dataViews[0].fields = this.mappedFields.map(field => field.field.Title)
+  }
+
+  
+  mappedFieldToDataViewField(mappedField: IMappedField, index: number): GridDataViewField{
+    return {
+      FieldID: mappedField.field.FieldID,
+      Title: mappedField.field.Title,
+      ReadOnly: mappedField.field.ReadOnly,
+      Mandatory: mappedField.field.Mandatory,
+      Type: mappedField.field.Type,
+      Style: {
+        Alignment: {
+          Vertical: "Center",
+          Horizontal: "Stretch"
+        }
+      },
+      Layout: {
+        Origin: {
+          X: index,
+          Y: 0
+        }
+      }
+    }
+  }
+  mappedFieldsToDataViewFields(mappedFields: IMappedField[]): GridDataViewField[]{
+    return mappedFields.map((mappedField, index) => {
+        return this.mappedFieldToDataViewField(mappedField, index)
+    })
+  }
+  fieldToMappedField(field: GridDataViewField, width = 10): IMappedField{
+    return {
+      id: uuid.v4(),
+      field: field,
+      width: width
+    }
+  }
+  fieldsToMappedFields(fields: GridDataViewField[], columns: {Width: number}[]): IMappedField[]{
+    const mappedFields = []
+    fields.forEach((field,index) => {
+      mappedFields.push({
+        id: uuid.v4(),
+        field: field,
+        width: columns[index]
+      })
+    })
+    return mappedFields
   }
 }
