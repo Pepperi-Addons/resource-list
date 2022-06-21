@@ -11,6 +11,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { PepTopBarModule } from '@pepperi-addons/ngx-lib/top-bar';
 import { PepPageLayoutModule } from '@pepperi-addons/ngx-lib/page-layout';
+import { TableComponent } from './table/table.component';
 
 
 export const routes: Routes = [
@@ -22,7 +23,8 @@ export const routes: Routes = [
 
 @NgModule({
   declarations: [
-    ViewsAndEditorsComponent
+    ViewsAndEditorsComponent,
+    TableComponent,
   ],
   imports: [
     CommonModule,

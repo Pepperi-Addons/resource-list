@@ -1,9 +1,8 @@
-import { DataSource } from '../data-source/data-source';
 import { Component, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { ViewsService } from '../services/views.service'
 import { PepSelectionData } from '@pepperi-addons/ngx-lib/list';
-import { ActivatedRoute, Data, Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { IPepGenericListActions } from '@pepperi-addons/ngx-composite-lib/generic-list';
 
 @Component({
@@ -12,23 +11,17 @@ import { IPepGenericListActions } from '@pepperi-addons/ngx-composite-lib/generi
   styleUrls: ['./views-and-editors.component.scss']
 })
 export class ViewsAndEditorsComponent implements OnInit {
-  datasource: DataSource
-  editorsDatasource: DataSource
+  //------------editor properties------------
+  editorItems: any[] = []
+  editorActions: IPepGenericListActions
+  addEditorCB = () => this.router.navigate(["editor/new"], {relativeTo : this.route})
+  editorsTableTitle = "Editors"
+  
+  //------------view properties------------
   items: any[] = []
-  editorsItems: any[] = []
-  actions: IPepGenericListActions
-  editorsActions: IPepGenericListActions
-  private widthArray = [
-    {
-      Width: 0
-    },
-    {
-      Width: 0
-    },
-    {
-      Width: 0
-    }
-  ]
+  viewActions: IPepGenericListActions
+  addViewCB = () => this.router.navigate(["new"], {relativeTo : this.route})
+  viewsTableTitle = "Views"
 
   constructor(
     private translate: TranslateService,
@@ -36,85 +29,28 @@ export class ViewsAndEditorsComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute
   ) {
-   }
-
-  
+    this.viewsTableTitle = this.translate.instant(this.viewsTableTitle)
+    this.editorsTableTitle = this.translate.instant(this.editorsTableTitle)
+  }
   ngOnInit(): void {
-    this.initEditrosActions()
-    this.setEditorsItems()
-    .then(() => {
-      this.editorsDatasource = new DataSource(this.editorsItems, this.generateFields(), this.widthArray)
+    this.viewActions = this.getViewsTableActions()
+    this.getViewsTableItems().then(items => {
+      this.items = items
     })
-    this.initGenericListActions()
-    this.setItems().then(() => {
-      this.datasource = new DataSource(this.items, this.generateFields(), this.widthArray)
-    })
-  }
-  initEditrosActions(){
-    this.editorsActions = {
-      get: async (data: PepSelectionData) => {
-        const actions = []
-        if(data && data.rows.length == 1){
-          actions.push({
-              title: this.translate.instant('Edit'),
-              handler: async (selectedRows) => {
-                this.router.navigate([`editor/${selectedRows.rows[0]}`], {relativeTo : this.route})
-              }
-          })
-        }
-        return actions
-      }
-    }
-
-  }
-  generateFields(){
-    return [{
-        FieldID: 'Name',
-        Mandatory: true,
-        ReadOnly: true,
-        Title: this.translate.instant('Name'),
-        Type: 'TextBox'
-      },
-      {
-        FieldID: 'Description',
-        Mandatory: true,
-        ReadOnly: true,
-        Title: this.translate.instant('Description'),
-        Type: 'TextBox'
-      },
-      {
-        FieldID: 'Resource',
-        Mandatory: true,
-        ReadOnly: true,
-        Title: this.translate.instant('Resource'),
-        Type: 'TextBox'
-      },
-    ]
-  }
-  async setEditorsItems(){
-    const editorsItems = await this.viewsService.getEditors()
-    this.editorsItems = editorsItems.map((editor) => {
-      return {
-        Name: editor.Name,
-        Description: editor.Description,
-        Resource: editor.Resource.Name,
-        Key: editor.Key
-      }
+    this.editorActions = this.getEditorsTableActions()
+    this.getEditorsItems().then(items => {
+      this.editorItems = items
     })
   }
-  async setItems(){
-    const items = await this.viewsService.getViews()
-    this.items = items.map((item) => {
-      return {
-        Name: item.Name,
-        Description: item.Description,
-        Resource: item.Resource.Name,
-        Key: item.Key
-      }
-    })
+  //----------------------------------------------
+  //-------------views table functions------------
+  //----------------------------------------------
+  async getViewsTableItems(){
+    const views = await this.viewsService.getViews()
+    return this.fieldsToListItems(views)
   }
-  initGenericListActions(){
-    this.actions = {
+  getViewsTableActions(){
+    return {
       get: async (data: PepSelectionData) => {
         const actions = []
         if(data && data.rows.length == 1){
@@ -129,10 +65,40 @@ export class ViewsAndEditorsComponent implements OnInit {
       }
     }
   }
-  onAddClick(){
-    this.router.navigate(["new"], {relativeTo : this.route})
+  //-----------------------------------------------
+  //------------editors table functions------------
+  //-----------------------------------------------
+  getEditorsTableActions(){
+    return  {
+      get: async (data: PepSelectionData) => {
+        const actions = []
+        if(data && data.rows.length == 1){
+          actions.push({
+            title: this.translate.instant('Edit'),
+            handler: async (selectedRows) => {
+              this.router.navigate([`editor/${selectedRows.rows[0]}`], {relativeTo : this.route})
+            }
+          })
+        }
+        return actions
+      }
+    }
   }
-  onAddEditorClick(){
-    this.router.navigate(["editor/new"], {relativeTo : this.route})
+  async getEditorsItems(){
+    const editors = await this.viewsService.getEditors()
+    return this.fieldsToListItems(editors)
+  }
+  //-----------------------------------------
+  //------------general functions------------
+  //-----------------------------------------
+  fieldsToListItems(items: any[]){
+    return items.map((editor) => {
+      return {
+        Name: editor.Name,
+        Description: editor.Description,
+        Resource: editor.Resource.Name,
+        Key: editor.Key
+      }
+    })
   }
 }
