@@ -4,6 +4,7 @@ import { ViewsService } from '../services/views.service';
 import { UDCService } from '../services/udc-service';
 import { config } from '../addon.config';
 import { View, Editor } from '../../../../shared/entities';
+import { IDataService } from '../metadata';
 
 export abstract class AbstractEditor{
     key: string
@@ -23,7 +24,7 @@ export abstract class AbstractEditor{
         private route: ActivatedRoute,
         private translate: TranslateService,
         private udcService: UDCService,
-        protected service: ViewsService,
+        protected service: IDataService,
         ){ 
           this.udcService.pluginUUID = config.AddonUUID
         }

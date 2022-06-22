@@ -16,13 +16,13 @@ export  class ViewEditor extends AbstractEditor{
         }
       }
       else{
-        this.content = (await this.service.getViews(key))[0]
+        this.content = (await this.service.getItems(key))[0]
       }
   }
   async update() {
     this.content.Name = this.dataSource.Name
     this.content.Description = this.dataSource.Description
     this.content.Resource.Name = this.dataSource.Resource
-    this.service.upsertView(this.content)
+    this.service.upsertItem(this.content)
   }
 }

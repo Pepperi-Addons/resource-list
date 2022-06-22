@@ -9,6 +9,7 @@ import { EditorEditor } from '../editors/editor-editor'
 import {Location} from '@angular/common';
 import { IPepOption, PepSelectField } from '@pepperi-addons/ngx-lib';
 import { OpenMode } from '../../../../shared/entities'
+import { EditorsService } from '../services/editors.service';
 
 @Component({
   selector: 'app-editors-editor',
@@ -36,7 +37,7 @@ export class EditorsEditorComponent implements OnInit {
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    private viewsService: ViewsService,
+    private editorsService: EditorsService,
     private translate: TranslateService,
     private udcService: UDCService,
     private location: Location
@@ -61,7 +62,7 @@ export class EditorsEditorComponent implements OnInit {
       this.route,
       this.translate,
       this.udcService,
-      this.viewsService
+      this.editorsService
     )
     this.editorEditor.init(this.editorKey).then(() => {
       this.editorName = this.editorEditor.getName()

@@ -23,7 +23,7 @@ export class ViewsService {
 
     }
     async postEditor(editor: any){
-        if(!editor.key){
+        if(!editor.Key){
             editor.Key = uuidv4()
         }
         return await this.addonService.papiClient.addons.data.uuid(this.client.AddonUUID).table(editorsTable.Name).upsert(editor) 

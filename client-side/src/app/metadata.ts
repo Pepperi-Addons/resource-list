@@ -16,3 +16,8 @@ export interface IMappedField {
     },
     width: number
   }
+
+  export interface IDataService{
+    getItems(key?: string , includeDeleted?: boolean)
+    upsertItem(item: any)
+  }

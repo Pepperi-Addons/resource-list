@@ -2,22 +2,22 @@ import { Injectable } from "@angular/core";
 import { config } from "../addon.config";
 import { UtilitiesService } from './utilities-service'
 import { Editor, View } from "../../../../shared/entities"
-import { IDataService } from "../metadata";
+import { IDataService } from '../metadata'
 
 @Injectable({ providedIn: 'root' })
-export class ViewsService implements IDataService{
+export class EditorsService implements IDataService{
     pluginUUID;
     constructor(
         private utilitiesService: UtilitiesService,
     ){
     }
-    async getItems(key: string = undefined, includeDeleted = false): Promise<View[]>{
+    async getItems(key: string = undefined, includeDeleted = false){
         const deletedQuery = includeDeleted? `Hidden=true` : `Hidden=false`
         const query: any = key? {where:'Key=' + '"' + key + '"' + " AND " + deletedQuery} : {where: deletedQuery}
-        query.include_deleted = includeDeleted 
-        return await this.utilitiesService.papiClient.addons.api.uuid(config.AddonUUID).file('api').func('views').get(query)
+        query.include_deleted = includeDeleted
+        return await this.utilitiesService.papiClient.addons.api.uuid(config.AddonUUID).file('api').func('editors').get(query)
     }
-    async upsertItem(view: any){
-        return await this.utilitiesService.papiClient.addons.api.uuid(config.AddonUUID).file('api').func('views').post(undefined,view)
+    async upsertItem(editor: any){
+        return await this.utilitiesService.papiClient.addons.api.uuid(config.AddonUUID).file('api').func('editors').post(undefined,editor)
     }
 }

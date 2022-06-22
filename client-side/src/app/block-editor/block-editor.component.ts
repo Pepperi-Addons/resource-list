@@ -29,7 +29,7 @@ export class BlockEditorComponent implements OnInit {
     }
     ngOnInit(): void {
         this.cardsList = this.hostObject.configuration.cardsList || []
-        Promise.all([this.setResourcesNames(), this.viewsService.getViews()])
+        Promise.all([this.setResourcesNames(), this.viewsService.getItems()])
         .then(([_, views]) => {
             this.resource = this.hostObject.configuration.resource ||  this.resourcesNames.length > 0? this.resourcesNames[0].value : undefined
             this.views = views

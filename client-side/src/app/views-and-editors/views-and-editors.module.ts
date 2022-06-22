@@ -12,6 +12,9 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { PepTopBarModule } from '@pepperi-addons/ngx-lib/top-bar';
 import { PepPageLayoutModule } from '@pepperi-addons/ngx-lib/page-layout';
 import { TableComponent } from './table/table.component';
+import { PepMenuModule } from '@pepperi-addons/ngx-lib/menu';
+import { PepSizeDetectorModule } from '@pepperi-addons/ngx-lib/size-detector';
+
 
 
 export const routes: Routes = [
@@ -34,6 +37,8 @@ export const routes: Routes = [
     BrowserAnimationsModule,
     PepTopBarModule,
     PepPageLayoutModule,
+    PepMenuModule,
+    PepSizeDetectorModule,
     TranslateModule.forChild({
       loader: {
           provide: TranslateLoader,

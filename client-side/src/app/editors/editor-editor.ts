@@ -17,7 +17,7 @@ export class EditorEditor extends AbstractEditor{
         }
       }
       else{
-        this.content = (await this.service.getEditors(key))[0]
+        this.content = (await this.service.getItems(key))[0]
       }
   }
   async update() {
@@ -25,7 +25,7 @@ export class EditorEditor extends AbstractEditor{
     this.content.Description = this.dataSource.Description
     this.content.Resource.Name = this.dataSource.Resource
     this.content.OpenMode = this.dataSource.OpenMode
-    this.service.upsertEditor(this.content)
+    this.service.upsertItem(this.content)
   }
   setOpenMode(openMode: OpenMode){
     this.dataSource.OpenMode = openMode
