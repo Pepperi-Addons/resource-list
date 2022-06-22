@@ -19,6 +19,16 @@ export interface View{
     Sorting?: Sorting,
 }
 
+export interface Editor{
+    Key: string,
+    Name: string,
+    Description: string,
+    Resource: Resource,
+    OpenMode: OpenMode
+}
+
+export type OpenMode = "popup" | "same-page"
+
 export interface Resource{
     AddonUUID: string,
     Name: string

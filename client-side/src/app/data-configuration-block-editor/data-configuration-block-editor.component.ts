@@ -69,9 +69,8 @@ export class DataConfigurationBlockEditorComponent implements OnInit {
             label : key,
             readOnly : readOnly,
             mandatory : mandatory,
-            showContent : showContent,
-            value: value,
-            defaultValue: "" 
+            defaultValue: "",
+            showContent: false
         }
         this.cardsList.push(newCard)
     }
@@ -176,17 +175,5 @@ export class DataConfigurationBlockEditorComponent implements OnInit {
                 ]
             }
         })
-    }
-    onSelectKey($event){
-        this.cardsList[$event.id].key= $event.key
-        this.cardsList[$event.id].label= $event.key
-        this.cardsList[$event.id].value.FieldID= $event.key
-        this.cardsList[$event.id].value.Title= $event.key
-        this.updateAllConfigurationObject()
-    }
-    onReadOnlyChange($event){
-        this.cardsList[$event.id].readOnly = $event.readOnly;
-        this.cardsList[$event.id].value.ReadOnly = $event.readOnly
-        this.updateAllConfigurationObject();
     }
 }

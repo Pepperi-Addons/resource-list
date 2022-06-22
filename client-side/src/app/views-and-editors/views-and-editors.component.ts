@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { ViewsService } from '../services/views.service'
 import { PepSelectionData } from '@pepperi-addons/ngx-lib/list';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Data, Router } from '@angular/router';
 import { IPepGenericListActions } from '@pepperi-addons/ngx-composite-lib/generic-list';
 
 @Component({
@@ -13,8 +13,23 @@ import { IPepGenericListActions } from '@pepperi-addons/ngx-composite-lib/generi
 })
 export class ViewsAndEditorsComponent implements OnInit {
   datasource: DataSource
+  editorsDatasource: DataSource
   items: any[] = []
+  editorsItems: any[] = []
   actions: IPepGenericListActions
+  editorsActions: IPepGenericListActions
+  private widthArray = [
+    //set all columns widths to zero in order to give default equal width for all of them.
+    {
+      Width: 0
+    },
+    {
+      Width: 0
+    },
+    {
+      Width: 0
+    }
+  ]
 
   constructor(
     private translate: TranslateService,
@@ -26,10 +41,32 @@ export class ViewsAndEditorsComponent implements OnInit {
 
   
   ngOnInit(): void {
+    this.initEditrosActions()
+    this.setEditorsItems()
+    .then(() => {
+      this.editorsDatasource = new DataSource(this.editorsItems, this.generateFields(), this.widthArray)
+    })
     this.initGenericListActions()
     this.setItems().then(() => {
-      this.datasource = new DataSource(this.items, this.generateFields(), this.generateWidthArray())
+      this.datasource = new DataSource(this.items, this.generateFields(), this.widthArray)
     })
+  }
+  initEditrosActions(){
+    this.editorsActions = {
+      get: async (data: PepSelectionData) => {
+        const actions = []
+        if(data && data.rows.length == 1){
+          actions.push({
+              title: this.translate.instant('Edit'),
+              handler: async (selectedRows) => {
+                this.router.navigate([`editor/${selectedRows.rows[0]}`], {relativeTo : this.route})
+              }
+          })
+        }
+        return actions
+      }
+    }
+
   }
   generateFields(){
     return [{
@@ -55,15 +92,16 @@ export class ViewsAndEditorsComponent implements OnInit {
       },
     ]
   }
-  generateWidthArray(){
-    const width = {
-      Width: 0
-    }
-    return [
-      width,
-      width,
-      width
-    ]
+  async setEditorsItems(){
+    const editorsItems = await this.viewsService.getEditors()
+    this.editorsItems = editorsItems.map((editor) => {
+      return {
+        Name: editor.Name,
+        Description: editor.Description,
+        Resource: editor.Resource.Name,
+        Key: editor.Key
+      }
+    })
   }
   async setItems(){
     const items = await this.viewsService.getViews()
@@ -94,6 +132,8 @@ export class ViewsAndEditorsComponent implements OnInit {
   }
   onAddClick(){
     this.router.navigate(["new"], {relativeTo : this.route})
-
+  }
+  onAddEditorClick(){
+    this.router.navigate(["editor/new"], {relativeTo : this.route})
   }
 }

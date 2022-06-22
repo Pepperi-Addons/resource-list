@@ -2,10 +2,10 @@ import { TranslateService } from '@ngx-translate/core';
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { UDCService } from '../services/udc-service';
 import { PepMenuItem } from "@pepperi-addons/ngx-lib/menu";
-import { DIMXComponent } from '@pepperi-addons/ngx-composite-lib/dimx-export';
+// import { DIMXComponent } from '@pepperi-addons/ngx-composite-lib/dimx-export';
 import { UDC_UUID } from '../addon.config';
 import { config } from '../addon.config'
-import { BlockEditorCard } from '../draggable-card-fields/cards.model';
+import { ViewsCard } from '../draggable-card-fields/cards.model';
 import { GridDataViewColumn } from '@pepperi-addons/papi-sdk';
 import { DataSource } from '../data-source/data-source'
 import { PepSelectionData } from '@pepperi-addons/ngx-lib/list';
@@ -17,7 +17,7 @@ import { Params, Router } from '@angular/router';
     styleUrls: ['./block.component.scss']
 })
 export class BlockComponent implements OnInit {
-    @ViewChild('dimx') dimx:DIMXComponent | undefined;
+    // @ViewChild('dimx') dimx:DIMXComponent | undefined;
     @Input() hostObject: any;
     datasource: DataSource
     resourceName: string
@@ -28,7 +28,7 @@ export class BlockComponent implements OnInit {
     allowImport: boolean = false;
     menuDisabled: boolean = false;
     widthArray: GridDataViewColumn[] = []
-    cardsList: BlockEditorCard[] = []
+    cardsList: ViewsCard[] = []
     fields: any[] = []
     items: any[] = []
     actions: any = {}
@@ -59,7 +59,7 @@ export class BlockComponent implements OnInit {
       this.loadVariablesFromHostObject()
       this.menuDisabled = !(this.allowImport || this.allowExport)
       this.menuItems = this.getMenuItems()
-      this.fields = this.generateFieldsFromCards()
+      // this.fields = this.generateFieldsFromCards()
       this.widthArray = this.generateWidthArrayFromCardsList()
       this.loadGenericList()
     }
@@ -87,15 +87,15 @@ export class BlockComponent implements OnInit {
         return []
       }
       return this.cardsList.map(card => {
-        return {'Width': card.width}})
+        return {'Width': 0}})
     }
-    generateFieldsFromCards(){
-      if(!this.cardsList){
-        return []
-      }
-      const returnVal = this.cardsList.map(card => card.value);
-      return returnVal
-    }
+    // generateFieldsFromCards(){
+    //   if(!this.cardsList){
+    //     return []
+    //   }
+    //   const returnVal = this.cardsList.map(card => card.value);
+    //   return returnVal
+    // }
     onMenuItemClick($event){ 
       switch ($event.source.key){
         case 'Export':

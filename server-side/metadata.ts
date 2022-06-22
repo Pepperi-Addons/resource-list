@@ -1,22 +1,10 @@
 import { AddonDataScheme } from "@pepperi-addons/papi-sdk"
-import {Resource, Sorting } from '../shared/entities'
-
-
-export interface ViewsScheme{
-    Key: string,
-    Name: string,
-    Description: string,
-    Resource: Resource,
-    Filter: any,
-    Sorting: Sorting,
-}
 
 export const viewsTable: AddonDataScheme = {
-    Name: "VIEWS_TABLE",
+    Name: "ViewsTable",
     Type: 'meta_data',
-    Fields: {
-        Name: {
-            Type: "String"
-        }
-    }
+}
+export const editorsTable: AddonDataScheme = {
+    Name: "EditorsTable",
+    Type: 'meta_data',
 }

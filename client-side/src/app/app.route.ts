@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Component } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+import { EditorsFormsComponent } from './editors-form/editors-form.component';
 import { ViewsAndEditorsComponent } from './views-and-editors/views-and-editors.component';
 import { ViewsEditorComponent } from './views-editor/views-editor.component';
 
@@ -23,9 +24,14 @@ const routes: Routes = [
                 // loadChildren: () => import('./addon/addon.module').then(m => m.AddonModule)
             },
             {
+                path: 'views_and_editors/editor/:key',
+                component: EditorsFormsComponent
+            },
+            {
                 path: 'views_and_editors/:key',
                 component: ViewsEditorComponent
-            }
+            },
+
         ]
     },
     {

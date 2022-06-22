@@ -1,18 +1,18 @@
-<h2> {{'VIEWS_AND_EDITORS_TITLE' | translate}} </h2>
+<h2> {{'Views_And_Editors_Title' | translate}} </h2>
 <hr>
 <br>
 <mat-tab-group #tabgroup class="editor-tabs">
-    <mat-tab label= "Views">
+    <mat-tab label= "{{'Tabs.Views' | translate}}">
         <pep-generic-list class="generic-list" 
             [showTopBar]="true"
             [dataSource]="datasource"
             [actions] = "actions"
             [showSearch]="true"
-            title = "{{'VIEWS_LIST_TITLE' | translate}}"
+            title = "{{'Views_List_Title' | translate}}"
             uuidMapping = 'Key'>
             <ng-container right-buttons>
                 <pep-button
-                    value="{{'ADD' | translate}}"
+                    value="{{'Add' | translate}}"
                     styleType="strong"
                     styleStateType="system"
                     sizeType="md"
@@ -24,5 +24,28 @@
             </ng-container>
         </pep-generic-list>
     </mat-tab>
+    <mat-tab label= "{{'Tabs.Editors' | translate}}">
+        <pep-generic-list class="generic-list" 
+            [showTopBar]="true"
+            [dataSource]="editorsDatasource"
+            [actions] = "editorsActions"
+            [showSearch]="true"
+            title = "{{'Tabs.Editors' | translate}}"
+            uuidMapping = 'Key'>
+            <ng-container right-buttons>
+                <pep-button
+                    value="{{'Add' | translate}}"
+                    styleType="strong"
+                    styleStateType="system"
+                    sizeType="md"
+                    classNames=""
+                    iconPosition="end"
+                    [visible]="true"
+                    (buttonClick)="onAddEditorClick()"
+                ></pep-button>
+            </ng-container>
+        </pep-generic-list>
+    </mat-tab>
+
 </mat-tab-group>
             
