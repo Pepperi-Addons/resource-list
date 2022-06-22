@@ -15,7 +15,7 @@ import { PepButtonModule } from '@pepperi-addons/ngx-lib/button';
 import { MatTabsModule } from '@angular/material/tabs';
 import { PepGenericFormModule } from '@pepperi-addons/ngx-composite-lib/generic-form';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { EditorsEditorComponent } from './editors-editor/editors-editor.component';
+import { EditorsFormsComponent } from './editors-form/editors-form.component';
 
 @NgModule({
     imports: [
@@ -42,7 +42,7 @@ import { EditorsEditorComponent } from './editors-editor/editors-editor.componen
     declarations: [
         AppComponent,
         ViewsEditorComponent,
-        EditorsEditorComponent,
+        EditorsFormsComponent,
     ],
     providers: [
         TranslateStore
