@@ -11,11 +11,11 @@ import { IPepOption, PepSelectField } from '@pepperi-addons/ngx-lib';
 import { OpenMode } from '../../../../shared/entities'
 
 @Component({
-  selector: 'app-editors-editor',
-  templateUrl: './editors-editor.component.html',
-  styleUrls: ['./editors-editor.component.scss']
+  selector: 'app-editors-form',
+  templateUrl: './editors-form.component.html',
+  styleUrls: ['./editors-form.component.scss']
 })
-export class EditorsEditorComponent implements OnInit {
+export class EditorsFormComponent implements OnInit {
   editor: Editor
   dataSource: any = {}
   dataView: any = {

@@ -52,7 +52,7 @@ export class BlockEditorComponent implements OnInit {
     async setResourcesNames(){
         const resources = await this.udcService.getCollections()
         this.resourcesNames = resources.map(resource => {
-            return {'key': resource.Name, 'value': resource.Name}})
+            return {key: resource.Name, value: resource.Name}})
     }
     async onResourceChanged($event){
         this.restoreData()
@@ -90,7 +90,7 @@ export class BlockEditorComponent implements OnInit {
             views: this.currentViews,
             showContent: true,
             title: "Grid",
-            view: this.currentViews.length > 0? this.currentViews[0] : undefined
+            selectedView: this.currentViews.length > 0? this.currentViews[0] : undefined
         }
         this.viewsList.push(card)
         this.updateConfigurationField('viewsList', this.viewsList)
