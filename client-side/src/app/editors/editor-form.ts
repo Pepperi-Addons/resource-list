@@ -17,7 +17,14 @@ export class EditorForm extends AbstractForm{
         }
       }
       else{
-        this.content = (await this.service.getEditors(key))[0]
+        const contentArray = await this.service.getEditors(key)
+        if(contentArray && contentArray.length > 0)
+        {
+          this.content = contentArray[0]
+        }
+        else{
+          throw new Error("Editor does not exist")
+        }
       }
   }
   async update() {
@@ -28,7 +35,6 @@ export class EditorForm extends AbstractForm{
     this.service.upsertEditor(this.content)
   }
   setOpenMode(openMode: OpenMode){
-    debugger
     this.dataSource.OpenMode = openMode
   }
 }

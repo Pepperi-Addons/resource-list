@@ -5,7 +5,7 @@ import { Editor } from '../../../../shared/entities';
 import { config } from '../addon.config';
 import { UDCService } from '../services/udc-service';
 import { ViewsService } from '../services/views.service';
-import { EditorEditor } from '../editors/editor-editor'
+import { EditorForm } from '../editors/editor-form'
 import {Location} from '@angular/common';
 import { IPepOption, PepSelectField } from '@pepperi-addons/ngx-lib';
 import { OpenMode } from '../../../../shared/entities'
@@ -16,7 +16,6 @@ import { OpenMode } from '../../../../shared/entities'
   styleUrls: ['./editors-form.component.scss']
 })
 export class EditorsFormComponent implements OnInit {
-  editor: Editor
   dataSource: any = {}
   dataView: any = {
     Type: "Form",
@@ -27,7 +26,7 @@ export class EditorsFormComponent implements OnInit {
       ScreenSize: 'Tablet'
     }
   };
-  editorEditor: EditorEditor
+  editorForm: EditorForm
   editorName: string
   openModes: IPepOption[] = []
   openMode: OpenMode = 'popup'
@@ -47,34 +46,34 @@ export class EditorsFormComponent implements OnInit {
     this.openModes = [
       {
         key: "same-page",
-        value: this.translate.instant('replace the current page')
+        value: this.translate.instant("Replace")
       },
       {
         key: "popup",
-        value: this.translate.instant('open as popup')
+        value: this.translate.instant("Popup")
       }
     ]
-    this.editorEditor = new EditorEditor(
+    this.editorForm = new EditorForm(
       this.router,
       this.route,
       this.translate,
       this.udcService,
       this.viewsService
     )
-    this.editorEditor.init().then(() => {
-      this.editorName = this.editorEditor.getName()
-      this.dataSource = this.editorEditor.getDataSource()
-      this.dataView = this.editorEditor.getDataView()
+    this.editorForm.init().then(() => {
+      this.editorName = this.editorForm.getName()
+      this.dataSource = this.editorForm.getDataSource()
+      this.dataView = this.editorForm.getDataView()
     })
   }
   onBackToList(){
-    this.location.back()
+    this.router.navigate(["../.."],{ relativeTo: this.route })
   }
   onUpdate(){
-    this.editorEditor.update()
+    this.editorForm.update()
   }
   onOpenModeChange(event){
     this.openMode = event
-    this.editorEditor.setOpenMode(this.openMode)
+    this.editorForm.setOpenMode(this.openMode)
   }
 }

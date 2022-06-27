@@ -54,7 +54,7 @@ export class ViewsEditorComponent implements OnInit {
   }
 
   onBackToList(){
-    this.location.back()
+    this.router.navigate([".."], { relativeTo: this.route})
   }
   onUpdate(){
     this.viewEditor.update()

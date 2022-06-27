@@ -11,5 +11,8 @@
     "Add": "Add",
     "Update": "Update",
     "Back_To_List": "Back to list",
+    "Design": "Design",
+    "Same-page": "replace the current page",
+    "Popup": "open as popup",
     "Block_Editor_First_Line": "Select the views to show. If no views are define then all the views allowed to the user profile will be shown"
 }
