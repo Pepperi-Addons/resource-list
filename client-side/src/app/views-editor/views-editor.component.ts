@@ -5,6 +5,8 @@ import { View } from "../../../../shared/entities"
 import { ViewsService } from '../services/views.service';
 import { UDCService } from '../services/udc-service';
 import { config } from '../addon.config';
+import { ViewEditor } from '../editors/view-editor'
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-views-editor',
@@ -12,7 +14,6 @@ import { config } from '../addon.config';
   styleUrls: ['./views-editor.component.scss']
 })
 export class ViewsEditorComponent implements OnInit {
-  view: View
   dataSource: any = {}
   dataView: any = {
     Type: "Form",
@@ -23,129 +24,39 @@ export class ViewsEditorComponent implements OnInit {
       ScreenSize: 'Tablet'
     }
   };
+  viewEditor: ViewEditor
+  viewName: string
 
   constructor(
     private router: Router,
     private route: ActivatedRoute,
     private viewsService: ViewsService,
     private translate: TranslateService,
-    private udcService: UDCService
+    private udcService: UDCService,
+    private location: Location
     ){ 
       this.udcService.pluginUUID = config.AddonUUID
     }
 
   ngOnInit(): void {
-    this.initView(this.route.snapshot.paramMap.get('key')).then( () => {
-      this.initDataSource();
-      this.initDataView()
+    this.viewEditor = new ViewEditor(
+      this.router,
+      this.route,
+      this.translate,
+      this.udcService,
+      this.viewsService,
+    )
+    this.viewEditor.init().then(() => {
+      this.viewName = this.viewEditor.getName()
+      this.dataSource = this.viewEditor.getDataSource()
+      this.dataView = this.viewEditor.getDataView()
     })
   }
-  async initView(key: string){
-    if(key === "new"){
-      this.view = {
-        Key: "",
-        Name: "",
-        Description: "",
-        Resource: {
-          AddonUUID: "",
-          Name: ""
-        }
-      }
-    }
-    else{
-      this.view = (await this.viewsService.getViews(key))[0]
-    }
 
-  }
-  initDataSource(){
-    this.dataSource = {
-      Name: this.view.Name,
-      Description: this.view.Description,
-      Resource: this.view.Resource.Name
-    }
-  }
   onBackToList(){
     this.router.navigate([".."], { relativeTo: this.route})
   }
   onUpdate(){
-    this.view.Name = this.dataSource?.Name
-    this.view.Description = this.dataSource?.Description
-    this.view.Resource.Name = this.dataSource?.Resource
-    this.viewsService.upsertView(this.view)
+    this.viewEditor.update()
   }
-  async initDataView(){
-    this.dataView =  {
-      Type: "Form",
-      Fields: await this.getFields(),
-      Context: {
-        Name: "",
-        Profile: {},
-        ScreenSize: 'Tablet'
-      }
-    };
-    
-  }
-  async getFields(){
-    return [
-      {
-        ReadOnly: false,
-        Title: this.translate.instant('Name'),
-        Type: 'TextBox',
-        FieldID: "Name",
-        Mandatory: false,
-        Layout: {
-          Origin: {
-            X: 0,
-            Y:0
-          },
-          Size: {
-            Width: 1,
-            Height: 0
-          }
-        }
-      },
-      {
-        ReadOnly: false,
-        Title: this.translate.instant('Description'),
-        Type: 'TextBox',
-        FieldID: "Description",
-        Mandatory: false,
-        Layout: {
-          Origin: {
-            X: 1,
-            Y: 0
-          },
-          Size: {
-            Width: 1,
-            Height: 0
-          }
-        }
-      },
-      {
-        ReadOnly: false,
-        Title: this.translate.instant('Resource'),
-        Type: 'ComboBox',
-        FieldID: "Resource",
-        Mandatory: false,
-        OptionalValues: await this.getResourcesNames(),
-        Layout: {
-          Origin: {
-            X: 0,
-            Y:1
-          },
-          Size: {
-            Width: 1,
-            Height: 0
-          }
-        }
-      }
-    ]
-  }
-  async getResourcesNames(){
-    const resources = await this.udcService.getCollections()
-    return resources.map(resource => {
-      return {'Key': resource.Name, 'Value': resource.Name}
-    })
-  }
-
 }

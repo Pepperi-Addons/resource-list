@@ -1,1 +1,61 @@
-<p>editors-form works!</p>
+<pep-page-layout>
+    <ng-container pep-top-area>
+        <pep-top-bar [title] ="'Edit - ' + editorName">
+            <div header-end-content>
+                <pep-button
+                    class="pep-spacing-element"
+                    value="{{'Back_To_List' | translate}}"
+                    styleType="weak"
+                    styleStateType="system"
+                    sizeType="md"
+                    classNames=""
+                    iconPosition="end"
+                    [visible]="true"
+                    (buttonClick)="onBackToList()"
+                ></pep-button>
+                <pep-button
+                    class="pep-spacing-element"
+                    value="{{'Update' | translate}}"
+                    styleType="strong"
+                    styleStateType="system"
+                    sizeType="md"
+                    classNames=""
+                    iconPosition="end"
+                    [visible]="true"
+                    (buttonClick)="onUpdate()"
+                ></pep-button>
+            </div>
+        </pep-top-bar>
+    </ng-container>
+    <ng-container pep-main-area>
+        <mat-tab-group #tabgroup class="editor-tabs">
+            <mat-tab label= "{{'Tabs.General' | translate}}">
+                <h5> {{'Views_Editor_First_Line' | translate}}</h5>
+                <!-- ---------form------------- -->
+                <pep-generic-form
+                [dataSource]="dataSource"
+                [dataView]="dataView" 
+                ></pep-generic-form>
+                <!-- ---------design------------- -->
+                <pep-separator
+                    [label]="'Design' | translate">
+                </pep-separator>
+                <pep-select
+                    class="open-mode-options" 
+                    value="same-page"
+                    label="open mode"
+                    type="select"
+                    [mandatory]="false"
+                    [disabled]="false"
+                    xAlignment="left"
+                    [options]="openModes"
+                    [showTitle]="true"
+                    (valueChange)="onOpenModeChange($event)"
+                    [emptyOption]="false"
+                ></pep-select>
+            </mat-tab>
+        </mat-tab-group>
+    </ng-container>
+</pep-page-layout>
+
+

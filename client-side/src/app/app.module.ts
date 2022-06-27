@@ -15,7 +15,11 @@ import { PepButtonModule } from '@pepperi-addons/ngx-lib/button';
 import { MatTabsModule } from '@angular/material/tabs';
 import { PepGenericFormModule } from '@pepperi-addons/ngx-composite-lib/generic-form';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { EditorsFormsComponent } from './editors-form/editors-form.component';
+import { EditorsFormComponent } from './editors-form/editors-form.component';
+import { PepSelectModule } from '@pepperi-addons/ngx-lib/select';
+import { PepPageLayoutModule } from '@pepperi-addons/ngx-lib/page-layout';
+import { PepTopBarModule } from '@pepperi-addons/ngx-lib/top-bar';
+import { PepSeparatorModule } from '@pepperi-addons/ngx-lib/separator';
 
 @NgModule({
     imports: [
@@ -31,6 +35,10 @@ import { EditorsFormsComponent } from './editors-form/editors-form.component';
         MatTabsModule,
         PepGenericFormModule,
         BrowserAnimationsModule,
+        PepSelectModule,
+        PepPageLayoutModule,
+        PepTopBarModule,
+        PepSeparatorModule,
         TranslateModule.forRoot({
             loader: {
                 provide: TranslateLoader,
@@ -42,7 +50,7 @@ import { EditorsFormsComponent } from './editors-form/editors-form.component';
     declarations: [
         AppComponent,
         ViewsEditorComponent,
-        EditorsFormsComponent,
+        EditorsFormComponent,
     ],
     providers: [
         TranslateStore
