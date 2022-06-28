@@ -4,9 +4,10 @@ import { TranslateService } from '@ngx-translate/core';
 import { DataSource } from '../../data-source/data-source';
 import { PepMenuItem } from "@pepperi-addons/ngx-lib/menu";
 import { PepSelectionData } from '@pepperi-addons/ngx-lib/list';
-import { IDataService } from 'src/app/metadata';
+import { IDataService } from '../../metadata';
 import { PepDialogData, PepDialogService } from '@pepperi-addons/ngx-lib/dialog';
 import { IPepGenericListActions } from '@pepperi-addons/ngx-composite-lib/generic-list';
+import { AddFormComponent } from '../../add-form/add-form.component'
 @Component({
   selector: 'app-table',
   templateUrl: './table.component.html',
@@ -14,10 +15,9 @@ import { IPepGenericListActions } from '@pepperi-addons/ngx-composite-lib/generi
 })
 export class TableComponent{
   actions: IPepGenericListActions
-  @Input() addCallback
   items: any[]
   title: string
-  @Input() name: string  = undefined
+  @Input() name: string = ""
   @Input() service: IDataService
   @Input() editRoute: string
   datasource: DataSource
@@ -50,11 +50,12 @@ export class TableComponent{
     this.title = this.translate.instant(this.name)
     this.menuItems = this.getTableMenuItems()
     this.actions = this.getTableActions()
-    this.service.getItems().then(fields => {
-      this.fields = fields
-      this.items = this.fieldsToListItems(this.fields)
-      this.datasource = new DataSource(this.items, this.listFields, this.widthArray)
-    })
+    this.loadGenericList(false)
+  }
+  async loadGenericList(recycleBin: boolean){
+    this.fields = await this.service.getItems(undefined, recycleBin)
+    this.items = this.fieldsToListItems(this.fields)
+    this.datasource = new DataSource(this.items, this.listFields, this.widthArray)
   }
   fieldsToListItems(items: any[]){
     return items.map((field) => {
@@ -69,7 +70,7 @@ export class TableComponent{
   getTableActions(){
     return {
       get: async (data: PepSelectionData) => {
-        const actions = []
+        const actions: any[] = []
         if(data && data.rows.length == 1){
           actions.push({
               title: this.translate.instant('Edit'),
@@ -114,7 +115,18 @@ export class TableComponent{
     ]
   }
   onAddClick(){
-    this.addCallback()
+    const formData = {
+      service : this.service
+    }
+    const config = this.dialogService.getDialogConfig({
+
+    }, 'large');
+    config.data = new PepDialogData({
+        content: AddFormComponent
+    })
+    this.dialogService.openDialog(AddFormComponent, formData, config).afterClosed().subscribe((value => {
+      this.loadGenericList(false)
+    }))
   }
   menuItemClick($event){
     switch($event.source.key){
@@ -132,9 +144,7 @@ export class TableComponent{
     this.menuItems = this.getTableMenuItems()
     this.actions = this.getTableActions()
     this.title = this.translate.instant(this.name)
-    this.fields = await  this.service.getItems()
-    this.items = this.fieldsToListItems(this.fields)
-    this.datasource = new DataSource(this.items, this.listFields, this.widthArray)
+    this.loadGenericList(false)
   }
 
   getTableMenuItems(): PepMenuItem[]{
@@ -157,17 +167,15 @@ export class TableComponent{
   }
   async initRecycleBin(){
     this.menuItems = this.getRecycleBinMenuItems()
-    this.fields = await this.service.getItems(undefined, true)
-    this.items = this.fieldsToListItems(this.fields)
     this.title = this.translate.instant(`${this.name} Recycle Bin`)
     this.actions = this.getRecyclebinActions()
-    this.datasource = new DataSource(this.items, this.listFields, this.widthArray)
+    this.loadGenericList(true)
   }
 
   getRecyclebinActions(){
     return {
       get: async (data: PepSelectionData) => {
-        const actions = []
+        const actions: any[] = []
         if(data && data.rows.length == 1){
           actions.push({
             title: this.translate.instant('Restore'),
@@ -200,9 +208,7 @@ export class TableComponent{
   async deleteItem(selectedRows){
     const field = this.fields.find(field => field.Key === selectedRows.rows[0])
     field.Hidden = true
-    const result = await this.service.upsertItem(field)
-    this.fields = await this.service.getItems()
-    this.items = this.fieldsToListItems(this.fields)
-    this.datasource = new DataSource(this.items, this.listFields, this.widthArray)
+    await this.service.upsertItem(field)
+    this.loadGenericList(false)
   }
 }

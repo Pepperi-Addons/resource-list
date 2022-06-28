@@ -23,6 +23,8 @@ import { PepDraggableItemsModule } from '@pepperi-addons/ngx-lib/draggable-items
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { MappedFieldComponent } from './mapped-field/mapped-field.component';
 import { PepTextboxModule } from '@pepperi-addons/ngx-lib/textbox';
+import { AddFormComponent } from './add-form/add-form.component';
+import { PepDialogModule } from '@pepperi-addons/ngx-lib/dialog';
 
 
 @NgModule({
@@ -45,6 +47,7 @@ import { PepTextboxModule } from '@pepperi-addons/ngx-lib/textbox';
         PepDraggableItemsModule,
         DragDropModule,
         PepTextboxModule,
+        PepDialogModule,
         TranslateModule.forRoot({
             loader: {
                 provide: TranslateLoader,
@@ -58,6 +61,7 @@ import { PepTextboxModule } from '@pepperi-addons/ngx-lib/textbox';
         ViewsEditorComponent,
         EditorsEditorComponent,
         MappedFieldComponent,
+        AddFormComponent,
     ],
     providers: [
         TranslateStore

@@ -4,20 +4,17 @@
 <mat-tab-group #tabgroup class="editor-tabs">
     <mat-tab label= "{{'TABS.VIEWS' | translate}}">
         <app-table 
-            [addCallback] = "addViewCB" 
             name = "Views"
             [service] = "viewsService"
-            editRoute = ""
-            >
+            editRoute = "">
         </app-table>
     </mat-tab>
     <mat-tab label= "{{'TABS.EDITORS' | translate}}">
         <app-table 
-        [addCallback] = "addEditorCB"
         name = "Editors"
         [service] ="editorsService"
-        editRoute="editor/"
-        ></app-table>
+        editRoute="editor/">
+    </app-table>
     </mat-tab>
 </mat-tab-group>
             
