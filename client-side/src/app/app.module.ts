@@ -15,13 +15,15 @@ import { PepButtonModule } from '@pepperi-addons/ngx-lib/button';
 import { MatTabsModule } from '@angular/material/tabs';
 import { PepGenericFormModule } from '@pepperi-addons/ngx-composite-lib/generic-form';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { EditorsEditorComponent } from './editors-editor/editors-editor.component';
+import { EditorsFormComponent } from './editors-form/editors-form.component';
 import { PepSelectModule } from '@pepperi-addons/ngx-lib/select';
 import { PepProfileDataViewsListModule } from '@pepperi-addons/ngx-lib/profile-data-views-list';
 import { PepPageLayoutModule } from '@pepperi-addons/ngx-lib/page-layout';
 import { PepDraggableItemsModule } from '@pepperi-addons/ngx-lib/draggable-items';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { MappedFieldComponent } from './mapped-field/mapped-field.component';
+import { PepTopBarModule } from '@pepperi-addons/ngx-lib/top-bar';
+import { PepSeparatorModule } from '@pepperi-addons/ngx-lib/separator';
 
 
 @NgModule({
@@ -43,6 +45,9 @@ import { MappedFieldComponent } from './mapped-field/mapped-field.component';
         BrowserAnimationsModule,
         PepDraggableItemsModule,
         DragDropModule,
+        PepPageLayoutModule,
+        PepTopBarModule,
+        PepSeparatorModule,
         TranslateModule.forRoot({
             loader: {
                 provide: TranslateLoader,
@@ -54,7 +59,7 @@ import { MappedFieldComponent } from './mapped-field/mapped-field.component';
     declarations: [
         AppComponent,
         ViewsEditorComponent,
-        EditorsEditorComponent,
+        EditorsFormComponent,
         MappedFieldComponent,
     ],
     providers: [

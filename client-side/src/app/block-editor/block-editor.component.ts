@@ -20,7 +20,7 @@ export class BlockEditorComponent implements OnInit {
     currentViews: SelectOption[] = []
     @Input() hostObject: any;
     @Output() hostEvents: EventEmitter<any> = new EventEmitter<any>();
-    cardsList: ViewsCard[]
+    viewsList: ViewsCard[]
     constructor(private udcService: UDCService,
                 private cardsService: CardsService,
                 private viewsService: ViewsService
@@ -29,7 +29,7 @@ export class BlockEditorComponent implements OnInit {
     }
     ngOnInit(): void {
         this.resource = this.hostObject.configuration.resource;
-        this.cardsList = this.hostObject.configuration.cardsList || []
+        this.viewsList = this.hostObject.configuration.viewsList || []
         Promise.all([this.setResourcesNames(), this.viewsService.getViews()])
         .then(([_, views]) => {
             if(!this.resource){
@@ -41,7 +41,7 @@ export class BlockEditorComponent implements OnInit {
     }
     setViewsByResource(){
         this.views.forEach(view =>{
-            if(view.Resource?.Name == this.hostObject.configuration.resource){
+            if(view.Resource?.Name == this.resource){
                 this.currentViews.push({
                     value: view.Name,
                     key: view.Key
@@ -52,7 +52,7 @@ export class BlockEditorComponent implements OnInit {
     async setResourcesNames(){
         const resources = await this.udcService.getCollections()
         this.resourcesNames = resources.map(resource => {
-            return {'key': resource.Name, 'value': resource.Name}})
+            return {key: resource.Name, value: resource.Name}})
     }
     async onResourceChanged($event){
         this.restoreData()
@@ -68,15 +68,15 @@ export class BlockEditorComponent implements OnInit {
         })
     }
     restoreData(){
-        this.cardsList = undefined
+        this.viewsList = []
         this.resource = undefined
-        this.currentViews = undefined
+        this.currentViews = []
     }
     drop(event: CdkDragDrop<string[]>){
         if (event.previousContainer === event.container) {
-            moveItemInArray(this.cardsList, event.previousIndex, event.currentIndex);
+            moveItemInArray(this.viewsList, event.previousIndex, event.currentIndex);
            }
-        this.updateConfigurationField('cardsList', this.cardsList) 
+        this.updateConfigurationField('viewsList', this.viewsList) 
     }
     onDragStart(event: CdkDragStart) {
         this.cardsService.changeCursorOnDragStart();
@@ -90,13 +90,13 @@ export class BlockEditorComponent implements OnInit {
             views: this.currentViews,
             showContent: true,
             title: "Grid",
-            view: this.currentViews.length > 0? this.currentViews[0] : undefined
+            selectedView: this.currentViews.length > 0? this.currentViews[0] : undefined
         }
-        this.cardsList.push(card)
-        this.updateConfigurationField('cardsList', this.cardsList)
+        this.viewsList.push(card)
+        this.updateConfigurationField('viewsList', this.viewsList)
     }
     onCardRemoveClick(event){
-        this.cardsList = this.cardsList.filter((card) => card.id != event.id)
-       this.updateConfigurationField('cardsList', this.cardsList)
+        this.viewsList = this.viewsList.filter((card) => card.id != event.id)
+       this.updateConfigurationField('viewsList', this.viewsList)
     }
 }

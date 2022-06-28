@@ -135,7 +135,7 @@ export class ViewsEditorComponent implements OnInit {
     return (await this.dataViewService.getRepDataView(this.viewKey))[0].Fields || []
   }
   onBackToList(){
-    this.location.back()
+    this.router.navigate([".."], { relativeTo: this.route})
   }
   //save the profile data views and the view editor
   onUpdate(){
@@ -183,10 +183,7 @@ export class ViewsEditorComponent implements OnInit {
   }
   //add profile card to the page
   async onSaveNewProfileClicked($event){
-    // debugger
-    // const repMappedFields = await this.getRepMappedFields()
     const repFields = this.dataViewsMap.get(this.repDataViewID)?.Fields || []
-    debugger
     const profile = this.availableProfiles?.find(profile => profile.id == $event)
     const dataView = await this.postNewDataViewAndSaveOnMap(profile, repFields)
     this.profileDataViewsList.push({

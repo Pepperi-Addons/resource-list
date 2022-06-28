@@ -10,22 +10,32 @@
     [emptyOption]="false"
 ></pep-select>
 <h3>Views</h3>
-<p>{{'BlOCK_EDITOR_FIRST_LINE' | translate}}</p>
+<p>{{'Block_Editor_First_Line' | translate}}</p>
 <div cdkDropListGroup (cdkDropListDropped)="drop($event)"  cdkDropList>
-    <draggable-card-fields  
-        *ngFor="let card of cardsList"
-        [showActions] = "true" [isDraggable] = "true"
+    <draggable-card-fields
+        cdkDrag 
+        *ngFor="let card of viewsList"
+        [showActions] = "true"
+        [isDraggable] = "true"
         (hostEvents)='onHostObjectChange($event)'
         (editClick)='onCardEditClick($event);'
         (removeClick)='onCardRemoveClick($event);'
-        (updateCard) = "updateConfigurationField('cardsList', this.cardsList)"
+        (updateCard) = "updateConfigurationField('viewsList', this.viewsList)"
         (insertWidth) = 'onWidthChange()'
         [card] = "card"
-        cdkDrag [cdkDragDisabled]="false"  style="cursor: grab;" (cdkDragStarted)="onDragStart($event)" (cdkDragEnded)="onDragEnd($event)">
+        [cdkDragDisabled]="false"
+        style="cursor: grab;"
+        (cdkDragStarted)="onDragStart($event)"
+        (cdkDragEnded)="onDragEnd($event)">
     </draggable-card-fields>
 </div>
-<pep-button class="add-content-button" value="Add" styleType="regular"  
-(buttonClick)="addNewCardClick()"></pep-button>
+<pep-button
+    class="add-content-button"
+    value="Add"
+    styleType="regular"  
+    (buttonClick)="addNewCardClick()" 
+    [disabled]="currentViews?.length == 0">
+</pep-button>
 
 
 

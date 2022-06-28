@@ -1,23 +1,27 @@
 {
     "Block_Title": "Block title",
-    "TABS": {
-        "GENERAL": "General",
-        "VIEWS": "Views",
-        "EDITORS": "Editors",
-        "FORM": "Form"
+    "Tabs": {
+        "General": "General",
+        "Views": "Views",
+        "Editors": "Editors",
+        "Form": "Form"
     },
-    "VIEWS_EDITOR_FIRST_LINE" : "Define the new content",
-    "VIEWS_AND_EDITORS_TITLE" : "Views & Editors",
-    "VIEWS_LIST_TITLE" : "Views",
-    "ADD": "Add",
-    "UPDATE": "Update",
-    "BACK_TO_LIST": "Back to list",
-    "BlOCK_EDITOR_FIRST_LINE": "Select the views to show. If no views are define then all the views allowed to the user profile will be shown",
-    "EMPTY_MAPPED_FIELD_AREA": "Drop field here",
+    "Views_Editor_First_Line" : "Define the new content",
+    "Views_And_Editors_Title" : "Views & Editors",
+    "Views_List_Title" : "Views",
+    "Add": "Add",
+    "Update": "Update",
+    "Back_To_List": "Back to list",
+    "Empty_Mapped_Field_Area": "Drop field here",
 
-    "MAPPED_FIELDS_TITLE": "Mapped fields",
-    "MAPPED_FIELDS_TITLE_HINT": "(Drag & Drop anywhere from available fields)",
-    "CREATION_DATE_TIME": "CreationDateTime"
+    "Mapped_Fields_Title": "Mapped fields",
+    "Mapped_Fields_Title_Hint": "(Drag & Drop anywhere from available fields)",
+    "Creation_Date_Time": "CreationDateTime",
+
+    "Design": "Design",
+    "Same-page": "replace the current page",
+    "Popup": "open as popup",
+    "Block_Editor_First_Line": "Select the views to show. If no views are define then all the views allowed to the user profile will be shown"
     
 
 }

@@ -1,10 +1,10 @@
 <pep-page-layout>
-    <ng-container pep-top-area>   
-        <div class="header">
-            <h4>Edit - {{viewName}}</h4>
-            <div class="buttons-holder">
+    <ng-container pep-top-area>
+        <pep-top-bar [title] ="'Edit - ' + viewName">
+            <div header-end-content>
                 <pep-button
-                value="Back to list"
+                class="pep-spacing-element"
+                value="{{'Back_To_List' | translate}}"
                 styleType="weak"
                 styleStateType="system"
                 sizeType="md"
@@ -14,7 +14,8 @@
                 (buttonClick)="onBackToList()"
                 ></pep-button>
                 <pep-button
-                value="Update"
+                class="pep-spacing-element"
+                value="{{'Update' | translate}}"
                 styleType="strong"
                 styleStateType="system"
                 sizeType="md"
@@ -24,19 +25,18 @@
                 (buttonClick)="onUpdate()"
                 ></pep-button>
             </div>
-        </div>
-        <hr>
+        </pep-top-bar>
     </ng-container>
-    <ng-container pep-main-area>  
+    <ng-container pep-main-area>
         <mat-tab-group #tabgroup class="editor-tabs">
-            <mat-tab label= "{{'TABS.GENERAL' | translate}}">
-                <h5> {{'VIEWS_EDITOR_FIRST_LINE' | translate}}</h5>
+            <mat-tab label= "{{'Tabs.General' | translate}}">
+                <h5> {{'Views_Editor_First_Line' | translate}}</h5>
                 <pep-generic-form
                 [dataSource]="dataSource"
                 [dataView]="dataView" 
                 ></pep-generic-form>
             </mat-tab>
-            <mat-tab *ngIf="loadCompleted" label = "{{'TABS.FORM' | translate}}">
+            <mat-tab *ngIf="loadCompleted" label = "{{'Tabs.Form' | translate}}">
                 <ng-container *ngIf="!editCard; then cardsTemplate;else cardEditor" ></ng-container>
                 <ng-template #cardsTemplate>
                     <pep-profile-data-views-list [profileDataViewsList]="profileDataViewsList"
@@ -78,9 +78,9 @@
                         </div>
                         <div pep-main-area class="mapped-fields-main-area">
                             <div class="mapped-fields-top-area pep-border-bottom"
-                                [title]="('MAPPED_FIELDS_TITLE' | translate) + ' ' + ('MAPPED_FIELDS_TITLE_HINT' | translate)">
-                                <span class="title-md">{{'MAPPED_FIELDS_TITLE' | translate}}&nbsp;</span>
-                                <span class="color-dimmed">{{('MAPPED_FIELDS_TITLE_HINT' | translate)}}
+                                [title]="('Mapped_Fields_Title' | translate) + ' ' + ('MAPPED_FIELDS_TITLE_HINT' | translate)">
+                                <span class="title-md">{{'Mapped_Fields_Title' | translate}}&nbsp;</span>
+                                <span class="color-dimmed">{{('Mapped_Fields_Title_Hint' | translate)}}
                                 </span>
                             </div>
             
@@ -92,7 +92,7 @@
                                             <pep-icon name="arrow_down_alt"></pep-icon>
                                         </mat-icon>
                                         <span class="body-sm ellipsis">
-                                            {{ 'EMPTY_MAPPED_FIELD_AREA' | translate }}
+                                            {{ 'Empty_Mapped_Field_Area' | translate }}
                                         </span> 
                                     </div>
                                 </ng-template>
@@ -121,14 +121,3 @@
     </ng-container>
 </pep-page-layout>
 
-<!-- <ng-template #mappedSlugTemplate let-mappedSlug="mappedSlug">
-    <div class="fields-wrapper">
-        
-        <pep-select label= "{{mappedSlug.slug}}"
-            [options]='resourceFields' [value]="currentResourceField" [emptyOption]="false"
-            (valueChange)="onResourceFieldChange($event, mappedSlug)">
-        </pep-select>
-
-        <pep-button class="del-button" iconName="system_bin" (buttonClick)="onDeleteMappedSlug($event, mappedSlug)"></pep-button>
-    </div>
-</ng-template> -->

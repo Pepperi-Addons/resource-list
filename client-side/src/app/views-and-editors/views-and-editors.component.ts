@@ -19,6 +19,7 @@ export class ViewsAndEditorsComponent implements OnInit {
   actions: IPepGenericListActions
   editorsActions: IPepGenericListActions
   private widthArray = [
+    //set all columns widths to zero in order to give default equal width for all of them.
     {
       Width: 0
     },

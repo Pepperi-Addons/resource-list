@@ -1,7 +1,7 @@
 import { View, Editor } from "../../../../shared/entities";
-import { AbstractEditor } from "./editor";
+import { AbstractForm } from "./form";
 
-export  class ViewEditor extends AbstractEditor{
+export  class ViewEditor extends AbstractForm{
   content: View;
   async initView(key: string){
       if(key === "new"){

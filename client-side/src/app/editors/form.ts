@@ -5,7 +5,7 @@ import { UDCService } from '../services/udc-service';
 import { config } from '../addon.config';
 import { View, Editor } from '../../../../shared/entities';
 
-export abstract class AbstractEditor{
+export abstract class AbstractForm{
     key: string
     dataSource: any
     dataView: any = {
