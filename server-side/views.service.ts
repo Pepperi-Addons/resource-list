@@ -33,7 +33,6 @@ export class ViewsService {
         if(!editor.Key){
             editor.Key = uuidv4().replace(/-/g, '')
             await this.postDefaultRepDataView(editor.Key, "editor")
-            debugger
         }
         return await this.addonService.papiClient.addons.data.uuid(this.client.AddonUUID).table(editorsTable.Name).upsert(editor) 
     }
