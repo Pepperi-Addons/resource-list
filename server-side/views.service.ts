@@ -3,11 +3,17 @@ import AddonService from "./addon.service";
 import { editorsTable, viewsTable } from "./metadata";
 import { v4 as uuidv4 } from 'uuid';
 import { FindOptions } from "@pepperi-addons/papi-sdk";
+import { DataViewsService } from "./dataviews.service";
 
 export class ViewsService {  
     addonService: AddonService = new AddonService(this.client);
 
-    constructor(private client: Client) {}
+    constructor(
+        private client: Client,
+        )
+        {
+
+        }
     
     async getViews(options: FindOptions = {}){
         return await this.addonService.papiClient.addons.data.uuid(this.client.AddonUUID).table(viewsTable.Name).find(options);
@@ -15,6 +21,7 @@ export class ViewsService {
     async postView(view: any){
         if(!view.Key){
             view.Key =  uuidv4().replace(/-/g, '')
+            await this.postDefaultRepDataView(view.Key)
         }
         return await this.addonService.papiClient.addons.data.uuid(this.client.AddonUUID).table(viewsTable.Name).upsert(view)
     }
@@ -33,5 +40,19 @@ export class ViewsService {
     }
     async createEditorsTable(){
         return await this.addonService.papiClient.addons.data.schemes.post(editorsTable)
+    }
+
+    async postDefaultRepDataView(key: string){
+        const dataViewsService = new DataViewsService(this.client)
+        const repProfiles = await this.addonService.papiClient.profiles.find({where: "Name='Rep'"})
+        if(repProfiles && repProfiles.length > 0)
+        {
+            return await dataViewsService.postDefaultDataView(key, repProfiles[0].InternalID || 0, repProfiles[0].Name || "" )
+        }
+        else{
+            throw new Error("error in views service, inside postDefaultRepDataView function. reason: rep profile does not exist!!")
+        }
+        
+
     }
 }

@@ -111,13 +111,7 @@ export class ViewsEditorComponent implements OnInit {
       this.dataViewsMap.set(dataView.InternalID.toString(), dataView)
       notAvilablesProfiles.add(dataView.Context.Profile.InternalID.toString())
     })
-    //if rep not found then this is the first time the user edit the form, rep should always wxist so we are creating rep dataview.
-    if(!repFound){
-      const repProfile = this.availableProfiles.find(profile => profile.name === 'Rep')
-      const dataView = await this.postNewDataViewAndSaveOnMap(repProfile)
-      this.repDataViewID = dataView.InternalID.toString()
-    }
-    //if profile is in not available set then the profile card already exist!
+    //if profile is not in available set then the profile card already exist!
     this.availableProfiles = this.availableProfiles.filter(availableProfile => !notAvilablesProfiles.has(availableProfile.id))
   }
   initProfilesCardsByDataViews(){
