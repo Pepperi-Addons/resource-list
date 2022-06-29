@@ -21,7 +21,7 @@ export class ViewsService {
     async postView(view: any){
         if(!view.Key){
             view.Key =  uuidv4().replace(/-/g, '')
-            await this.postDefaultRepDataView(view.Key)
+            await this.postDefaultRepDataView(view.Key, "view")
         }
         return await this.addonService.papiClient.addons.data.uuid(this.client.AddonUUID).table(viewsTable.Name).upsert(view)
     }
@@ -31,7 +31,9 @@ export class ViewsService {
     }
     async postEditor(editor: any){
         if(!editor.Key){
-            editor.Key = uuidv4()
+            editor.Key = uuidv4().replace(/-/g, '')
+            await this.postDefaultRepDataView(editor.Key, "editor")
+            debugger
         }
         return await this.addonService.papiClient.addons.data.uuid(this.client.AddonUUID).table(editorsTable.Name).upsert(editor) 
     }
@@ -42,12 +44,12 @@ export class ViewsService {
         return await this.addonService.papiClient.addons.data.schemes.post(editorsTable)
     }
 
-    async postDefaultRepDataView(key: string){
+    async postDefaultRepDataView(key: string, type: "view" | "editor"){
         const dataViewsService = new DataViewsService(this.client)
         const repProfiles = await this.addonService.papiClient.profiles.find({where: "Name='Rep'"})
         if(repProfiles && repProfiles.length > 0)
         {
-            return await dataViewsService.postDefaultDataView(key, repProfiles[0].InternalID || 0, repProfiles[0].Name || "" )
+            return await dataViewsService.postDefaultDataView(key, repProfiles[0].InternalID || 0, repProfiles[0].Name || "" , type )
         }
         else{
             throw new Error("error in views service, inside postDefaultRepDataView function. reason: rep profile does not exist!!")

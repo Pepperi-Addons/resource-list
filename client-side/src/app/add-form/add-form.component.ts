@@ -72,12 +72,12 @@ export class AddFormComponent implements OnInit {
       Mandatory: true,
       Layout: {
           Origin: {
-          X: 0,
-          Y:0
+            X: 0,
+            Y:0
           },
           Size: {
-          Width: 1,
-          Height: 0
+            Width: 1,
+            Height: 0
           }
       }
       },
@@ -89,12 +89,12 @@ export class AddFormComponent implements OnInit {
       Mandatory: true,
       Layout: {
           Origin: {
-          X: 1,
-          Y: 0
+            X: 1,
+            Y: 0
           },
           Size: {
-          Width: 1,
-          Height: 0
+            Width: 1,
+            Height: 0
           }
       }
       },
@@ -107,12 +107,12 @@ export class AddFormComponent implements OnInit {
       OptionalValues: resourcesNames,
       Layout: {
           Origin: {
-          X: 0,
-          Y:1
+            X: 0,
+            Y:1
           },
           Size: {
-          Width: 1,
-          Height: 0
+            Width: 1,
+            Height: 0
           }
       }
       }
