@@ -10,16 +10,16 @@ export class DataViewService{
     constructor(
         private utilitiesService: UtilitiesService,
     ){}
-    async getDataViews(viewKey: string){
-        const query = {where: `Context.Name="GV_${viewKey}_View"`}
-        return await this.utilitiesService.papiClient.metaData.dataViews.find(query) as GridDataView[]
+    async getDataViews(key: string){
+        const query = {where: `Context.Name=${key}`}
+        return await this.utilitiesService.papiClient.metaData.dataViews.find(query)
     }
     async postDataView(dataView: DataView){
         const result =  await this.utilitiesService.papiClient.metaData.dataViews.upsert(dataView)
         return result as GridDataView
     }
-    async getDataViewsByProfile(viewKey: string, profileName: string){
-        const query = {where: `Context.Name="GV_${viewKey}_View" AND Context.Profile.Name="Rep"`}
-        return await this.utilitiesService.papiClient.metaData.dataViews.find(query) as GridDataView[]
+    async getDataViewsByProfile(key: string, profileName: string){
+        const query = {where: `Context.Name=${key} AND Context.Profile.Name="Rep"`}
+        return await this.utilitiesService.papiClient.metaData.dataViews.find(query)
     }
 }

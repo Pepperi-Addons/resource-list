@@ -64,9 +64,9 @@ export class BlockComponent implements OnInit {
       this.DisplayViewInList(this.currentViewKey)
     }
     async DisplayViewInList(viewKey){
-      const dataViews = await this.dataViewService.getDataViewsByProfile(viewKey, "Rep");
+      const dataViews = await this.dataViewService.getDataViewsByProfile(`GV_${viewKey}_View`, "Rep");
       if(dataViews.length > 0){
-        this.loadList(dataViews[0])
+        this.loadList(dataViews[0] as GridDataView)
       }
       //if there is no dataview we will display an empty list
       else{

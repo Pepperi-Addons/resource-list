@@ -25,6 +25,7 @@ import { MappedFieldComponent } from './mapped-field/mapped-field.component';
 import { PepTextboxModule } from '@pepperi-addons/ngx-lib/textbox';
 import { AddFormComponent } from './add-form/add-form.component';
 import { PepDialogModule } from '@pepperi-addons/ngx-lib/dialog';
+import { ProfileCardsComponent } from './profile-cards/profile-cards.component';
 
 
 @NgModule({
@@ -62,6 +63,7 @@ import { PepDialogModule } from '@pepperi-addons/ngx-lib/dialog';
         EditorsEditorComponent,
         MappedFieldComponent,
         AddFormComponent,
+        ProfileCardsComponent,
     ],
     providers: [
         TranslateStore

@@ -1,5 +1,4 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { IPepOption } from '@pepperi-addons/ngx-lib';
 import { IMappedField } from '../metadata'
 
 @Component({
@@ -18,7 +17,7 @@ export class MappedFieldComponent implements OnInit {
   onDeleteMappedField($event, mappedField){
     this.removeClick.emit(mappedField.id)
   }
-
+  
   onWidthChange($event){
     this.mappedField.width = Number($event)
   }

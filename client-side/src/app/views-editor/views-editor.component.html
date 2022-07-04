@@ -39,11 +39,12 @@
             <mat-tab *ngIf="loadCompleted" label = "{{'TABS.FORM' | translate}}">
                 <ng-container *ngIf="!editCard; then cardsTemplate;else cardEditor" ></ng-container>
                 <ng-template #cardsTemplate>
-                    <pep-profile-data-views-list [profileDataViewsList]="profileDataViewsList"
-                    [availableProfiles]="availableProfiles"
-                    [defaultProfileId]="defaultProfileId" (dataViewEditClick)="onDataViewEditClicked($event, event2)"
-                    (dataViewDeleteClick)="onDataViewDeleteClicked($event)" (saveNewProfileClick)="onSaveNewProfileClicked($event)">
-                    </pep-profile-data-views-list>
+                    <app-profile-cards 
+                        [dataViewContextName] = "dataViewContextName"
+                        [resourceName] = "resourceName"
+                        [dataViewsMap] = "dataViewsMap"
+                        (editCardEvent) = "onEditCardEvent($event)">
+                    </app-profile-cards>
                 </ng-template>
                 <ng-template #cardEditor>
                     <div class="buttons-holder">
@@ -105,12 +106,9 @@
                                         class="mapped-field-container" 
                                         cdkDrag (cdkDragStarted)="onDragStart($event)" 
                                         (cdkDragEnded)="onDragEnd($event)">
-                                            <!-- <ng-container *ngTemplateOutlet="mappedSlugTemplate; context: {mappedSlug: mappedSlug}"></ng-container> -->
                                         </app-mapped-field>
                                     </div>
                                 </ng-template>
-            
-                                <!-- {{ mappedSlugs | json}} -->
                             </div>
                         </div>
                             
@@ -120,15 +118,3 @@
         </mat-tab-group>
     </ng-container>
 </pep-page-layout>
-
-<!-- <ng-template #mappedSlugTemplate let-mappedSlug="mappedSlug">
-    <div class="fields-wrapper">
-        
-        <pep-select label= "{{mappedSlug.slug}}"
-            [options]='resourceFields' [value]="currentResourceField" [emptyOption]="false"
-            (valueChange)="onResourceFieldChange($event, mappedSlug)">
-        </pep-select>
-
-        <pep-button class="del-button" iconName="system_bin" (buttonClick)="onDeleteMappedSlug($event, mappedSlug)"></pep-button>
-    </div>
-</ng-template> -->
