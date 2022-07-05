@@ -27,7 +27,7 @@ export class DraggableCardFieldsComponent {
         this.updateCard.emit(this.card)
     }
     updateCardsList(key){
-        this.card.view = this.card.views.find((view) => key === view.key) 
+        this.card.selectedView = this.card.views.find((view) => key === view.key) 
         this.updateCard.emit(this.card)
     }
 }

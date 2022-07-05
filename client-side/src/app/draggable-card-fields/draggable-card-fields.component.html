@@ -4,7 +4,7 @@
     </div>
     <div class="title-container">
         <span class="body-sm ellipsis">&nbsp;</span>
-        <span class="body-sm color-link bold ellipsis" >{{card.view.value}}</span>
+        <span class="body-sm color-link bold ellipsis" >{{card.selectedView.value}}</span>
     </div>
     <div class="actions" >
         <pep-button classNames="caution" sizeType="xs" iconName="system_bin" (buttonClick)="onRemoveClick();"></pep-button>
@@ -13,7 +13,7 @@
     </div>
     <div class="editorCont" *ngIf = "card.showContent">
         <pep-select 
-            [value]="card.view.key"
+            [value]="card.selectedView.key"
             label="select view"
             type="select"
             [mandatory]="false"

@@ -15,10 +15,7 @@ import { PepButtonModule } from '@pepperi-addons/ngx-lib/button';
 import { MatTabsModule } from '@angular/material/tabs';
 import { PepGenericFormModule } from '@pepperi-addons/ngx-composite-lib/generic-form';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { EditorsEditorComponent } from './editors-editor/editors-editor.component';
-import { PepSelectModule } from '@pepperi-addons/ngx-lib/select';
 import { PepProfileDataViewsListModule } from '@pepperi-addons/ngx-lib/profile-data-views-list';
-import { PepPageLayoutModule } from '@pepperi-addons/ngx-lib/page-layout';
 import { PepDraggableItemsModule } from '@pepperi-addons/ngx-lib/draggable-items';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { MappedFieldComponent } from './mapped-field/mapped-field.component';
@@ -26,7 +23,11 @@ import { PepTextboxModule } from '@pepperi-addons/ngx-lib/textbox';
 import { AddFormComponent } from './add-form/add-form.component';
 import { PepDialogModule } from '@pepperi-addons/ngx-lib/dialog';
 import { ProfileCardsComponent } from './profile-cards/profile-cards.component';
-
+import { EditorsFormComponent } from './editors-form/editors-form.component';
+import { PepSelectModule } from '@pepperi-addons/ngx-lib/select';
+import { PepPageLayoutModule } from '@pepperi-addons/ngx-lib/page-layout';
+import { PepTopBarModule } from '@pepperi-addons/ngx-lib/top-bar';
+import { PepSeparatorModule } from '@pepperi-addons/ngx-lib/separator';
 
 @NgModule({
     imports: [
@@ -49,6 +50,10 @@ import { ProfileCardsComponent } from './profile-cards/profile-cards.component';
         DragDropModule,
         PepTextboxModule,
         PepDialogModule,
+        PepSelectModule,
+        PepPageLayoutModule,
+        PepTopBarModule,
+        PepSeparatorModule,
         TranslateModule.forRoot({
             loader: {
                 provide: TranslateLoader,
@@ -60,10 +65,10 @@ import { ProfileCardsComponent } from './profile-cards/profile-cards.component';
     declarations: [
         AppComponent,
         ViewsEditorComponent,
-        EditorsEditorComponent,
         MappedFieldComponent,
         AddFormComponent,
         ProfileCardsComponent,
+        EditorsFormComponent,
     ],
     providers: [
         TranslateStore

@@ -30,7 +30,7 @@ export class BlockComponent implements OnInit {
     allowImport: boolean = false;
     menuDisabled: boolean = false;
     widthArray: GridDataViewColumn[] = []
-    cardsList: ViewsCard[] = []
+    viewsList: ViewsCard[] = []
     fields: any[] = []
     items: any[] = []
     actions: any = {}
@@ -50,17 +50,17 @@ export class BlockComponent implements OnInit {
          private router: Router,
          private dataViewService: DataViewService) {
           this.udcService.pluginUUID = config.AddonUUID
-          this.actions.get = this.getActionsCallBack()
+          // this.actions.get = this.getActionsCallBack()
     }
     ngOnInit(): void {
       this.loadBlock()
     }
 
     loadBlock(){
-      this.cardsList = this.hostObject?.configuration?.cardsList || []
+      this.viewsList = this.hostObject?.configuration?.viewsList || []
       this.resource = this.hostObject.configuration?.resource || ""
       this.createDropDownOfViews()
-      this.currentViewKey = this.dropDownOfViews?.length > 0? this.dropDownOfViews[0].key : undefined
+      this.currentViewKey = this.dropDownOfViews?.length > 0? this.dropDownOfViews[0].key : ""
       this.DisplayViewInList(this.currentViewKey)
     }
     async DisplayViewInList(viewKey){
@@ -87,10 +87,10 @@ export class BlockComponent implements OnInit {
     }
 
     createDropDownOfViews(){
-      this.dropDownOfViews = this.cardsList.map(card => {
+      this.dropDownOfViews = this.viewsList.map(card => {
         return {
-          key: card.view.key,
-          value: card.view.value
+          key: card.selectedView.key,
+          value: card.selectedView.value
         }
       })
     }
@@ -99,145 +99,142 @@ export class BlockComponent implements OnInit {
       this.loadBlock()
     }
 
-    //-------------------------------------------------------------------------------
-    //---------------------------Old Page Block Functions ---------------------------
-    //-------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------
+//---------------------------Old Page Block Functions ---------------------------
+//-------------------------------------------------------------------------------
 
-    async loadGenericList(){
-    this.items = await  this.udcService.getItems(this.resourceName);
-    this.datasource = new DataSource(this.items, this.fields, this.widthArray)
-    }
-    init(){
-      this.loadVariablesFromHostObject()
-      this.menuDisabled = !(this.allowImport || this.allowExport)
-      this.menuItems = this.getMenuItems()
-      // this.fields = this.generateFieldsFromCards()
-      this.widthArray = this.generateWidthArrayFromCardsList()
-      this.loadGenericList()
-    }
-    loadVariablesFromHostObject(){
-      this.title = this.hostObject?.configuration?.title || this.title
-      this.allowExport = Boolean(this.hostObject?.configuration?.allowExport)
-      this.allowImport = Boolean(this?.hostObject?.configuration?.allowImport)
-      this.cardsList = this.hostObject?.configuration?.cardsList
-      this.minHeight = this.hostObject?.configuration?.minHeight || 20;
-      this.relativeHeight = this.hostObject?.configuration?.relativeHeight || 100
-      this.allowEdit = this.hostObject?.configuration?.allowEdit
-      this.updateResourceNameAndItemsIfChanged()
-    }
-    updateResourceNameAndItemsIfChanged(){
-      if(this.hostObject?.configuration?.resourceName != this.resourceName){
-        this.resourceName = this.hostObject?.configuration?.resourceName || this.resourceName
-        this.udcService.getItems(this.resourceName).then(items => {
-          this.items = items
-          this.datasource = new DataSource(items, this.fields, this.widthArray)
-        })
-      }
-    }
-    generateWidthArrayFromCardsList(): GridDataViewColumn[]{
-      if(!this.cardsList || this.cardsList.length == 0){
-        return []
-      }
-      return this.cardsList.map(card => {
-        return {'Width': 0}})
-    }
-    // generateFieldsFromCards(){
-    //   if(!this.cardsList){
-    //     return []
-    //   }
-    //   const returnVal = this.cardsList.map(card => card.value);
-    //   return returnVal
-    // }
-    onMenuItemClick($event){ 
-      switch ($event.source.key){
-        case 'Export':
-          // this.dimx?.DIMXExportRun({
-          //   DIMXExportFormat: "csv",
-          //   DIMXExportIncludeDeleted: false,
-          //   DIMXExportFileName: this.resourceName,
-          //   DIMXExportFields: this.fields.map((field) => field.FieldID).join(),
-          //   DIMXExportDelimiter: ","
-          // });
-          break;
-        case 'Import':
-          // this.dimx?.uploadFile({
-          //   OverwriteOBject: true,
-          //   Delimiter: ",",
-          //   OwnerID: UDC_UUID
-          // });
-          break;    
-      // }
-    }
-    } 
-    // onDIMXProcessDone($event){
-    //     this.udcService.getItems(this.resourceName).then(items => {
-    //       this.datasource = new DataSource(this.translate, items, this.fields)
-    //     })
-    // }
-    getMenuItems() {
-      return[
-          {
-            key:'Export',
-            text: this.translate.instant('Export'),
-            hidden: !this.allowExport
-          },
-          {
-            key: 'Import',
-            text: this.translate.instant('Import'),
-            hidden: !this.allowImport
-          }]
-    }
-     getActionsCallBack(){
-      return async (data: PepSelectionData) => {
-          const actions = []
-          if(data && data.rows.length == 1){
-            actions.push({
-                title: this.translate.instant('Delete'),
-                handler: async (selectedRows) => {
-                  await this.udcService.postItem(this.resourceName, {Key: selectedRows.rows[0], Hidden: true})
-                  this.loadGenericList()
-                }
+//     init(){
+//       this.loadVariablesFromHostObject()
+//       this.menuDisabled = !(this.allowImport || this.allowExport)
+//       this.menuItems = this.getMenuItems()
+//       // this.fields = this.generateFieldsFromCards()
+//       this.widthArray = this.generateWidthArrayFromCardsList()
+//       this.loadGenericList()
+//     }
+//     loadVariablesFromHostObject(){
+//       this.title = this.hostObject?.configuration?.title || this.title
+//       this.allowExport = Boolean(this.hostObject?.configuration?.allowExport)
+//       this.allowImport = Boolean(this?.hostObject?.configuration?.allowImport)
+//       this.viewsList = this.hostObject?.configuration?.cardsList
+//       this.minHeight = this.hostObject?.configuration?.minHeight || 20;
+//       this.relativeHeight = this.hostObject?.configuration?.relativeHeight || 100
+//       this.allowEdit = this.hostObject?.configuration?.allowEdit
+//       this.updateResourceNameAndItemsIfChanged()
+//     }
+//     updateResourceNameAndItemsIfChanged(){
+//       if(this.hostObject?.configuration?.resourceName != this.resourceName){
+//         this.resourceName = this.hostObject?.configuration?.resourceName || this.resourceName
+//         this.udcService.getItems(this.resourceName).then(items => {
+//           this.items = items
+//           this.datasource = new DataSource(items, this.fields, this.widthArray)
+//         })
+//       }
+//     }
+//     generateWidthArrayFromCardsList(): GridDataViewColumn[]{
+//       if(!this.viewsList || this.viewsList.length == 0){
+//         return []
+//       }
+//       return this.viewsList.map(card => {
+//         return {'Width': 0}})
+//     }
+//     // generateFieldsFromCards(){
+//     //   if(!this.cardsList){
+//     //     return []
+//     //   }
+//     //   const returnVal = this.cardsList.map(card => card.value);
+//     //   return returnVal
+//     // }
+//     onMenuItemClick($event){ 
+//       switch ($event.source.key){
+//         case 'Export':
+//           // this.dimx?.DIMXExportRun({
+//           //   DIMXExportFormat: "csv",
+//           //   DIMXExportIncludeDeleted: false,
+//           //   DIMXExportFileName: this.resourceName,
+//           //   DIMXExportFields: this.fields.map((field) => field.FieldID).join(),
+//           //   DIMXExportDelimiter: ","
+//           // });
+//           break;
+//         case 'Import':
+//           // this.dimx?.uploadFile({
+//           //   OverwriteOBject: true,
+//           //   Delimiter: ",",
+//           //   OwnerID: UDC_UUID
+//           // });
+//           break;    
+//       // }
+//     }
+//     } 
+//     // onDIMXProcessDone($event){
+//     //     this.udcService.getItems(this.resourceName).then(items => {
+//     //       this.datasource = new DataSource(this.translate, items, this.fields)
+//     //     })
+//     // }
+//     getMenuItems() {
+//       return[
+//           {
+//             key:'Export',
+//             text: this.translate.instant('Export'),
+//             hidden: !this.allowExport
+//           },
+//           {
+//             key: 'Import',
+//             text: this.translate.instant('Import'),
+//             hidden: !this.allowImport
+//           }]
+//     }
+//      getActionsCallBack(){
+//       return async (data: PepSelectionData) => {
+//           const actions = []
+//           if(data && data.rows.length == 1){
+//             actions.push({
+//                 title: this.translate.instant('Delete'),
+//                 handler: async (selectedRows) => {
+//                   await this.udcService.postItem(this.resourceName, {Key: selectedRows.rows[0], Hidden: true})
+//                   this.loadGenericList()
+//                 }
               
-            })
-            if (this.hostObject?.configuration?.allowEdit) {
-                  actions.push({
-                      title: this.translate.instant('Edit'),
-                      handler : async (selectedRows) => {
-                        const key = `collection_${this.resourceName}`
-                        const value = selectedRows.rows[0]
-                        if(this.hostObject.configuration.currentOpenMode == 'replace'){
-                          this.router.navigate([this.hostObject.configuration.currentSlug],
-                            {
-                              queryParams: {
-                                [key]: `\"${value}\"`
-                              }
-                            })
-                        }
-                        else{
-                          this.sendObjectToEditor(key,value)
-                        }
-                      }
-                  })
-            }
-          }
-          return actions
-      }
-    }
-    sendObjectToEditor(key: string, value: string){
-      this.hostEvents.emit({
-        action: 'set-parameter',
-        key: key,
-        value: value 
-      })
-    }
-    onAddClick(){
-      if(this.hostObject?.configuration?.allowEdit){
-        if(this.hostObject.configuration.currentOpenMode == 'replace'){
-            this.router.navigate([this.hostObject.configuration.currentSlug])
-        }
-        else{
-          this.sendObjectToEditor("","")
-        }
-      }
-   }
-}
+//             })
+//             if (this.hostObject?.configuration?.allowEdit) {
+//                   actions.push({
+//                       title: this.translate.instant('Edit'),
+//                       handler : async (selectedRows) => {
+//                         const key = `collection_${this.resourceName}`
+//                         const value = selectedRows.rows[0]
+//                         if(this.hostObject.configuration.currentOpenMode == 'replace'){
+//                           this.router.navigate([this.hostObject.configuration.currentSlug],
+//                             {
+//                               queryParams: {
+//                                 [key]: `\"${value}\"`
+//                               }
+//                             })
+//                         }
+//                         else{
+//                           this.sendObjectToEditor(key,value)
+//                         }
+//                       }
+//                   })
+//             }
+//           }
+//           return actions
+//       }
+//     }
+//     sendObjectToEditor(key: string, value: string){
+//       this.hostEvents.emit({
+//         action: 'set-parameter',
+//         key: key,
+//         value: value 
+//       })
+//     }
+//     onAddClick(){
+//       if(this.hostObject?.configuration?.allowEdit){
+//         if(this.hostObject.configuration.currentOpenMode == 'replace'){
+//             this.router.navigate([this.hostObject.configuration.currentSlug])
+//         }
+//         else{
+//           this.sendObjectToEditor("","")
+//         }
+//       }
+//    }
+// }
+  }

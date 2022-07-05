@@ -20,7 +20,7 @@ export class BlockEditorComponent implements OnInit {
     currentViews: SelectOption[] = []
     @Input() hostObject: any;
     @Output() hostEvents: EventEmitter<any> = new EventEmitter<any>();
-    cardsList: ViewsCard[]
+    viewsList: ViewsCard[]
     constructor(private udcService: UDCService,
                 private cardsService: CardsService,
                 private viewsService: ViewsService
@@ -28,7 +28,8 @@ export class BlockEditorComponent implements OnInit {
                 this.udcService.pluginUUID = config.AddonUUID
     }
     ngOnInit(): void {
-        this.cardsList = this.hostObject.configuration.cardsList || []
+        this.resource = this.hostObject.configuration.resource;
+        this.viewsList = this.hostObject.configuration.viewsList || []
         Promise.all([this.setResourcesNames(), this.viewsService.getItems()])
         .then(([_, views]) => {
             this.resource = this.hostObject.configuration.resource ||  this.resourcesNames.length > 0? this.resourcesNames[0].value : undefined
@@ -51,13 +52,15 @@ export class BlockEditorComponent implements OnInit {
     async setResourcesNames(){
         const resources = await this.udcService.getCollections()
         this.resourcesNames = resources.map(resource => {
-            return {'key': resource.Name, 'value': resource.Name}})
+            return {key: resource.Name, value: resource.Name}})
     }
     async onResourceChanged($event){
         this.restoreData()
         this.resource = $event
         this.setViewsByResource()
         this.updateConfigurationField('resource', this.resource)
+        this.updateConfigurationField('viewsList', this.viewsList)
+        
     }
     updateConfigurationField(key: string,value: any){
         this.hostEvents.emit({
@@ -67,17 +70,15 @@ export class BlockEditorComponent implements OnInit {
         })
     }
     restoreData(){
-        this.cardsList = []
+        this.viewsList = []
         this.resource = undefined
-        this.currentViews = undefined
-        this.updateConfigurationField('cardsList', this.cardsList)
-        this.updateConfigurationField('resource', this.resource)
+        this.currentViews = []
     }
     drop(event: CdkDragDrop<string[]>){
         if (event.previousContainer === event.container) {
-            moveItemInArray(this.cardsList, event.previousIndex, event.currentIndex);
+            moveItemInArray(this.viewsList, event.previousIndex, event.currentIndex);
            }
-        this.updateConfigurationField('cardsList', this.cardsList) 
+        this.updateConfigurationField('viewsList', this.viewsList) 
     }
     onDragStart(event: CdkDragStart) {
         this.cardsService.changeCursorOnDragStart();
@@ -91,13 +92,13 @@ export class BlockEditorComponent implements OnInit {
             views: this.currentViews,
             showContent: true,
             title: "Grid",
-            view: this.currentViews[0]
+            selectedView: this.currentViews.length > 0? this.currentViews[0] : undefined
         }
-        this.cardsList.push(card)
-        this.updateConfigurationField('cardsList', this.cardsList)
+        this.viewsList.push(card)
+        this.updateConfigurationField('viewsList', this.viewsList)
     }
     onCardRemoveClick(event){
-        this.cardsList = this.cardsList.filter((card) => card.id != event.id)
-       this.updateConfigurationField('cardsList', this.cardsList)
+        this.viewsList = this.viewsList.filter((card) => card.id != event.id)
+       this.updateConfigurationField('viewsList', this.viewsList)
     }
 }

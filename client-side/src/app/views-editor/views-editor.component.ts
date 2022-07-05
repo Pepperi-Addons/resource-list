@@ -72,7 +72,7 @@ export class ViewsEditorComponent implements OnInit {
       this.udcService,
       this.viewsService,
       )
-      this.initViewEditor(key)
+      this.initViewEditor()
       .then(_ => {
         this.loadCompleted = true
         this.initCurrentCollection()
@@ -85,8 +85,8 @@ export class ViewsEditorComponent implements OnInit {
     this.collectionFields = (await this.udcService.getCollection(this.dataSource.Resource))?.ListView?.Fields || []
     this.initSideCardsListAndFields(this.collectionFields)
   }
-  async initViewEditor(key: string){
-    await this.viewEditor.init(key)
+  async initViewEditor(){
+    await this.viewEditor.init()
     this.dataSource = this.viewEditor.getDataSource()
     this.resourceName = this.dataSource.resourceName
     this.viewName = this.viewEditor.getName()
