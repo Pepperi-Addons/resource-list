@@ -6,11 +6,7 @@ export class DataViewsService {
     addonService: AddonService = new AddonService(this.client);
 
     constructor(private client: Client) {}
-
-    // async postDefaultGridDataView(key: string, profileID: number, profileName: string){
-    //     const defaultDataView = this.getDefaultGridDataView(key, profileID, profileName)
-    //     return await this.postDataView(defaultDataView)
-    // }
+    
     async postDefaultDataView(key: string, profileID: number, profileName:string, type: "view" | "editor"){
         const defaultDataView = type == "view" ? this.getDefaultGridDataView(key,profileID,profileName) : this.getDefaultFormDataView(key,profileID,profileName)
         return this.postDataView(defaultDataView)
@@ -18,10 +14,7 @@ export class DataViewsService {
     async postDataView(dataView: DataView){
         return await this.addonService.papiClient.metaData.dataViews.upsert(dataView)
     }
-    // async postDefaultFormDataView(key: string, profileID: number, profileName: string){
-    //     const defaultDataView = this.getDefaultFormDataView(key, profileID, profileName)
-    //     return await this.postDataView(defaultDataView)
-    // }
+
     getDefaultGridDataView(key: string, profileID: number, profileName: string): GridDataView{
         return {
             Type: "Grid",
