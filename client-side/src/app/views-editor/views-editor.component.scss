@@ -32,10 +32,6 @@
             height: variables.$top-bar-field-height;
             display: flex;
             align-items: center;
-
-            // &.pep-border-bottom {
-            //     margin-bottom: variables.$content-margin;
-            // }
         }
         
         .drop-field-here-area {
@@ -63,7 +59,6 @@
         }
 
         .mapped-fields-area {
-            // height: inherit;
             display: flex;
             flex-direction: column;
             gap: variables.$content-margin;
@@ -86,8 +81,6 @@
                 @include styles.mapped-field-container();
 
                 &.cdk-drag-placeholder {
-                    // opacity: 0;
-                    // @include mixins.state-regular-default(true);
                     @include mixins.focus();
 
                     .fields-wrapper {
@@ -98,9 +91,6 @@
         }
     }
 }
-
-
-
 
 .header{
     display: flex;
@@ -153,26 +143,5 @@ html {
         }
     }
 }
-// .mat-tab-group {
 
-//     height: inherit;
-
-//     ::ng-deep {
-//         .mat-tab-body-wrapper {
-//             height: inherit;
-//         }
-//         .mat-tab-body-content {
-//             padding: 0 !important;
-//             margin-top: -0.25rem;
-            
-//             .profile-data-views-list-container {
-//                 padding-top: 0.25rem;
-//             }
-//         }
-//     }
-// }
-
-// // ::ng-deep .pep-button.strong:focus{
-// //     box-shadow: none !important;
-// // }
 
