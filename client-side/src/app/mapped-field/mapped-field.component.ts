@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { IMappedField } from '../metadata'
+import { IMappedField, IViewMappedField } from '../metadata'
 
 @Component({
   selector: 'app-mapped-field',
@@ -7,7 +7,7 @@ import { IMappedField } from '../metadata'
   styleUrls: ['./mapped-field.component.scss']
 })
 export class MappedFieldComponent implements OnInit {
-  @Input() mappedField: IMappedField
+  @Input() mappedField: IViewMappedField
   @Output() removeClick: EventEmitter<IMappedField> = new EventEmitter();
   width: number
   constructor() { }

@@ -14,8 +14,13 @@ export interface IMappedField {
       ReadOnly: boolean
       Mandatory: boolean
     },
-    width: number
-  }
+}
+export interface IViewMappedField extends IMappedField{
+  width: number
+}
+export interface IEditorMappedField extends IMappedField{
+
+}
 
   export interface IDataService{
     getItems(key?: string , includeDeleted?: boolean)

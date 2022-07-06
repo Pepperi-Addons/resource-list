@@ -1,4 +1,156 @@
 
+// .buttons-holder{
+//     float: right;
+//     display: flex; 
+// }
+
+// html {
+//     body.inheritCursors * {
+//         cursor: inherit !important;
+//     }
+// }
+
+// .open-mode-options{
+//     width: 50%;
+// }
+
+// .editor-tabs {
+//     height: 100%;
+    
+//     ::ng-deep {
+//         .mat-tab-body-wrapper {
+//             overflow: unset;
+//             margin: 0;
+//             display: block;
+
+//             .mat-tab-body {
+//                 &.mat-tab-body-active {
+//                     overflow: unset;
+
+//                     .mat-tab-body-content {
+//                         overflow: unset;
+//                         display: flex;
+//                         flex-direction: column;
+//                         padding-inline: 0;
+//                         row-gap: 1rem;
+
+//                     }
+//                 }
+//             }
+//         }
+//     }
+// }
+
+@use '~@pepperi-addons/ngx-lib/src/core/style/abstracts/variables';
+@use '~@pepperi-addons/ngx-lib/src/core/style/abstracts/mixins';
+@use '~@pepperi-addons/ngx-lib/src/core/style/abstracts/functions';
+
+@use '../../styles.scss';
+
+.mapped-fields-container {
+    display: grid;
+    height: 100%;
+    grid-template-columns: auto 1fr;
+    grid-template-areas: "side-area    main-area";
+
+    .available-fields-side-area {
+        grid-area: side-area;
+        width: 240px;
+        max-width: 240px;
+        height: inherit;
+        overflow: auto;
+        padding-top: variables.$spacing-2xl;
+        margin-inline-end: variables.$double-content-margin;
+    }
+    
+    .mapped-fields-main-area {
+        display: grid;
+        grid-template-rows: auto 1fr;
+        grid-area: main-area;
+        padding-top: variables.$spacing-2xl;
+        overflow: auto;
+        height: inherit;
+
+        .mapped-fields-top-area {
+            height: variables.$top-bar-field-height;
+            display: flex;
+            align-items: center;
+
+            // &.pep-border-bottom {
+            //     margin-bottom: variables.$content-margin;
+            // }
+        }
+        
+        .drop-field-here-area {
+            @include styles.mapped-field-item-container();
+            @include mixins.state-weak-default();
+            @include mixins.inline(functions.get-pep-color(color-system-primary, color-flat-r-20), 1px, dashed);
+
+            &.cdk-drop-list-dragging {
+                @include mixins.focus();
+                
+                &:hover {
+                    @include mixins.state-regular-hover(true);
+                    @include mixins.focus();
+                }
+        
+                // Hide the placeholder when 
+                ::ng-deep.placeholder-item {
+                    display: none;
+                }
+            }
+        }
+
+        .fields-area-overflow {
+            overflow: auto;
+        }
+
+        .mapped-fields-area {
+            // height: inherit;
+            display: flex;
+            flex-direction: column;
+            gap: variables.$content-margin;
+            padding-top: variables.$content-margin;
+            padding-bottom: variables.$content-margin;
+            padding-inline: variables.$spacing-xs;
+
+            &.cdk-drop-list-dragging {
+                ::ng-deep.placeholder-item {
+                    @include styles.mapped-field-item-container();
+                    @include mixins.state-regular-default(true);
+                    @include mixins.focus();
+                    height: variables.$draggable-item-height;
+                }
+            }
+
+            // The mapped-slug-container style declared in style.scss because when dragging in list the item added to the end of the dom and we cannot style it here (component context).
+            .mapped-field-container { 
+                cursor: grab;
+                @include styles.mapped-field-container();
+
+                &.cdk-drag-placeholder {
+                    // opacity: 0;
+                    // @include mixins.state-regular-default(true);
+                    @include mixins.focus();
+
+                    .fields-wrapper {
+                        opacity: 0;
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+
+
+.header{
+    display: flex;
+    justify-content: space-between;
+    margin-top: 1%;
+}
+
 .buttons-holder{
     float: right;
     display: flex; 
@@ -9,12 +161,12 @@ html {
         cursor: inherit !important;
     }
 }
-
-.open-mode-options{
-    width: 50%;
+.fields-area-overflow {
+    overflow: auto;
 }
 
-.editor-tabs {
+
+.views-tabs {
     height: 100%;
     
     ::ng-deep {
@@ -33,10 +185,37 @@ html {
                         flex-direction: column;
                         padding-inline: 0;
                         row-gap: 1rem;
-
+                        padding: 0 !important;
+                        margin-top: -0.25rem;
+                        .profile-data-views-list-container {
+                            padding-top: 0.25rem;
+                        }
                     }
                 }
             }
         }
     }
 }
+// .mat-tab-group {
+
+//     height: inherit;
+
+//     ::ng-deep {
+//         .mat-tab-body-wrapper {
+//             height: inherit;
+//         }
+//         .mat-tab-body-content {
+//             padding: 0 !important;
+//             margin-top: -0.25rem;
+            
+//             .profile-data-views-list-container {
+//                 padding-top: 0.25rem;
+//             }
+//         }
+//     }
+// }
+
+// // ::ng-deep .pep-button.strong:focus{
+// //     box-shadow: none !important;
+// // }
+

@@ -2,14 +2,14 @@
 <hr>
 <br>
 <mat-tab-group #tabgroup class="editor-tabs">
-    <mat-tab label= "{{'TABS.VIEWS' | translate}}">
+    <mat-tab label= "{{'Tabs.Views' | translate}}">
         <app-table 
             name = "Views"
             [service] = "viewsService"
             editRoute = "">
         </app-table>
     </mat-tab>
-    <mat-tab label= "{{'TABS.EDITORS' | translate}}">
+    <mat-tab label= "{{'Tabs.Editors' | translate}}">
         <app-table 
         name = "Editors"
         [service] ="editorsService"

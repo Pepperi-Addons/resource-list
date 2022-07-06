@@ -28,15 +28,15 @@
         <hr>
     </ng-container>
     <ng-container pep-main-area>  
-        <mat-tab-group #tabgroup class="editor-tabs">
-            <mat-tab label= "{{'TABS.GENERAL' | translate}}">
-                <h5> {{'VIEWS_EDITOR_FIRST_LINE' | translate}}</h5>
+        <mat-tab-group #tabgroup class="views-tabs">
+            <mat-tab label= "{{'Tabs.General' | translate}}">
+                <h5> {{'Views_Editor_First_Line' | translate}}</h5>
                 <pep-generic-form
                 [dataSource]="dataSource"
                 [dataView]="dataView" 
                 ></pep-generic-form>
             </mat-tab>
-            <mat-tab *ngIf="loadCompleted" label = "{{'TABS.FORM' | translate}}">
+            <mat-tab *ngIf="loadCompleted" label = "{{'Tabs.Form' | translate}}">
                 <ng-container *ngIf="!editCard; then cardsTemplate;else cardEditor" ></ng-container>
                 <ng-template #cardsTemplate>
                     <app-profile-cards 
@@ -84,7 +84,7 @@
                                 <span class="color-dimmed">{{('MAPPED_FIELDS_TITLE_HINT' | translate)}}
                                 </span>
                             </div>
-            
+    
                             <div class="fields-area-overflow">
                                 <ng-container *ngIf="mappedFields === null || mappedFields.length === 0; then emptyTemplate; else notEmptyTemplate"></ng-container>
                                 <ng-template #emptyTemplate>

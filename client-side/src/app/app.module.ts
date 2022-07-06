@@ -28,6 +28,8 @@ import { PepSelectModule } from '@pepperi-addons/ngx-lib/select';
 import { PepPageLayoutModule } from '@pepperi-addons/ngx-lib/page-layout';
 import { PepTopBarModule } from '@pepperi-addons/ngx-lib/top-bar';
 import { PepSeparatorModule } from '@pepperi-addons/ngx-lib/separator';
+import { EditorMappedFieldComponent } from './editor-mapped-field/editor-mapped-field.component';
+import { PepCheckboxModule } from '@pepperi-addons/ngx-lib/checkbox';
 
 @NgModule({
     imports: [
@@ -54,6 +56,7 @@ import { PepSeparatorModule } from '@pepperi-addons/ngx-lib/separator';
         PepPageLayoutModule,
         PepTopBarModule,
         PepSeparatorModule,
+        PepCheckboxModule,
         TranslateModule.forRoot({
             loader: {
                 provide: TranslateLoader,
@@ -69,6 +72,7 @@ import { PepSeparatorModule } from '@pepperi-addons/ngx-lib/separator';
         AddFormComponent,
         ProfileCardsComponent,
         EditorsFormComponent,
+        EditorMappedFieldComponent,
     ],
     providers: [
         TranslateStore

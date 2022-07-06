@@ -9,7 +9,7 @@ import { Location } from '@angular/common';
 import { IPepProfileDataViewsCard, IPepProfile } from '@pepperi-addons/ngx-lib/profile-data-views-list';
 import { IPepDraggableItem } from '@pepperi-addons/ngx-lib/draggable-items';
 import { CdkDragDrop, CdkDragEnd, CdkDragStart, moveItemInArray } from '@angular/cdk/drag-drop';
-import {CREATION_DATE_TIME_ID, MODIFICATION_DATE_TIME_ID, CREATION_DATE_TIME_TITLE, MODIFICATION_DATE_TIME_TITLE} from '../metadata'
+import {CREATION_DATE_TIME_ID, MODIFICATION_DATE_TIME_ID, CREATION_DATE_TIME_TITLE, MODIFICATION_DATE_TIME_TITLE, IViewMappedField} from '../metadata'
 import { DataViewService } from '../services/data-view-service'
 import { Collection, DataView, GridDataView, GridDataViewField } from '@pepperi-addons/papi-sdk';
 import { IMappedField } from '../metadata';
@@ -40,7 +40,7 @@ export class ViewsEditorComponent implements OnInit {
   editCard: boolean = false;
   currentTabIndex = 0;
   sideCardsList:Array<IPepDraggableItem> = []
-  mappedFields: Array<IMappedField> = [];
+  mappedFields: Array<IViewMappedField> = [];
   currentResourceField: string = undefined
   viewKey: string
   collectionFields: Collection
@@ -109,7 +109,6 @@ export class ViewsEditorComponent implements OnInit {
     this.currentDataView = event.dataview
     this.currentCard = event.card
     const mappedFieldsIDSet = new Set<string>()
-    //you can use for here, and also put the width on same loop.
     this.mappedFields = this.currentDataView.Fields.map((field, index) => {
       mappedFieldsIDSet.add(field.FieldID)
       return this.fieldToMappedField(field, this.currentDataView.Columns[index].Width)
@@ -192,7 +191,7 @@ export class ViewsEditorComponent implements OnInit {
     }
   }
   private addNewField(draggableItem: IPepDraggableItem, index: number) {
-    const mappedField: IMappedField  = {
+    const mappedField: IViewMappedField  = {
       id: uuid.v4(),
       field: {
         FieldID: draggableItem.data.FieldID,
@@ -224,11 +223,9 @@ export class ViewsEditorComponent implements OnInit {
     this.currentDataView.Fields = this.mappedFieldsToDataViewFields(this.mappedFields)
     const dataview = await this.dataViewService.postDataView(this.currentDataView)
     this.dataViewsMap.set(dataview.InternalID.toString(), dataview)
-    // const currentProfileCard = this.profileDataViewsList.find(profile => profile.profileId == this.currentDataView.Context.Profile.InternalID.toString());
     this.currentCard.dataViews[0].fields = this.mappedFields.map(field => field.field.Title)
   }
 
-  
   mappedFieldToDataViewField(mappedField: IMappedField, index: number): GridDataViewField{
     return {
       FieldID: mappedField.field.FieldID,
@@ -255,14 +252,14 @@ export class ViewsEditorComponent implements OnInit {
         return this.mappedFieldToDataViewField(mappedField, index)
     })
   }
-  fieldToMappedField(field: GridDataViewField, width = 10): IMappedField{
+  fieldToMappedField(field: GridDataViewField, width = 10): IViewMappedField{
     return {
       id: uuid.v4(),
       field: field,
       width: width
     }
   }
-  fieldsToMappedFields(fields: GridDataViewField[], columns: {Width: number}[]): IMappedField[]{
+  fieldsToMappedFields(fields: GridDataViewField[], columns: {Width: number}[]): IViewMappedField[]{
     const mappedFields = []
     fields.forEach((field,index) => {
       mappedFields.push({

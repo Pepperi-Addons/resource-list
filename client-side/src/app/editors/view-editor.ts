@@ -1,4 +1,4 @@
-import { View, Editor } from "../../../../shared/entities";
+import { View } from "../../../../shared/entities";
 import { AbstractForm } from "./form";
 
 export  class ViewEditor extends AbstractForm{
