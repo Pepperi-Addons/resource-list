@@ -224,7 +224,6 @@ export class EditorsFormComponent implements OnInit {
   async onSaveDataView(){
     this.currentDataView.Fields = this.mappedFieldsToDataViewFields(this.mappedFields)
     const dataview = await this.dataViewService.postDataView(this.currentDataView)
-    debugger
     this.dataViewsMap.set(dataview.InternalID.toString(), dataview)
     this.currentCard.dataViews[0].fields = this.mappedFields.map(field => field.field.Title)
   }

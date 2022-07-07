@@ -22,5 +22,6 @@
     "Design": "Design",
     "Same-page": "replace the current page",
     "Popup": "open as popup",
-    "DeleteMessage": "Are you sure you want to delete this list?"
+    "DeleteMessage": "Are you sure you want to delete this list?",
+    "Resource": "Resource"
 }

@@ -27,7 +27,6 @@ export class ViewsService {
     }
     async getEditors(options){
         return await this.addonService.papiClient.addons.data.uuid(this.client.AddonUUID).table(editorsTable.Name).find(options)
-
     }
     async postEditor(editor: any){
         if(!editor.Key){
