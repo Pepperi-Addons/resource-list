@@ -21,5 +21,6 @@
     "CREATION_DATE_TIME": "CreationDateTime",
     "Design": "Design",
     "Same-page": "replace the current page",
-    "Popup": "open as popup"
+    "Popup": "open as popup",
+    "DeleteMassage": "Are you sure you want to delete this list?"
 }

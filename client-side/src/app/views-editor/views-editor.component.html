@@ -4,16 +4,7 @@
             <h4>Edit - {{viewName}}</h4>
             <div class="buttons-holder">
                 <pep-button
-                value="Back to list"
-                styleType="weak"
-                styleStateType="system"
-                sizeType="md"
-                classNames=""
-                iconPosition="end"
-                [visible]="true"
-                (buttonClick)="onBackToList()"
-                ></pep-button>
-                <pep-button
+                class="pep-spacing-element"
                 value="Update"
                 styleType="strong"
                 styleStateType="system"
@@ -22,6 +13,17 @@
                 iconPosition="end"
                 [visible]="true"
                 (buttonClick)="onUpdate()"
+                ></pep-button>
+                <pep-button
+                class="pep-spacing-element"
+                value="Back to list"
+                styleType="weak"
+                styleStateType="system"
+                sizeType="md"
+                classNames=""
+                iconPosition="end"
+                [visible]="true"
+                (buttonClick)="onBackToList()"
                 ></pep-button>
             </div>
         </div>
@@ -49,7 +51,18 @@
                 <ng-template #cardEditor>
                     <div class="buttons-holder">
                         <pep-button
-                            class="buttons-holder"
+                        class="pep-spacing-element"
+                        value="Save"
+                        styleType="strong"
+                        styleStateType="system"
+                        sizeType="md"
+                        classNames=""
+                        iconPosition="end"
+                        [visible]="editCard"
+                        (buttonClick)="onSaveDataView()"
+                        ></pep-button>
+                        <pep-button
+                            class="pep-spacing-element"
                             value="Back"
                             styleType="weak"
                             styleStateType="system"
@@ -58,17 +71,6 @@
                             iconPosition="end"
                             [visible]="editCard"
                             (buttonClick)="backFromCardsTemplate()"
-                        ></pep-button>
-                        <pep-button
-                            class="buttons-holder"
-                            value="Save"
-                            styleType="strong"
-                            styleStateType="system"
-                            sizeType="md"
-                            classNames=""
-                            iconPosition="end"
-                            [visible]="editCard"
-                            (buttonClick)="onSaveDataView()"
                         ></pep-button>
                     </div>
                     <div class="mapped-fields-container">
@@ -110,11 +112,11 @@
                                     </div>
                                 </ng-template>
                             </div>
-                        </div>
-                            
+                        </div>     
                     </div>
                 </ng-template>
             </mat-tab>
         </mat-tab-group>
     </ng-container>
 </pep-page-layout>
+<pep-size-detector></pep-size-detector>

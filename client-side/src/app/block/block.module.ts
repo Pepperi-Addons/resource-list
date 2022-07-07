@@ -11,6 +11,8 @@ import { PepMenuModule } from '@pepperi-addons/ngx-lib/menu';
 // import { PepDIMXModule } from '@pepperi-addons/ngx-composite-lib/dimx-export';
 import { PepButtonModule } from '@pepperi-addons/ngx-lib/button';
 import { PepSelectModule } from '@pepperi-addons/ngx-lib/select';
+import { PepPageLayoutModule } from '@pepperi-addons/ngx-lib/page-layout';
+import { PepSizeDetectorModule } from '@pepperi-addons/ngx-lib/size-detector';
 
 
 export const routes: Routes = [
@@ -30,6 +32,8 @@ export const routes: Routes = [
         // PepDIMXModule,
         PepButtonModule,
         PepSelectModule,
+        PepPageLayoutModule,
+        PepSizeDetectorModule,
         TranslateModule.forChild({
             loader: {
                 provide: TranslateLoader,
