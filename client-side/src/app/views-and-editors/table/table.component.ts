@@ -197,7 +197,7 @@ export class TableComponent{
     const dataMsg = new PepDialogData({
       title: this.translate.instant('Delete'),
       actionsType: 'cancel-delete',
-      content: this.translate.instant('Are you sure you want to delete this list?')
+      content: this.translate.instant("DeleteMessage")
     });
     this.dialogService.openDefaultDialog(dataMsg).afterClosed().subscribe(async (isDeletePressed) => {
       if(isDeletePressed){
