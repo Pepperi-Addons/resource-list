@@ -53,20 +53,25 @@ export class DataConfigurationBlockEditorComponent implements OnInit {
     async init(){
         this.resources = await this.udcService.getCollections() || []
         this.editors = await this.editorsService.getItems() || []
-        // this.loadVariablesFromHostObject()
-        await this.setResourcesOptions()
+        this.initPepSelectResource()
+        this.initPepSelectEditors()
+        this.updateHostObject()
+    }
+    initPepSelectResource(){
+        this.setResourcesOptions()
         this.currentResourceName = this.hostObject?.configuration?.currentResourceName
         this.setCurrentResourceName()
-        await this.setEditorsOptions(this.currentResourceName)
+    }
+    initPepSelectEditors(){
+        this.setEditorsOptions(this.currentResourceName)
         this.currentEditorKey = this.hostObject?.configuration?.currentEditorKey
         this.setCurrentEditor(this.editorsOptions)
-        this.updateHostObject()
     }
     updateHostObject(){
         this.updateConfigurationField('currentResourceName', this.currentResourceName)
         this.updateConfigurationField('currentEditorKey', this.currentEditorKey)
     }
-    async setResourcesOptions(){
+    setResourcesOptions(){
         this.resourcesOptions = this.resources.map(collection => {
             return {
                 key: collection.Name,
@@ -82,7 +87,7 @@ export class DataConfigurationBlockEditorComponent implements OnInit {
     isResourceExist(resourcesOptions: SelectOption[],resourceName: string): Boolean{
         return resourcesOptions.find(resourceOption => resourceOption.value == resourceName) != undefined
     }
-    async setEditorsOptions(resourceName: string){
+    setEditorsOptions(resourceName: string){
         const resourceEditors = this.editors.filter(editor => editor.Resource.Name == resourceName)
         this.editorsOptions = resourceEditors.map(resourceEditor => {
             return {
