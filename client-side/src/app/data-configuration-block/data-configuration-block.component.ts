@@ -5,6 +5,7 @@ import { PepMenuItem } from '@pepperi-addons/ngx-lib/menu';
 import { TypeMap } from '../type-map';
 import { UDCService } from '../services/udc-service';
 import { config } from '../addon.config';
+import { DataViewService } from '../services/data-view-service';
 @Component({
     selector: 'data-configuration-block',
     templateUrl: './data-configuration-block.component.html',
@@ -29,20 +30,42 @@ export class DataConfigurationBlockComponent implements OnInit {
           ScreenSize: 'Tablet'
         }
       };
+    currentEditorKey: string
     @Output() hostEvents: EventEmitter<any> = new EventEmitter<any>();
 
-    constructor(private translate: TranslateService, private udcService: UDCService) {
+    constructor(private translate: TranslateService,
+       private udcService: UDCService,
+       private dataViewService: DataViewService) {
       this.udcService.pluginUUID = config.AddonUUID
       // this.typeMap = new TypeMap()
       // this.typeMap.init()
       
     }
     ngOnInit(): void {
-      
+      this.loadBlock()
     }
-    ngOnChanges($eent){
+    ngOnChanges($event){
+      this.loadBlock()
+    }
+    async loadBlock(){
+      this.currentEditorKey = this.hostObject?.configuration?.currentEditorKey
+      if(this.currentEditorKey != undefined){
+        const editorDataViews = await this.dataViewService.getDataViews(`GV_${this.currentEditorKey}_Editor`)
+        this.loadEditor(editorDataViews[0])
+      }
+    }
+    loadEditor(editorDataView){
+      this.dataView =  {
+        Type: "Form",
+        Fields: editorDataView.Fields,
+        Context: {
+          Name: "",
+          Profile: {},
+          ScreenSize: 'Tablet'
+        }
+      };
+    }
 
-    }
     // loadVariablesFromHostObject(){
     //   this.currentResourceName = this.hostObject?.configuration?.currentResourceName
     //   this.minHeight = this.hostObject?.configuration?.minHeight || 20
