@@ -9,8 +9,9 @@ export class DataSource implements IPepGenericListDataSource{
       pager:{
       type: 'scroll'
       },
+      selectionType: 'multi'
     }
-  selectionType: 'multi'
+
     constructor(private items: any[], private fields: any[], private widthArray: GridDataViewColumn[] = [], private searchCB = (str, items) => items ){
     }
     async init(params: { searchString?: string; filter?: any; sorting?: IPepListSortingChangeEvent; fromIndex: number; toIndex: number; }): Promise<IPepGenericListInitData> {

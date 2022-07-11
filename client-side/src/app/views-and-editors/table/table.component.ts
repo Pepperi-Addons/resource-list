@@ -26,7 +26,7 @@ export class TableComponent{
   fields: any[]
   listFields: any[]
   searchCB = (str, items) => {
-    return items.filter(item => item.Description.includes(str) || item.Name.includes(str))
+    return items.filter(item => item.Description.toLowerCase().includes(str.toLowerCase()) || item.Name.toLowerCase().includes(str.toLowerCase()))
   }
   widthArray = [
     {
