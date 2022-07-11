@@ -14,6 +14,7 @@ import { DataViewService } from '../services/data-view-service'
 import { Collection, DataView, GridDataView, GridDataViewField } from '@pepperi-addons/papi-sdk';
 import { IMappedField } from '../metadata';
 import * as uuid from 'uuid';
+import { View } from '../../../../shared/entities';
 
 
 @Component({
@@ -41,7 +42,6 @@ export class ViewsEditorComponent implements OnInit {
   currentTabIndex = 0;
   sideCardsList:Array<IPepDraggableItem> = []
   mappedFields: Array<IViewMappedField> = [];
-  currentResourceField: string = undefined
   viewKey: string
   collectionFields: Collection
   currentDataView: GridDataView
@@ -49,6 +49,7 @@ export class ViewsEditorComponent implements OnInit {
   dataViewsMap: Map<string, DataView> = new Map()
   repDataViewID: string
   currentCard: IPepProfileDataViewsCard
+  currentView: View
 
   constructor(
     private router: Router,
@@ -65,18 +66,11 @@ export class ViewsEditorComponent implements OnInit {
   ngOnInit(): void {
     const key = this.route.snapshot.paramMap.get('key')
     this.dataViewContextName = `GV_${key}_View`
-    this.viewEditor = new ViewEditor(
-      this.router,
-      this.route,
-      this.translate,
-      this.udcService,
-      this.viewsService,
-      )
-      this.initViewEditor()
-      .then(_ => {
-        this.loadCompleted = true
-        this.initCurrentCollection()
-      })
+    this.initGeneralTab(key)
+    .then(()=> {
+      this.loadCompleted = true
+      this.initCurrentCollection()
+    })
   }
   // -------------------------------------------------------------
   //                        Init Functions                        
@@ -85,20 +79,94 @@ export class ViewsEditorComponent implements OnInit {
     this.collectionFields = (await this.udcService.getCollection(this.dataSource.Resource))?.ListView?.Fields || []
     this.initSideCardsListAndFields(this.collectionFields)
   }
-  async initViewEditor(){
-    await this.viewEditor.init()
-    this.dataSource = this.viewEditor.getDataSource()
-    this.resourceName = this.dataSource.resourceName
-    this.viewName = this.viewEditor.getName()
-    this.dataView = this.viewEditor.getDataView()
+  async initGeneralTab(key){
+    this.currentView = (await this.viewsService.getItems(key))[0]
+    this.dataSource = this.convertViewToDataSource(this.currentView)
+    this.dataView = this.getDataview()
   }
+  convertViewToDataSource(viewData: View){
+    return {
+      Name: viewData.Name,
+      Description: viewData.Description,
+      Resource: viewData.Resource.Name
+    }
+  }
+  getDataview(){
+    return  {
+      Type: "Form",
+      Fields: this.getDataViewFields(),
+      Context: {
+        Name: "",
+        Profile: {},
+        ScreenSize: 'Tablet'
+      }
+    }
+  }
+  getDataViewFields(){
+    return [
+      {
+      ReadOnly: true,
+      Title: this.translate.instant('Name'),
+      Type: 'TextBox',
+      FieldID: "Name",
+      Mandatory: false,
+      Layout: {
+          Origin: {
+          X: 0,
+          Y:0
+          },
+          Size: {
+          Width: 1,
+          Height: 0
+          }
+      }
+      },
+      {
+      ReadOnly: false,
+      Title: this.translate.instant('Description'),
+      Type: 'TextBox',
+      FieldID: "Description",
+      Mandatory: false,
+      Layout: {
+          Origin: {
+          X: 1,
+          Y: 0
+          },
+          Size: {
+          Width: 1,
+          Height: 0
+          }
+      }
+      },
+      {
+      ReadOnly: true,
+      Title: this.translate.instant('Resource'),
+      Type: 'TextBox',
+      FieldID: "Resource",
+      Mandatory: false,
+      Layout: {
+          Origin: {
+          X: 0,
+          Y:1
+          },
+          Size: {
+          Width: 1,
+          Height: 0
+          }
+      }
+      }
+  ]
+  }
+
 
   onBackToList(){
     this.location.back()
   }
   //save the profile data views and the view editor
   onUpdate(){
-    this.viewEditor.update()
+    this.currentView.Description = this.dataSource.Description
+    this.viewsService.upsertItem(this.currentView)
+    // this.viewEditor.update()
   }
 
   //-----------------------------------------------------------------------

@@ -55,7 +55,7 @@ export abstract class AbstractForm{
     async getFields(){
         return [
             {
-            ReadOnly: false,
+            ReadOnly: true,
             Title: this.translate.instant('Name'),
             Type: 'TextBox',
             FieldID: "Name",
@@ -93,7 +93,7 @@ export abstract class AbstractForm{
             Title: this.translate.instant('Resource'),
             Type: 'ComboBox',
             FieldID: "Resource",
-            Mandatory: false,
+            Mandatory: true,
             OptionalValues: await this.getResourcesNames(),
             Layout: {
                 Origin: {
