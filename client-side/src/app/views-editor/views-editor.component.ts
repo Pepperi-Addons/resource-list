@@ -36,7 +36,6 @@ export class ViewsEditorComponent implements OnInit {
   };
   resourceName: string
   dataViewContextName: string
-  viewEditor: ViewEditor
   viewName: string
   editCard: boolean = false;
   currentTabIndex = 0;
