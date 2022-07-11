@@ -13,9 +13,8 @@ import { Params, Router } from '@angular/router';
 import { SelectOption, View } from '../../../../shared/entities';
 import { DataViewService } from '../services/data-view-service';
 import { PepDialogService } from '@pepperi-addons/ngx-lib/dialog';
-import { EditViewDialogComponent } from './edit-view-dialog/edit-view-dialog.component';
 import { ViewsService } from '../services/views.service';
-import { EditorsService } from '../services/editors.service';
+import { FieldEditorComponent } from '../field-editor/field-editor.component';
 
 @Component({
     selector: 'block',
@@ -217,7 +216,7 @@ export class BlockComponent implements OnInit {
                         const config = this.dialogService.getDialogConfig({
 
                         }, 'large')
-                        this.dialogService.openDialog(EditViewDialogComponent, dialogData, config).afterClosed().subscribe((value => { }))
+                        this.dialogService.openDialog(FieldEditorComponent, dialogData, config).afterClosed().subscribe((value => { }))
                       }
                   })
           }

@@ -13,7 +13,8 @@ import { DataViewService } from '../services/data-view-service';
 })
 export class DataConfigurationBlockComponent implements OnInit {
     @Input() hostObject: any;
-    datasource: DataSource;
+    datasource: DataSource
+    editorDataSource = {}
     menuItems: PepMenuItem[] = [];
     typeMap: any;
     currentResourceName: string = ""
@@ -21,15 +22,7 @@ export class DataConfigurationBlockComponent implements OnInit {
     relativeHeight: number
     item = {} 
     fields: any[] = []
-    dataView =  {
-        Type: "Form",
-        Fields: this.fields,
-        Context: {
-          Name: "",
-          Profile: {},
-          ScreenSize: 'Tablet'
-        }
-      };
+    dataView: any
     currentEditorKey: string
     @Output() hostEvents: EventEmitter<any> = new EventEmitter<any>();
 
@@ -51,19 +44,10 @@ export class DataConfigurationBlockComponent implements OnInit {
       this.currentEditorKey = this.hostObject?.configuration?.currentEditorKey
       if(this.currentEditorKey != undefined){
         const editorDataViews = await this.dataViewService.getDataViews(`GV_${this.currentEditorKey}_Editor`)
-        this.loadEditor(editorDataViews[0])
+        this.dataView = editorDataViews[0] 
+      }else{
+        this.dataView = {}
       }
-    }
-    loadEditor(editorDataView){
-      this.dataView =  {
-        Type: "Form",
-        Fields: editorDataView.Fields,
-        Context: {
-          Name: "",
-          Profile: {},
-          ScreenSize: 'Tablet'
-        }
-      };
     }
 
     // loadVariablesFromHostObject(){

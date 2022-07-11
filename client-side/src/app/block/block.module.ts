@@ -13,9 +13,8 @@ import { PepButtonModule } from '@pepperi-addons/ngx-lib/button';
 import { PepSelectModule } from '@pepperi-addons/ngx-lib/select';
 import { PepPageLayoutModule } from '@pepperi-addons/ngx-lib/page-layout';
 import { PepSizeDetectorModule } from '@pepperi-addons/ngx-lib/size-detector';
-import { EditViewDialogComponent } from './edit-view-dialog/edit-view-dialog.component';
 import { PepGenericFormModule } from '@pepperi-addons/ngx-composite-lib/generic-form';
-
+import { FieldEditorModule } from '../field-editor/field-editor.module'
 
 export const routes: Routes = [
     {
@@ -25,7 +24,7 @@ export const routes: Routes = [
 ];
 
 @NgModule({
-    declarations: [BlockComponent, EditViewDialogComponent],
+    declarations: [BlockComponent],
     imports: [
         CommonModule,
         PepGenericListModule,
@@ -37,6 +36,7 @@ export const routes: Routes = [
         PepPageLayoutModule,
         PepSizeDetectorModule,
         PepGenericFormModule,
+        FieldEditorModule,
         TranslateModule.forChild({
             loader: {
                 provide: TranslateLoader,
