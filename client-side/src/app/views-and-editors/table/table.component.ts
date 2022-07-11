@@ -25,6 +25,9 @@ export class TableComponent{
   recycleBin: boolean = false
   fields: any[]
   listFields: any[]
+  searchCB = (str, items) => {
+    return items.filter(item => item.Description.includes(str) || item.Name.includes(str))
+  }
   widthArray = [
     {
       Width: 0
@@ -55,7 +58,7 @@ export class TableComponent{
   async loadGenericList(recycleBin: boolean){
     this.fields = await this.service.getItems(undefined, recycleBin)
     this.items = this.fieldsToListItems(this.fields)
-    this.datasource = new DataSource(this.items, this.listFields, this.widthArray)
+    this.datasource = new DataSource(this.items, this.listFields, this.widthArray, this.searchCB)
   }
   fieldsToListItems(items: any[]){
     return items.map((field) => {
@@ -185,7 +188,7 @@ export class TableComponent{
               await this.service.upsertItem(field)
               this.fields = await this.service.getItems(undefined, true)
               this.items = this.fieldsToListItems(this.fields)
-              this.datasource = new DataSource(this.items, this.listFields, this.widthArray)
+              this.datasource = new DataSource(this.items, this.listFields, this.widthArray, this.searchCB)
             }
           })
         }
