@@ -17,6 +17,7 @@ export interface View{
     Resource: Resource,
     Filter?: any,
     Sorting?: Sorting,
+    Editor?: string
 }
 
 export interface Editor{

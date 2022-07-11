@@ -6,12 +6,16 @@ import { PepMenuItem } from "@pepperi-addons/ngx-lib/menu";
 import { UDC_UUID } from '../addon.config';
 import { config } from '../addon.config'
 import { ViewsCard } from '../draggable-card-fields/cards.model';
-import { GridDataView, GridDataViewColumn } from '@pepperi-addons/papi-sdk';
+import { DataView, GridDataView, GridDataViewColumn } from '@pepperi-addons/papi-sdk';
 import { DataSource } from '../data-source/data-source'
 import { PepSelectionData } from '@pepperi-addons/ngx-lib/list';
 import { Params, Router } from '@angular/router';
-import { SelectOption } from '../../../../shared/entities';
+import { SelectOption, View } from '../../../../shared/entities';
 import { DataViewService } from '../services/data-view-service';
+import { PepDialogService } from '@pepperi-addons/ngx-lib/dialog';
+import { EditViewDialogComponent } from './edit-view-dialog/edit-view-dialog.component';
+import { ViewsService } from '../services/views.service';
+import { EditorsService } from '../services/editors.service';
 
 @Component({
     selector: 'block',
@@ -41,27 +45,39 @@ export class BlockComponent implements OnInit {
     //new page block
     dropDownOfViews: SelectOption[] = []
     currentViewKey : string
-    resource: string   
+    resource: string
+    editorDataView: DataView
+    currentView: View   
 
     @Output() hostEvents: EventEmitter<any> = new EventEmitter<any>();
 
     constructor(private translate: TranslateService,
          private udcService: UDCService,
          private router: Router,
-         private dataViewService: DataViewService) {
+         private dataViewService: DataViewService,
+         private dialogService : PepDialogService,
+         private viewSerivce: ViewsService) {
           this.udcService.pluginUUID = config.AddonUUID
-          // this.actions.get = this.getActionsCallBack()
+          this.actions.get = this.getActionsCallBack()
     }
     ngOnInit(): void {
       this.loadBlock()
     }
 
-    loadBlock(){
+    async loadBlock(){
       this.viewsList = this.hostObject?.configuration?.viewsList || []
       this.resource = this.hostObject.configuration?.resource || ""
       this.createDropDownOfViews()
       this.currentViewKey = this.dropDownOfViews?.length > 0? this.dropDownOfViews[0].key : ""
+      this.currentView = (await this.viewSerivce.getItems(this.currentViewKey))[0]
+      this.editorDataView = await this.getEditorDataView(this.currentView.Editor)
       this.DisplayViewInList(this.currentViewKey)
+    }
+    async getEditorDataView(editorKey: string | undefined): Promise<DataView>{
+      if(editorKey == undefined){
+        return 
+      }
+      return (await this.dataViewService.getDataViews(`GV_${editorKey}_Editor`))[0]
     }
     async DisplayViewInList(viewKey){
       const dataViews = await this.dataViewService.getDataViewsByProfile(`GV_${viewKey}_View`, "Rep");
@@ -73,8 +89,9 @@ export class BlockComponent implements OnInit {
         this.datasource = new DataSource([],[],[])
       }
     }
-    onViewChange($event){
+    async onViewChange($event){
       this.currentViewKey = $event
+      this.currentView = (await this.viewSerivce.getItems(this.currentViewKey))[0]
       this.DisplayViewInList(this.currentViewKey)
 
     }
@@ -183,42 +200,44 @@ export class BlockComponent implements OnInit {
 //             hidden: !this.allowImport
 //           }]
 //     }
-//      getActionsCallBack(){
-//       return async (data: PepSelectionData) => {
-//           const actions = []
-//           if(data && data.rows.length == 1){
-//             actions.push({
-//                 title: this.translate.instant('Delete'),
-//                 handler: async (selectedRows) => {
-//                   await this.udcService.postItem(this.resourceName, {Key: selectedRows.rows[0], Hidden: true})
-//                   this.loadGenericList()
-//                 }
-              
-//             })
-//             if (this.hostObject?.configuration?.allowEdit) {
-//                   actions.push({
-//                       title: this.translate.instant('Edit'),
-//                       handler : async (selectedRows) => {
-//                         const key = `collection_${this.resourceName}`
-//                         const value = selectedRows.rows[0]
-//                         if(this.hostObject.configuration.currentOpenMode == 'replace'){
-//                           this.router.navigate([this.hostObject.configuration.currentSlug],
-//                             {
-//                               queryParams: {
-//                                 [key]: `\"${value}\"`
-//                               }
-//                             })
-//                         }
-//                         else{
-//                           this.sendObjectToEditor(key,value)
-//                         }
-//                       }
-//                   })
-//             }
-//           }
-//           return actions
-//       }
-//     }
+     getActionsCallBack(){
+      return async (data: PepSelectionData) => {
+          const actions = []
+          if(data && data.rows.length == 1 && this.editorDataView){
+                  actions.push({
+                      title: this.translate.instant('Edit'),
+                      handler : async (selectedRows) => {
+                        const selectedItemKey = selectedRows.rows[0]
+                        const items = this.datasource.getItems()
+                        const item = items.find(item => item.Key == selectedItemKey)
+                        const dialogData = {
+                          item : item,
+                          editorDataView: this.editorDataView
+                        }
+                        const config = this.dialogService.getDialogConfig({
+
+                        }, 'large')
+                        this.dialogService.openDialog(EditViewDialogComponent, dialogData, config).afterClosed().subscribe((value => { }))
+                      }
+                  })
+          }
+          return actions
+      }
+    }
+    // onAddClick(){
+    //   const formData = {
+    //     service : this.service
+    //   }
+    //   const config = this.dialogService.getDialogConfig({
+  
+    //   }, 'large');
+    //   config.data = new PepDialogData({
+    //       content: AddFormComponent
+    //   })
+    //   this.dialogService.openDialog(AddFormComponent, formData, config).afterClosed().subscribe((value => {
+    //     this.loadGenericList(false)
+    //   }))
+    // }
 //     sendObjectToEditor(key: string, value: string){
 //       this.hostEvents.emit({
 //         action: 'set-parameter',

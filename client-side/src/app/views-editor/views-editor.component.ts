@@ -15,6 +15,7 @@ import { Collection, DataView, GridDataView, GridDataViewField } from '@pepperi-
 import { IMappedField } from '../metadata';
 import * as uuid from 'uuid';
 import { View } from '../../../../shared/entities';
+import { EditorsService } from '../services/editors.service';
 
 
 @Component({
@@ -36,7 +37,6 @@ export class ViewsEditorComponent implements OnInit {
   };
   resourceName: string
   dataViewContextName: string
-  viewName: string
   editCard: boolean = false;
   currentTabIndex = 0;
   sideCardsList:Array<IPepDraggableItem> = []
@@ -57,43 +57,57 @@ export class ViewsEditorComponent implements OnInit {
     private translate: TranslateService,
     private udcService: UDCService,
     private location: Location,
-    private dataViewService: DataViewService
+    private dataViewService: DataViewService,
+    private editorsService: EditorsService
     ){ 
       this.udcService.pluginUUID = config.AddonUUID
     }
 
   ngOnInit(): void {
-    const key = this.route.snapshot.paramMap.get('key')
-    this.dataViewContextName = `GV_${key}_View`
-    this.initGeneralTab(key)
-    .then(()=> {
-      this.loadCompleted = true
-      this.initCurrentCollection()
-    })
+    this.initComponent()
   }
   // -------------------------------------------------------------
   //                        Init Functions                        
   // -------------------------------------------------------------
+  async initComponent(){
+    const key = this.route.snapshot.paramMap.get('key')
+    this.dataViewContextName = `GV_${key}_View`
+    await this.initGeneralTab(key)
+    this.loadCompleted = true
+    this.initCurrentCollection()
+  }
   async initCurrentCollection(){
     this.collectionFields = (await this.udcService.getCollection(this.dataSource.Resource))?.ListView?.Fields || []
     this.initSideCardsListAndFields(this.collectionFields)
   }
   async initGeneralTab(key){
     this.currentView = (await this.viewsService.getItems(key))[0]
+    const editorOptionalValues = await this.getEditorOptionalValues()
     this.dataSource = this.convertViewToDataSource(this.currentView)
-    this.dataView = this.getDataview()
+    this.dataView = this.getDataview(editorOptionalValues)
   }
-  convertViewToDataSource(viewData: View){
+  async getEditorOptionalValues(){
+    const editors = await this.editorsService.getItems()
+    const editorsOfCurrentView = editors.filter((editor) => editor.Resource.Name == this.currentView.Resource.Name)
+    return editorsOfCurrentView.map(editor => {
+      return {
+        Key: editor.Key,
+        Value: editor.Name
+      }
+    })
+  }
+  convertViewToDataSource(view: View){
     return {
-      Name: viewData.Name,
-      Description: viewData.Description,
-      Resource: viewData.Resource.Name
+      Name: view.Name,
+      Description: view.Description,
+      Resource: view.Resource.Name,
+      Editor: view.Editor
     }
   }
-  getDataview(){
+  getDataview(editorOptionalValues){
     return  {
       Type: "Form",
-      Fields: this.getDataViewFields(),
+      Fields: this.getDataViewFields(editorOptionalValues),
       Context: {
         Name: "",
         Profile: {},
@@ -101,7 +115,7 @@ export class ViewsEditorComponent implements OnInit {
       }
     }
   }
-  getDataViewFields(){
+  getDataViewFields(editorsOptoinalValues){
     return [
       {
       ReadOnly: true,
@@ -153,7 +167,25 @@ export class ViewsEditorComponent implements OnInit {
           Height: 0
           }
       }
-      }
+      },
+      {
+        ReadOnly: editorsOptoinalValues.length == 0,
+        Title: this.translate.instant('Editor'),
+        Type: 'ComboBox',
+        FieldID: "Editor",
+        Mandatory: false,
+        OptionalValues: editorsOptoinalValues,
+        Layout: {
+            Origin: {
+            X: 1,
+            Y:1
+            },
+            Size: {
+            Width: 1,
+            Height: 0
+            }
+        }
+        }
   ]
   }
 
@@ -164,8 +196,8 @@ export class ViewsEditorComponent implements OnInit {
   //save the profile data views and the view editor
   onUpdate(){
     this.currentView.Description = this.dataSource.Description
+    this.currentView.Editor = this.dataSource.Editor
     this.viewsService.upsertItem(this.currentView)
-    // this.viewEditor.update()
   }
 
   //-----------------------------------------------------------------------
