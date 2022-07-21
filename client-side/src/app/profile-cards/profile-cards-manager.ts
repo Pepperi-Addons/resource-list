@@ -62,7 +62,6 @@ export class ProfileCardsManager{
                 Mandatory: true,
                 ReadOnly: true,
             }
-
         ]
     }
     private createProfileCardsArray(): Array<IPepProfileDataViewsCard>{
