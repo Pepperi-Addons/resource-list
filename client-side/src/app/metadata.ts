@@ -7,7 +7,6 @@ export const CREATION_DATE_TIME_ID = "CreationDateTime"
 export const MODIFICATION_DATE_TIME_ID = "ModificationDateTime"
 
 export interface IMappedField {
-    id: string
     field: {
       FieldID: string
       Title: string;
@@ -36,7 +35,3 @@ export interface IFieldConvertor {
 }
 
 export type IDataViewField = GridDataViewField | BaseFormDataViewField
-
-// type WithRequiredProp<Type, Key extends keyof Type> = Omit<Type, Key> &  Required<Pick<Type, Key>>;
-
-// export type DataViewWithContext = WithRequiredProp<DataView, 'Context'>

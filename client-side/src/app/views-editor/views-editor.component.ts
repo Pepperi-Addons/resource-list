@@ -12,7 +12,6 @@ import { IViewMappedField, IDataViewField} from '../metadata'
 import { DataViewService } from '../services/data-view-service'
 import { GridDataViewField } from '@pepperi-addons/papi-sdk';
 import { IMappedField } from '../metadata';
-import * as uuid from 'uuid';
 import { View } from '../../../../shared/entities';
 import { EditorsService } from '../services/editors.service';
 import { ProfileCardsManager } from '../profile-cards/profile-cards-manager';
@@ -52,6 +51,7 @@ export class ViewsEditorComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private viewsService: ViewsService,
     private translate: TranslateService,
     private udcService: UDCService,
@@ -96,7 +96,6 @@ export class ViewsEditorComponent implements OnInit {
   }
   private draggableFieldToMappedField(draggableItem: IPepDraggableItem){
     return {
-     id: uuid.v4(),
      field: {
        FieldID: draggableItem.data.FieldID,
        Title: draggableItem.data.Title, 
@@ -224,9 +223,10 @@ export class ViewsEditorComponent implements OnInit {
 
 
   onBackToList(){
-    this.location.back()
+    this.router.navigate([".."], {
+      relativeTo: this.route
+    })
   }
-  //save the profile data views and the view editor
   onUpdate(){
     this.currentView.Description = this.dataSource.Description
     this.currentView.Editor = this.dataSource.Editor
@@ -311,7 +311,6 @@ export class ViewsEditorComponent implements OnInit {
   }
   fieldToMappedField(field: GridDataViewField, width = 10): IViewMappedField{
     return {
-      id: uuid.v4(),
       field: field,
       width: width
     }

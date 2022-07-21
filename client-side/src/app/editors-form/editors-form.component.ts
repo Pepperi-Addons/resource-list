@@ -1,21 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { Editor } from '../../../../shared/entities';
 import { config } from '../addon.config';
 import { UDCService } from '../services/udc-service';
-import { ViewsService } from '../services/views.service';
 import { EditorForm } from '../editors/editor-form'
-import {Location} from '@angular/common';
-import { IPepOption, PepSelectField } from '@pepperi-addons/ngx-lib';
+import { IPepOption } from '@pepperi-addons/ngx-lib';
 import { OpenMode } from '../../../../shared/entities'
 import { EditorsService } from '../services/editors.service';
-import { BaseFormDataViewField, Collection, CollectionField, DataView, FormDataView } from '@pepperi-addons/papi-sdk';
+import { BaseFormDataViewField, Collection, DataView, FormDataView } from '@pepperi-addons/papi-sdk';
 import { IPepProfile, IPepProfileDataViewsCard } from '@pepperi-addons/ngx-lib/profile-data-views-list';
-import { CREATION_DATE_TIME_ID, CREATION_DATE_TIME_TITLE, IDataViewField, IEditorMappedField, IFieldConvertor, IMappedField, MODIFICATION_DATE_TIME_ID, MODIFICATION_DATE_TIME_TITLE } from '../metadata';
+import { IDataViewField, IEditorMappedField, IMappedField } from '../metadata';
 import { IPepDraggableItem } from '@pepperi-addons/ngx-lib/draggable-items';
-import * as uuid from 'uuid';
-import { CdkDragDrop, CdkDragEnd, CdkDragStart, moveItemInArray } from '@angular/cdk/drag-drop';
+import { CdkDragDrop, CdkDragEnd, CdkDragStart } from '@angular/cdk/drag-drop';
 import { DataViewService } from '../services/data-view-service';
 import { ProfileCardsManager } from '../profile-cards/profile-cards-manager'
 import { ProfileService } from '../services/profile-service';
@@ -134,7 +130,7 @@ export class EditorsFormComponent implements OnInit {
     this.loadProfileCardVariables()
   }
   onBackToList(){
-    this.router.navigate(["../.."],{ relativeTo: this.route, queryParamsHandling: 'merge' },)
+    this.router.navigate(["../.."],{ relativeTo: this.route },)
   }
   onUpdate(){
     this.editorForm.update()
@@ -146,7 +142,6 @@ export class EditorsFormComponent implements OnInit {
   //mapped fields
   fieldToEditorMappedField(field: BaseFormDataViewField): IEditorMappedField{
     return {
-      id: uuid.v4(),
       field: field,
     }
   }
@@ -173,7 +168,6 @@ export class EditorsFormComponent implements OnInit {
   }
   private draggableFieldToMappedField(draggableItem: IPepDraggableItem){
      return {
-      id: uuid.v4(),
       field: {
         FieldID: draggableItem.data.FieldID,
         Title: draggableItem.data.Title, 

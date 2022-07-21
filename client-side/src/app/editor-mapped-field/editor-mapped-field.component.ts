@@ -8,7 +8,7 @@ import { IEditorMappedField, IMappedField } from '../metadata';
 })
 export class EditorMappedFieldComponent implements OnInit {
   @Input() mappedField: IEditorMappedField
-  @Output() removeClick: EventEmitter<IMappedField> = new EventEmitter();
+  @Output() removeClick: EventEmitter<string> = new EventEmitter();
 
   constructor() { }
 
@@ -16,8 +16,8 @@ export class EditorMappedFieldComponent implements OnInit {
   }
 
 
-  onDeleteMappedField($event, mappedField){
-    this.removeClick.emit(mappedField.id)
+  onDeleteMappedField(){
+    this.removeClick.emit(this.mappedField.field.FieldID)
   }
 
 }

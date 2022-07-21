@@ -201,7 +201,7 @@ export class ProfileCardsManager{
         this.currentSideCardsList = this.currentSideCardsList.filter(field => field.data.FieldID != draggableItem.data.FieldID)
     }
     removeMappedField(mappedFieldID: string){
-        const index = this.currentMappedFields.findIndex(ms => ms.id === mappedFieldID);
+        const index = this.currentMappedFields.findIndex(ms => ms.field.FieldID === mappedFieldID);
         const field = this.collectionFields.find(field => field.FieldID == this.currentMappedFields[index].field.FieldID)
         this.addFieldToSideCardsList(field!, this.currentSideCardsList)
         this.currentMappedFields.splice(index, 1);

@@ -8,14 +8,14 @@ import { IMappedField, IViewMappedField } from '../metadata'
 })
 export class MappedFieldComponent implements OnInit {
   @Input() mappedField: IViewMappedField
-  @Output() removeClick: EventEmitter<IMappedField> = new EventEmitter();
+  @Output() removeClick: EventEmitter<string> = new EventEmitter();
   width: number
   constructor() { }
 
   ngOnInit(): void {
   }
-  onDeleteMappedField($event, mappedField){
-    this.removeClick.emit(mappedField.id)
+  onDeleteMappedField(){
+    this.removeClick.emit(this.mappedField.field.FieldID)
   }
   
   onWidthChange($event){
