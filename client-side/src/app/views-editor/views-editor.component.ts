@@ -104,6 +104,7 @@ export class ViewsEditorComponent implements OnInit {
        ReadOnly: draggableItem.data.ReadOnly,
        Type: draggableItem.data.Type,
      },
+     width: 10
     };
  }
   loadProfileCardVariables(){
