@@ -80,7 +80,6 @@ export class ProfileCardsManager{
         }
         return profilesCardsArray
     }
-
     private createAvailableProfiles(): IPepProfile[]{
         const usedProfilesIDSet = new Set<string | undefined>()
         for(const [id, dataView] of this.dataViewMap.entries()){
