@@ -17,7 +17,7 @@ export class ProfileService{
         return profiles.map(profile => {
             return {
                 id: profile.InternalID.toString(),
-                name: profile.Name
+                name: profile.Name || ""
             }
         })
     }

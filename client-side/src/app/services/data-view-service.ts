@@ -22,4 +22,7 @@ export class DataViewService{
         const query = {where: `Context.Name=${key} AND Context.Profile.Name="Rep"`}
         return await this.utilitiesService.papiClient.metaData.dataViews.find(query)
     }
+    isGridDataView(dataView: DataView): dataView is GridDataView{
+        return dataView.Type == "Grid"
+    }
 }

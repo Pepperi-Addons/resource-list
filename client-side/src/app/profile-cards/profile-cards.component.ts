@@ -22,14 +22,14 @@ export class ProfileCardsComponent implements OnInit {
   defaultProfileId: number = 0
 
 
-  constructor(private profileServce: ProfileService, 
+  constructor(private profileService: ProfileService, 
     private dataViewService: DataViewService){
   }
   //------------------------------------------------------------------------------------------------------
   //------------------------------------------- Init Functions -------------------------------------------
   //------------------------------------------------------------------------------------------------------
   ngOnInit(): void {
-    Promise.all([this.profileServce.getProfiles(), this.dataViewService.getDataViews(this.dataViewContextName)])
+    Promise.all([this.profileService.getProfiles(), this.dataViewService.getDataViews(this.dataViewContextName)])
     .then(([profiles, dataViews]) => {
       this.allProfiles = profiles
       this.initDataViewsMap(dataViews)

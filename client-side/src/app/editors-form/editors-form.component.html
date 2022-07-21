@@ -57,12 +57,12 @@
             <mat-tab label = "{{'Tabs.Form' | translate}}">
                 <ng-container *ngIf="!editCard; then cardsTemplate;else cardEditor" ></ng-container>
                 <ng-template #cardsTemplate>
-                    <app-profile-cards 
-                        [dataViewContextName] = "dataViewContextName"
-                        [resourceName] = "resourceName"
-                        [dataViewsMap] = "dataViewsMap"
-                        (editCardEvent) = "onEditCardEvent($event)">
-                    </app-profile-cards>
+                    <pep-profile-data-views-list 
+                    [profileDataViewsList]="profileCardsArray"
+                    [availableProfiles]="availableProfiles"
+                    [defaultProfileId]="defaultProfileId" (dataViewEditClick)="onDataViewEditClicked($event)"
+                    (dataViewDeleteClick)="onDataViewDeleteClicked($event)" (saveNewProfileClick)="onSaveNewProfileClicked($event)">
+                    </pep-profile-data-views-list>
                 </ng-template>
                 <ng-template #cardEditor>
                     <div class="buttons-holder">
@@ -123,7 +123,7 @@
                                         (removeClick)='onCardRemoveClick($event);'
                                         class="mapped-field-container" 
                                         cdkDrag (cdkDragStarted)="onDragStart($event)" 
-                                        (cdkDragEnded)="onDragEnd($event)">
+                                        (cdkDragEnded)="onDragEnd($event)"> -->
                                         </app-editor-mapped-field>
                                     </div>
                                 </ng-template>

@@ -11,12 +11,14 @@ import { IPepOption, PepSelectField } from '@pepperi-addons/ngx-lib';
 import { OpenMode } from '../../../../shared/entities'
 import { EditorsService } from '../services/editors.service';
 import { BaseFormDataViewField, Collection, CollectionField, DataView, FormDataView } from '@pepperi-addons/papi-sdk';
-import { IPepProfileDataViewsCard } from '@pepperi-addons/ngx-lib/profile-data-views-list';
-import { CREATION_DATE_TIME_ID, CREATION_DATE_TIME_TITLE, IEditorMappedField, MODIFICATION_DATE_TIME_ID, MODIFICATION_DATE_TIME_TITLE } from '../metadata';
+import { IPepProfile, IPepProfileDataViewsCard } from '@pepperi-addons/ngx-lib/profile-data-views-list';
+import { CREATION_DATE_TIME_ID, CREATION_DATE_TIME_TITLE, IDataViewField, IEditorMappedField, IFieldConvertor, IMappedField, MODIFICATION_DATE_TIME_ID, MODIFICATION_DATE_TIME_TITLE } from '../metadata';
 import { IPepDraggableItem } from '@pepperi-addons/ngx-lib/draggable-items';
 import * as uuid from 'uuid';
 import { CdkDragDrop, CdkDragEnd, CdkDragStart, moveItemInArray } from '@angular/cdk/drag-drop';
 import { DataViewService } from '../services/data-view-service';
+import { ProfileCardsManager } from '../profile-cards/profile-cards-manager'
+import { ProfileService } from '../services/profile-service';
 
 @Component({
   selector: 'app-editors-form',
@@ -46,8 +48,12 @@ export class EditorsFormComponent implements OnInit {
   dataViewsMap: Map<string,DataView> = new Map()
   currentCard: IPepProfileDataViewsCard
   currentDataView: FormDataView
-  mappedFields: Array<IEditorMappedField> = []
+  mappedFields: Array<IMappedField> = []
   sideCardsList:Array<IPepDraggableItem> = []
+  profileCardsManager: ProfileCardsManager
+  availableProfiles: Array<IPepProfile> = [];
+  profileCardsArray: Array<IPepProfileDataViewsCard> = [];
+  defaultProfileId = 0
 
   constructor(
     private router: Router,
@@ -55,7 +61,8 @@ export class EditorsFormComponent implements OnInit {
     private editorsService: EditorsService,
     private translate: TranslateService,
     private udcService: UDCService,
-    private dataViewService: DataViewService
+    private dataViewService: DataViewService,
+    private profileService: ProfileService
     ){ 
       this.udcService.pluginUUID = config.AddonUUID
     }
@@ -85,62 +92,47 @@ export class EditorsFormComponent implements OnInit {
       this.dataSource = this.editorForm.getDataSource()
       this.dataView = this.editorForm.getDataView()
       this.resourceName = this.dataSource.Resource
-      this.initCurrentCollection()
+      this.initFormTab()
+
     })
   }
-
-  async initCurrentCollection(){
-    this.collectionFields = (await this.udcService.getCollection(this.dataSource.Resource))?.ListView?.Fields || []
-    this.initSideCardsListAndFields(this.collectionFields)
+  async initFormTab(){
+    const convertor = this.createConvertor()
+    this.profileCardsManager = new ProfileCardsManager(this.udcService,
+      this.dataViewContextName,
+      this.resourceName,
+      this.dataViewService,
+      this.profileService,
+      convertor)
+      await this.profileCardsManager.init()
+      this.loadProfileCardVariables()
   }
-  initSideCardsListAndFields(resourcefields: any){
-    this.sideCardsList = [
-      {
-        data: {
-          key: undefined,
-          FieldID: CREATION_DATE_TIME_ID,
-          Title: CREATION_DATE_TIME_TITLE,
-          Type: 'DateAndTime',
-          Mandatory: true,
-          ReadOnly: true
-        },
-        title: this.translate.instant(CREATION_DATE_TIME_TITLE)
-      },
-      {
-        data: {
-          key: undefined,
-          FieldID: MODIFICATION_DATE_TIME_ID,
-          Title: MODIFICATION_DATE_TIME_TITLE,
-          Type: 'DateAndTime',
-          Mandatory: true,
-          ReadOnly: true
-        },
-        title: this.translate.instant(MODIFICATION_DATE_TIME_TITLE)
-      }
-    ]
-    resourcefields.forEach(field => {
-      this.sideCardsList.push({
-        title: field.Title,
-        data: field
-      })
-    })
-    this.sortFields()
+  createConvertor(){
+    return {
+      mappedFieldToField: this.mappedFieldToDataViewField,
+      fieldToMappedField: this.fieldToEditorMappedField,
+      draggableItemToMappedField: this.draggableFieldToMappedField
+    }
   }
-  sortFields(){
-    this.sideCardsList.sort((a,b) => {
-      if(a.title < b.title){
-        return  -1;
-      }
-      else if(a.title > b.title){
-        return 1;
-      }
-      return 0;
-    })
+  loadProfileCardVariables():void{
+    this.availableProfiles = this.profileCardsManager.getAvailableProfiles()
+    this.profileCardsArray = this.profileCardsManager.getProfileCardsArray()
+    this.sideCardsList = this.profileCardsManager.getCurrentSideCardsList()
+    this.mappedFields = this.profileCardsManager.getCurrentMappedFields()
   }
-
-
-
-  //mapped fields
+  onDataViewEditClicked(event){
+    this.profileCardsManager.editCard(Number(event.dataViewId))
+    this.loadProfileCardVariables()
+    this.editCard = true
+  }
+  async onSaveNewProfileClicked(event){
+    await this.profileCardsManager.createCard(event)
+    this.loadProfileCardVariables()
+  }
+  async onDataViewDeleteClicked($event){
+    await this.profileCardsManager.deleteCard(Number($event.dataViewId))
+    this.loadProfileCardVariables()
+  }
   onBackToList(){
     this.router.navigate(["../.."],{ relativeTo: this.route, queryParamsHandling: 'merge' },)
   }
@@ -151,19 +143,7 @@ export class EditorsFormComponent implements OnInit {
     this.openMode = event
     this.editorForm.setOpenMode(this.openMode)
   }
-
-  onEditCardEvent(event){
-    this.currentDataView = event.dataview
-    this.currentCard = event.card
-    const mappedFieldsIDSet = new Set<string>()
-    this.mappedFields = this.currentDataView.Fields.map((field, index) => {
-      mappedFieldsIDSet.add(field.FieldID)
-      return this.fieldToEditorMappedField(field)
-    }) || []
-    this.sideCardsList = this.sideCardsList.filter(card => !mappedFieldsIDSet.has(card.data.FieldID))
-    this.editCard = true
-  }
-
+  //mapped fields
   fieldToEditorMappedField(field: BaseFormDataViewField): IEditorMappedField{
     return {
       id: uuid.v4(),
@@ -188,16 +168,11 @@ export class EditorsFormComponent implements OnInit {
     document.body.style.cursor = 'unset';
   }
   onDropField(event: CdkDragDrop<IPepDraggableItem[]>) {
-    if (event.previousContainer === event.container) {
-        moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
-    } else if (event.container.id === 'emptyDropArea') {
-        this.addNewField(event.previousContainer.data[event.previousIndex], this.mappedFields.length);
-    } else {
-        this.addNewField(event.previousContainer.data[event.previousIndex], event.currentIndex);
-    }
+    this.profileCardsManager.dropField(event)
+    this.loadProfileCardVariables()
   }
-  private addNewField(draggableItem: IPepDraggableItem, index: number) {
-    const mappedField: IEditorMappedField  = {
+  private draggableFieldToMappedField(draggableItem: IPepDraggableItem){
+     return {
       id: uuid.v4(),
       field: {
         FieldID: draggableItem.data.FieldID,
@@ -207,33 +182,21 @@ export class EditorsFormComponent implements OnInit {
         Type: draggableItem.data.Type,
       },
      };
-    this.mappedFields.splice(index, 0, mappedField);
-    this.sideCardsList = this.sideCardsList.filter(field => field.data.FieldID != draggableItem.data.FieldID)
   }
+  //remove mapped field
   onCardRemoveClick(id){
-    const index = this.mappedFields.findIndex(ms => ms.id === id);
-    if (index > -1) {
-      this.mappedFields[index].field.Title = this.mappedFields[index].field.FieldID
-      this.sideCardsList.push({
-        title: this.translate.instant(this.mappedFields[index].field.FieldID),
-        data: {key: undefined, ...this.mappedFields[index].field}
-      })
-      this.mappedFields.splice(index, 1);
-    }
+    this.profileCardsManager.removeMappedField(id)
+    this.loadProfileCardVariables()
   }
   async onSaveDataView(){
-    this.currentDataView.Fields = this.mappedFieldsToDataViewFields(this.mappedFields)
-    const dataview = await this.dataViewService.postDataView(this.currentDataView)
-    this.dataViewsMap.set(dataview.InternalID.toString(), dataview)
-    this.currentCard.dataViews[0].fields = this.mappedFields.map(field => field.field.Title)
+    await this.profileCardsManager.saveCurrentDataView()
   }
-
   mappedFieldsToDataViewFields(mappedFields: IEditorMappedField[]): BaseFormDataViewField[]{
     return mappedFields.map((mappedField, index) => {
         return this.mappedFieldToDataViewField(mappedField, index)
     })
   }
-  mappedFieldToDataViewField(mappedField: IEditorMappedField, index: number): BaseFormDataViewField{
+  mappedFieldToDataViewField(mappedField: IMappedField, index: number): IDataViewField{
     return {
       FieldID: mappedField.field.FieldID,
       Title: mappedField.field.Title,
