@@ -10,7 +10,11 @@ import { PepGenericListModule } from '@pepperi-addons/ngx-composite-lib/generic-
 import { PepMenuModule } from '@pepperi-addons/ngx-lib/menu';
 // import { PepDIMXModule } from '@pepperi-addons/ngx-composite-lib/dimx-export';
 import { PepButtonModule } from '@pepperi-addons/ngx-lib/button';
-
+import { PepSelectModule } from '@pepperi-addons/ngx-lib/select';
+import { PepPageLayoutModule } from '@pepperi-addons/ngx-lib/page-layout';
+import { PepSizeDetectorModule } from '@pepperi-addons/ngx-lib/size-detector';
+import { PepGenericFormModule } from '@pepperi-addons/ngx-composite-lib/generic-form';
+import { FieldEditorModule } from '../field-editor/field-editor.module'
 
 export const routes: Routes = [
     {
@@ -28,6 +32,11 @@ export const routes: Routes = [
         PepMenuModule,
         // PepDIMXModule,
         PepButtonModule,
+        PepSelectModule,
+        PepPageLayoutModule,
+        PepSizeDetectorModule,
+        PepGenericFormModule,
+        FieldEditorModule,
         TranslateModule.forChild({
             loader: {
                 provide: TranslateLoader,

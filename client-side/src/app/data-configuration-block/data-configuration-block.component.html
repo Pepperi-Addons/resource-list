@@ -1,4 +1,4 @@
-<div [ngStyle]="{'min-height': minHeight+'rem', 'height': relativeHeight + '%'}">
+<!-- <div [ngStyle]="{'min-height': minHeight+'rem', 'height': relativeHeight + '%'}">
     <pep-generic-form
         [dataSource]="item"
         [dataView]="dataView" 
@@ -31,4 +31,11 @@
         ></pep-button>
 </div>
 
+ -->
+ 
+ <!-- <pep-generic-form
+    [dataSource]="item"
+    [dataView]="dataView" 
+></pep-generic-form> -->
 
+<app-field-editor [dataSource] ="editorDataSource" [dataView] = "dataView"></app-field-editor>

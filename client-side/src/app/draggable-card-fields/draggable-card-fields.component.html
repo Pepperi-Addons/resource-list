@@ -13,7 +13,7 @@
     </div>
     <div class="editorCont" *ngIf = "card.showContent">
         <pep-select 
-            [value]="card.view.key"
+            [value]="card.selectedView.key"
             label="select view"
             type="select"
             [mandatory]="false"

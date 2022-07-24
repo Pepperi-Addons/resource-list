@@ -1,29 +1,23 @@
 import { Injectable } from "@angular/core";
 import { config } from "../addon.config";
 import { UtilitiesService } from './utilities-service'
-import { Editor, View } from "../../../../shared/entities"
-
-
+import { View } from "../../../../shared/entities"
+import { IDataService } from "../metadata";
 
 @Injectable({ providedIn: 'root' })
-export class ViewsService{
+export class ViewsService implements IDataService{
     pluginUUID;
     constructor(
         private utilitiesService: UtilitiesService,
     ){
     }
-    async getViews(key: string = undefined): Promise<View[]>{
-        const query = key? {where:'Key=' + '"' + key + '"'} : undefined 
+    async getItems(key: string = undefined, includeDeleted = false): Promise<View[]>{
+        const deletedQuery = includeDeleted? `Hidden=true` : `Hidden=false`
+        const query: any = key? {where:'Key=' + '"' + key + '"' + " AND " + deletedQuery} : {where: deletedQuery}
+        query.include_deleted = includeDeleted 
         return await this.utilitiesService.papiClient.addons.api.uuid(config.AddonUUID).file('api').func('views').get(query)
     }
-    async upsertView(view: View){
+    async upsertItem(view: any){
         return await this.utilitiesService.papiClient.addons.api.uuid(config.AddonUUID).file('api').func('views').post(undefined,view)
-    }
-    async getEditors(key: string = undefined){
-        const query = key? {where:'Key=' + '"' + key + '"'} : undefined
-        return await this.utilitiesService.papiClient.addons.api.uuid(config.AddonUUID).file('api').func('editors').get(query)
-    }
-    async upsertEditor(editor: Editor){
-        return await this.utilitiesService.papiClient.addons.api.uuid(config.AddonUUID).file('api').func('editors').post(undefined,editor)
     }
 }

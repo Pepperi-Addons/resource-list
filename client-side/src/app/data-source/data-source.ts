@@ -9,28 +9,34 @@ export class DataSource implements IPepGenericListDataSource{
       pager:{
       type: 'scroll'
       },
+      selectionType: 'multi'
     }
-  selectionType: 'multi'
-    constructor(private items: any[], private fields: any[], private widthArray: GridDataViewColumn[] = []){
+
+    constructor(private items: any[], private fields: any[], private widthArray: GridDataViewColumn[] = [], private searchCB = (str, items) => items ){
     }
     async init(params: { searchString?: string; filter?: any; sorting?: IPepListSortingChangeEvent; fromIndex: number; toIndex: number; }): Promise<IPepGenericListInitData> {
-        return {
-            dataView: {
-              Context: {
-                Name: '',
-                Profile: { InternalID: 0 },
-                ScreenSize: 'Landscape'
-              },
-              Type: 'Grid',
-              
-              Title: 'Block',
-              Fields: this.fields,
-              Columns: this.widthArray,
-              FrozenColumnsCount: 0,
-              MinimumColumnWidth: 0
+      const searchString = params?.searchString || ""
+      const items = this.searchCB(searchString,this.items)
+      return {
+          dataView: {
+            Context: {
+              Name: '',
+              Profile: { InternalID: 0 },
+              ScreenSize: 'Landscape'
             },
-            totalCount: this.items.length,
-            items: this.items
-          }; 
+            Type: 'Grid',
+            
+            Title: 'Block',
+            Fields: this.fields,
+            Columns: this.widthArray,
+            FrozenColumnsCount: 0,
+            MinimumColumnWidth: 0
+          },
+          totalCount: items.length,
+          items: items
+        }; 
+    }
+    getItems(){
+      return this.items
     }
 }

@@ -1,0 +1,24 @@
+<pep-textbox
+  [(value)]="mappedField.field.Title"
+  label="Label"
+  type="text"
+  [mandatory]="false"
+  [disabled]="false"
+  xAlignment="left"
+></pep-textbox>
+
+
+<pep-checkbox
+  [(value)]="mappedField.field.ReadOnly"
+  label= "Read Only"
+  type="checkbox"
+  [mandatory]="false"
+  [disabled]="false"
+  xAlignment="left"
+></pep-checkbox>
+
+<pep-button
+    class="del-button"
+    iconName="system_bin" 
+    (buttonClick)="onDeleteMappedField()">
+</pep-button>

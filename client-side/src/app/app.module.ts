@@ -10,16 +10,26 @@ import { ViewsAndEditorsModule } from './views-and-editors'
 import { TranslateLoader, TranslateModule, TranslateStore } from '@ngx-translate/core';
 import { PepAddonService } from '@pepperi-addons/ngx-lib';
 import { AppRoutingModule } from './app.route';
-import { ViewsEditorComponent } from './views-editor/views-editor.component'
+import { ViewsFormComponent } from './views-form/views-form.component'
 import { PepButtonModule } from '@pepperi-addons/ngx-lib/button';
 import { MatTabsModule } from '@angular/material/tabs';
 import { PepGenericFormModule } from '@pepperi-addons/ngx-composite-lib/generic-form';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { PepProfileDataViewsListModule } from '@pepperi-addons/ngx-lib/profile-data-views-list';
+import { PepDraggableItemsModule } from '@pepperi-addons/ngx-lib/draggable-items';
+import { DragDropModule } from '@angular/cdk/drag-drop';
+import { ViewsMappedFieldComponent } from './mapped-field/views-mapped-field.component';
+import { PepTextboxModule } from '@pepperi-addons/ngx-lib/textbox';
+import { AddFormComponent } from './add-form/add-form.component';
+import { PepDialogModule } from '@pepperi-addons/ngx-lib/dialog';
 import { EditorsFormComponent } from './editors-form/editors-form.component';
 import { PepSelectModule } from '@pepperi-addons/ngx-lib/select';
 import { PepPageLayoutModule } from '@pepperi-addons/ngx-lib/page-layout';
 import { PepTopBarModule } from '@pepperi-addons/ngx-lib/top-bar';
 import { PepSeparatorModule } from '@pepperi-addons/ngx-lib/separator';
+import { EditorMappedFieldComponent } from './editor-mapped-field/editor-mapped-field.component';
+import { PepCheckboxModule } from '@pepperi-addons/ngx-lib/checkbox';
+import { PepSizeDetectorModule } from '@pepperi-addons/ngx-lib/size-detector';
 
 @NgModule({
     imports: [
@@ -34,11 +44,20 @@ import { PepSeparatorModule } from '@pepperi-addons/ngx-lib/separator';
         PepButtonModule,
         MatTabsModule,
         PepGenericFormModule,
+        PepSelectModule,
+        PepProfileDataViewsListModule,
+        PepPageLayoutModule,
         BrowserAnimationsModule,
+        PepDraggableItemsModule,
+        DragDropModule,
+        PepTextboxModule,
+        PepDialogModule,
         PepSelectModule,
         PepPageLayoutModule,
         PepTopBarModule,
         PepSeparatorModule,
+        PepCheckboxModule,
+        PepSizeDetectorModule,
         TranslateModule.forRoot({
             loader: {
                 provide: TranslateLoader,
@@ -49,8 +68,11 @@ import { PepSeparatorModule } from '@pepperi-addons/ngx-lib/separator';
     ],
     declarations: [
         AppComponent,
-        ViewsEditorComponent,
+        ViewsFormComponent,
+        ViewsMappedFieldComponent,
+        AddFormComponent,
         EditorsFormComponent,
+        EditorMappedFieldComponent,
     ],
     providers: [
         TranslateStore

@@ -5,6 +5,7 @@ import { PepMenuItem } from '@pepperi-addons/ngx-lib/menu';
 import { TypeMap } from '../type-map';
 import { UDCService } from '../services/udc-service';
 import { config } from '../addon.config';
+import { DataViewService } from '../services/data-view-service';
 @Component({
     selector: 'data-configuration-block',
     templateUrl: './data-configuration-block.component.html',
@@ -12,7 +13,8 @@ import { config } from '../addon.config';
 })
 export class DataConfigurationBlockComponent implements OnInit {
     @Input() hostObject: any;
-    datasource: DataSource;
+    datasource: DataSource
+    editorDataSource = {}
     menuItems: PepMenuItem[] = [];
     typeMap: any;
     currentResourceName: string = ""
@@ -20,72 +22,83 @@ export class DataConfigurationBlockComponent implements OnInit {
     relativeHeight: number
     item = {} 
     fields: any[] = []
-    dataView =  {
-        Type: "Form",
-        Fields: this.fields,
-        Context: {
-          Name: "",
-          Profile: {},
-          ScreenSize: 'Tablet'
-        }
-      };
+    dataView: any
+    currentEditorKey: string
     @Output() hostEvents: EventEmitter<any> = new EventEmitter<any>();
 
-    constructor(private translate: TranslateService, private udcService: UDCService) {
+    constructor(private translate: TranslateService,
+       private udcService: UDCService,
+       private dataViewService: DataViewService) {
       this.udcService.pluginUUID = config.AddonUUID
-      this.typeMap = new TypeMap()
-      this.typeMap.init()
+      // this.typeMap = new TypeMap()
+      // this.typeMap.init()
       
     }
-    loadVariablesFromHostObject(){
-      this.currentResourceName = this.hostObject?.configuration?.currentResourceName
-      this.minHeight = this.hostObject?.configuration?.minHeight || 20
-      this.relativeHeight = this.hostObject?.configuration?.relativeHeight || 100
-    }
     ngOnInit(): void {
-      this.loadVariablesFromHostObject()
-      this.loadObjectFromPageParam()
+      this.loadBlock()
     }
-    loadObjectFromPageParam(){
-      const key = this.hostObject?.parameters? this.hostObject?.parameters[`collection_${this.currentResourceName}`] : undefined;
-      this.updateItem(key)
+    ngOnChanges($event){
+      this.loadBlock()
     }
-    ngOnChanges(e: any): void {
-      if(this.hostObject?.configuration?.cardsList){
-        this.rebuildDataview()
-      }
-      if(this.hostObject?.parameters){
-        this.loadObjectFromPageParam()
-      }
-      if(this.hostObject?.configuration?.currentResourceName && this.hostObject?.configuration?.currentResourceName != this.currentResourceName){
-        this.item = {}
-        this.loadVariablesFromHostObject()
+    async loadBlock(){
+      this.currentEditorKey = this.hostObject?.configuration?.currentEditorKey
+      if(this.currentEditorKey != undefined){
+        const editorDataViews = await this.dataViewService.getDataViews(`GV_${this.currentEditorKey}_Editor`)
+        this.dataView = editorDataViews[0] 
+      }else{
+        this.dataView = {}
       }
     }
-    rebuildDataview() : void{
-      this.dataView =  {
-        Type: "Form",
-        Fields: this.generateDataViewFormFields(),
-        Context: {
-          Name: "",
-          Profile: {},
-          ScreenSize: 'Tablet'
-        }
-      };
-    }
-    generateDataViewFormFields(): DataView[]{
-      return this.fields = this.hostObject.configuration.cardsList.map(card => card.value)
-    }
-    async updateItem(key: string){
-      const items = await this.udcService.getItems(this.currentResourceName)
-      this.item = items.find(item => item.Key == key) || {}
-      this.rebuildDataview()
-    }
-    onSaveButtonClick(){
-      this.udcService.postItem(this.currentResourceName, this.item)
-    }
-    onCancelClick(){
-      this.item = {}
-      this.rebuildDataview()
-    }
+
+    // loadVariablesFromHostObject(){
+    //   this.currentResourceName = this.hostObject?.configuration?.currentResourceName
+    //   this.minHeight = this.hostObject?.configuration?.minHeight || 20
+    //   this.relativeHeight = this.hostObject?.configuration?.relativeHeight || 100
+    // }
+    // ngOnInit(): void {
+    //   this.loadVariablesFromHostObject()
+    //   this.loadObjectFromPageParam()
+    // }
+    // loadObjectFromPageParam(){
+    //   const key = this.hostObject?.parameters? this.hostObject?.parameters[`collection_${this.currentResourceName}`] : undefined;
+    //   this.updateItem(key)
+    // }
+    // ngOnChanges(e: any): void {
+    //   if(this.hostObject?.configuration?.cardsList){
+    //     this.rebuildDataview()
+    //   }
+    //   if(this.hostObject?.parameters){
+    //     this.loadObjectFromPageParam()
+    //   }
+    //   if(this.hostObject?.configuration?.currentResourceName && this.hostObject?.configuration?.currentResourceName != this.currentResourceName){
+    //     this.item = {}
+    //     this.loadVariablesFromHostObject()
+    //   }
+    // }
+    // rebuildDataview() : void{
+    //   this.dataView =  {
+    //     Type: "Form",
+    //     Fields: this.generateDataViewFormFields(),
+    //     Context: {
+    //       Name: "",
+    //       Profile: {},
+    //       ScreenSize: 'Tablet'
+    //     }
+    //   };
+    // }
+    // generateDataViewFormFields(): DataView[]{
+    //   return this.fields = this.hostObject.configuration.cardsList.map(card => card.value)
+    // }
+    // async updateItem(key: string){
+    //   const items = await this.udcService.getItems(this.currentResourceName)
+    //   this.item = items.find(item => item.Key == key) || {}
+    //   this.rebuildDataview()
+    // }
+    // onSaveButtonClick(){
+    //   this.udcService.postItem(this.currentResourceName, this.item)
+    // }
+    // onCancelClick(){
+    //   this.item = {}
+    //   this.rebuildDataview()
+    // }
 }
