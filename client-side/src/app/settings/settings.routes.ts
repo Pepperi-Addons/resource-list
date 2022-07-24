@@ -4,6 +4,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { Routes, RouterModule } from '@angular/router';
 import { PepIconModule } from '@pepperi-addons/ngx-lib/icon';
 import { EditorsFormComponent } from '../editors-form/editors-form.component';
+import { ViewsAndEditorsComponent } from '../views-and-editors';
 import { ViewsFormComponent } from '../views-form/views-form.component';
 import { SettingsComponent } from './settings.component';
 
@@ -18,6 +19,10 @@ const routes: Routes = [
         path: '',
         component: SettingsComponent,
         children: [
+            {
+                path: '',
+                component: ViewsAndEditorsComponent
+            },
             {
                 path: 'editor/:key',
                 component: EditorsFormComponent
