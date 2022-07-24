@@ -1,8 +1,10 @@
 import { NgModule } from '@angular/core';
 import { Component } from '@angular/core';
+import { MatIconModule } from '@angular/material/icon';
 import { Routes, RouterModule } from '@angular/router';
+import { PepIconModule } from '@pepperi-addons/ngx-lib/icon';
 import { EditorsFormComponent } from '../editors-form/editors-form.component';
-import { ViewsEditorComponent } from '../views-editor/views-editor.component';
+import { ViewsFormComponent } from '../views-form/views-form.component';
 import { SettingsComponent } from './settings.component';
 
 @Component({
@@ -22,7 +24,7 @@ const routes: Routes = [
             },
             {
                 path: ':key',
-                component: ViewsEditorComponent
+                component: ViewsFormComponent
             },
             { path: '**', component: EmptyRouteComponent }
         ]
@@ -31,6 +33,8 @@ const routes: Routes = [
 
 @NgModule({
     imports: [
+        MatIconModule,
+        PepIconModule,
         RouterModule.forChild(routes),
     ],
     exports: [RouterModule]

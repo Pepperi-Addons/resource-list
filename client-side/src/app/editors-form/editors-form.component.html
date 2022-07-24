@@ -119,7 +119,6 @@
                                     <div id="mappedFields" class="mapped-fields-area" cdkDropList [cdkDropListData]="mappedFields" (cdkDropListDropped)="onDropField($event)">
                                         <app-editor-mapped-field *ngFor="let mappedField of mappedFields; let i = index" 
                                         [mappedField] = "mappedField"
-                                        [resourceFields] ="resourceFields"
                                         (removeClick)='onCardRemoveClick($event);'
                                         class="mapped-field-container" 
                                         cdkDrag (cdkDragStarted)="onDragStart($event)" 

@@ -15,13 +15,8 @@
     <draggable-card-fields
         cdkDrag 
         *ngFor="let card of viewsList"
-        [showActions] = "true"
-        [isDraggable] = "true"
-        (hostEvents)='onHostObjectChange($event)'
-        (editClick)='onCardEditClick($event);'
         (removeClick)='onCardRemoveClick($event);'
         (updateCard) = "updateConfigurationField('viewsList', this.viewsList)"
-        (insertWidth) = 'onWidthChange()'
         [card] = "card"
         [cdkDragDisabled]="false"
         style="cursor: grab;"

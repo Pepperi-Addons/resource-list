@@ -30,6 +30,8 @@ import { PepSeparatorModule } from '@pepperi-addons/ngx-lib/separator';
 import { EditorMappedFieldComponent } from './editor-mapped-field/editor-mapped-field.component';
 import { PepCheckboxModule } from '@pepperi-addons/ngx-lib/checkbox';
 import { PepSizeDetectorModule } from '@pepperi-addons/ngx-lib/size-detector';
+import { PepIconModule } from '@pepperi-addons/ngx-lib/icon';
+import { MatIconModule } from '@angular/material/icon';
 
 @NgModule({
     imports: [
@@ -43,6 +45,7 @@ import { PepSizeDetectorModule } from '@pepperi-addons/ngx-lib/size-detector';
         AppRoutingModule,
         PepButtonModule,
         MatTabsModule,
+        MatIconModule,
         PepGenericFormModule,
         PepSelectModule,
         PepProfileDataViewsListModule,
@@ -58,6 +61,7 @@ import { PepSizeDetectorModule } from '@pepperi-addons/ngx-lib/size-detector';
         PepSeparatorModule,
         PepCheckboxModule,
         PepSizeDetectorModule,
+        PepIconModule,
         TranslateModule.forRoot({
             loader: {
                 provide: TranslateLoader,
