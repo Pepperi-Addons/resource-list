@@ -6,21 +6,21 @@ export class DataViewsService {
     addonService: AddonService = new AddonService(this.client);
 
     constructor(private client: Client) {}
-    async postDefaultDataView(key: string, profileID: number, profileName:string, type: "view" | "editor"){
-        const defaultDataView = type == "view" ? this.getDefaultGridDataView(key,profileID,profileName) : this.getDefaultFormDataView(key,profileID,profileName)
-        return this.postDataView(defaultDataView)
+    async postDefaultDataView(key: string, profileID: number, type: "view" | "editor"){
+        const dataViewKey = key.replace(/-/g, '')
+        const defaultDataView = type == "view" ? this.getDefaultGridDataView(dataViewKey,profileID) : this.getDefaultFormDataView(dataViewKey,profileID)
+        return await this.postDataView(defaultDataView)
     }
     async postDataView(dataView: DataView){
         return await this.addonService.papiClient.metaData.dataViews.upsert(dataView)
     }
-    getDefaultGridDataView(key: string, profileID: number, profileName: string): GridDataView{
+    getDefaultGridDataView(key: string, profileID: number): GridDataView{
         return {
             Type: "Grid",
             Context: {
                 Name: `GV_${key}_View`,
                 ScreenSize: "Tablet",
                 Profile: {
-                    Name: profileName,
                     InternalID: profileID
                 }
             },
@@ -96,14 +96,13 @@ export class DataViewsService {
             ]
         }
     }
-    getDefaultFormDataView(key: string, profileID: number, profileName: string): FormDataView{
+    getDefaultFormDataView(key: string, profileID: number): FormDataView{
         return {
             Type: "Form",
             Context: {
                 Name: `GV_${key}_Editor`,
                 ScreenSize: "Tablet",
                 Profile: {
-                    Name: profileName,
                     InternalID: profileID
                 }
             },

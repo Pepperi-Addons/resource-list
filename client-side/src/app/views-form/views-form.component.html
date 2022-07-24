@@ -101,14 +101,14 @@
                                 </ng-template>
                                 <ng-template #notEmptyTemplate>
                                     <div id="mappedFields" class="mapped-fields-area" cdkDropList [cdkDropListData]="mappedFields" (cdkDropListDropped)="onDropField($event)">
-                                        <app-mapped-field *ngFor="let mappedField of mappedFields; let i = index" 
+                                        <app-views-mapped-field *ngFor="let mappedField of mappedFields; let i = index" 
                                         [mappedField] = "mappedField"
                                         [resourceFields] ="resourceFields"
                                         (removeClick)='onCardRemoveClick($event);'
                                         class="mapped-field-container" 
                                         cdkDrag (cdkDragStarted)="onDragStart($event)" 
                                         (cdkDragEnded)="onDragEnd($event)">
-                                        </app-mapped-field>
+                                        </app-views-mapped-field>
                                     </div>
                                 </ng-template>
                             </div>

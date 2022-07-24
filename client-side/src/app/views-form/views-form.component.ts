@@ -4,7 +4,6 @@ import { TranslateService } from '@ngx-translate/core';
 import { ViewsService } from '../services/views.service';
 import { UDCService } from '../services/udc-service';
 import { config } from '../addon.config';
-import { Location } from '@angular/common';
 import { IPepProfileDataViewsCard, IPepProfile } from '@pepperi-addons/ngx-lib/profile-data-views-list';
 import { IPepDraggableItem } from '@pepperi-addons/ngx-lib/draggable-items';
 import { CdkDragDrop, CdkDragEnd, CdkDragStart } from '@angular/cdk/drag-drop';
@@ -19,12 +18,12 @@ import { ProfileService } from '../services/profile-service';
 
 
 @Component({
-  selector: 'app-views-editor',
-  templateUrl: './views-editor.component.html',
-  styleUrls: ['./views-editor.component.scss']
+  selector: 'app-views-form',
+  templateUrl: './views-form.component.html',
+  styleUrls: ['./views-form.component.scss']
 })
 
-export class ViewsEditorComponent implements OnInit {
+export class ViewsFormComponent implements OnInit {
   dataSource: any = {}
   dataView: any = {
     Type: "Form",
@@ -55,7 +54,6 @@ export class ViewsEditorComponent implements OnInit {
     private viewsService: ViewsService,
     private translate: TranslateService,
     private udcService: UDCService,
-    private location: Location,
     private dataViewService: DataViewService,
     private editorsService: EditorsService,
     private profileService: ProfileService
@@ -70,7 +68,8 @@ export class ViewsEditorComponent implements OnInit {
   //                        Init Functions                        
   // -------------------------------------------------------------
   async initComponent(){
-    const key = this.route.snapshot.paramMap.get('key')
+    const key = this.route.snapshot.paramMap.get('key')?.replace(/-/g, '')
+
     this.dataViewContextName = `GV_${key}_View`
     await this.initGeneralTab(key)
     await this.initFormTab()

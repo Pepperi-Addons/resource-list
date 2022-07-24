@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { config } from "../addon.config";
 import { UtilitiesService } from './utilities-service'
-import { Editor, View } from "../../../../shared/entities"
+import { View } from "../../../../shared/entities"
 import { IDataService } from "../metadata";
 
 @Injectable({ providedIn: 'root' })

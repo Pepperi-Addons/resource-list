@@ -1,10 +1,15 @@
 import { AddonDataScheme } from "@pepperi-addons/papi-sdk"
 
-export const viewsTable: AddonDataScheme = {
-    Name: "Views_Table",
+export const viewsSchema: ItemSchema = {
+    Name: "views",
     Type: 'meta_data',
 }
-export const editorsTable: AddonDataScheme = {
-    Name: "Editors_Table",
+export const editorSchema: ItemSchema = {
+    Name: "editors",
     Type: 'meta_data',
+}
+
+export type ItemSchema = {
+    Name: string,
+    Type: "meta_data"
 }

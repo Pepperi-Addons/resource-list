@@ -72,7 +72,7 @@ export class BlockComponent implements OnInit {
       this.editorDataView = await this.getEditorDataView(this.currentView.Editor)
       this.DisplayViewInList(this.currentViewKey)
     }
-    async getEditorDataView(editorKey: string | undefined): Promise<DataView>{
+    async getEditorDataView(editorKey: string | undefined): Promise<DataView | undefined>{
       if(editorKey == undefined){
         return 
       }

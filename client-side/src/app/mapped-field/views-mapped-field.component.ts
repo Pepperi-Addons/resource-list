@@ -1,13 +1,13 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { IMappedField, IViewMappedField } from '../metadata'
+import { IMappedField } from '../metadata'
 
 @Component({
-  selector: 'app-mapped-field',
-  templateUrl: './mapped-field.component.html',
-  styleUrls: ['./mapped-field.component.scss']
+  selector: 'app-views-mapped-field',
+  templateUrl: './views-mapped-field.component.html',
+  styleUrls: ['./views-mapped-field.component.scss']
 })
-export class MappedFieldComponent implements OnInit {
-  @Input() mappedField: IViewMappedField
+export class ViewsMappedFieldComponent implements OnInit {
+  @Input() mappedField: IMappedField
   @Output() removeClick: EventEmitter<string> = new EventEmitter();
   width: number
   constructor() { }

@@ -1,4 +1,4 @@
-import { Component, Inject, Injector, Input, OnInit } from '@angular/core';
+import { Component, Injector, Input, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
@@ -9,10 +9,10 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 export class FieldEditorComponent implements OnInit {
   @Input() dataView
   @Input() dataSource
-  private dialogref = null
+  private dialogRef = null
   private dialogData
   constructor(private injector: Injector) {
-    this.dialogref = this.injector.get(MatDialogRef, null)
+    this.dialogRef = this.injector.get(MatDialogRef, null)
     this.dialogData = this.injector.get(MAT_DIALOG_DATA, null)
    }
 

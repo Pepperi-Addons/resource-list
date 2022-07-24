@@ -10,7 +10,7 @@ import { ViewsAndEditorsModule } from './views-and-editors'
 import { TranslateLoader, TranslateModule, TranslateStore } from '@ngx-translate/core';
 import { PepAddonService } from '@pepperi-addons/ngx-lib';
 import { AppRoutingModule } from './app.route';
-import { ViewsEditorComponent } from './views-editor/views-editor.component'
+import { ViewsFormComponent } from './views-form/views-form.component'
 import { PepButtonModule } from '@pepperi-addons/ngx-lib/button';
 import { MatTabsModule } from '@angular/material/tabs';
 import { PepGenericFormModule } from '@pepperi-addons/ngx-composite-lib/generic-form';
@@ -18,11 +18,10 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { PepProfileDataViewsListModule } from '@pepperi-addons/ngx-lib/profile-data-views-list';
 import { PepDraggableItemsModule } from '@pepperi-addons/ngx-lib/draggable-items';
 import { DragDropModule } from '@angular/cdk/drag-drop';
-import { MappedFieldComponent } from './mapped-field/mapped-field.component';
+import { ViewsMappedFieldComponent } from './mapped-field/views-mapped-field.component';
 import { PepTextboxModule } from '@pepperi-addons/ngx-lib/textbox';
 import { AddFormComponent } from './add-form/add-form.component';
 import { PepDialogModule } from '@pepperi-addons/ngx-lib/dialog';
-import { ProfileCardsComponent } from './profile-cards/profile-cards.component';
 import { EditorsFormComponent } from './editors-form/editors-form.component';
 import { PepSelectModule } from '@pepperi-addons/ngx-lib/select';
 import { PepPageLayoutModule } from '@pepperi-addons/ngx-lib/page-layout';
@@ -69,10 +68,9 @@ import { PepSizeDetectorModule } from '@pepperi-addons/ngx-lib/size-detector';
     ],
     declarations: [
         AppComponent,
-        ViewsEditorComponent,
-        MappedFieldComponent,
+        ViewsFormComponent,
+        ViewsMappedFieldComponent,
         AddFormComponent,
-        ProfileCardsComponent,
         EditorsFormComponent,
         EditorMappedFieldComponent,
     ],
