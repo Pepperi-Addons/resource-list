@@ -61,10 +61,14 @@
                 (saveCardsList) = 'onSaveCardsList()'
                 (keySelected) = 'onSelectKey($event)'
                 (readOnlyChanged) = 'onReadOnlyChange($event)'
-                [configuration]="configuration"
                 [card] = "card"
                 [resourceFields] = "currentResourceFields"
                 cdkDrag [cdkDragDisabled]="false"  style="cursor: grab;" (cdkDragStarted)="onDragStart($event)" (cdkDragEnded)="onDragEnd($event)">
+                
+                <!-- 
+                    TODO: This property is not exist
+                    [configuration]="configuration" 
+                -->
             </data-configuration-draggable-fields>
         </div>
 

@@ -12,6 +12,7 @@ import { ViewsEditorComponent } from './views-editor/views-editor.component';
 })
 export class EmptyRouteComponent {}
 
+// Old - used in angular 12.
 const routes: Routes = [
     {
         path: `settings/:addon_uuid`,

@@ -2,3 +2,4 @@
 var_sk
 **/node_modules/**
 **/build/**
+client-side/.angular/cache/
