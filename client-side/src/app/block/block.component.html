@@ -1,36 +1,31 @@
-<div [ngStyle]="{'min-height': minHeight+'rem', 'height': relativeHeight + '%'}">
+<pep-page-layout>
     <ng-container pep-main-area>
         <pep-generic-list class="generic-list" 
             [showTopBar]="true"
             [dataSource]="datasource"
             [showSearch]="true"
             [title] = "title"
+            [inline] ="false"
             [actions] = "actions"
             uuidMapping = 'Key'>
             <ng-container right-buttons>
-                <pep-button
-                    value="Add"
-                    styleType="strong"
-                    styleStateType="system"
-                    sizeType="md"
-                    classNames=""
-                    [disabled]="!allowEdit"
-                    iconPosition="end"
-                    [visible]="true"
-                    (buttonClick)="onAddClick()"
-                ></pep-button>
-                <pep-menu
-                    classNames="pep-spacing-element"
-                    iconName="system_menu"
-                    type="action"
-                    styleType="strong"
-                    sizeType="md"
-                    [items]="menuItems"
-                    [disabled]="menuDisabled"
-                    (menuItemClick)="onMenuItemClick($event)"
-                ></pep-menu>
+                <pep-select *ngIf="dropDownOfViews.length > 0"
+                    class="buttons-holder"
+                    [value]="currentViewKey"
+                    label="select view"
+                    type="select"
+                    [mandatory]="false"
+                    xAlignment="left"
+                    [options]="dropDownOfViews"
+                    [showTitle]="true"
+                    (valueChange)="onViewChange($event)"
+                    [emptyOption]="false"
+                ></pep-select>
             </ng-container>
         </pep-generic-list>
     </ng-container>
-</div>
+</pep-page-layout>
+
+<pep-size-detector></pep-size-detector>
+
 <!-- <pep-dimx #dimx [DIMXAddonUUID]="udcUUID" [DIMXResource]="resourceName" (DIMXProcessDone)='onDIMXProcessDone($event);'></pep-dimx> -->

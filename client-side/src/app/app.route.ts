@@ -3,8 +3,7 @@ import { Component } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { EditorsFormComponent } from './editors-form/editors-form.component';
 import { ViewsAndEditorsComponent } from './views-and-editors/views-and-editors.component';
-import { ViewsEditorComponent } from './views-editor/views-editor.component';
-
+import { ViewsFormComponent } from './views-form/views-form.component';
 // Important for single spa
 @Component({
     selector: 'app-empty-route',
@@ -30,7 +29,7 @@ const routes: Routes = [
             },
             {
                 path: 'views_and_editors/:key',
-                component: ViewsEditorComponent
+                component: ViewsFormComponent
             },
 
         ]

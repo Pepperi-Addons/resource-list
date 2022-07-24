@@ -1,4 +1,4 @@
-<mat-tab-group #tabgroup class="editor-tabs">
+<!-- <mat-tab-group #tabgroup class="editor-tabs">
     <mat-tab label= "General">
         <div>
             <pep-select 
@@ -75,4 +75,35 @@
         <pep-button class="add-content-button" value="Add" styleType="regular"  
         (buttonClick)="addNewCardClick()"></pep-button>
     </mat-tab>
-</mat-tab-group>
+</mat-tab-group> -->
+
+<pep-page-layout>
+    <ng-container pep-top-area>
+        <h3><b>{{"Resource" | translate}}</b></h3>
+        <pep-select 
+            [value]="currentResourceName"
+            label="Resource"
+            type="select"
+            [mandatory]="false"
+            [disabled]="false"
+            xAlignment="left"
+            [options]="resourcesOptions"
+            [showTitle]="true"
+            (valueChange)="onResourceChanged($event)"
+            [emptyOption]="false"
+        ></pep-select>
+        <pep-select 
+            [value]="currentEditorKey"
+            label="Editor"
+            type="select"
+            [mandatory]="false"
+            [disabled]="currentResourceName == undefined || editorsOptions.length == 0"
+            xAlignment="left"
+            [options]="editorsOptions"
+            [showTitle]="true"
+            (valueChange)="onEditorChanged($event)"
+            [emptyOption]="false"
+        ></pep-select>
+    </ng-container>
+</pep-page-layout>
+<pep-size-detector></pep-size-detector>

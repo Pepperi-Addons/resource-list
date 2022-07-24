@@ -30,16 +30,16 @@ export class BlockEditorComponent implements OnInit {
     ngOnInit(): void {
         this.resource = this.hostObject.configuration.resource;
         this.viewsList = this.hostObject.configuration.viewsList || []
-        Promise.all([this.setResourcesNames(), this.viewsService.getViews()])
+        Promise.all([this.setResourcesNames(), this.viewsService.getItems()])
         .then(([_, views]) => {
-            if(!this.resource){
-                this.resource = this.resourcesNames.length > 0? this.resourcesNames[0].value : undefined
-            }
+            this.resource = this.hostObject.configuration.resource ||  this.resourcesNames.length > 0? this.resourcesNames[0].value : undefined
             this.views = views
             this.setViewsByResource();
+            this.updateConfigurationField('resource', this.resource)
         })   
     }
     setViewsByResource(){
+        this.currentViews = []
         this.views.forEach(view =>{
             if(view.Resource?.Name == this.resource){
                 this.currentViews.push({
@@ -59,6 +59,8 @@ export class BlockEditorComponent implements OnInit {
         this.resource = $event
         this.setViewsByResource()
         this.updateConfigurationField('resource', this.resource)
+        this.updateConfigurationField('viewsList', this.viewsList)
+        
     }
     updateConfigurationField(key: string,value: any){
         this.hostEvents.emit({

@@ -8,6 +8,11 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { PepGenericListModule } from '@pepperi-addons/ngx-composite-lib/generic-list';
 import { PepButtonModule } from '@pepperi-addons/ngx-lib/button';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { PepTopBarModule } from '@pepperi-addons/ngx-lib/top-bar';
+import { PepPageLayoutModule } from '@pepperi-addons/ngx-lib/page-layout';
+import { TableComponent } from './table/table.component';
+import { PepMenuModule } from '@pepperi-addons/ngx-lib/menu';
+import { PepSizeDetectorModule } from '@pepperi-addons/ngx-lib/size-detector';
 
 
 
@@ -20,7 +25,8 @@ export const routes: Routes = [
 
 @NgModule({
   declarations: [
-    ViewsAndEditorsComponent
+    ViewsAndEditorsComponent,
+    TableComponent,
   ],
   imports: [
     CommonModule,
@@ -28,6 +34,10 @@ export const routes: Routes = [
     PepGenericListModule,
     PepButtonModule,
     BrowserAnimationsModule,
+    PepTopBarModule,
+    PepPageLayoutModule,
+    PepMenuModule,
+    PepSizeDetectorModule,
     TranslateModule.forChild({
       loader: {
           provide: TranslateLoader,

@@ -4,6 +4,7 @@ import { ViewsService } from '../services/views.service';
 import { UDCService } from '../services/udc-service';
 import { config } from '../addon.config';
 import { View, Editor } from '../../../../shared/entities';
+import { IDataService } from '../metadata';
 
 export abstract class AbstractForm{
     dataSource: any
@@ -22,7 +23,7 @@ export abstract class AbstractForm{
         private route: ActivatedRoute,
         private translate: TranslateService,
         private udcService: UDCService,
-        protected service: ViewsService,
+        protected service: IDataService,
         ){ 
           this.udcService.pluginUUID = config.AddonUUID
         }
@@ -54,7 +55,7 @@ export abstract class AbstractForm{
     async getFields(){
         return [
             {
-            ReadOnly: false,
+            ReadOnly: true,
             Title: this.translate.instant('Name'),
             Type: 'TextBox',
             FieldID: "Name",
@@ -92,7 +93,7 @@ export abstract class AbstractForm{
             Title: this.translate.instant('Resource'),
             Type: 'ComboBox',
             FieldID: "Resource",
-            Mandatory: false,
+            Mandatory: true,
             OptionalValues: await this.getResourcesNames(),
             Layout: {
                 Origin: {

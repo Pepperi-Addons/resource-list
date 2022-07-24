@@ -17,7 +17,7 @@ export class EditorForm extends AbstractForm{
         }
       }
       else{
-        const contentArray = await this.service.getEditors(key)
+        const contentArray = await this.service.getItems(key)
         if(contentArray && contentArray.length > 0)
         {
           this.content = contentArray[0]
@@ -32,7 +32,7 @@ export class EditorForm extends AbstractForm{
     this.content.Description = this.dataSource.Description
     this.content.Resource.Name = this.dataSource.Resource
     this.content.OpenMode = this.dataSource.OpenMode
-    this.service.upsertEditor(this.content)
+    this.service.upsertItem(this.content)
   }
   setOpenMode(openMode: OpenMode){
     this.dataSource.OpenMode = openMode

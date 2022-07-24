@@ -12,7 +12,7 @@ import {ICardEditor, ViewsCard } from './cards.model';
 export class DraggableCardFieldsComponent {
     @Input() card: ViewsCard
     @Output() removeClick: EventEmitter<any> = new EventEmitter();
-    @Output() updateCard: EventEmitter<ViewsCard> = new EventEmitter
+    @Output() updateCard: EventEmitter<ViewsCard> = new EventEmitter()
 
     constructor(private translate: TranslateService) {
 

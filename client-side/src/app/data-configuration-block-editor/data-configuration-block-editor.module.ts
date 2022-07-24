@@ -12,6 +12,8 @@ import { DataConfigurationDraggableFieldsModule } from '../data-configuration-dr
 import { PepButtonModule } from '@pepperi-addons/ngx-lib/button';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { PepTextboxModule } from '@pepperi-addons/ngx-lib/textbox';
+import { PepPageLayoutModule } from '@pepperi-addons/ngx-lib/page-layout';
+import { PepSizeDetectorModule } from '@pepperi-addons/ngx-lib/size-detector';
 
 import { UDCService } from '../services/udc-service';
 import { UtilitiesService } from '../services/utilities-service';
@@ -35,6 +37,8 @@ export const routes: Routes = [
         PepButtonModule,
         DragDropModule,
         PepTextboxModule,
+        PepPageLayoutModule,
+        PepSizeDetectorModule,
         TranslateModule.forChild({
             loader: {
                 provide: TranslateLoader,
