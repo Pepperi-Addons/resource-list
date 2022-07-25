@@ -7,9 +7,10 @@
     </ng-container>
     <!--Body-->
     <ng-container pep-main-area>
-        <mat-tab-group #tabgroup class="editor-tabs">
+        <mat-tab-group #tabGroup class="editor-tabs" (selectedTabChange)="onTabChanged($event)">
             <mat-tab label= "{{'Tabs.Views' | translate}}">
                 <app-table 
+                    *ngIf="currentTab == 0"
                     name = "Views"
                     [service] = "viewsService"
                     editRoute = "">
@@ -17,6 +18,7 @@
             </mat-tab>
             <mat-tab label= "{{'Tabs.Editors' | translate}}">
                 <app-table 
+                    *ngIf="currentTab == 1"
                     name = "Editors"
                     [service] ="editorsService"
                     editRoute="editor/">

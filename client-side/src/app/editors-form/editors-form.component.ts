@@ -15,6 +15,7 @@ import { CdkDragDrop, CdkDragEnd, CdkDragStart } from '@angular/cdk/drag-drop';
 import { DataViewService } from '../services/data-view-service';
 import { ProfileCardsManager } from '../profile-cards/profile-cards-manager'
 import { ProfileService } from '../services/profile-service';
+import { PepDialogActionsType, PepDialogData, PepDialogService } from '@pepperi-addons/ngx-lib/dialog';
 
 @Component({
   selector: 'app-editors-form',
@@ -58,7 +59,8 @@ export class EditorsFormComponent implements OnInit {
     private translate: TranslateService,
     private udcService: UDCService,
     private dataViewService: DataViewService,
-    private profileService: ProfileService
+    private profileService: ProfileService,
+    private dialogService: PepDialogService
     ){ 
       this.udcService.pluginUUID = config.AddonUUID
     }
@@ -134,6 +136,15 @@ export class EditorsFormComponent implements OnInit {
   }
   onUpdate(){
     this.editorForm.update()
+    this.showDialog('Update', 'UpdateDialogMSG', 'close')
+  }
+  showDialog(title: string, content: string, actionsType: PepDialogActionsType){
+    const dataMsg = new PepDialogData({
+      title: this.translate.instant(title),
+      actionsType: actionsType,
+      content: this.translate.instant(content)
+    });
+    this.dialogService.openDefaultDialog(dataMsg)
   }
   onOpenModeChange(event){
     this.openMode = event
@@ -184,6 +195,7 @@ export class EditorsFormComponent implements OnInit {
   }
   async onSaveDataView(){
     await this.profileCardsManager.saveCurrentDataView()
+    this.showDialog('Save', 'SaveDialogMSG', 'close')
   }
   mappedFieldsToDataViewFields(mappedFields: IEditorMappedField[]): BaseFormDataViewField[]{
     return mappedFields.map((mappedField, index) => {

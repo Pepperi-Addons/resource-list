@@ -233,7 +233,6 @@ export class ViewsFormComponent implements OnInit {
     this.currentView.Editor = this.dataSource.Editor
     this.viewsService.upsertItem(this.currentView)
     this.showDialog("Update", "UpdateDialogMSG", 'close')
-
   }
   //-----------------------------------------------------------------------
   //                        Profiles Cards Function

@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { ViewsService } from '../services/views.service'
 import {EditorsService} from '../services/editors.service'
+import { MatTabGroup } from '@angular/material/tabs';
 
 @Component({
   selector: 'app-views-and-editors',
@@ -9,10 +10,15 @@ import {EditorsService} from '../services/editors.service'
 })
 export class ViewsAndEditorsComponent implements OnInit {
 
+  // @ViewChild('tabgroup', {read: MatTabGroup}) set tabGroup(element)
+  currentTab: 0 | 1 = 0
   constructor(
     public viewsService: ViewsService,
     public editorsService: EditorsService,
     ) {}
     ngOnInit(): void {
+    }
+    onTabChanged($event){
+      this.currentTab = $event.index
     }
 }
