@@ -75,7 +75,7 @@ export class EditorsFormComponent implements OnInit {
       }
     ]
     const key = this.route.snapshot.paramMap.get('key')
-    this.dataViewContextName = `GV_${key}_Editor`
+    this.dataViewContextName = `GV_${key.replace(/-/g, '')}_Editor`
     this.editorForm = new EditorForm(
       this.router,
       this.route,

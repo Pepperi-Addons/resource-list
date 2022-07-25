@@ -68,9 +68,9 @@ export class ViewsFormComponent implements OnInit {
   //                        Init Functions                        
   // -------------------------------------------------------------
   async initComponent(){
-    const key = this.route.snapshot.paramMap.get('key')?.replace(/-/g, '')
+    const key = this.route.snapshot.paramMap.get('key')
 
-    this.dataViewContextName = `GV_${key}_View`
+    this.dataViewContextName = `GV_${key.replace(/-/g, '')}_View`
     await this.initGeneralTab(key)
     await this.initFormTab()
     this.loadCompleted = true
@@ -112,7 +112,7 @@ export class ViewsFormComponent implements OnInit {
     this.mappedFields = this.profileCardsManager.getCurrentMappedFields()
   }
   async initGeneralTab(key){
-    this.currentView = (await this.viewsService.getItems(key))[0]
+    this.currentView = (await this.viewsService.getItems(key))[0]    
     const editorOptionalValues = await this.getEditorOptionalValues()
     this.dataSource = this.convertViewToDataSource(this.currentView)
     this.dataView = this.getDataview(editorOptionalValues)
