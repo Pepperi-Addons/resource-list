@@ -1,4 +1,4 @@
-<pep-page-layout>
+<pep-page-layout >
     <!--Header-->
     <ng-container pep-top-area>
         <h2> {{'Views_And_Editors_Title' | translate}} </h2>
@@ -17,10 +17,10 @@
             </mat-tab>
             <mat-tab label= "{{'Tabs.Editors' | translate}}">
                 <app-table 
-                name = "Editors"
-                [service] ="editorsService"
-                editRoute="editor/">
-            </app-table>
+                    name = "Editors"
+                    [service] ="editorsService"
+                    editRoute="editor/">
+                </app-table>
             </mat-tab>
         </mat-tab-group>
     </ng-container>

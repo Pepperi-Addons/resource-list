@@ -128,7 +128,7 @@ export class TableComponent{
         content: AddFormComponent
     })
     this.dialogService.openDialog(AddFormComponent, formData, config).afterClosed().subscribe((value => {
-      this.loadGenericList(false)
+      this.router.navigate([`${this.editRoute}${value.Key}`], { relativeTo: this.route })
     }))
   }
   menuItemClick($event){

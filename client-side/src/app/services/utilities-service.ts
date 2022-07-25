@@ -1,7 +1,6 @@
 import { Injectable } from "@angular/core";
 import { PepJwtHelperService, PepSessionService } from "@pepperi-addons/ngx-lib";
 import { PapiClient } from "@pepperi-addons/papi-sdk";
-import { SLUGS_UUID } from "../addon.config";
 
 
 @Injectable({ providedIn: 'root' })
@@ -25,8 +24,5 @@ export class UtilitiesService{
         const accessToken = this.session.getIdpToken();
         this.parsedToken = jwtService.decodeToken(accessToken);
         this.papiBaseURL = this.parsedToken["pepperi.baseurl"]
-    }
-    async getSlugs(){
-        return await this.papiClient.addons.api.uuid(SLUGS_UUID).file('api').func('slugs').get()
     }
 }

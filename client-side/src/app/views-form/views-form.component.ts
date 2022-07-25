@@ -70,7 +70,7 @@ export class ViewsFormComponent implements OnInit {
   async initComponent(){
     const key = this.route.snapshot.paramMap.get('key')
 
-    this.dataViewContextName = `GV_${key.replace(/-/g, '')}_View`
+    this.dataViewContextName = `GV_${key?.replace(/-/g, '')}_View`
     await this.initGeneralTab(key)
     await this.initFormTab()
     this.loadCompleted = true

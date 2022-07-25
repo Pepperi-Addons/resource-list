@@ -16,6 +16,8 @@ import { PepImageModule } from '@pepperi-addons/ngx-lib/image';
 import { PepSelectModule } from '@pepperi-addons/ngx-lib/select';
 import { PepTextareaModule } from '@pepperi-addons/ngx-lib/textarea';
 import { DraggableCardFieldsComponent } from './draggable-card-fields.component'
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 
 
 @NgModule({
@@ -24,17 +26,12 @@ import { DraggableCardFieldsComponent } from './draggable-card-fields.component'
         CommonModule,
         DragDropModule,
         PepButtonModule,
-        PepMenuModule,
-        PepTextboxModule,
         PepCheckboxModule,
         PepSliderModule,
         PepNgxLibModule,
         PepSelectModule,
-        MatDialogModule,
         PepGroupButtonsModule,
-        PepColorModule,
         PepImageModule,
-        PepTextareaModule,
         TranslateModule.forChild({
             loader: {
                 provide: TranslateLoader,

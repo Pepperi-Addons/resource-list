@@ -3,7 +3,6 @@ import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angu
 import { UDCService } from '../services/udc-service';
 import { PepMenuItem } from "@pepperi-addons/ngx-lib/menu";
 // import { DIMXComponent } from '@pepperi-addons/ngx-composite-lib/dimx-export';
-import { UDC_UUID } from '../addon.config';
 import { config } from '../addon.config'
 import { ViewsCard } from '../draggable-card-fields/cards.model';
 import { DataView, GridDataView, GridDataViewColumn } from '@pepperi-addons/papi-sdk';
@@ -27,7 +26,6 @@ export class BlockComponent implements OnInit {
     datasource: DataSource
     resourceName: string
     title: string
-    udcUUID: string = UDC_UUID
     menuItems: PepMenuItem[] = []
     allowExport: boolean = false;
     allowImport: boolean = false;
@@ -52,10 +50,9 @@ export class BlockComponent implements OnInit {
 
     constructor(private translate: TranslateService,
          private udcService: UDCService,
-         private router: Router,
          private dataViewService: DataViewService,
          private dialogService : PepDialogService,
-         private viewSerivce: ViewsService) {
+         private viewService: ViewsService) {
           this.udcService.pluginUUID = config.AddonUUID
           this.actions.get = this.getActionsCallBack()
     }
@@ -68,8 +65,8 @@ export class BlockComponent implements OnInit {
       this.resource = this.hostObject.configuration?.resource || ""
       this.createDropDownOfViews()
       this.currentViewKey = this.dropDownOfViews?.length > 0? this.dropDownOfViews[0].key : ""
-      this.currentView = (await this.viewSerivce.getItems(this.currentViewKey))[0]
-      this.editorDataView = await this.getEditorDataView(this.currentView.Editor)
+      this.currentView = (await this.viewService.getItems(this.currentViewKey))[0]
+      this.editorDataView =this.currentView?.Editor? await this.getEditorDataView(this.currentView.Editor) : undefined
       this.DisplayViewInList(this.currentViewKey)
     }
     async getEditorDataView(editorKey: string | undefined): Promise<DataView | undefined>{
@@ -90,16 +87,14 @@ export class BlockComponent implements OnInit {
     }
     async onViewChange($event){
       this.currentViewKey = $event
-      this.currentView = (await this.viewSerivce.getItems(this.currentViewKey))[0]
+      this.currentView = (await this.viewService.getItems(this.currentViewKey))[0]
       this.DisplayViewInList(this.currentViewKey)
-
     }
     async loadList(dataView: GridDataView){
       const fields = dataView.Fields || []
       const columns = dataView.Columns || []
       const items = await this.udcService.getItems(this.resource)
       this.datasource = new DataSource(items, fields,columns)
-
     }
 
     createDropDownOfViews(){
