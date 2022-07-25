@@ -24,7 +24,7 @@ export class BlockComponent implements OnInit {
     // @ViewChild('dimx') dimx:DIMXComponent | undefined;
     @Input() hostObject: any;
     datasource: DataSource
-    resourceName: string
+    // resourceName: string
     title: string
     menuItems: PepMenuItem[] = []
     allowExport: boolean = false;
@@ -207,12 +207,18 @@ export class BlockComponent implements OnInit {
                     const item = items.find(item => item.Key == selectedItemKey)
                     const dialogData = {
                       item : item,
-                      editorDataView: this.editorDataView
+                      editorDataView: this.editorDataView,
+                      resourceName: this.resource
                     }
                     const config = this.dialogService.getDialogConfig({
   
                     }, 'large')
-                    this.dialogService.openDialog(FieldEditorComponent, dialogData, config).afterClosed().subscribe((value => { }))
+                    this.dialogService.openDialog(FieldEditorComponent, dialogData, config).afterClosed().subscribe((async isUpdatePreformed => {
+                      if(isUpdatePreformed){
+                        this.items = await this.udcService.getItems(this.resource)
+                        this.datasource = new DataSource(this.items, this.datasource.getFields(), this.datasource.getColumns())
+                      }
+                     }))
                   }
               })
             }
@@ -225,8 +231,8 @@ export class BlockComponent implements OnInit {
                 if(item){
                   item.Hidden = true
                   await this.udcService.postItem(this.resource,item)
-                  const items = await this.udcService.getItems(this.resource)
-                  this.datasource = new DataSource(items, this.datasource.getFields(),this.datasource.getColumns())
+                  this.items = await this.udcService.getItems(this.resource)
+                  this.datasource = new DataSource(this.items, this.datasource.getFields(),this.datasource.getColumns())
                 }
               }
             })
