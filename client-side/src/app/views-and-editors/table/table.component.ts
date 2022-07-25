@@ -25,7 +25,6 @@ export class TableComponent{
   recycleBin: boolean = false
   fields: any[]
   listFields: any[]
-  itemsLoaded:boolean = false;
   searchCB = (str, items) => {
     return items.filter(item => item.Description.toLowerCase().includes(str.toLowerCase()) || item.Name.toLowerCase().includes(str.toLowerCase()))
   }
@@ -81,7 +80,7 @@ export class TableComponent{
               handler: async (selectedRows) => {
                 this.router.navigate([`${this.editRoute}${selectedRows.rows[0]}`], {relativeTo : this.route})
               }
-          },
+          }, 
           {
             title: this.translate.instant('Delete'),
             handler: async (selectedRows) => {
@@ -129,7 +128,9 @@ export class TableComponent{
         content: AddFormComponent
     })
     this.dialogService.openDialog(AddFormComponent, formData, config).afterClosed().subscribe((value => {
-      this.router.navigate([`${this.editRoute}${value.Key}`], { relativeTo: this.route })
+      if(value && value.Key){
+        this.router.navigate([`${this.editRoute}${value.Key}`], { relativeTo: this.route })
+      }
     }))
   }
   menuItemClick($event){

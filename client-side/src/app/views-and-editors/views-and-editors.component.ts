@@ -10,8 +10,7 @@ import { MatTabGroup } from '@angular/material/tabs';
 })
 export class ViewsAndEditorsComponent implements OnInit {
 
-  // @ViewChild('tabgroup', {read: MatTabGroup}) set tabGroup(element)
-  currentTab: 0 | 1 = 0
+  currentTabIndex: 0 | 1 = 0
   constructor(
     public viewsService: ViewsService,
     public editorsService: EditorsService,
@@ -19,6 +18,6 @@ export class ViewsAndEditorsComponent implements OnInit {
     ngOnInit(): void {
     }
     onTabChanged($event){
-      this.currentTab = $event.index
+      this.currentTabIndex = $event.index
     }
 }

@@ -2,14 +2,12 @@ import { Injectable } from "@angular/core";
 import { config } from "../addon.config";
 import { UtilitiesService } from './utilities-service'
 import { IDataService } from '../metadata'
-import { Route, Router } from "@angular/router";
 
 @Injectable({ providedIn: 'root' })
 export class EditorsService implements IDataService{
     pluginUUID;
     constructor(
         private utilitiesService: UtilitiesService,
-        private router: Router
     ){
     }
     async getItems(key: string = undefined, includeDeleted = false){
