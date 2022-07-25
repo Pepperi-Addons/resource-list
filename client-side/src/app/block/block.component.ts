@@ -197,23 +197,39 @@ export class BlockComponent implements OnInit {
      getActionsCallBack(){
       return async (data: PepSelectionData) => {
           const actions = []
-          if(data && data.rows.length == 1 && this.editorDataView){
-                  actions.push({
-                      title: this.translate.instant('Edit'),
-                      handler : async (selectedRows) => {
-                        const selectedItemKey = selectedRows.rows[0]
-                        const items = this.datasource.getItems()
-                        const item = items.find(item => item.Key == selectedItemKey)
-                        const dialogData = {
-                          item : item,
-                          editorDataView: this.editorDataView
-                        }
-                        const config = this.dialogService.getDialogConfig({
-
-                        }, 'large')
-                        this.dialogService.openDialog(FieldEditorComponent, dialogData, config).afterClosed().subscribe((value => { }))
-                      }
-                  })
+          if(data && data.rows.length == 1){
+            if(this.editorDataView){
+              actions.push({
+                  title: this.translate.instant('Edit'),
+                  handler : async (selectedRows) => {
+                    const selectedItemKey = selectedRows.rows[0]
+                    const items = this.datasource.getItems()
+                    const item = items.find(item => item.Key == selectedItemKey)
+                    const dialogData = {
+                      item : item,
+                      editorDataView: this.editorDataView
+                    }
+                    const config = this.dialogService.getDialogConfig({
+  
+                    }, 'large')
+                    this.dialogService.openDialog(FieldEditorComponent, dialogData, config).afterClosed().subscribe((value => { }))
+                  }
+              })
+            }
+            actions.push({
+              title: this.translate.instant('Delete'),
+              handler: async (selectedRows) => {
+                const selectedItemKey = selectedRows.rows[0]
+                const items = this.datasource.getItems()
+                const item = items.find(item => item.Key == selectedItemKey)
+                if(item){
+                  item.Hidden = true
+                  await this.udcService.postItem(this.resource,item)
+                  const items = await this.udcService.getItems(this.resource)
+                  this.datasource = new DataSource(items, this.datasource.getFields(),this.datasource.getColumns())
+                }
+              }
+            })
           }
           return actions
       }
