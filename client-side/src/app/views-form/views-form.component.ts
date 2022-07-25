@@ -15,6 +15,7 @@ import { View } from '../../../../shared/entities';
 import { EditorsService } from '../services/editors.service';
 import { ProfileCardsManager } from '../profile-cards/profile-cards-manager';
 import { ProfileService } from '../services/profile-service';
+import { PepDialogActionsType, PepDialogData, PepDialogService } from '@pepperi-addons/ngx-lib/dialog';
 
 
 @Component({
@@ -56,7 +57,8 @@ export class ViewsFormComponent implements OnInit {
     private udcService: UDCService,
     private dataViewService: DataViewService,
     private editorsService: EditorsService,
-    private profileService: ProfileService
+    private profileService: ProfileService,
+    private dialogService: PepDialogService
     ){ 
       this.udcService.pluginUUID = config.AddonUUID
     }
@@ -230,8 +232,9 @@ export class ViewsFormComponent implements OnInit {
     this.currentView.Description = this.dataSource.Description
     this.currentView.Editor = this.dataSource.Editor
     this.viewsService.upsertItem(this.currentView)
-  }
+    this.showDialog("Update", "UpdateDialogMSG", 'close')
 
+  }
   //-----------------------------------------------------------------------
   //                        Profiles Cards Function
   //-----------------------------------------------------------------------
@@ -281,6 +284,15 @@ export class ViewsFormComponent implements OnInit {
   }
   async onSaveDataView(){
     await this.profileCardsManager.saveCurrentDataView()
+    this.showDialog('Save', "SaveDialogMSG", 'close')
+  }
+  showDialog(title: string, content: string, actionsType: PepDialogActionsType){
+    const dataMsg = new PepDialogData({
+      title: this.translate.instant(title),
+      actionsType: actionsType,
+      content: this.translate.instant(content)
+    });
+    this.dialogService.openDefaultDialog(dataMsg)
   }
   mappedFieldToDataViewField(mappedField: IMappedField, index: number): IDataViewField{
     return {
