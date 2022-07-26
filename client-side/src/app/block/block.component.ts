@@ -240,6 +240,20 @@ export class BlockComponent implements OnInit {
           return actions
       }
     }
+    onNewButtonClicked(){
+      const dialogData = {
+        item : {},
+        editorDataView: this.editorDataView,
+        resourceName: this.resource
+      }
+      const config = this.dialogService.getDialogConfig({
+      }, 'large')
+      this.dialogService.openDialog(FieldEditorComponent, dialogData, config).afterClosed().subscribe((async isUpdatePreformed => {
+        if(isUpdatePreformed){
+          this.items = await this.udcService.getItems(this.resource)
+          this.datasource = new DataSource(this.items, this.datasource.getFields(), this.datasource.getColumns())
+        }}))
+    }
     // onAddClick(){
     //   const formData = {
     //     service : this.service

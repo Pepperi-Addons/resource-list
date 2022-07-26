@@ -25,5 +25,8 @@
     "DeleteMessage": "Are you sure you want to delete this list?",
     "Resource": "Resource",
     "UpdateDialogMSG": "Successfully updated",
-    "SaveDialogMSG": "Saved successfully"
+    "SaveDialogMSG": "Saved successfully",
+    "New": "New",
+    "Error": "Error",
+    "UpdateErrorMSG": "There is an error occurred, please fill mandatory fields before you update."
 }
