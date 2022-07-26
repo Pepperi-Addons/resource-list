@@ -16,7 +16,7 @@ import { EditorsService } from '../services/editors.service';
 import { ProfileCardsManager } from '../profile-cards/profile-cards-manager';
 import { ProfileService } from '../services/profile-service';
 import { PepDialogActionsType, PepDialogData, PepDialogService } from '@pepperi-addons/ngx-lib/dialog';
-import { UtilitiesService } from '../services/utilities-service';
+
 
 
 @Component({
@@ -60,7 +60,6 @@ export class ViewsFormComponent implements OnInit {
     private editorsService: EditorsService,
     private profileService: ProfileService,
     private dialogService: PepDialogService,
-    private utilitiesService: UtilitiesService
     ){ 
       this.udcService.pluginUUID = config.AddonUUID
     }
@@ -234,7 +233,15 @@ export class ViewsFormComponent implements OnInit {
     this.currentView.Description = this.dataSource.Description
     this.currentView.Editor = this.dataSource.Editor
     this.viewsService.upsertItem(this.currentView)
-    this.utilitiesService.showDialog("Update", "UpdateDialogMSG", 'close')
+    this.showDialog("Update", "UpdateDialogMSG", 'close')
+  }
+  showDialog(title: string, content: string, actionsType: PepDialogActionsType){
+    const dataMsg = new PepDialogData({
+      title: this.translate.instant(title),
+      actionsType: actionsType,
+      content: this.translate.instant(content)
+    });
+    this.dialogService.openDefaultDialog(dataMsg)
   }
   //-----------------------------------------------------------------------
   //                        Profiles Cards Function
@@ -285,15 +292,7 @@ export class ViewsFormComponent implements OnInit {
   }
   async onSaveDataView(){
     await this.profileCardsManager.saveCurrentDataView()
-    this.utilitiesService.showDialog('Save', "SaveDialogMSG", 'close')
-  }
-  showDialog(title: string, content: string, actionsType: PepDialogActionsType){
-    const dataMsg = new PepDialogData({
-      title: this.translate.instant(title),
-      actionsType: actionsType,
-      content: this.translate.instant(content)
-    });
-    this.dialogService.openDefaultDialog(dataMsg)
+    this.showDialog('Save', "SaveDialogMSG", 'close')
   }
   mappedFieldToDataViewField(mappedField: IMappedField, index: number): IDataViewField{
     return {

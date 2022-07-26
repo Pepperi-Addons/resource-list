@@ -22,20 +22,11 @@ export class UtilitiesService{
     constructor(
         public session:  PepSessionService,
         public jwtService: PepJwtHelperService,
-        private translate: TranslateService,
-        private dialogService: PepDialogService
     ){
         const accessToken = this.session.getIdpToken();
         this.parsedToken = jwtService.decodeToken(accessToken);
         this.papiBaseURL = this.parsedToken["pepperi.baseurl"]
     }
-    showDialog(title: string, content: string, actionsType: PepDialogActionsType){
-        const dataMsg = new PepDialogData({
-          title: this.translate.instant(title),
-          actionsType: actionsType,
-          content: this.translate.instant(content)
-        });
-        this.dialogService.openDefaultDialog(dataMsg)
-      }
+
 
 }
