@@ -32,10 +32,10 @@ export class BlockEditorComponent implements OnInit {
         this.viewsList = this.hostObject.configuration.viewsList || []
         Promise.all([this.setResourcesNames(), this.viewsService.getItems()])
         .then(([_, views]) => {
-            this.resource = this.hostObject.configuration.resource ||  this.resourcesNames.length > 0? this.resourcesNames[0].value : undefined
+            this.resource = this.resource ||  (this.resourcesNames.length > 0? this.resourcesNames[0].value : undefined)
+            this.updateConfigurationField('resource', this.resource)
             this.views = views
             this.setViewsByResource();
-            this.updateConfigurationField('resource', this.resource)
         })   
     }
     setViewsByResource(){

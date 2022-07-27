@@ -20,7 +20,6 @@ export class FieldEditorComponent implements OnInit {
   ngOnInit(): void {
     this.dataSource = this.dataSource || this.dialogData?.item 
     this.dataView = this.dataView || this.dialogData?.editorDataView
-    debugger
   }
   async onUpdateButtonClick(){
     await this.udcService.postItem(this.dialogData.resourceName, this.dataSource)
