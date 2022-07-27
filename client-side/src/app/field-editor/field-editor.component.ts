@@ -29,7 +29,6 @@ export class FieldEditorComponent implements OnInit {
     this.dataView = this.dataView || this.dialogData?.editorDataView
   }
   async onUpdateButtonClick(){
-    debugger
     try{
       await this.udcService.postItem(this.dialogData.resourceName, this.dataSource)
     }
