@@ -15,6 +15,12 @@ import { PepPageLayoutModule } from '@pepperi-addons/ngx-lib/page-layout';
 import { PepSizeDetectorModule } from '@pepperi-addons/ngx-lib/size-detector';
 import { PepGenericFormModule } from '@pepperi-addons/ngx-composite-lib/generic-form';
 import { FieldEditorModule } from '../field-editor/field-editor.module'
+import { UtilitiesService } from '../services/utilities-service';
+import { UDCService } from '../services/udc-service';
+import { DataViewService } from '../services/data-view-service';
+import { MatDialogModule } from '@angular/material/dialog';
+import { PepDialogModule } from '@pepperi-addons/ngx-lib/dialog';
+import { ViewsService } from '../services/views.service';
 
 export const routes: Routes = [
     {
@@ -35,7 +41,9 @@ export const routes: Routes = [
         PepSelectModule,
         PepPageLayoutModule,
         PepSizeDetectorModule,
+        MatDialogModule,
         PepGenericFormModule,
+        PepDialogModule,
         FieldEditorModule,
         TranslateModule.forChild({
             loader: {
@@ -50,7 +58,13 @@ export const routes: Routes = [
     exports: [BlockComponent],
     providers: [
         TranslateStore,
-        TranslateService
+        TranslateService,
+        UtilitiesService,
+        UDCService,
+        DataViewService,
+        ViewsService,
+        
+
     ]
 })
 export class BlockModule {
