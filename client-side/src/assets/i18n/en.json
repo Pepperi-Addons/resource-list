@@ -1,27 +1,29 @@
 {
-    "Block_Title": "Block title",
+    "BlockTitle": "Block title",
     "Tabs": {
         "General": "General",
         "Views": "Views",
         "Editors": "Editors",
         "Form": "Form"
     },
-    "Views_Editor_First_Line" : "Define the new content",
-    "Views_And_Editors_Title" : "Views & Editors",
-    "Views_List_Title" : "Views",
-    "Editors_List_Title": "Editors",
+    "ViewsEditorFirstLine" : "Define the new content",
+    "ViewsAndEditorsTitle" : "Views & Editors",
+    "ViewsListTitle" : "Views",
+    "EditorsListTitle": "Editors",
     "Add": "Add",
     "Update": "Update",
-    "Back_To_List": "Back to list",
-    "Block_Editor_First_Line": "Select the views to show. If no views are define then all the views allowed to the user profile will be shown",
-    "Empty_Mapped_Field_Area": "Drop field here",
+    "BackToList": "Back to list",
+    "BlockEditorFirstLine": "Select the views to show. If no views are define then all the views allowed to the user profile will be shown",
+    "EmptyMappedFieldArea": "Drop field here",
 
-    "MAPPED_FIELDS_TITLE": "Mapped fields",
-    "MAPPED_FIELDS_TITLE_HINT": "(Drag & Drop anywhere from available fields)",
-    "CREATION_DATE_TIME": "CreationDateTime",
+    "MappedFieldsTitle": "Mapped fields",
+    "MappedFieldsTitleHint": "(Drag & Drop anywhere from available fields)",
+    "CreationDateTime": "CreationDateTime",
     "Design": "Design",
-    "Same-page": "replace the current page",
+    "SamePage": "replace the current page",
     "Popup": "open as popup",
     "DeleteMessage": "Are you sure you want to delete this list?",
-    "Resource": "Resource"
+    "Resource": "Resource",
+    "UpdateDialogMSG": "Successfully updated",
+    "SaveDialogMSG": "Saved successfully"
 }

@@ -1,7 +1,8 @@
 import { Injectable } from "@angular/core";
+import { TranslateService } from "@ngx-translate/core";
 import { PepJwtHelperService, PepSessionService } from "@pepperi-addons/ngx-lib";
+import { PepDialogActionsType, PepDialogData, PepDialogService } from "@pepperi-addons/ngx-lib/dialog";
 import { PapiClient } from "@pepperi-addons/papi-sdk";
-import { SLUGS_UUID } from "../addon.config";
 
 
 @Injectable({ providedIn: 'root' })
@@ -20,13 +21,23 @@ export class UtilitiesService{
     }
     constructor(
         public session:  PepSessionService,
-        public jwtService: PepJwtHelperService
+        public jwtService: PepJwtHelperService,
+        private translate: TranslateService,
+        private dialogService: PepDialogService
     ){
         const accessToken = this.session.getIdpToken();
         this.parsedToken = jwtService.decodeToken(accessToken);
         this.papiBaseURL = this.parsedToken["pepperi.baseurl"]
     }
-    async getSlugs(){
-        return await this.papiClient.addons.api.uuid(SLUGS_UUID).file('api').func('slugs').get()
-    }
+
+    showDialog(title: string, content: string, actionsType: PepDialogActionsType){
+        const dataMsg = new PepDialogData({
+          title: this.translate.instant(title),
+          actionsType: actionsType,
+          content: this.translate.instant(content)
+        });
+        this.dialogService.openDefaultDialog(dataMsg)
+      }
+
+
 }

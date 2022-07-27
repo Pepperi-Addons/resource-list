@@ -15,6 +15,8 @@ import { View } from '../../../../shared/entities';
 import { EditorsService } from '../services/editors.service';
 import { ProfileCardsManager } from '../profile-cards/profile-cards-manager';
 import { ProfileService } from '../services/profile-service';
+import { UtilitiesService } from '../services/utilities-service';
+
 
 
 @Component({
@@ -56,7 +58,8 @@ export class ViewsFormComponent implements OnInit {
     private udcService: UDCService,
     private dataViewService: DataViewService,
     private editorsService: EditorsService,
-    private profileService: ProfileService
+    private profileService: ProfileService,
+    private utilitiesService: UtilitiesService
     ){ 
       this.udcService.pluginUUID = config.AddonUUID
     }
@@ -70,7 +73,7 @@ export class ViewsFormComponent implements OnInit {
   async initComponent(){
     const key = this.route.snapshot.paramMap.get('key')
 
-    this.dataViewContextName = `GV_${key.replace(/-/g, '')}_View`
+    this.dataViewContextName = `GV_${key?.replace(/-/g, '')}_View`
     await this.initGeneralTab(key)
     await this.initFormTab()
     this.loadCompleted = true
@@ -230,6 +233,7 @@ export class ViewsFormComponent implements OnInit {
     this.currentView.Description = this.dataSource.Description
     this.currentView.Editor = this.dataSource.Editor
     this.viewsService.upsertItem(this.currentView)
+    this.utilitiesService.showDialog("Update", "UpdateDialogMSG", 'close')
   }
 
   //-----------------------------------------------------------------------
@@ -281,6 +285,7 @@ export class ViewsFormComponent implements OnInit {
   }
   async onSaveDataView(){
     await this.profileCardsManager.saveCurrentDataView()
+    this.utilitiesService.showDialog('Save', "SaveDialogMSG", 'close')
   }
   mappedFieldToDataViewField(mappedField: IMappedField, index: number): IDataViewField{
     return {
@@ -301,7 +306,7 @@ export class ViewsFormComponent implements OnInit {
           Y: 0
         }
       }
-    }
+  }
   }
   mappedFieldsToDataViewFields(mappedFields: IMappedField[]): GridDataViewField[]{
     return mappedFields.map((mappedField, index) => {

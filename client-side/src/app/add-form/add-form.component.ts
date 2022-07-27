@@ -127,8 +127,9 @@ export class AddFormComponent implements OnInit {
         AddonUUID: ""
       }
     }
-    await this.service.upsertItem(field)
-    this.dialogRef.close()
+    const result = await this.service.upsertItem(field)
+    this.dialogRef.close(result)
+    
   }
   onCancel(){
     this.dialogRef.close();
