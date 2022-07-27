@@ -36,14 +36,11 @@ export const routes: Routes = [
         PepGenericListModule,
         PepNgxCompositeLibModule,
         PepMenuModule,
-        // PepDIMXModule,
         PepButtonModule,
         PepSelectModule,
         PepPageLayoutModule,
         PepSizeDetectorModule,
-        MatDialogModule,
         PepGenericFormModule,
-        PepDialogModule,
         FieldEditorModule,
         TranslateModule.forChild({
             loader: {
