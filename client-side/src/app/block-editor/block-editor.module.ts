@@ -11,6 +11,10 @@ import { PepCheckboxModule } from '@pepperi-addons/ngx-lib/checkbox';
 import { DraggableCardFieldsModule } from '../draggable-card-fields/draggable-card-fields.module';
 import { PepButtonModule } from '@pepperi-addons/ngx-lib/button';
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { UDCService } from '../services/udc-service';
+import { PepDialogModule } from '@pepperi-addons/ngx-lib/dialog';
+import { UtilitiesService } from '../services/utilities-service';
+import { ViewsService } from '../services/views.service';
 
 @NgModule({
     declarations: [BlockEditorComponent],
@@ -23,6 +27,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
         PepCheckboxModule,
         DraggableCardFieldsModule,
         PepButtonModule,
+        PepDialogModule,
         TranslateModule.forChild({
             loader: {
                 provide: TranslateLoader,
@@ -35,6 +40,10 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
     exports: [BlockEditorComponent],
     providers: [
         TranslateStore,
+        TranslateService,
+        UDCService, 
+        UtilitiesService,
+        ViewsService,
     ]
 })
 export class BlockEditorModule {
