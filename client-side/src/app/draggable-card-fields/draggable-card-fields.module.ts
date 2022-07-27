@@ -11,8 +11,14 @@ import { PepGroupButtonsModule } from '@pepperi-addons/ngx-lib/group-buttons';
 import { PepImageModule } from '@pepperi-addons/ngx-lib/image';
 import { PepSelectModule } from '@pepperi-addons/ngx-lib/select';
 import { DraggableCardFieldsComponent } from './draggable-card-fields.component'
+import { pepIconArrowDown, pepIconArrowUp, PepIconRegistry, pepIconSystemBin, pepIconSystemMove } from '@pepperi-addons/ngx-lib/icon';
 
-
+const pepIcons = [
+    pepIconSystemMove,
+    pepIconSystemBin,
+    pepIconArrowDown,
+    pepIconArrowUp
+];
 @NgModule({
     declarations: [DraggableCardFieldsComponent],
     imports: [
@@ -39,8 +45,11 @@ import { DraggableCardFieldsComponent } from './draggable-card-fields.component'
 export class DraggableCardFieldsModule { 
     constructor(
         translate: TranslateService,
-        private pepAddonService: PepAddonService
+        private pepAddonService: PepAddonService,
+        private pepIconRegistry: PepIconRegistry,
     ) {
         this.pepAddonService.setDefaultTranslateLang(translate);
+        this.pepIconRegistry.registerIcons(pepIcons);
+
     }
 }

@@ -62,7 +62,7 @@ export class BlockComponent implements OnInit {
 
     async loadBlock(){
       this.viewsList = this.hostObject?.configuration?.viewsList || []
-      this.resource = this.hostObject.configuration?.resource || ""
+      this.resource = this.hostObject.configuration?.resource || "" 
       this.createDropDownOfViews()
       this.currentViewKey = this.dropDownOfViews?.length > 0? this.dropDownOfViews[0].key : ""
       this.currentView = (await this.viewService.getItems(this.currentViewKey))[0]

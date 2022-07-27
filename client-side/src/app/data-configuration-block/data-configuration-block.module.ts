@@ -9,6 +9,11 @@ import { DataConfigurationBlockComponent } from './data-configuration-block.comp
 import { PepGenericFormModule } from '@pepperi-addons/ngx-composite-lib/generic-form';
 import { PepButtonModule } from '@pepperi-addons/ngx-lib/button';
 import { FieldEditorModule } from '../field-editor/field-editor.module';
+import { UDCService } from '../services/udc-service';
+import { UtilitiesService } from '../services/utilities-service';
+import { PepDialogModule } from '@pepperi-addons/ngx-lib/dialog';
+import { MatDialogModule } from '@angular/material/dialog';
+import { DataViewService } from '../services/data-view-service';
 
 
 export const routes: Routes = [
@@ -25,7 +30,9 @@ export const routes: Routes = [
         PepNgxCompositeLibModule,
         PepGenericFormModule,
         PepButtonModule,
+        PepDialogModule,
         FieldEditorModule,
+        MatDialogModule,
         TranslateModule.forChild({
             loader: {
                 provide: TranslateLoader,
@@ -39,7 +46,11 @@ export const routes: Routes = [
     exports: [DataConfigurationBlockComponent],
     providers: [
         TranslateStore,
-        TranslateService
+        TranslateService,
+        UtilitiesService,
+        DataViewService,
+        UDCService
+        
     ]
 })
 export class DataConfigurationBlockModule {
