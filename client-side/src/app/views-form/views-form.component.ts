@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { ViewsService } from '../services/views.service';
-import { UDCService } from '../services/udc-service';
+import { GenericResourceService } from '../services/generic-resource-service';
 import { config } from '../addon.config';
 import { IPepProfileDataViewsCard, IPepProfile } from '@pepperi-addons/ngx-lib/profile-data-views-list';
 import { IPepDraggableItem } from '@pepperi-addons/ngx-lib/draggable-items';
@@ -55,13 +55,13 @@ export class ViewsFormComponent implements OnInit {
     private router: Router,
     private viewsService: ViewsService,
     private translate: TranslateService,
-    private udcService: UDCService,
+    private genericResourceService: GenericResourceService,
     private dataViewService: DataViewService,
     private editorsService: EditorsService,
     private profileService: ProfileService,
     private utilitiesService: UtilitiesService
     ){ 
-      this.udcService.pluginUUID = config.AddonUUID
+      this.genericResourceService.pluginUUID = config.AddonUUID
     }
 
   ngOnInit(): void {
@@ -80,7 +80,7 @@ export class ViewsFormComponent implements OnInit {
   }
   async initFormTab(){
     const convertor = this.createConvertor()
-    this.profileCardsManager = new ProfileCardsManager(this.udcService,
+    this.profileCardsManager = new ProfileCardsManager(this.genericResourceService,
       this.dataViewContextName,
       this.dataSource.Resource,
       this.dataViewService,

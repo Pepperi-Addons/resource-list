@@ -1,6 +1,6 @@
 import { TranslateService } from '@ngx-translate/core';
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { UDCService } from '../services/udc-service';
+import { GenericResourceService } from '../services/generic-resource-service';
 import { PepMenuItem } from "@pepperi-addons/ngx-lib/menu";
 // import { DIMXComponent } from '@pepperi-addons/ngx-composite-lib/dimx-export';
 import { config } from '../addon.config'
@@ -49,11 +49,11 @@ export class BlockComponent implements OnInit {
     @Output() hostEvents: EventEmitter<any> = new EventEmitter<any>();
 
     constructor(private translate: TranslateService,
-         private udcService: UDCService,
+         private genericResourceService: GenericResourceService,
          private dataViewService: DataViewService,
          private dialogService : PepDialogService,
          private viewService: ViewsService) {
-          this.udcService.pluginUUID = config.AddonUUID
+          this.genericResourceService.pluginUUID = config.AddonUUID
           this.actions.get = this.getActionsCallBack()
     }
     ngOnInit(): void {
@@ -93,7 +93,7 @@ export class BlockComponent implements OnInit {
     async loadList(dataView: GridDataView){
       const fields = dataView.Fields || []
       const columns = dataView.Columns || []
-      const items = await this.udcService.getItems(this.resource)
+      const items = await this.genericResourceService.getItems(this.resource)
       this.datasource = new DataSource(items, fields,columns)
     }
 
@@ -215,7 +215,7 @@ export class BlockComponent implements OnInit {
                     }, 'large')
                     this.dialogService.openDialog(FieldEditorComponent, dialogData, config).afterClosed().subscribe((async isUpdatePreformed => {
                       if(isUpdatePreformed){
-                        this.items = await this.udcService.getItems(this.resource)
+                        this.items = await this.genericResourceService.getItems(this.resource)
                         this.datasource = new DataSource(this.items, this.datasource.getFields(), this.datasource.getColumns())
                       }
                      }))
@@ -230,8 +230,8 @@ export class BlockComponent implements OnInit {
                 const item = items.find(item => item.Key == selectedItemKey)
                 if(item){
                   item.Hidden = true
-                  await this.udcService.postItem(this.resource,item)
-                  this.items = await this.udcService.getItems(this.resource)
+                  await this.genericResourceService.postItem(this.resource,item)
+                  this.items = await this.genericResourceService.getItems(this.resource)
                   this.datasource = new DataSource(this.items, this.datasource.getFields(),this.datasource.getColumns())
                 }
               }
@@ -250,7 +250,7 @@ export class BlockComponent implements OnInit {
       }, 'large')
       this.dialogService.openDialog(FieldEditorComponent, dialogData, config).afterClosed().subscribe((async isUpdatePreformed => {
         if(isUpdatePreformed){
-          this.items = await this.udcService.getItems(this.resource)
+          this.items = await this.genericResourceService.getItems(this.resource)
           this.datasource = new DataSource(this.items, this.datasource.getFields(), this.datasource.getColumns())
         }}))
     }

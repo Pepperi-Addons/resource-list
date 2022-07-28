@@ -2,9 +2,6 @@ import { TranslateService } from '@ngx-translate/core';
 import { Component, EventEmitter, Inject, Input, OnInit, Output } from '@angular/core';
 import { DataSource } from '../data-source/data-source';
 import { PepMenuItem } from '@pepperi-addons/ngx-lib/menu';
-import { TypeMap } from '../type-map';
-import { UDCService } from '../services/udc-service';
-import { config } from '../addon.config';
 import { DataViewService } from '../services/data-view-service';
 @Component({
     selector: 'data-configuration-block',
@@ -27,9 +24,7 @@ export class DataConfigurationBlockComponent implements OnInit {
     @Output() hostEvents: EventEmitter<any> = new EventEmitter<any>();
 
     constructor(private translate: TranslateService,
-       private udcService: UDCService,
        private dataViewService: DataViewService) {
-      this.udcService.pluginUUID = config.AddonUUID
       // this.typeMap = new TypeMap()
       // this.typeMap.init()
       

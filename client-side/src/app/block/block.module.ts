@@ -16,10 +16,8 @@ import { PepSizeDetectorModule } from '@pepperi-addons/ngx-lib/size-detector';
 import { PepGenericFormModule } from '@pepperi-addons/ngx-composite-lib/generic-form';
 import { FieldEditorModule } from '../field-editor/field-editor.module'
 import { UtilitiesService } from '../services/utilities-service';
-import { UDCService } from '../services/udc-service';
+import { GenericResourceService } from '../services/generic-resource-service';
 import { DataViewService } from '../services/data-view-service';
-import { MatDialogModule } from '@angular/material/dialog';
-import { PepDialogModule } from '@pepperi-addons/ngx-lib/dialog';
 import { ViewsService } from '../services/views.service';
 
 export const routes: Routes = [
@@ -57,7 +55,7 @@ export const routes: Routes = [
         TranslateStore,
         TranslateService,
         UtilitiesService,
-        UDCService,
+        GenericResourceService,
         DataViewService,
         ViewsService,
         

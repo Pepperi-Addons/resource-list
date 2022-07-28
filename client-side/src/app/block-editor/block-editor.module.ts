@@ -11,7 +11,7 @@ import { PepCheckboxModule } from '@pepperi-addons/ngx-lib/checkbox';
 import { DraggableCardFieldsModule } from '../draggable-card-fields/draggable-card-fields.module';
 import { PepButtonModule } from '@pepperi-addons/ngx-lib/button';
 import { DragDropModule } from '@angular/cdk/drag-drop';
-import { UDCService } from '../services/udc-service';
+import { GenericResourceService } from '../services/generic-resource-service';
 import { PepDialogModule } from '@pepperi-addons/ngx-lib/dialog';
 import { UtilitiesService } from '../services/utilities-service';
 import { ViewsService } from '../services/views.service';
@@ -41,7 +41,7 @@ import { ViewsService } from '../services/views.service';
     providers: [
         TranslateStore,
         TranslateService,
-        UDCService, 
+        GenericResourceService, 
         UtilitiesService,
         ViewsService,
     ]

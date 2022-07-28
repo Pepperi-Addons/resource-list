@@ -2,7 +2,7 @@ import { Component, Injector, Input, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { PepDialogActionsType, PepDialogData, PepDialogService } from '@pepperi-addons/ngx-lib/dialog';
-import { UDCService } from '../services/udc-service';
+import { GenericResourceService } from '../services/generic-resource-service';
 
 @Component({
   selector: 'app-field-editor',
@@ -15,13 +15,12 @@ export class FieldEditorComponent implements OnInit {
   dialogRef = null
   dialogData
   constructor(private injector: Injector,
-     private udcService: UDCService,
+     private genericResourceService: GenericResourceService,
      private translate: TranslateService,
      private dialogService: PepDialogService
      ) {
     this.dialogRef = this.injector.get(MatDialogRef, null)
     this.dialogData = this.injector.get(MAT_DIALOG_DATA, null)
-    
    }
 
   ngOnInit(): void {
@@ -30,7 +29,7 @@ export class FieldEditorComponent implements OnInit {
   }
   async onUpdateButtonClick(){
     try{
-      await this.udcService.postItem(this.dialogData.resourceName, this.dataSource)
+      await this.genericResourceService.postItem(this.dialogData.resourceName, this.dataSource)
     }
     catch(err){
       console.log(err)
