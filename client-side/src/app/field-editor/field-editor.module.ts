@@ -5,6 +5,9 @@ import { PepGenericFormModule } from '@pepperi-addons/ngx-composite-lib/generic-
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { PepAddonService } from '@pepperi-addons/ngx-lib';
 import { RouterModule, Routes } from '@angular/router';
+import { PepButtonModule } from '@pepperi-addons/ngx-lib/button';
+import { PepPageLayoutModule } from '@pepperi-addons/ngx-lib/page-layout';
+import { PepSizeDetectorModule } from '@pepperi-addons/ngx-lib/size-detector';
 
 
 export const routes: Routes = [
@@ -21,6 +24,9 @@ export const routes: Routes = [
   imports: [
     CommonModule,
     PepGenericFormModule,
+    PepButtonModule,
+    PepPageLayoutModule,
+    PepSizeDetectorModule,
     TranslateModule.forChild({
       loader: {
           provide: TranslateLoader,

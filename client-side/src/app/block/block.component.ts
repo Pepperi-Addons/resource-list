@@ -1,14 +1,12 @@
 import { TranslateService } from '@ngx-translate/core';
-import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { UDCService } from '../services/udc-service';
 import { PepMenuItem } from "@pepperi-addons/ngx-lib/menu";
-// import { DIMXComponent } from '@pepperi-addons/ngx-composite-lib/dimx-export';
 import { config } from '../addon.config'
 import { ViewsCard } from '../draggable-card-fields/cards.model';
 import { DataView, GridDataView, GridDataViewColumn } from '@pepperi-addons/papi-sdk';
 import { DataSource } from '../data-source/data-source'
 import { PepSelectionData } from '@pepperi-addons/ngx-lib/list';
-import { Params, Router } from '@angular/router';
 import { SelectOption, View } from '../../../../shared/entities';
 import { DataViewService } from '../services/data-view-service';
 import { PepDialogService } from '@pepperi-addons/ngx-lib/dialog';
@@ -21,10 +19,8 @@ import { FieldEditorComponent } from '../field-editor/field-editor.component';
     styleUrls: ['./block.component.scss']
 })
 export class BlockComponent implements OnInit {
-    // @ViewChild('dimx') dimx:DIMXComponent | undefined;
     @Input() hostObject: any;
     datasource: DataSource
-    resourceName: string
     title: string
     menuItems: PepMenuItem[] = []
     allowExport: boolean = false;
@@ -62,7 +58,7 @@ export class BlockComponent implements OnInit {
 
     async loadBlock(){
       this.viewsList = this.hostObject?.configuration?.viewsList || []
-      this.resource = this.hostObject.configuration?.resource || ""
+      this.resource = this.hostObject.configuration?.resource || "" 
       this.createDropDownOfViews()
       this.currentViewKey = this.dropDownOfViews?.length > 0? this.dropDownOfViews[0].key : ""
       this.currentView = (await this.viewService.getItems(this.currentViewKey))[0]
@@ -197,23 +193,45 @@ export class BlockComponent implements OnInit {
      getActionsCallBack(){
       return async (data: PepSelectionData) => {
           const actions = []
-          if(data && data.rows.length == 1 && this.editorDataView){
-                  actions.push({
-                      title: this.translate.instant('Edit'),
-                      handler : async (selectedRows) => {
-                        const selectedItemKey = selectedRows.rows[0]
-                        const items = this.datasource.getItems()
-                        const item = items.find(item => item.Key == selectedItemKey)
-                        const dialogData = {
-                          item : item,
-                          editorDataView: this.editorDataView
-                        }
-                        const config = this.dialogService.getDialogConfig({
-
-                        }, 'large')
-                        this.dialogService.openDialog(FieldEditorComponent, dialogData, config).afterClosed().subscribe((value => { }))
+          if(data && data.rows.length == 1){
+            if(this.editorDataView){
+              actions.push({
+                  title: this.translate.instant('Edit'),
+                  handler : async (selectedRows) => {
+                    const selectedItemKey = selectedRows.rows[0]
+                    const items = this.datasource.getItems()
+                    const item = items.find(item => item.Key == selectedItemKey)
+                    const dialogData = {
+                      item : item,
+                      editorDataView: this.editorDataView,
+                      resourceName: this.resource
+                    }
+                    const config = this.dialogService.getDialogConfig({
+  
+                    }, 'large')
+                    this.dialogService.openDialog(FieldEditorComponent, dialogData, config).afterClosed().subscribe((async isUpdatePreformed => {
+                      if(isUpdatePreformed){
+                        this.items = await this.udcService.getItems(this.resource)
+                        this.datasource = new DataSource(this.items, this.datasource.getFields(), this.datasource.getColumns())
                       }
-                  })
+                     }))
+                  }
+              })
+            }
+            actions.push({
+              title: this.translate.instant('Delete'),
+              handler: async (selectedRows) => {
+                const selectedItemKey = selectedRows.rows[0]
+                const items = this.datasource.getItems()
+                const item = items.find(item => item.Key == selectedItemKey)
+                if(item){
+                  item.Hidden = true
+                  await this.udcService.postItem(this.resource,item)
+                  this.items = await this.udcService.getItems(this.resource)
+                  this.datasource = new DataSource(this.items, this.datasource.getFields(),this.datasource.getColumns())
+                }
+              }
+            })
           }
           return actions
       }

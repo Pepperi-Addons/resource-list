@@ -38,4 +38,10 @@ export class DataSource implements IPepGenericListDataSource{
     getItems(){
       return this.items
     }
+    getFields(){
+      return this.fields
+    }
+    getColumns(){
+      return this.widthArray
+    }
 }
