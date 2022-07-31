@@ -1,5 +1,45 @@
-<pep-generic-form
-    [dataSource]="dataSource"
-    [dataView]="dataView" 
-></pep-generic-form>
+<pep-page-layout>
+    <ng-container pep-top-area>
+        <div class="buttons-holder">
+            <pep-button class="pep-spacing-element"
+                class='pep-spacing-element'
+                value = "{{'Update' | translate}}"
+                styleType=strong
+                styleStateType=system
+                sizeType=md
+                classNames='update'
+                [disabled]='dialogData == undefined'
+                iconPosition='end'
+                [visible]='true'
+                (buttonClick)='onUpdateButtonClick()'
+            ></pep-button>
+            <pep-button
+                class='pep-spacing-element'
+                value = "{{'Cancel' | translate }}"
+                styleType=weak
+                styleStateType=system
+                sizeType=md
+                classNames='cancel'
+                [disabled]='false'
+                iconPosition='end'
+                [visible]='dialogRef != null'
+                (buttonClick)='onCancelButtonClicked()'
+            ></pep-button>
+        </div>
+    </ng-container>
+    <ng-container pep-main-area>
+        <pep-generic-form
+            [dataSource]="dataSource"
+            [dataView]="dataView"
+        ></pep-generic-form>
+    </ng-container>
+</pep-page-layout>
+<pep-size-detector></pep-size-detector>
+
+
+
+
+
+
+
 
