@@ -30,6 +30,7 @@ import { PepSeparatorModule } from '@pepperi-addons/ngx-lib/separator';
 import { EditorMappedFieldComponent } from './editor-mapped-field/editor-mapped-field.component';
 import { PepCheckboxModule } from '@pepperi-addons/ngx-lib/checkbox';
 import { PepSizeDetectorModule } from '@pepperi-addons/ngx-lib/size-detector';
+import { MenuTabComponent } from './menu-tab/menu-tab.component';
 
 @NgModule({
     imports: [
@@ -73,6 +74,7 @@ import { PepSizeDetectorModule } from '@pepperi-addons/ngx-lib/size-detector';
         AddFormComponent,
         EditorsFormComponent,
         EditorMappedFieldComponent,
+        MenuTabComponent,
     ],
     providers: [
         TranslateStore

@@ -1,0 +1,77 @@
+<ng-container *ngIf="!editCard; then cardsTemplate;else cardEditor" ></ng-container>
+<ng-template #cardsTemplate>
+    <pep-profile-data-views-list 
+        [profileDataViewsList]="profileCardsArray"
+        [availableProfiles]="availableProfiles"
+        [defaultProfileId]="defaultProfileId" (dataViewEditClick)="onDataViewEditClicked($event)"
+        (dataViewDeleteClick)="onDataViewDeleteClicked($event)" (saveNewProfileClick)="onSaveNewProfileClicked($event)">
+    </pep-profile-data-views-list>
+</ng-template>
+<ng-template #cardEditor>
+    <div class="buttons-holder">
+        <pep-button
+        class="pep-spacing-element"
+        value="Save"
+        styleType="strong"
+        styleStateType="system"
+        sizeType="md"
+        classNames=""
+        iconPosition="end"
+        [visible]="editCard"
+        (buttonClick)="onSaveDataView()"
+        ></pep-button>
+        <pep-button
+            class="pep-spacing-element"
+            value="Back"
+            styleType="weak"
+            styleStateType="system"
+            sizeType="md"
+            classNames=""
+            iconPosition="end"
+            [visible]="editCard"
+            (buttonClick)="backFromCardsTemplate()"
+        ></pep-button>
+    </div>
+    <div class="mapped-fields-container">
+        <div class="available-fields-side-area">
+            <pep-draggable-items [items]="sideCardsList" [title]="'Cards List'" titleType="with-bottom-border" titleSizeType="md"
+                itemPlaceholderType="weak" [showSearch]="true"  [dropAreaIds]="['emptyDropArea', 'mappedFields']" >
+            </pep-draggable-items>
+        </div>
+        <div pep-main-area class="mapped-fields-main-area">
+            <div class="mapped-fields-top-area pep-border-bottom"
+                [title]="('MappedFieldTitle' | translate) + ' ' + ('MappedFieldTitleHint' | translate)">
+                <span class="title-md">{{'MappedFieldTitle' | translate}}&nbsp;</span>
+                <span class="color-dimmed">{{('MappedFieldTitleHint' | translate)}}
+                </span>
+            </div>
+
+            <div class="fields-area-overflow">
+                <ng-container *ngIf="mappedFields === null || mappedFields.length === 0; then emptyTemplate; else notEmptyTemplate"></ng-container>
+                <ng-template #emptyTemplate>
+                    <div id="emptyDropArea" class="drop-field-here-area" cdkDropList (cdkDropListDropped)="onDropField($event)">
+                        <mat-icon class="pep-spacing-element">
+                            <pep-icon name="arrow_down_alt"></pep-icon>
+                        </mat-icon>
+                        <span class="body-sm ellipsis">
+                            {{ 'EmptyMappedFieldArea' | translate }}
+                        </span> 
+                    </div>
+                </ng-template>
+                <ng-template #notEmptyTemplate>
+                    <div id="mappedFields" class="mapped-fields-area" cdkDropList [cdkDropListData]="mappedFields" (cdkDropListDropped)="onDropField($event)">
+                        <app-views-mapped-field *ngFor="let mappedField of mappedFields; let i = index" 
+                        [mappedField] = "mappedField"
+                        [resourceFields] ="resourceFields"
+                        (removeClick)='onCardRemoveClick($event);'
+                        class="mapped-field-container" 
+                        cdkDrag (cdkDragStarted)="onDragStart($event)" 
+                        (cdkDragEnded)="onDragEnd($event)">
+                        </app-views-mapped-field>
+                    </div>
+                </ng-template>
+            </div>
+        </div>     
+    </div>
+</ng-template>
+<!-- <p>hello world</p> -->

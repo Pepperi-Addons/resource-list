@@ -1,9 +1,8 @@
-import { GenericResourceService } from '../services/generic-resource-service';
 import { DataViewService } from '../services/data-view-service';
 import { ProfileService } from '../services/profile-service';
-import { DataView, GridDataViewField } from '@pepperi-addons/papi-sdk';
+import { DataView } from '@pepperi-addons/papi-sdk';
 import { IPepProfile, IPepProfileDataViewsCard } from '@pepperi-addons/ngx-lib/profile-data-views-list';
-import { CREATION_DATE_TIME_ID, CREATION_DATE_TIME_TITLE, IFieldConvertor, IMappedField, MODIFICATION_DATE_TIME_ID, MODIFICATION_DATE_TIME_TITLE } from '../metadata'
+import { IFieldConvertor, IMappedField } from '../metadata'
 import { IPepDraggableItem } from '@pepperi-addons/ngx-lib/draggable-items';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 
@@ -15,17 +14,14 @@ export class ProfileCardsManager{
     private availableProfiles: Array<IPepProfile> = []
     private currentMappedFields: Array<IMappedField> = []
     private currentSideCardsList: IPepDraggableItem[] = []
-    private collectionFields: GridDataViewField[] = []
-    constructor(private genericResourceService: GenericResourceService,
+    constructor(
                 private dataViewContextName: string,
-                private resourceName: string,
                 private dataViewService: DataViewService,
                 private profileService: ProfileService,
-                private fieldConvertor: IFieldConvertor
+                private fieldConvertor: IFieldConvertor,
+                private fields: any[]
                 ){}
     async init(): Promise<void>{
-        const collection = await this.genericResourceService.getResource(this.resourceName)
-        this.collectionFields = [...collection?.ListView?.Fields, ...this.getDefaultCollectionFields()]
         const dataViews: DataView[] = await this.dataViewService.getDataViews(this.dataViewContextName)
         this.allProfiles = await this.profileService.getProfiles()
         this.dataViewMap = this.createDataViewMap(dataViews)
@@ -38,31 +34,6 @@ export class ProfileCardsManager{
         }catch(err){
             throw new Error(`Error: error occurred while creating the data views map, maybe one of the data views does not have an internalID? :   ${err}`)
         }
-    }
-    private getDefaultCollectionFields(){
-        return [
-            {
-                FieldID: CREATION_DATE_TIME_ID,
-                Title: CREATION_DATE_TIME_TITLE,
-                Type: 'DateAndTime',
-                Mandatory: true,
-                ReadOnly: true
-            },
-            {
-                FieldID: MODIFICATION_DATE_TIME_ID,
-                Title: MODIFICATION_DATE_TIME_TITLE,
-                Type: 'DateAndTime',
-                Mandatory: true,
-                ReadOnly: true
-            },
-            {
-                FieldID: "Key",
-                Type: "TextBox",
-                Title: "Key",
-                Mandatory: true,
-                ReadOnly: true,
-            }
-        ]
     }
     private createProfileCardsArray(): Array<IPepProfileDataViewsCard>{
         const profilesCardsArray: Array<IPepProfileDataViewsCard> = []
@@ -124,14 +95,14 @@ export class ProfileCardsManager{
     }
     private createSideCardsList(mappedFieldsSet: Set<string>): IPepDraggableItem[]{
         const sideCardList: IPepDraggableItem[] = []
-        this.collectionFields.forEach(field => {
+        this.fields.forEach(field => {
             if(!mappedFieldsSet.has(field.FieldID)){
                 this.addFieldToSideCardsList(field, sideCardList)
             }
         })
         return sideCardList
     }
-    private addFieldToSideCardsList(field: GridDataViewField, sideCardList){
+    private addFieldToSideCardsList(field: any, sideCardList){
         sideCardList.push({
             title: field.Title,
             data: {
@@ -200,7 +171,7 @@ export class ProfileCardsManager{
     }
     removeMappedField(mappedFieldID: string){
         const index = this.currentMappedFields.findIndex(ms => ms.field.FieldID === mappedFieldID);
-        const field = this.collectionFields.find(field => field.FieldID == this.currentMappedFields[index].field.FieldID)
+        const field = this.fields.find(field => field.FieldID == this.currentMappedFields[index].field.FieldID)
         this.addFieldToSideCardsList(field!, this.currentSideCardsList)
         this.currentMappedFields.splice(index, 1);
     }

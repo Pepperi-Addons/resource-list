@@ -6,13 +6,14 @@ export const MODIFICATION_DATE_TIME_TITLE = "Modification Date Time"
 export const CREATION_DATE_TIME_ID = "CreationDateTime"
 export const MODIFICATION_DATE_TIME_ID = "ModificationDateTime"
 
+
 export interface IMappedField {
     field: {
       FieldID: string
       Title: string;
-      Type: DataViewFieldType;
-      ReadOnly: boolean
-      Mandatory: boolean
+      Type?: DataViewFieldType;
+      ReadOnly?: boolean
+      Mandatory?: boolean
     },
     width?: number
 }
@@ -34,4 +35,27 @@ export interface IFieldConvertor {
   draggableItemToMappedField(draggableItem: IPepDraggableItem)
 }
 
-export type IDataViewField = GridDataViewField | BaseFormDataViewField
+export type IDataViewField = GridDataViewField | BaseFormDataViewField | MenuDataViewField
+export const defaultCollectionFields = [
+  {
+    FieldID: CREATION_DATE_TIME_ID,
+    Title: CREATION_DATE_TIME_TITLE,
+    Type: 'DateAndTime',
+    Mandatory: true,
+    ReadOnly: true
+  },
+  {
+    FieldID: MODIFICATION_DATE_TIME_ID,
+    Title: MODIFICATION_DATE_TIME_TITLE,
+    Type: 'DateAndTime',
+    Mandatory: true,
+    ReadOnly: true
+  },
+  {
+    FieldID: "Key",
+    Type: "TextBox",
+    Title: "Key",
+    Mandatory: true,
+    ReadOnly: true,
+  }
+]

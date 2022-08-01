@@ -5,11 +5,11 @@ import { config } from '../addon.config';
 import { GenericResourceService } from '../services/generic-resource-service';
 import { EditorForm } from '../editors/editor-form'
 import { IPepOption } from '@pepperi-addons/ngx-lib';
-import { OpenMode } from '../../../../shared/entities'
+import { Field, OpenMode } from '../../../../shared/entities'
 import { EditorsService } from '../services/editors.service';
 import { BaseFormDataViewField, Collection, DataView, FormDataView } from '@pepperi-addons/papi-sdk';
 import { IPepProfile, IPepProfileDataViewsCard } from '@pepperi-addons/ngx-lib/profile-data-views-list';
-import { IDataViewField, IEditorMappedField, IMappedField } from '../metadata';
+import { defaultCollectionFields, IDataViewField, IEditorMappedField, IMappedField } from '../metadata';
 import { IPepDraggableItem } from '@pepperi-addons/ngx-lib/draggable-items';
 import { CdkDragDrop, CdkDragEnd, CdkDragStart } from '@angular/cdk/drag-drop';
 import { DataViewService } from '../services/data-view-service';
@@ -40,7 +40,6 @@ export class EditorsFormComponent implements OnInit {
   editCard: boolean = false
   dataViewContextName: string
   //profile cards fields
-  collectionFields: Collection
   resourceName: string
   dataViewsMap: Map<string,DataView> = new Map()
   currentCard: IPepProfileDataViewsCard
@@ -96,14 +95,21 @@ export class EditorsFormComponent implements OnInit {
   }
   async initFormTab(){
     const convertor = this.createConvertor()
-    this.profileCardsManager = new ProfileCardsManager(this.genericResource,
+    const fields = await this.getFields(this.resourceName)
+    fields.sort((a,b) => a.FieldID.localeCompare(b.FieldID))
+    this.profileCardsManager = new ProfileCardsManager(
       this.dataViewContextName,
-      this.resourceName,
       this.dataViewService,
       this.profileService,
-      convertor)
+      convertor,
+      fields)
       await this.profileCardsManager.init()
       this.loadProfileCardVariables()
+  }
+
+  async getFields(resourceName: string){    
+    const collection = await this.genericResource.getResource(resourceName)
+    return  [...collection?.ListView?.Fields as Field[] || [], ...defaultCollectionFields]
   }
   createConvertor(){
     return {
@@ -199,7 +205,7 @@ export class EditorsFormComponent implements OnInit {
   }
   mappedFieldsToDataViewFields(mappedFields: IEditorMappedField[]): BaseFormDataViewField[]{
     return mappedFields.map((mappedField, index) => {
-        return this.mappedFieldToDataViewField(mappedField, index)
+        return this.mappedFieldToDataViewField(mappedField, index) as BaseFormDataViewField
     })
   }
   mappedFieldToDataViewField(mappedField: IMappedField, index: number): IDataViewField{

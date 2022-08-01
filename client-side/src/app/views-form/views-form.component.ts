@@ -7,11 +7,11 @@ import { config } from '../addon.config';
 import { IPepProfileDataViewsCard, IPepProfile } from '@pepperi-addons/ngx-lib/profile-data-views-list';
 import { IPepDraggableItem } from '@pepperi-addons/ngx-lib/draggable-items';
 import { CdkDragDrop, CdkDragEnd, CdkDragStart } from '@angular/cdk/drag-drop';
-import { IViewMappedField, IDataViewField} from '../metadata'
+import { IViewMappedField, IDataViewField, defaultCollectionFields} from '../metadata'
 import { DataViewService } from '../services/data-view-service'
 import { GridDataViewField } from '@pepperi-addons/papi-sdk';
 import { IMappedField } from '../metadata';
-import { View } from '../../../../shared/entities';
+import { Field, View } from '../../../../shared/entities';
 import { EditorsService } from '../services/editors.service';
 import { ProfileCardsManager } from '../profile-cards/profile-cards-manager';
 import { ProfileService } from '../services/profile-service';
@@ -41,7 +41,6 @@ export class ViewsFormComponent implements OnInit {
   editCard: boolean = false;
   currentTabIndex = 0;
   viewKey: string
-  loadCompleted: boolean = false
   currentView: View
   mappedFields: Array<IMappedField> = []
   sideCardsList:Array<IPepDraggableItem> = []
@@ -71,23 +70,27 @@ export class ViewsFormComponent implements OnInit {
   //                        Init Functions                        
   // -------------------------------------------------------------
   async initComponent(){
-    const key = this.route.snapshot.paramMap.get('key')
-
-    this.dataViewContextName = `GV_${key?.replace(/-/g, '')}_View`
-    await this.initGeneralTab(key)
+    this.viewKey = this.route.snapshot.paramMap.get('key')
+    this.dataViewContextName = `GV_${this.viewKey?.replace(/-/g, '')}_View`
+    await this.initGeneralTab(this.viewKey)
     await this.initFormTab()
-    this.loadCompleted = true
   }
   async initFormTab(){
     const convertor = this.createConvertor()
-    this.profileCardsManager = new ProfileCardsManager(this.genericResourceService,
+    const fields = await this.getFields(this.dataSource.Resource)
+    fields.sort((a,b) => a.FieldID.localeCompare(b.FieldID))
+    this.profileCardsManager = new ProfileCardsManager(
       this.dataViewContextName,
-      this.dataSource.Resource,
       this.dataViewService,
       this.profileService,
-      convertor)
+      convertor,
+      fields)
       await this.profileCardsManager.init()
       this.loadProfileCardVariables()
+  }
+  async getFields(resourceName: string){    
+    const collection = await this.genericResourceService.getResource(resourceName)
+    return  [...collection?.ListView?.Fields as Field[] || [], ...defaultCollectionFields]
   }
   createConvertor(){
     return {
@@ -310,7 +313,7 @@ export class ViewsFormComponent implements OnInit {
   }
   mappedFieldsToDataViewFields(mappedFields: IMappedField[]): GridDataViewField[]{
     return mappedFields.map((mappedField, index) => {
-        return this.mappedFieldToDataViewField(mappedField, index)
+        return this.mappedFieldToDataViewField(mappedField, index) as GridDataViewField
     })
   }
   fieldToMappedField(field: GridDataViewField, width = 10): IViewMappedField{
