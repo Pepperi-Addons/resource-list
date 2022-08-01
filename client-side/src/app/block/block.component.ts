@@ -42,8 +42,10 @@ export class BlockComponent implements OnInit {
     editorDataView: DataView
     currentView: View
     
+    
     addButtonTitle: string
     isAddButtonConfigured: boolean = false
+    inRecycleBinMode: boolean = false
 
     @Output() hostEvents: EventEmitter<any> = new EventEmitter<any>();
 
@@ -127,12 +129,35 @@ export class BlockComponent implements OnInit {
         }
       })
     }
-
+    async initRecycleBin(){
+      const deletedItems = await this.genericResourceService.getItems(this.resource, true)
+      this.menuItems.push({
+        key: "BackToList",
+        text: "Back to list"
+      })
+      this.menuItems = this.menuItems.filter(menuItem => menuItem.key != "RecycleBin")
+      this.datasource = new DataSource(deletedItems, this.datasource.getFields(), this.datasource.getColumns())
+    }
     ngOnChanges(e: any): void {
       this.loadBlock()
     }
+    async backToList(){
+      const items = await this.genericResourceService.getItems(this.resource)
+      this.menuItems = this.menuItems.filter(menuItem => menuItem.key != "BackToList")
+      this.menuItems.push({
+        key: "RecycleBin",
+        text: "Recycle bin"
+      })
+      this.datasource = new DataSource(items, this.datasource.getFields(), this.datasource.getColumns())
+    }
     menuItemClick($event){
-      
+      switch($event.source.key){
+        case 'RecycleBin':
+          this.initRecycleBin()
+          break;
+        case 'BackToList': 
+          this.backToList()
+      }
     }
 
 //-------------------------------------------------------------------------------
