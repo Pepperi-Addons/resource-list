@@ -2,13 +2,11 @@ import { TranslateService } from '@ngx-translate/core';
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { GenericResourceService } from '../services/generic-resource-service';
 import { PepMenuItem } from "@pepperi-addons/ngx-lib/menu";
-// import { DIMXComponent } from '@pepperi-addons/ngx-composite-lib/dimx-export';
 import { config } from '../addon.config'
 import { ViewsCard } from '../draggable-card-fields/cards.model';
 import { DataView, GridDataView, GridDataViewColumn } from '@pepperi-addons/papi-sdk';
 import { DataSource } from '../data-source/data-source'
 import { PepSelectionData } from '@pepperi-addons/ngx-lib/list';
-import { Params, Router } from '@angular/router';
 import { SelectOption, View } from '../../../../shared/entities';
 import { DataViewService } from '../services/data-view-service';
 import { PepDialogService } from '@pepperi-addons/ngx-lib/dialog';
@@ -21,10 +19,8 @@ import { FieldEditorComponent } from '../field-editor/field-editor.component';
     styleUrls: ['./block.component.scss']
 })
 export class BlockComponent implements OnInit {
-    // @ViewChild('dimx') dimx:DIMXComponent | undefined;
     @Input() hostObject: any;
     datasource: DataSource
-    // resourceName: string
     title: string
     menuItems: PepMenuItem[] = []
     allowExport: boolean = false;
