@@ -9,6 +9,16 @@
             [actions] = "actions"
             uuidMapping = 'Key'>
             <ng-container right-buttons>
+                <pep-menu
+                    iconName="system_menu" 
+                    type="action" 
+                    styleType="weak" 
+                    sizeType="sm" 
+                    classNames=""
+                    [items]="menuItems" 
+                    [disabled]="false" 
+                    (menuItemClick)="menuItemClick($event)">
+                </pep-menu>
                 <pep-select *ngIf="dropDownOfViews.length > 0"
                     class="buttons-holder"
                     [value]="currentViewKey"
@@ -23,14 +33,14 @@
                 ></pep-select>
                 <pep-button
                     class='pep-spacing-element'
-                    value = "{{'New' | translate }}"
+                    [value] = "addButtonTitle"
                     styleType=strong
                     styleStateType=system
                     sizeType=md
                     classNames='new'
                     [disabled]='false'
                     iconPosition='end'
-                    [visible]='true'
+                    [visible]='isAddButtonConfigured'
                     (buttonClick)='onNewButtonClicked()'
                 ></pep-button>
             </ng-container>

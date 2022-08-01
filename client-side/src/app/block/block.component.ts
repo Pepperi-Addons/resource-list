@@ -40,7 +40,10 @@ export class BlockComponent implements OnInit {
     currentViewKey : string
     resource: string
     editorDataView: DataView
-    currentView: View   
+    currentView: View
+    
+    addButtonTitle: string
+    isAddButtonConfigured: boolean = false
 
     @Output() hostEvents: EventEmitter<any> = new EventEmitter<any>();
 
@@ -63,13 +66,36 @@ export class BlockComponent implements OnInit {
       this.currentViewKey = this.dropDownOfViews?.length > 0? this.dropDownOfViews[0].key : ""
       this.currentView = (await this.viewService.getItems(this.currentViewKey))[0]
       this.editorDataView =this.currentView?.Editor? await this.getEditorDataView(this.currentView.Editor) : undefined
+      await this.initMenuItems(this.currentViewKey)
       this.DisplayViewInList(this.currentViewKey)
+    }
+    async initMenuItems(viewKey: string){
+      const menuDataView = await this.getMenuDataview(viewKey)
+      this.menuItems = []
+      menuDataView?.Fields?.forEach(field => {
+        if(field.FieldID != "Add"){
+          this.menuItems.push({
+            key: field.FieldID,
+            text: field.Title
+          })
+        }
+        else{
+          this.isAddButtonConfigured = true
+          this.addButtonTitle = field.Title
+        }
+      })
     }
     async getEditorDataView(editorKey: string | undefined): Promise<DataView | undefined>{
       if(editorKey == undefined){
         return 
       }
       return (await this.dataViewService.getDataViews(`GV_${editorKey}_Editor`))[0]
+    }
+    async getMenuDataview(viewKey: string | undefined){
+      if(viewKey == undefined){
+        return
+      }
+      return (await this.dataViewService.getDataViews(`GV_${viewKey}_Menu`))[0]
     }
     async DisplayViewInList(viewKey){
       const dataViews = await this.dataViewService.getDataViewsByProfile(`GV_${viewKey}_View`, "Rep");
@@ -104,6 +130,9 @@ export class BlockComponent implements OnInit {
 
     ngOnChanges(e: any): void {
       this.loadBlock()
+    }
+    menuItemClick($event){
+      
     }
 
 //-------------------------------------------------------------------------------
