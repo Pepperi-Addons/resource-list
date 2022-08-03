@@ -12,6 +12,7 @@ import { DataViewService } from '../services/data-view-service';
 import { PepDialogService } from '@pepperi-addons/ngx-lib/dialog';
 import { ViewsService } from '../services/views.service';
 import { FieldEditorComponent } from '../field-editor/field-editor.component';
+import { async } from 'rxjs';
 
 @Component({
     selector: 'block',
@@ -137,6 +138,25 @@ export class BlockComponent implements OnInit {
       })
       this.menuItems = this.menuItems.filter(menuItem => menuItem.key != "RecycleBin")
       this.datasource = new DataSource(deletedItems, this.datasource.getFields(), this.datasource.getColumns())
+      this.actions.get = this.getRecycleBinActions()
+    }
+    getRecycleBinActions(){
+      return async(data: PepSelectionData) => {
+        const actions = []
+        if(data && data.rows.length == 1){
+          actions.push({
+            title: this.translate.instant('Restore'),
+            handler: async (selectedRows) => {
+              const item = this.datasource.getItems().find(item => item.Key == selectedRows.rows[0])
+              item.Hidden = false
+              await this.genericResourceService.postItem(this.resource,item)
+              const items = await this.genericResourceService.getItems(this.resource, true)
+              this.datasource = new DataSource(items, this.datasource.getFields(), this.datasource.getColumns())
+            }
+          })
+        }
+        return actions
+      }
     }
     ngOnChanges(e: any): void {
       this.loadBlock()
@@ -148,6 +168,7 @@ export class BlockComponent implements OnInit {
         key: "RecycleBin",
         text: "Recycle bin"
       })
+      this.actions.get = this.getActionsCallBack()
       this.datasource = new DataSource(items, this.datasource.getFields(), this.datasource.getColumns())
     }
     menuItemClick($event){
