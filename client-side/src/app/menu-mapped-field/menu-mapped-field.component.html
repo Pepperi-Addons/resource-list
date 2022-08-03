@@ -1,0 +1,23 @@
+<pep-textbox
+  [(value)]="mappedField.field.Title"
+  label="Title"
+  type="text"
+  [mandatory]="false"
+  [disabled]="false"
+  xAlignment="left"
+></pep-textbox>
+
+<pep-textbox
+  [(value)]="mappedField.field.FieldID"
+  label="Original name"
+  type="text"
+  [mandatory]="false"
+  [disabled]="true"
+  xAlignment="left"
+></pep-textbox>
+
+<pep-button
+    class="del-button"
+    iconName="system_bin" 
+    (buttonClick)="onDeleteMappedField()">
+</pep-button>

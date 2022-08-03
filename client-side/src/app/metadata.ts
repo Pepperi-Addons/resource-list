@@ -13,7 +13,8 @@ export interface IMappedField {
       Title: string;
       Type?: DataViewFieldType;
       ReadOnly?: boolean
-      Mandatory?: boolean
+      Mandatory?: boolean,
+      OriginalName?: string
     },
     width?: number
 }
@@ -21,8 +22,10 @@ export interface IViewMappedField extends IMappedField{
   width: number
 }
 export interface IEditorMappedField extends IMappedField{
-
+  
 }
+export type MenuField = MenuDataViewField & {OriginalName: string}
+
 
 export interface IDataService{
   getItems(key?: string , includeDeleted?: boolean)
