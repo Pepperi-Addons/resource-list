@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { IEditorMappedField, IMappedField } from '../metadata';
+import { IEditorMappedField } from '../metadata';
 
 @Component({
   selector: 'app-editor-mapped-field',

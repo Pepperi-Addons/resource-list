@@ -31,6 +31,7 @@ import { EditorMappedFieldComponent } from './editor-mapped-field/editor-mapped-
 import { PepCheckboxModule } from '@pepperi-addons/ngx-lib/checkbox';
 import { PepSizeDetectorModule } from '@pepperi-addons/ngx-lib/size-detector';
 import { MenuTabComponent } from './menu-tab/menu-tab.component';
+import { MenuMappedFieldComponent } from './menu-mapped-field/menu-mapped-field.component';
 
 @NgModule({
     imports: [
@@ -75,6 +76,7 @@ import { MenuTabComponent } from './menu-tab/menu-tab.component';
         EditorsFormComponent,
         EditorMappedFieldComponent,
         MenuTabComponent,
+        MenuMappedFieldComponent,
     ],
     providers: [
         TranslateStore
