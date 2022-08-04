@@ -33,7 +33,6 @@ export class FieldEditorComponent implements OnInit {
     catch(err){
       console.log(err)
       //show dialog here
-      this.dialogRef.close(false)
       this.utilitiesService.showDialog('Error', 'UpdateErrorMSG', 'close')
       return
     }
@@ -41,7 +40,7 @@ export class FieldEditorComponent implements OnInit {
   }
 
   onCancelButtonClicked(){
-    this.dialogRef.close()
+    this.dialogRef.close(false)
   }
   
 }
