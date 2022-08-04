@@ -12,5 +12,6 @@ export class ViewsService extends ItemsService {
     async postDataViews(key: string, repProfileID: number, service: DataViewsService){
         await service.postDefaultDataView(key, repProfileID, this.getType())
         await service.postDefaultMenuDataView(key, repProfileID)
+        await service.postDefaultLineMenuDataView(key, repProfileID)
     }
 }

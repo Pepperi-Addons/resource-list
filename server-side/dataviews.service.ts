@@ -12,6 +12,31 @@ export class DataViewsService {
         const defaultDataView = type == "view" ? this.getDefaultGridDataView(dataViewKey,profileID) : this.getDefaultFormDataView(dataViewKey,profileID)
         return await this.addonService.papiClient.metaData.dataViews.upsert(defaultDataView)
     }
+
+    async postDefaultLineMenuDataView(key: string, profileID: number){
+        const menuDataView: MenuDataView = {
+            Type: "Menu",
+            Context: {
+                Name: `RV_${key}_LineMenu`,
+                Profile: {
+                    InternalID : profileID,
+                    Name: "Rep"
+                },
+                ScreenSize: "Landscape",
+            },
+            Fields: [
+                {
+                    FieldID: "Edit",
+                    Title: "Edit",
+                },
+                {
+                    FieldID: "Delete",
+                    Title: "Delete",
+                },
+            ]
+        }
+        return await this.addonService.papiClient.metaData.dataViews.upsert(menuDataView)
+    }
     async postDefaultMenuDataView(key: string, profileID: number){
         const menuDataView: MenuDataView = {
             Type: "Menu",
