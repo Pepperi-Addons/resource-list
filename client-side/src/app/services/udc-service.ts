@@ -22,13 +22,8 @@ export class UDCService{
         return [];
     }
     async postItem(resourceName, item){
-        try{
-            const res = await this.utilitiesService.papiClient.userDefinedCollections.documents(resourceName).upsert(item)
-            return res
-        }
-        catch(e){
-            console.error(`try to post item:\n${item}\n to resource:\n${resourceName}\nin UDC, end with error:\n ${e}`)
-        }
+        const res = await this.utilitiesService.papiClient.userDefinedCollections.documents(resourceName).upsert(item)
+        return res
     }
     async getCollection(name: string){
         return await this.utilitiesService.papiClient.userDefinedCollections.schemes.name(name).get()
