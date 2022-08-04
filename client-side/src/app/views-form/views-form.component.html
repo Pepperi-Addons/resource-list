@@ -116,15 +116,16 @@
                     </div>
                 </ng-template>
             </mat-tab>
+            <!--Menu Tab-->
             <mat-tab label="{{'Menu' | translate}}">
-                <!--Menu Tab-->
                 <app-menu-tab
                 [key] = "viewKey">
                 </app-menu-tab>
             </mat-tab>
+            <!--Line Menu Tab-->
             <mat-tab label="{{'LineMenu' | translate}}">
-                <!--Line Menu Tab-->
-                <app-line-menu-tab>
+                <app-line-menu-tab
+                [key] = "viewKey">
                 </app-line-menu-tab>
             </mat-tab>
         </mat-tab-group>
