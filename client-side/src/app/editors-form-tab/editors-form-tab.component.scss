@@ -1,4 +1,5 @@
 
+
 @use '~@pepperi-addons/ngx-lib/src/core/style/abstracts/variables';
 @use '~@pepperi-addons/ngx-lib/src/core/style/abstracts/mixins';
 @use '~@pepperi-addons/ngx-lib/src/core/style/abstracts/functions';
@@ -108,7 +109,6 @@
 .buttons-holder{
     float: right;
     display: flex; 
-    flex-direction: row-reverse;
 }
 
 html {
@@ -119,6 +119,7 @@ html {
 .fields-area-overflow {
     overflow: auto;
 }
+
 
 .views-tabs {
     height: 100%;
@@ -150,4 +151,5 @@ html {
         }
     }
 }
+
 

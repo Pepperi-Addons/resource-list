@@ -33,6 +33,8 @@ import { PepSizeDetectorModule } from '@pepperi-addons/ngx-lib/size-detector';
 import { MenuTabComponent } from './menu-tab/menu-tab.component';
 import { MenuMappedFieldComponent } from './menu-mapped-field/menu-mapped-field.component';
 import { LineMenuTabComponent } from './line-menu-tab/line-menu-tab.component';
+import { EditorsFormTabComponent } from './editors-form-tab/editors-form-tab.component';
+import { ViewsFormTabComponent } from './views-form-tab/views-form-tab.component';
 
 @NgModule({
     imports: [
@@ -79,6 +81,8 @@ import { LineMenuTabComponent } from './line-menu-tab/line-menu-tab.component';
         MenuTabComponent,
         MenuMappedFieldComponent,
         LineMenuTabComponent,
+        EditorsFormTabComponent,
+        ViewsFormTabComponent,
     ],
     providers: [
         TranslateStore

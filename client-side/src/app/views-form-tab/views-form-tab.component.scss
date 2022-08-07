@@ -96,58 +96,9 @@
     }
 }
 
-
-
-
-.header{
-    display: flex;
-    justify-content: space-between;
-    margin-top: 1%;
-}
-
 .buttons-holder{
     float: right;
     display: flex; 
     flex-direction: row-reverse;
-}
-
-html {
-    body.inheritCursors * {
-        cursor: inherit !important;
-    }
-}
-.fields-area-overflow {
-    overflow: auto;
-}
-
-.views-tabs {
-    height: 100%;
-    
-    ::ng-deep {
-        .mat-tab-body-wrapper {
-            overflow: unset;
-            margin: 0;
-            display: block;
-
-            .mat-tab-body {
-                &.mat-tab-body-active {
-                    overflow: unset;
-
-                    .mat-tab-body-content {
-                        overflow: unset;
-                        display: flex;
-                        flex-direction: column;
-                        padding-inline: 0;
-                        row-gap: 1rem;
-                        padding: 0 !important;
-                        margin-top: -0.25rem;
-                        .profile-data-views-list-container {
-                            padding-top: 0.25rem;
-                        }
-                    }
-                }
-            }
-        }
-    }
 }
 
