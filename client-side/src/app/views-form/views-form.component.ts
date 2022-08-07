@@ -308,7 +308,7 @@ export class ViewsFormComponent implements OnInit {
       }
   }
   }
-  mappedFieldsToDataViewFields(mappedFields: IMappedField[]): GridDataViewField[]{
+  mappedFieldsToDataViewFields(mappedFields: IMappedField[]): IDataViewField[]{
     return mappedFields.map((mappedField, index) => {
         return this.mappedFieldToDataViewField(mappedField, index)
     })
