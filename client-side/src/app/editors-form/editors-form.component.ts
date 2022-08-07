@@ -197,7 +197,7 @@ export class EditorsFormComponent implements OnInit {
     });
     this.dialogService.openDefaultDialog(dataMsg)
   }
-  mappedFieldsToDataViewFields(mappedFields: IEditorMappedField[]): BaseFormDataViewField[]{
+  mappedFieldsToDataViewFields(mappedFields: IEditorMappedField[]): IDataViewField[]{
     return mappedFields.map((mappedField, index) => {
         return this.mappedFieldToDataViewField(mappedField, index)
     })
