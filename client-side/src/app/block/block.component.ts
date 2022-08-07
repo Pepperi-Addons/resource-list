@@ -1,10 +1,10 @@
 import { TranslateService } from '@ngx-translate/core';
-import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { GenericResourceService } from '../services/generic-resource-service';
 import { PepMenuItem } from "@pepperi-addons/ngx-lib/menu";
 import { config } from '../addon.config'
 import { ViewsCard } from '../draggable-card-fields/cards.model';
-import { DataView, GridDataView, GridDataViewColumn } from '@pepperi-addons/papi-sdk';
+import { DataView, GridDataView, GridDataViewColumn, MenuDataViewField } from '@pepperi-addons/papi-sdk';
 import { DataSource } from '../data-source/data-source'
 import { PepSelectionData } from '@pepperi-addons/ngx-lib/list';
 import { SelectOption, View } from '../../../../shared/entities';
@@ -12,7 +12,6 @@ import { DataViewService } from '../services/data-view-service';
 import { PepDialogService } from '@pepperi-addons/ngx-lib/dialog';
 import { ViewsService } from '../services/views.service';
 import { FieldEditorComponent } from '../field-editor/field-editor.component';
-import { async } from 'rxjs';
 
 @Component({
     selector: 'block',
@@ -36,14 +35,14 @@ export class BlockComponent implements OnInit {
     relativeHeight: number
     allowEdit:boolean = false;
 
+
     //new page block
     dropDownOfViews: SelectOption[] = []
     currentViewKey : string
     resource: string
     editorDataView: DataView
     currentView: View
-    
-    
+    lineMenuItemsMap: Map<string, MenuDataViewField>
     addButtonTitle: string
     isAddButtonConfigured: boolean = false
     inRecycleBinMode: boolean = false
@@ -70,7 +69,21 @@ export class BlockComponent implements OnInit {
       this.currentView = (await this.viewService.getItems(this.currentViewKey))[0]
       this.editorDataView =this.currentView?.Editor? await this.getEditorDataView(this.currentView.Editor) : undefined
       await this.initMenuItems(this.currentViewKey)
+      await this.initLineMenuItems(this.currentViewKey)
       this.DisplayViewInList(this.currentViewKey)
+    }
+    async initLineMenuItems(viewKey: string){
+      const lineMenuDataView = await this.getLineMenuDataView(viewKey)
+      this.lineMenuItemsMap = new Map()
+      lineMenuDataView.Fields?.forEach(dataViewField => {
+        this.lineMenuItemsMap.set(dataViewField.FieldID, dataViewField)
+      })
+    }
+    async getLineMenuDataView(viewKey: string){
+      if(viewKey == undefined){
+        return 
+      }
+      return (await this.dataViewService.getDataViews(`RV_${viewKey}_LineMenu`))[0]
     }
     async initMenuItems(viewKey: string){
       const menuDataView = await this.getMenuDataview(viewKey)
@@ -268,10 +281,10 @@ export class BlockComponent implements OnInit {
      getActionsCallBack(){
       return async (data: PepSelectionData) => {
           const actions = []
-          if(data && data.rows.length == 1){
-            if(this.editorDataView){
+          if(data && data.rows.length == 1 && this.lineMenuItemsMap != undefined){
+            if(this.editorDataView && this.lineMenuItemsMap.has("Edit")){
               actions.push({
-                  title: this.translate.instant('Edit'),
+                  title: this.lineMenuItemsMap.get("Edit").Title,
                   handler : async (selectedRows) => {
                     const selectedItemKey = selectedRows.rows[0]
                     const items = this.datasource.getItems()
@@ -293,20 +306,22 @@ export class BlockComponent implements OnInit {
                   }
               })
             }
-            actions.push({
-              title: this.translate.instant('Delete'),
-              handler: async (selectedRows) => {
-                const selectedItemKey = selectedRows.rows[0]
-                const items = this.datasource.getItems()
-                const item = items.find(item => item.Key == selectedItemKey)
-                if(item){
-                  item.Hidden = true
-                  await this.genericResourceService.postItem(this.resource,item)
-                  this.items = await this.genericResourceService.getItems(this.resource)
-                  this.datasource = new DataSource(this.items, this.datasource.getFields(),this.datasource.getColumns())
+            if(this.lineMenuItemsMap.has("Delete")){
+              actions.push({
+                title: this.lineMenuItemsMap.get("Delete").Title,
+                handler: async (selectedRows) => {
+                  const selectedItemKey = selectedRows.rows[0]
+                  const items = this.datasource.getItems()
+                  const item = items.find(item => item.Key == selectedItemKey)
+                  if(item){
+                    item.Hidden = true
+                    await this.genericResourceService.postItem(this.resource,item)
+                    this.items = await this.genericResourceService.getItems(this.resource)
+                    this.datasource = new DataSource(this.items, this.datasource.getFields(),this.datasource.getColumns())
+                  }
                 }
-              }
-            })
+              })
+            }
           }
           return actions
       }
