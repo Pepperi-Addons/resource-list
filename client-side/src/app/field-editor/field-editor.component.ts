@@ -4,6 +4,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { PepDialogActionsType, PepDialogData, PepDialogService } from '@pepperi-addons/ngx-lib/dialog';
 import { GenericResourceService } from '../services/generic-resource-service';
 
+
 @Component({
   selector: 'app-field-editor',
   templateUrl: './field-editor.component.html',
@@ -14,11 +15,7 @@ export class FieldEditorComponent implements OnInit {
   @Input() dataSource
   dialogRef = null
   dialogData
-  constructor(private injector: Injector,
-     private genericResourceService: GenericResourceService,
-     private translate: TranslateService,
-     private dialogService: PepDialogService
-     ) {
+  constructor(private injector: Injector, private genericResourceService: GenericResourceService) {
     this.dialogRef = this.injector.get(MatDialogRef, null)
     this.dialogData = this.injector.get(MAT_DIALOG_DATA, null)
    }
@@ -28,32 +25,11 @@ export class FieldEditorComponent implements OnInit {
     this.dataView = this.dataView || this.dialogData?.editorDataView
   }
   async onUpdateButtonClick(){
-    try{
-      await this.genericResourceService.postItem(this.dialogData.resourceName, this.dataSource)
-    }
-    catch(err){
-      console.log(err)
-      //show dialog here
-      this.dialogRef.close(false)
-      this.showDialog('Error', 'UpdateErrorMSG', 'close')
-      return
-    }
+    await this.genericResourceService.postItem(this.dialogData.resourceName, this.dataSource)
     this.dialogRef.close(true)
   }
 
   onCancelButtonClicked(){
     this.dialogRef.close()
   }
-  
-  showDialog(title: string, content: string, actionsType: PepDialogActionsType){
-    const dataMsg = new PepDialogData({
-      title: this.translate.instant(title),
-      actionsType: actionsType,
-      content: this.translate.instant(content)
-    });
-    this.dialogService.openDefaultDialog(dataMsg)
-  }
-
-  
-  
 }
