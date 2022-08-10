@@ -25,7 +25,6 @@ export class BlockEditorComponent implements OnInit {
                 private cardsService: CardsService,
                 private viewsService: ViewsService
                ) {
-                this.genericResourceService.pluginUUID = config.AddonUUID
     }
     ngOnInit(): void {
         this.resource = this.hostObject.configuration.resource;

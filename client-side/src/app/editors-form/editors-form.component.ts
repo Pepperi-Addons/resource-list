@@ -62,7 +62,6 @@ export class EditorsFormComponent implements OnInit {
     private profileService: ProfileService,
     private dialogService: PepDialogService,
     ){ 
-      this.genericResource.pluginUUID = config.AddonUUID
     }
 
   ngOnInit(): void {

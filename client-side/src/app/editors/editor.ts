@@ -25,7 +25,6 @@ export abstract class AbstractEditor{
         private genericResourceService: GenericResourceService,
         protected service: IDataService,
         ){ 
-          this.genericResourceService.pluginUUID = config.AddonUUID
         }
     async init(key){
         await this.initView(key)

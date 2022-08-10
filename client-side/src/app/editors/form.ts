@@ -25,7 +25,6 @@ export abstract class AbstractForm{
         private genericResourceService: GenericResourceService,
         protected service: IDataService,
         ){ 
-          this.genericResourceService.pluginUUID = config.AddonUUID
         }
     async init(){
         await this.initView(this.route.snapshot.paramMap.get('key'))

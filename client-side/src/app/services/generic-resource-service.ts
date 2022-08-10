@@ -5,7 +5,6 @@ import { UtilitiesService } from './utilities-service'
 
 @Injectable({ providedIn: 'root' })
 export class GenericResourceService{
-    pluginUUID;
     constructor(
         private utilitiesService: UtilitiesService,
     ){

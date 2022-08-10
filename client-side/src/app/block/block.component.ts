@@ -1,5 +1,5 @@
 import { TranslateService } from '@ngx-translate/core';
-import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { GenericResourceService } from '../services/generic-resource-service';
 import { PepMenuItem } from "@pepperi-addons/ngx-lib/menu";
 import { config } from '../addon.config'
@@ -49,7 +49,6 @@ export class BlockComponent implements OnInit {
          private dataViewService: DataViewService,
          private dialogService : PepDialogService,
          private viewService: ViewsService) {
-          this.genericResourceService.pluginUUID = config.AddonUUID
           this.actions.get = this.getActionsCallBack()
     }
     ngOnInit(): void {

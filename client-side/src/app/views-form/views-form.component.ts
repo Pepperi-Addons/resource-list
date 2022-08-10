@@ -61,7 +61,6 @@ export class ViewsFormComponent implements OnInit {
     private profileService: ProfileService,
     private utilitiesService: UtilitiesService
     ){ 
-      this.genericResourceService.pluginUUID = config.AddonUUID
     }
 
   ngOnInit(): void {

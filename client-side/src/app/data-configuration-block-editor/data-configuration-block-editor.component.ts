@@ -24,7 +24,6 @@ export class DataConfigurationBlockEditorComponent implements OnInit {
     constructor(private translate: TranslateService,
         private genericResourceService: GenericResourceService, 
         private editorsService: EditorsService){
-        this.genericResourceService.pluginUUID = config.AddonUUID
     }
     ngOnInit(): void{
         this.init()
