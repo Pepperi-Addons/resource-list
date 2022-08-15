@@ -1,5 +1,6 @@
 import { IPepDraggableItem } from "@pepperi-addons/ngx-lib/draggable-items"
-import { BaseFormDataViewField, DataView, DataViewField, DataViewFieldType, GridDataViewField, MenuDataViewField } from "@pepperi-addons/papi-sdk"
+import { BaseFormDataViewField, DataViewField, DataViewFieldType, GridDataViewField, MenuDataViewField } from "@pepperi-addons/papi-sdk"
+import { ViewsCard } from "./draggable-card-fields/cards.model"
 
 export const CREATION_DATE_TIME_TITLE = "Creation Date Time"
 export const MODIFICATION_DATE_TIME_TITLE = "Modification Date Time"
@@ -62,3 +63,8 @@ export const defaultCollectionFields = [
     ReadOnly: true,
   }
 ]
+
+export interface IGenericViewerConfigurationObject{
+  resource: string,
+  viewsList: ViewsCard[]
+}

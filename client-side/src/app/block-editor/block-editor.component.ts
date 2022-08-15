@@ -101,6 +101,6 @@ export class BlockEditorComponent implements OnInit {
     }
     onCardRemoveClick(event){
         this.viewsList = this.viewsList.filter((card) => card.id != event.id)
-       this.updateConfigurationField('viewsList', this.viewsList)
+        this.updateConfigurationField('viewsList', this.viewsList)
     }
 }

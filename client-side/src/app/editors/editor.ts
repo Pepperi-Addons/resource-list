@@ -1,10 +1,8 @@
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { ViewsService } from '../services/views.service';
-import { UDCService } from '../services/udc-service';
-import { config } from '../addon.config';
 import { View, Editor } from '../../../../shared/entities';
 import { IDataService } from '../metadata';
+import { GenericResourceService } from '../services/generic-resource-service'
 
 export abstract class AbstractEditor{
     key: string
@@ -23,10 +21,9 @@ export abstract class AbstractEditor{
         private router: Router,
         private route: ActivatedRoute,
         private translate: TranslateService,
-        private udcService: UDCService,
+        private genericResourceService: GenericResourceService,
         protected service: IDataService,
         ){ 
-          this.udcService.pluginUUID = config.AddonUUID
         }
     async init(key){
         await this.initView(key)
@@ -110,7 +107,7 @@ export abstract class AbstractEditor{
         ]
     }
     async getResourcesNames(){
-        const resources = await this.udcService.getCollections()
+        const resources = await this.genericResourceService.getResources()
         return resources.map(resource => {
             return {'Key': resource.Name, 'Value': resource.Name}
         })

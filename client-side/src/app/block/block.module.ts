@@ -8,7 +8,6 @@ import { config } from '../addon.config';
 import { PepNgxCompositeLibModule } from '@pepperi-addons/ngx-composite-lib';
 import { PepGenericListModule } from '@pepperi-addons/ngx-composite-lib/generic-list';
 import { PepMenuModule } from '@pepperi-addons/ngx-lib/menu';
-// import { PepDIMXModule } from '@pepperi-addons/ngx-composite-lib/dimx-export';
 import { PepButtonModule } from '@pepperi-addons/ngx-lib/button';
 import { PepSelectModule } from '@pepperi-addons/ngx-lib/select';
 import { PepPageLayoutModule } from '@pepperi-addons/ngx-lib/page-layout';
@@ -19,6 +18,7 @@ import { UtilitiesService } from '../services/utilities-service';
 import { GenericResourceService } from '../services/generic-resource-service';
 import { DataViewService } from '../services/data-view-service';
 import { ViewsService } from '../services/views.service';
+import { GenericViewerModule } from '../generic-viewer/generic-viewer.module'
 
 export const routes: Routes = [
     {
@@ -26,9 +26,10 @@ export const routes: Routes = [
         component: BlockComponent
     }
 ];
-
 @NgModule({
-    declarations: [BlockComponent],
+    declarations: [
+        BlockComponent
+    ],
     imports: [
         CommonModule,
         PepGenericListModule,
@@ -40,6 +41,7 @@ export const routes: Routes = [
         PepSizeDetectorModule,
         PepGenericFormModule,
         FieldEditorModule,
+        GenericViewerModule,
         TranslateModule.forChild({
             loader: {
                 provide: TranslateLoader,
@@ -58,8 +60,6 @@ export const routes: Routes = [
         GenericResourceService,
         DataViewService,
         ViewsService,
-        
-
     ]
 })
 export class BlockModule {
