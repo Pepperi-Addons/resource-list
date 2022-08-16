@@ -31,7 +31,6 @@ export class BlockComponent implements OnInit {
       this.configurationObject = {
         resource: hostObject?.configuration?.resource,
         viewsList: hostObject?.configuration?.viewsList || [],
-        selectionList: { none: false}
       }
     } 
     ngOnChanges(e: any): void {
