@@ -30,5 +30,6 @@
     "Error": "Error",
     "UpdateErrorMSG": "There is an error occurred, please fill mandatory fields before you update.",
     "Menu": "Menu",
-    "LineMenu": "Line Menu"
+    "LineMenu": "Line Menu",
+    "Done": "Done"
 }

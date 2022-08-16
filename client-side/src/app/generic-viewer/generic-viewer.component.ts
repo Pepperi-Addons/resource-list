@@ -1,5 +1,5 @@
 import { TranslateService } from '@ngx-translate/core';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { GenericResourceService } from '../services/generic-resource-service';
 import { PepMenuItem } from "@pepperi-addons/ngx-lib/menu";
 import { config } from '../addon.config'
@@ -13,6 +13,7 @@ import { PepDialogService } from '@pepperi-addons/ngx-lib/dialog';
 import { ViewsService } from '../services/views.service';
 import { FieldEditorComponent } from '../field-editor/field-editor.component';
 import { IGenericViewerConfigurationObject } from '../metadata';
+import { GenericListComponent } from '@pepperi-addons/ngx-composite-lib/generic-list';
 
 @Component({
     selector: 'app-generic-viewer',
@@ -20,21 +21,23 @@ import { IGenericViewerConfigurationObject } from '../metadata';
     styleUrls: ['./generic-viewer.component.scss']
 })
 export class GenericViewerComponent implements OnInit {
+    @ViewChild(GenericListComponent) genericList;
     @Input() configurationObject: IGenericViewerConfigurationObject
+    @Output() pressedDoneEvent: EventEmitter<number> = new EventEmitter<number>()
     dataSource: DataSource
     menuItems: PepMenuItem[] = []
     viewsList: ViewsCard[] = []
     items: any[] = []
     actions: any = {}
-    //new page block
     dropDownOfViews: SelectOption[] = []
     currentViewKey : string
     resource: string
     editorDataView: DataView
     currentView: View
     lineMenuItemsMap: Map<string, MenuDataViewField>
-    addButtonTitle: string
-    isAddButtonConfigured: boolean = false
+    buttonTitle: string
+    isButtonConfigured: boolean = false
+
 
     constructor(private translate: TranslateService,
          private genericResourceService: GenericResourceService,
@@ -45,26 +48,38 @@ export class GenericViewerComponent implements OnInit {
           this.actions.get = this.getActionsCallBack()
     }
     ngOnInit(): void {
-      console.log(`ng onInit!!!!!!!`);
       this.init()
     }
     async init(){
       this.setConfigurationObjectVariable()
-      if(this.configurationObject?.viewsList?.length == 0 || this.configurationObject?.resource == undefined){
-        this.dataSource = new DataSource([],[],[])
-      }
-      else{
-        await this.loadGenericViewerComponent()
-      }
+      await this.loadViewBlock()
     }
 
-    async loadGenericViewerComponent(){
+    async loadViewBlock(){
+      await this.configureViews()
+      if(this.configurationObject.selectionList){
+        await this.configureSelectionList()
+      }else{
+        await this.configureGenericViewerList()
+      }
+      this.DisplayViewInList(this.currentViewKey)
+    }
+
+    async configureSelectionList(){
+      if(!this.configurationObject.selectionList.none){
+        this.isButtonConfigured = true
+        this.buttonTitle = this.translate.instant("Done")
+      }
+    }
+    async configureViews(){
       this.createDropDownOfViews()
       await this.setCurrentViewAndKey()
+    }
+
+    async configureGenericViewerList(){
       this.editorDataView = await this.getEditorDataView(this.currentView?.Editor)
       await this.initMenuItems(this.currentViewKey)
       await this.initLineMenuItems(this.currentViewKey)
-      this.DisplayViewInList(this.currentViewKey)
     }
     setConfigurationObjectVariable():void{
       this.viewsList = this.configurationObject?.viewsList || []
@@ -98,8 +113,8 @@ export class GenericViewerComponent implements OnInit {
           })
         }
         else{
-          this.isAddButtonConfigured = true
-          this.addButtonTitle = field.Title
+          this.isButtonConfigured = true
+          this.buttonTitle = field.Title
         }
       })
     }
@@ -119,7 +134,6 @@ export class GenericViewerComponent implements OnInit {
       const dataViews = await this.dataViewService.getDataViewsByProfile(`GV_${viewKey}_View`, "Rep");
       if(dataViews.length > 0){
         this.loadList(dataViews[0] as GridDataView)
-        console.log(`display list ${dataViews} `);
       }
       //if there is no dataview we will display an empty list
       else{
@@ -176,7 +190,6 @@ export class GenericViewerComponent implements OnInit {
       }
     }
     ngOnChanges(e: any): void {
-      console.log(`generic viewer - ng onChanges!!`);
       this.init()
     }
     async backToList(){
@@ -259,5 +272,17 @@ export class GenericViewerComponent implements OnInit {
           this.items = await this.genericResourceService.getItems(this.resource)
           this.dataSource = new DataSource(this.items, this.dataSource.getFields(), this.dataSource.getColumns())
         }}))
+    }
+
+    onButtonClicked(){
+      if(this.configurationObject.selectionList){
+        this.onDoneButtonClicked()
+      }
+      else{
+        this.onNewButtonClicked()
+      }
+    }
+    onDoneButtonClicked(){
+      this.pressedDoneEvent.emit(this.genericList?.getSelectedItems()?.rows?.length || 0)
     }
 }

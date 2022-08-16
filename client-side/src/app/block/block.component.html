@@ -1,7 +1,10 @@
 <pep-page-layout>
     <ng-container pep-main-area>
-            <app-generic-viewer class="generic-viewer"
+            <app-generic-viewer
+                *ngIf="hasViewToDisplay" 
+                class="generic-viewer"
                 [configurationObject]="configurationObject"
+                (pressedDoneEvent) = "onDonePressed($event)"
             ></app-generic-viewer>
     </ng-container>
 </pep-page-layout>

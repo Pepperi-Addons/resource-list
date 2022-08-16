@@ -30,15 +30,15 @@
         ></pep-select>
         <pep-button
             class='pep-spacing-element'
-            [value] = "addButtonTitle"
+            [value] = "buttonTitle"
             styleType=strong
             styleStateType=system
             sizeType=md
             classNames='new'
             [disabled]='false'
             iconPosition='end'
-            [visible]='isAddButtonConfigured'
-            (buttonClick)='onNewButtonClicked()'
+            [visible]='isButtonConfigured'
+            (buttonClick)='onButtonClicked()'
         ></pep-button>
     </ng-container>
 </pep-generic-list>

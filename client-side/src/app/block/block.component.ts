@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { IGenericViewerConfigurationObject } from '../metadata';
 @Component({
     selector: 'block',
@@ -9,21 +9,35 @@ export class BlockComponent implements OnInit {
     @Input() hostObject: any;
     configurationObject: IGenericViewerConfigurationObject = {
       resource: undefined,
-      viewsList: []
+      viewsList: [],
     }
+    isSelectionList: boolean = false
+    hasViewToDisplay: boolean = false
     @Output() hostEvents: EventEmitter<any> = new EventEmitter<any>();
 
     constructor() {}
     ngOnInit(): void {
+      this.loadGenericView(this.hostObject)
+    }
+    loadGenericView(hostObject){
+      if(hostObject?.configuration?.viewsList?.length == 0){
+        this.hasViewToDisplay = false
+        return
+      }
+      this.hasViewToDisplay = true
+      this.setConfigurationObject(hostObject)
+    }
+    setConfigurationObject(hostObject): void{
       this.configurationObject = {
-        resource: this.hostObject?.configuration?.resource,
-        viewsList: this.hostObject?.configuration?.viewsList || []
+        resource: hostObject?.configuration?.resource,
+        viewsList: hostObject?.configuration?.viewsList || [],
+        selectionList: { none: false}
       }
     } 
     ngOnChanges(e: any): void {
-      this.configurationObject = {
-        resource: e?.configuration?.resource,
-        viewsList: e?.configuration?.viewsList || []
-      }
+      this.loadGenericView(e)
+    }
+    onDonePressed(numOfSelectedRows: number){
+      //will be implemented in the future      
     }
 }
