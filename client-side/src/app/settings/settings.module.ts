@@ -4,11 +4,10 @@ import { SettingsRoutingModule } from './settings.routes';
 import { SettingsComponent } from './settings.component';
 import { TranslateLoader, TranslateModule, TranslateService, TranslateStore } from '@ngx-translate/core';
 import { PepAddonService, PepNgxLibModule } from '@pepperi-addons/ngx-lib';
-
-import { config } from '../addon.config';
-import { UDCService } from '../services/udc-service';
 import { UtilitiesService } from '../services/utilities-service';
 import { ViewsService } from '../services/views.service';
+
+import { config } from '../addon.config';
 
 @NgModule({
     declarations: [
@@ -30,7 +29,6 @@ import { ViewsService } from '../services/views.service';
     providers: [
         TranslateStore,
         // When loading this module from route we need to add this here (because only this module is loading).
-        UDCService,
         UtilitiesService,
         ViewsService
     ]
