@@ -3,7 +3,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { config } from '../addon.config';
 import { IDataService } from '../metadata';
-import { UDCService } from '../services/udc-service';
+import { GenericResourceService } from '../services/generic-resource-service';
 
 @Component({
   selector: 'app-add-form',
@@ -27,6 +27,7 @@ export class AddFormComponent implements OnInit {
   };
   isValid: boolean = false
   service: IDataService
+  resources: any[]
 
 
 
@@ -34,10 +35,8 @@ export class AddFormComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public incoming: any,
     private dialogRef: MatDialogRef<AddFormComponent>,
     private translate: TranslateService,
-    private udcService: UDCService)
+    private genericResourceService: GenericResourceService)
   {
-    this.udcService.pluginUUID = config.AddonUUID
-
   } 
 
   ngOnInit(): void {
@@ -56,8 +55,8 @@ export class AddFormComponent implements OnInit {
   }
 
   async getResourcesNames(){
-    const resources = await this.udcService.getCollections()
-    return resources.map(resource => {
+    this.resources = await this.genericResourceService.getResources()
+    return this.resources.map(resource => {
         return {Key: resource.Name, Value: resource.Name}
     })
   }
@@ -119,12 +118,13 @@ export class AddFormComponent implements OnInit {
   ]
   }
   async onSave(){
+    const resource = this.resources.find(resource => resource.Name == this.dataSource.Resource)
     const field = {
       Name: this.dataSource.Name,
       Description: this.dataSource.Description,
       Resource: {
         Name: this.dataSource.Resource,
-        AddonUUID: ""
+        AddonUUID: resource.AddonUUID
       }
     }
     const result = await this.service.upsertItem(field)

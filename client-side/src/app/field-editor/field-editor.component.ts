@@ -1,6 +1,6 @@
 import { Component, Injector, Input, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { UDCService } from '../services/udc-service';
+import { GenericResourceService } from '../services/generic-resource-service';
 import { UtilitiesService } from '../services/utilities-service';
 
 @Component({
@@ -14,7 +14,7 @@ export class FieldEditorComponent implements OnInit {
   dialogRef = null
   dialogData
   constructor(private injector: Injector,
-     private udcService: UDCService,
+     private genericResourceService: GenericResourceService,
      private utilitiesService: UtilitiesService,
      ) {
     this.dialogRef = this.injector.get(MatDialogRef, null)
@@ -28,7 +28,7 @@ export class FieldEditorComponent implements OnInit {
   }
   async onUpdateButtonClick(){
     try{
-      await this.udcService.postItem(this.dialogData.resourceName, this.dataSource)
+      await this.genericResourceService.postItem(this.dialogData.resourceName, this.dataSource)
     }
     catch(err){
       console.log(err)

@@ -9,7 +9,6 @@ import { DataConfigurationBlockComponent } from './data-configuration-block.comp
 import { PepGenericFormModule } from '@pepperi-addons/ngx-composite-lib/generic-form';
 import { PepButtonModule } from '@pepperi-addons/ngx-lib/button';
 import { FieldEditorModule } from '../field-editor/field-editor.module';
-import { UDCService } from '../services/udc-service';
 import { UtilitiesService } from '../services/utilities-service';
 import { PepDialogModule } from '@pepperi-addons/ngx-lib/dialog';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -49,7 +48,6 @@ export const routes: Routes = [
         TranslateService,
         UtilitiesService,
         DataViewService,
-        UDCService
         
     ]
 })
