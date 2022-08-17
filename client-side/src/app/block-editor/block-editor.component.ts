@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { UDCService } from '../services/udc-service'
+import { GenericResourceService } from '../services/generic-resource-service'
 import { CdkDragDrop, CdkDragEnd, CdkDragStart, moveItemInArray} from '@angular/cdk/drag-drop';
 import { ViewsCard } from '../draggable-card-fields/cards.model'
 import { CardsService } from '../draggable-card-fields/cards.service'
@@ -21,21 +21,22 @@ export class BlockEditorComponent implements OnInit {
     @Input() hostObject: any;
     @Output() hostEvents: EventEmitter<any> = new EventEmitter<any>();
     viewsList: ViewsCard[]
-    constructor(private udcService: UDCService,
+    constructor(private genericResourceService: GenericResourceService,
                 private cardsService: CardsService,
                 private viewsService: ViewsService
                ) {
-                this.udcService.pluginUUID = config.AddonUUID
     }
     ngOnInit(): void {
         this.resource = this.hostObject.configuration.resource;
         this.viewsList = this.hostObject.configuration.viewsList || []
         Promise.all([this.setResourcesNames(), this.viewsService.getItems()])
         .then(([_, views]) => {
-            this.resource = this.hostObject.configuration.resource ||  this.resourcesNames.length > 0? this.resourcesNames[0].value : undefined
+            if(!this.resource){
+                this.resource = this.resourcesNames.length > 0? this.resourcesNames[0].value : undefined
+            }
+            this.updateConfigurationField('resource', this.resource)
             this.views = views
             this.setViewsByResource();
-            this.updateConfigurationField('resource', this.resource)
         })   
     }
     setViewsByResource(){
@@ -50,7 +51,7 @@ export class BlockEditorComponent implements OnInit {
         })
     }
     async setResourcesNames(){
-        const resources = await this.udcService.getCollections()
+        const resources = await this.genericResourceService.getResources()
         this.resourcesNames = resources.map(resource => {
             return {key: resource.Name, value: resource.Name}})
     }

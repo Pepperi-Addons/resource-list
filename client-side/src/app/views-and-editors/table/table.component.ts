@@ -20,7 +20,7 @@ export class TableComponent{
   @Input() name: string = ""
   @Input() service: IDataService
   @Input() editRoute: string
-  datasource: DataSource
+  dataSource: DataSource
   menuItems:PepMenuItem[] = []
   recycleBin: boolean = false
   fields: any[]
@@ -30,13 +30,13 @@ export class TableComponent{
   }
   widthArray = [
     {
-      Width: 0
+      Width: 33
     },
     {
-      Width: 0
+      Width: 33
     },
     {
-      Width: 0
+      Width: 33
     }
   ]
 
@@ -58,7 +58,7 @@ export class TableComponent{
   async loadGenericList(recycleBin: boolean){
     this.fields = await this.service.getItems(undefined, recycleBin)
     this.items = this.fieldsToListItems(this.fields)
-    this.datasource = new DataSource(this.items, this.listFields, this.widthArray, this.searchCB)
+    this.dataSource = new DataSource(this.items, this.listFields, this.widthArray, this.searchCB)
   }
   fieldsToListItems(items: any[]){
     return items.map((field) => {
@@ -80,7 +80,7 @@ export class TableComponent{
               handler: async (selectedRows) => {
                 this.router.navigate([`${this.editRoute}${selectedRows.rows[0]}`], {relativeTo : this.route})
               }
-          },
+          }, 
           {
             title: this.translate.instant('Delete'),
             handler: async (selectedRows) => {
@@ -128,7 +128,9 @@ export class TableComponent{
         content: AddFormComponent
     })
     this.dialogService.openDialog(AddFormComponent, formData, config).afterClosed().subscribe((value => {
-      this.loadGenericList(false)
+      if(value && value.Key){
+        this.router.navigate([`${this.editRoute}${value.Key}`], { relativeTo: this.route })
+      }
     }))
   }
   menuItemClick($event){
@@ -188,7 +190,7 @@ export class TableComponent{
               await this.service.upsertItem(field)
               this.fields = await this.service.getItems(undefined, true)
               this.items = this.fieldsToListItems(this.fields)
-              this.datasource = new DataSource(this.items, this.listFields, this.widthArray, this.searchCB)
+              this.dataSource = new DataSource(this.items, this.listFields, this.widthArray, this.searchCB)
             }
           })
         }

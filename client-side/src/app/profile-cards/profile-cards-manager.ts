@@ -1,4 +1,4 @@
-import { UDCService } from '../services/udc-service';
+import { GenericResourceService } from '../services/generic-resource-service';
 import { DataViewService } from '../services/data-view-service';
 import { ProfileService } from '../services/profile-service';
 import { DataView, GridDataViewField } from '@pepperi-addons/papi-sdk';
@@ -16,7 +16,7 @@ export class ProfileCardsManager{
     private currentMappedFields: Array<IMappedField> = []
     private currentSideCardsList: IPepDraggableItem[] = []
     private collectionFields: GridDataViewField[] = []
-    constructor(private udcService: UDCService,
+    constructor(private genericResourceService: GenericResourceService,
                 private dataViewContextName: string,
                 private resourceName: string,
                 private dataViewService: DataViewService,
@@ -24,7 +24,7 @@ export class ProfileCardsManager{
                 private fieldConvertor: IFieldConvertor
                 ){}
     async init(): Promise<void>{
-        const collection = await this.udcService.getCollection(this.resourceName)
+        const collection = await this.genericResourceService.getResource(this.resourceName)
         this.collectionFields = [...collection?.ListView?.Fields, ...this.getDefaultCollectionFields()]
         const dataViews: DataView[] = await this.dataViewService.getDataViews(this.dataViewContextName)
         this.allProfiles = await this.profileService.getProfiles()

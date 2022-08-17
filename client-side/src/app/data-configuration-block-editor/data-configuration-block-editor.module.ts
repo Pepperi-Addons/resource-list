@@ -14,9 +14,9 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 import { PepTextboxModule } from '@pepperi-addons/ngx-lib/textbox';
 import { PepPageLayoutModule } from '@pepperi-addons/ngx-lib/page-layout';
 import { PepSizeDetectorModule } from '@pepperi-addons/ngx-lib/size-detector';
-
-import { UDCService } from '../services/udc-service';
+import { GenericResourceService } from '../services/generic-resource-service';
 import { UtilitiesService } from '../services/utilities-service';
+import { EditorsService } from '../services/editors.service';
 import { ViewsService } from '../services/views.service';
 
 export const routes: Routes = [
@@ -53,9 +53,10 @@ export const routes: Routes = [
     providers: [
         TranslateStore,
         // When loading this module from route we need to add this here (because only this module is loading).
-        UDCService,
         UtilitiesService,
-        ViewsService
+        ViewsService,
+        GenericResourceService,
+        EditorsService
     ]
 })
 export class DataConfigurationBlockEditorModule{

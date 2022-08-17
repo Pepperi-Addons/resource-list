@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { config } from '../addon.config';
-import { UDCService } from '../services/udc-service';
+import { GenericResourceService } from '../services/generic-resource-service';
 import { EditorForm } from '../editors/editor-form'
 import { IPepOption } from '@pepperi-addons/ngx-lib';
 import { OpenMode } from '../../../../shared/entities'
@@ -15,6 +15,7 @@ import { CdkDragDrop, CdkDragEnd, CdkDragStart } from '@angular/cdk/drag-drop';
 import { DataViewService } from '../services/data-view-service';
 import { ProfileCardsManager } from '../profile-cards/profile-cards-manager'
 import { ProfileService } from '../services/profile-service';
+import { PepDialogActionsType, PepDialogData, PepDialogService } from '@pepperi-addons/ngx-lib/dialog';
 
 @Component({
   selector: 'app-editors-form',
@@ -56,11 +57,11 @@ export class EditorsFormComponent implements OnInit {
     private route: ActivatedRoute,
     private editorsService: EditorsService,
     private translate: TranslateService,
-    private udcService: UDCService,
+    private genericResource: GenericResourceService,
     private dataViewService: DataViewService,
-    private profileService: ProfileService
+    private profileService: ProfileService,
+    private dialogService: PepDialogService,
     ){ 
-      this.udcService.pluginUUID = config.AddonUUID
     }
 
   ngOnInit(): void {
@@ -75,12 +76,12 @@ export class EditorsFormComponent implements OnInit {
       }
     ]
     const key = this.route.snapshot.paramMap.get('key')
-    this.dataViewContextName = `GV_${key}_Editor`
+    this.dataViewContextName = `GV_${key.replace(/-/g, '')}_Editor`
     this.editorForm = new EditorForm(
       this.router,
       this.route,
       this.translate,
-      this.udcService,
+      this.genericResource,
       this.editorsService
     )
     this.editorForm.init().then(() => {
@@ -94,7 +95,7 @@ export class EditorsFormComponent implements OnInit {
   }
   async initFormTab(){
     const convertor = this.createConvertor()
-    this.profileCardsManager = new ProfileCardsManager(this.udcService,
+    this.profileCardsManager = new ProfileCardsManager(this.genericResource,
       this.dataViewContextName,
       this.resourceName,
       this.dataViewService,
@@ -134,6 +135,7 @@ export class EditorsFormComponent implements OnInit {
   }
   onUpdate(){
     this.editorForm.update()
+    this.showDialog('Update', 'UpdateDialogMSG', 'close')
   }
   onOpenModeChange(event){
     this.openMode = event
@@ -184,8 +186,17 @@ export class EditorsFormComponent implements OnInit {
   }
   async onSaveDataView(){
     await this.profileCardsManager.saveCurrentDataView()
+    this.showDialog('Save', 'SaveDialogMSG', 'close')
   }
-  mappedFieldsToDataViewFields(mappedFields: IEditorMappedField[]): BaseFormDataViewField[]{
+  showDialog(title: string, content: string, actionsType: PepDialogActionsType){
+    const dataMsg = new PepDialogData({
+      title: this.translate.instant(title),
+      actionsType: actionsType,
+      content: this.translate.instant(content)
+    });
+    this.dialogService.openDefaultDialog(dataMsg)
+  }
+  mappedFieldsToDataViewFields(mappedFields: IEditorMappedField[]): IDataViewField[]{
     return mappedFields.map((mappedField, index) => {
         return this.mappedFieldToDataViewField(mappedField, index)
     })

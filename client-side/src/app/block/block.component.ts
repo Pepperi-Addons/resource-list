@@ -1,15 +1,12 @@
 import { TranslateService } from '@ngx-translate/core';
-import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { UDCService } from '../services/udc-service';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { GenericResourceService } from '../services/generic-resource-service';
 import { PepMenuItem } from "@pepperi-addons/ngx-lib/menu";
-// import { DIMXComponent } from '@pepperi-addons/ngx-composite-lib/dimx-export';
-import { UDC_UUID } from '../addon.config';
 import { config } from '../addon.config'
 import { ViewsCard } from '../draggable-card-fields/cards.model';
 import { DataView, GridDataView, GridDataViewColumn } from '@pepperi-addons/papi-sdk';
 import { DataSource } from '../data-source/data-source'
 import { PepSelectionData } from '@pepperi-addons/ngx-lib/list';
-import { Params, Router } from '@angular/router';
 import { SelectOption, View } from '../../../../shared/entities';
 import { DataViewService } from '../services/data-view-service';
 import { PepDialogService } from '@pepperi-addons/ngx-lib/dialog';
@@ -22,12 +19,9 @@ import { FieldEditorComponent } from '../field-editor/field-editor.component';
     styleUrls: ['./block.component.scss']
 })
 export class BlockComponent implements OnInit {
-    // @ViewChild('dimx') dimx:DIMXComponent | undefined;
     @Input() hostObject: any;
     datasource: DataSource
-    resourceName: string
     title: string
-    udcUUID: string = UDC_UUID
     menuItems: PepMenuItem[] = []
     allowExport: boolean = false;
     allowImport: boolean = false;
@@ -51,12 +45,10 @@ export class BlockComponent implements OnInit {
     @Output() hostEvents: EventEmitter<any> = new EventEmitter<any>();
 
     constructor(private translate: TranslateService,
-         private udcService: UDCService,
-         private router: Router,
+         private genericResourceService: GenericResourceService,
          private dataViewService: DataViewService,
          private dialogService : PepDialogService,
-         private viewSerivce: ViewsService) {
-          this.udcService.pluginUUID = config.AddonUUID
+         private viewService: ViewsService) {
           this.actions.get = this.getActionsCallBack()
     }
     ngOnInit(): void {
@@ -65,11 +57,11 @@ export class BlockComponent implements OnInit {
 
     async loadBlock(){
       this.viewsList = this.hostObject?.configuration?.viewsList || []
-      this.resource = this.hostObject.configuration?.resource || ""
+      this.resource = this.hostObject.configuration?.resource || "" 
       this.createDropDownOfViews()
       this.currentViewKey = this.dropDownOfViews?.length > 0? this.dropDownOfViews[0].key : ""
-      this.currentView = (await this.viewSerivce.getItems(this.currentViewKey))[0]
-      this.editorDataView = await this.getEditorDataView(this.currentView.Editor)
+      this.currentView = (await this.viewService.getItems(this.currentViewKey))[0]
+      this.editorDataView =this.currentView?.Editor? await this.getEditorDataView(this.currentView.Editor) : undefined
       this.DisplayViewInList(this.currentViewKey)
     }
     async getEditorDataView(editorKey: string | undefined): Promise<DataView | undefined>{
@@ -90,16 +82,14 @@ export class BlockComponent implements OnInit {
     }
     async onViewChange($event){
       this.currentViewKey = $event
-      this.currentView = (await this.viewSerivce.getItems(this.currentViewKey))[0]
+      this.currentView = (await this.viewService.getItems(this.currentViewKey))[0]
       this.DisplayViewInList(this.currentViewKey)
-
     }
     async loadList(dataView: GridDataView){
       const fields = dataView.Fields || []
       const columns = dataView.Columns || []
-      const items = await this.udcService.getItems(this.resource)
+      const items = await this.genericResourceService.getItems(this.resource)
       this.datasource = new DataSource(items, fields,columns)
-
     }
 
     createDropDownOfViews(){
@@ -202,26 +192,62 @@ export class BlockComponent implements OnInit {
      getActionsCallBack(){
       return async (data: PepSelectionData) => {
           const actions = []
-          if(data && data.rows.length == 1 && this.editorDataView){
-                  actions.push({
-                      title: this.translate.instant('Edit'),
-                      handler : async (selectedRows) => {
-                        const selectedItemKey = selectedRows.rows[0]
-                        const items = this.datasource.getItems()
-                        const item = items.find(item => item.Key == selectedItemKey)
-                        const dialogData = {
-                          item : item,
-                          editorDataView: this.editorDataView
-                        }
-                        const config = this.dialogService.getDialogConfig({
-
-                        }, 'large')
-                        this.dialogService.openDialog(FieldEditorComponent, dialogData, config).afterClosed().subscribe((value => { }))
+          if(data && data.rows.length == 1){
+            if(this.editorDataView){
+              actions.push({
+                  title: this.translate.instant('Edit'),
+                  handler : async (selectedRows) => {
+                    const selectedItemKey = selectedRows.rows[0]
+                    const items = this.datasource.getItems()
+                    const item = items.find(item => item.Key == selectedItemKey)
+                    const dialogData = {
+                      item : item,
+                      editorDataView: this.editorDataView,
+                      resourceName: this.resource
+                    }
+                    const config = this.dialogService.getDialogConfig({
+  
+                    }, 'large')
+                    this.dialogService.openDialog(FieldEditorComponent, dialogData, config).afterClosed().subscribe((async isUpdatePreformed => {
+                      if(isUpdatePreformed){
+                        this.items = await this.genericResourceService.getItems(this.resource)
+                        this.datasource = new DataSource(this.items, this.datasource.getFields(), this.datasource.getColumns())
                       }
-                  })
+                     }))
+                  }
+              })
+            }
+            actions.push({
+              title: this.translate.instant('Delete'),
+              handler: async (selectedRows) => {
+                const selectedItemKey = selectedRows.rows[0]
+                const items = this.datasource.getItems()
+                const item = items.find(item => item.Key == selectedItemKey)
+                if(item){
+                  item.Hidden = true
+                  await this.genericResourceService.postItem(this.resource,item)
+                  this.items = await this.genericResourceService.getItems(this.resource)
+                  this.datasource = new DataSource(this.items, this.datasource.getFields(),this.datasource.getColumns())
+                }
+              }
+            })
           }
           return actions
       }
+    }
+    onNewButtonClicked(){
+      const dialogData = {
+        item : {},
+        editorDataView: this.editorDataView,
+        resourceName: this.resource
+      }
+      const config = this.dialogService.getDialogConfig({
+      }, 'large')
+      this.dialogService.openDialog(FieldEditorComponent, dialogData, config).afterClosed().subscribe((async isUpdatePreformed => {
+        if(isUpdatePreformed){
+          this.items = await this.genericResourceService.getItems(this.resource)
+          this.datasource = new DataSource(this.items, this.datasource.getFields(), this.datasource.getColumns())
+        }}))
     }
     // onAddClick(){
     //   const formData = {

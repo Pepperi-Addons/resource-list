@@ -1,6 +1,6 @@
 import { TranslateService } from '@ngx-translate/core';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { UDCService } from '../services/udc-service';
+import { GenericResourceService } from '../services/generic-resource-service';
 import { config } from '../addon.config';
 import { Editor, SelectOption } from '../../../../shared/entities'
 import { EditorsService } from '../services/editors.service';
@@ -22,15 +22,14 @@ export class DataConfigurationBlockEditorComponent implements OnInit {
     @Output() hostEvents: EventEmitter<any> = new EventEmitter<any>();
 
     constructor(private translate: TranslateService,
-        private udcService: UDCService, 
+        private genericResourceService: GenericResourceService, 
         private editorsService: EditorsService){
-        this.udcService.pluginUUID = config.AddonUUID
     }
     ngOnInit(): void{
         this.init()
     }
     async init(){
-        this.resources = await this.udcService.getCollections() || []
+        this.resources = await this.genericResourceService.getResources() || []
         this.editors = await this.editorsService.getItems() || []
         this.initPepSelectResource()
         this.initPepSelectEditors()

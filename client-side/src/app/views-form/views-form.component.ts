@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { ViewsService } from '../services/views.service';
-import { UDCService } from '../services/udc-service';
+import { GenericResourceService } from '../services/generic-resource-service';
 import { config } from '../addon.config';
 import { IPepProfileDataViewsCard, IPepProfile } from '@pepperi-addons/ngx-lib/profile-data-views-list';
 import { IPepDraggableItem } from '@pepperi-addons/ngx-lib/draggable-items';
@@ -15,6 +15,8 @@ import { View } from '../../../../shared/entities';
 import { EditorsService } from '../services/editors.service';
 import { ProfileCardsManager } from '../profile-cards/profile-cards-manager';
 import { ProfileService } from '../services/profile-service';
+import { UtilitiesService } from '../services/utilities-service';
+
 
 
 @Component({
@@ -53,12 +55,12 @@ export class ViewsFormComponent implements OnInit {
     private router: Router,
     private viewsService: ViewsService,
     private translate: TranslateService,
-    private udcService: UDCService,
+    private genericResourceService: GenericResourceService,
     private dataViewService: DataViewService,
     private editorsService: EditorsService,
-    private profileService: ProfileService
+    private profileService: ProfileService,
+    private utilitiesService: UtilitiesService
     ){ 
-      this.udcService.pluginUUID = config.AddonUUID
     }
 
   ngOnInit(): void {
@@ -68,16 +70,16 @@ export class ViewsFormComponent implements OnInit {
   //                        Init Functions                        
   // -------------------------------------------------------------
   async initComponent(){
-    const key = this.route.snapshot.paramMap.get('key')?.replace(/-/g, '')
+    const key = this.route.snapshot.paramMap.get('key')
 
-    this.dataViewContextName = `GV_${key}_View`
+    this.dataViewContextName = `GV_${key?.replace(/-/g, '')}_View`
     await this.initGeneralTab(key)
     await this.initFormTab()
     this.loadCompleted = true
   }
   async initFormTab(){
     const convertor = this.createConvertor()
-    this.profileCardsManager = new ProfileCardsManager(this.udcService,
+    this.profileCardsManager = new ProfileCardsManager(this.genericResourceService,
       this.dataViewContextName,
       this.dataSource.Resource,
       this.dataViewService,
@@ -112,7 +114,7 @@ export class ViewsFormComponent implements OnInit {
     this.mappedFields = this.profileCardsManager.getCurrentMappedFields()
   }
   async initGeneralTab(key){
-    this.currentView = (await this.viewsService.getItems(key))[0]
+    this.currentView = (await this.viewsService.getItems(key))[0]    
     const editorOptionalValues = await this.getEditorOptionalValues()
     this.dataSource = this.convertViewToDataSource(this.currentView)
     this.dataView = this.getDataview(editorOptionalValues)
@@ -230,6 +232,7 @@ export class ViewsFormComponent implements OnInit {
     this.currentView.Description = this.dataSource.Description
     this.currentView.Editor = this.dataSource.Editor
     this.viewsService.upsertItem(this.currentView)
+    this.utilitiesService.showDialog("Update", "UpdateDialogMSG", 'close')
   }
 
   //-----------------------------------------------------------------------
@@ -281,6 +284,7 @@ export class ViewsFormComponent implements OnInit {
   }
   async onSaveDataView(){
     await this.profileCardsManager.saveCurrentDataView()
+    this.utilitiesService.showDialog('Save', "SaveDialogMSG", 'close')
   }
   mappedFieldToDataViewField(mappedField: IMappedField, index: number): IDataViewField{
     return {
@@ -301,9 +305,9 @@ export class ViewsFormComponent implements OnInit {
           Y: 0
         }
       }
-    }
   }
-  mappedFieldsToDataViewFields(mappedFields: IMappedField[]): GridDataViewField[]{
+  }
+  mappedFieldsToDataViewFields(mappedFields: IMappedField[]): IDataViewField[]{
     return mappedFields.map((mappedField, index) => {
         return this.mappedFieldToDataViewField(mappedField, index)
     })

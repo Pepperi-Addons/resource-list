@@ -17,10 +17,22 @@
                     [mandatory]="false"
                     xAlignment="left"
                     [options]="dropDownOfViews"
-                    [showTitle]="true"
+                    [renderTitle]="false"
                     (valueChange)="onViewChange($event)"
                     [emptyOption]="false"
                 ></pep-select>
+                <pep-button
+                    class='pep-spacing-element'
+                    value = "{{'New' | translate }}"
+                    styleType=strong
+                    styleStateType=system
+                    sizeType=md
+                    classNames='new'
+                    [disabled]='false'
+                    iconPosition='end'
+                    [visible]='true'
+                    (buttonClick)='onNewButtonClicked()'
+                ></pep-button>
             </ng-container>
         </pep-generic-list>
     </ng-container>

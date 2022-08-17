@@ -30,7 +30,7 @@
     <ng-container pep-main-area>
         <mat-tab-group #tabgroup class="editor-tabs">
             <mat-tab label= "{{'Tabs.General' | translate}}">
-                <h5> {{'Views_Editor_First_Line' | translate}}</h5>
+                <h5> {{'ViewsEditorFirstLine' | translate}}</h5>
                 <!-- ---------form------------- -->
                 <pep-generic-form
                 [dataSource]="dataSource"
@@ -98,8 +98,8 @@
                         <div pep-main-area class="mapped-fields-main-area">
                             <div class="mapped-fields-top-area pep-border-bottom"
                                 [title]="('MAPPED_FIELDS_TITLE' | translate) + ' ' + ('MAPPED_FIELDS_TITLE_HINT' | translate)">
-                                <span class="title-md">{{'MAPPED_FIELDS_TITLE' | translate}}&nbsp;</span>
-                                <span class="color-dimmed">{{('MAPPED_FIELDS_TITLE_HINT' | translate)}}
+                                <span class="title-md">{{'MappedFieldTitle' | translate}}&nbsp;</span>
+                                <span class="color-dimmed">{{('MappedFieldTitleHint' | translate)}}
                                 </span>
                             </div>
             
@@ -111,7 +111,7 @@
                                             <pep-icon name="arrow_down_alt"></pep-icon>
                                         </mat-icon>
                                         <span class="body-sm ellipsis">
-                                            {{ 'Empty_Mapped_Field_Area' | translate }}
+                                            {{ 'EmptyMappedFieldArea' | translate }}
                                         </span> 
                                     </div>
                                 </ng-template>

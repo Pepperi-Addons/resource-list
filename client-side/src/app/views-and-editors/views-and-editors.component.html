@@ -1,15 +1,16 @@
 <pep-page-layout [addPadding]="true">
     <!--Header-->
     <ng-container pep-top-area>
-        <h2> {{'Views_And_Editors_Title' | translate}} </h2>
+        <h2> {{'ViewsAndEditorsTitle' | translate}} </h2>
         <hr>
         <br>
     </ng-container>
     <!--Body-->
     <ng-container pep-main-area>
-        <mat-tab-group #tabgroup class="editor-tabs">
+        <mat-tab-group #tabGroup class="editor-tabs" (selectedTabChange)="onTabChanged($event)">
             <mat-tab label= "{{'Tabs.Views' | translate}}">
                 <app-table 
+                    *ngIf="currentTabIndex == 0"
                     name = "Views"
                     [service] = "viewsService"
                     editRoute = "">
@@ -17,10 +18,11 @@
             </mat-tab>
             <mat-tab label= "{{'Tabs.Editors' | translate}}">
                 <app-table 
-                name = "Editors"
-                [service] ="editorsService"
-                editRoute="editor/">
-            </app-table>
+                    *ngIf="currentTabIndex == 1"
+                    name = "Editors"
+                    [service] ="editorsService"
+                    editRoute="editor/">
+                </app-table>
             </mat-tab>
         </mat-tab-group>
     </ng-container>
