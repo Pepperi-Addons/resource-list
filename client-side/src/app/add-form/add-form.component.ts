@@ -37,8 +37,6 @@ export class AddFormComponent implements OnInit {
     private translate: TranslateService,
     private genericResourceService: GenericResourceService)
   {
-    this.genericResourceService.pluginUUID = config.AddonUUID
-
   } 
 
   ngOnInit(): void {

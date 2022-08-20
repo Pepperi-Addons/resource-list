@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { GenericViewerComponent } from './generic-viewer.component'
 import { PepGenericListModule } from '@pepperi-addons/ngx-composite-lib/generic-list';
 import { PepMenuModule } from '@pepperi-addons/ngx-lib/menu';
+import { PepSelectModule } from '@pepperi-addons/ngx-lib/select';
 import { PepButtonModule } from '@pepperi-addons/ngx-lib/button';
 
 
@@ -13,6 +14,7 @@ import { PepButtonModule } from '@pepperi-addons/ngx-lib/button';
     CommonModule,
     PepGenericListModule,
     PepMenuModule,
+    PepSelectModule,
     PepButtonModule
   ],
   exports: [GenericViewerComponent]

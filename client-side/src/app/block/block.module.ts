@@ -46,7 +46,7 @@ export const routes: Routes = [
             loader: {
                 provide: TranslateLoader,
                 useFactory: (addonService: PepAddonService) => 
-                    PepAddonService.createMultiTranslateLoader(addonService, ['ngx-lib', 'ngx-composite-lib'], config.AddonUUID),
+                    PepAddonService.createMultiTranslateLoader(config.AddonUUID, addonService, ['ngx-lib', 'ngx-composite-lib']),
                 deps: [PepAddonService]
             }, isolate: false
         }),
@@ -55,7 +55,7 @@ export const routes: Routes = [
     exports: [BlockComponent],
     providers: [
         TranslateStore,
-        TranslateService,
+        // When loading this module from route we need to add this here (because only this module is loading).
         UtilitiesService,
         GenericResourceService,
         DataViewService,

@@ -13,7 +13,7 @@ import { UtilitiesService } from '../services/utilities-service';
 import { PepDialogModule } from '@pepperi-addons/ngx-lib/dialog';
 import { MatDialogModule } from '@angular/material/dialog';
 import { DataViewService } from '../services/data-view-service';
-
+import { ViewsService } from '../services/views.service';
 
 export const routes: Routes = [
     {
@@ -36,7 +36,7 @@ export const routes: Routes = [
             loader: {
                 provide: TranslateLoader,
                 useFactory: (addonService: PepAddonService) => 
-                    PepAddonService.createMultiTranslateLoader(addonService, ['ngx-lib', 'ngx-composite-lib'], config.AddonUUID),
+                    PepAddonService.createMultiTranslateLoader(config.AddonUUID, addonService, ['ngx-lib', 'ngx-composite-lib']),
                 deps: [PepAddonService]
             }, isolate: false
         }),
@@ -45,10 +45,10 @@ export const routes: Routes = [
     exports: [DataConfigurationBlockComponent],
     providers: [
         TranslateStore,
-        TranslateService,
+        // When loading this module from route we need to add this here (because only this module is loading).
+        ViewsService,
         UtilitiesService,
         DataViewService,
-        
     ]
 })
 export class DataConfigurationBlockModule {

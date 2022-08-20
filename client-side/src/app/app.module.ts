@@ -1,13 +1,13 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { DoBootstrap, Injector, NgModule } from '@angular/core';
 import { AppComponent } from './app.component';
 import { BlockModule } from './block/block.module';
 import { BlockEditorModule } from './block-editor/block-editor.module';
 import { DraggableCardFieldsModule } from './draggable-card-fields/draggable-card-fields.module';
-import { DataConfigurationBlockModule } from './data-configuration-block';
-import { DataConfigurationBlockEditorModule } from './data-configuration-block-editor';
+import { DataConfigurationBlockComponent, DataConfigurationBlockModule } from './data-configuration-block';
+import { DataConfigurationBlockEditorComponent, DataConfigurationBlockEditorModule } from './data-configuration-block-editor';
 import { ViewsAndEditorsModule } from './views-and-editors'
-import { TranslateLoader, TranslateModule, TranslateStore } from '@ngx-translate/core';
+import { TranslateLoader, TranslateModule, TranslateService, TranslateStore } from '@ngx-translate/core';
 import { PepAddonService } from '@pepperi-addons/ngx-lib';
 import { AppRoutingModule } from './app.route';
 import { ViewsFormComponent } from './views-form/views-form.component'
@@ -30,11 +30,17 @@ import { PepSeparatorModule } from '@pepperi-addons/ngx-lib/separator';
 import { EditorMappedFieldComponent } from './editor-mapped-field/editor-mapped-field.component';
 import { PepCheckboxModule } from '@pepperi-addons/ngx-lib/checkbox';
 import { PepSizeDetectorModule } from '@pepperi-addons/ngx-lib/size-detector';
+import { PepIconModule } from '@pepperi-addons/ngx-lib/icon';
+import { MatIconModule } from '@angular/material/icon';
 import { MenuTabComponent } from './menu-tab/menu-tab.component';
 import { MenuMappedFieldComponent } from './menu-mapped-field/menu-mapped-field.component';
 import { LineMenuTabComponent } from './line-menu-tab/line-menu-tab.component';
 import { EditorsFormTabComponent } from './editors-form-tab/editors-form-tab.component';
 import { ViewsFormTabComponent } from './views-form-tab/views-form-tab.component';
+import { config } from './addon.config';
+import { SettingsComponent } from './settings';
+import { BlockComponent } from './block';
+import { BlockEditorComponent } from './block-editor';
 
 @NgModule({
     imports: [
@@ -48,6 +54,7 @@ import { ViewsFormTabComponent } from './views-form-tab/views-form-tab.component
         AppRoutingModule,
         PepButtonModule,
         MatTabsModule,
+        MatIconModule,
         PepGenericFormModule,
         PepSelectModule,
         PepProfileDataViewsListModule,
@@ -63,10 +70,12 @@ import { ViewsFormTabComponent } from './views-form-tab/views-form-tab.component
         PepSeparatorModule,
         PepCheckboxModule,
         PepSizeDetectorModule,
+        PepIconModule,
         TranslateModule.forRoot({
             loader: {
                 provide: TranslateLoader,
-                useFactory: PepAddonService.createMultiTranslateLoader,
+                useFactory: (addonService: PepAddonService) => 
+                    PepAddonService.createMultiTranslateLoader(config.AddonUUID, addonService, ['ngx-lib', 'ngx-composite-lib']),
                 deps: [PepAddonService]
             }
         })
@@ -88,7 +97,24 @@ import { ViewsFormTabComponent } from './views-form-tab/views-form-tab.component
         TranslateStore
     ],
     bootstrap: [
-        AppComponent
+        // AppComponent
     ]
 })
-export class AppModule { }
+
+export class AppModule implements DoBootstrap {
+    constructor(
+        private injector: Injector,
+        translate: TranslateService,
+        private pepAddonService: PepAddonService
+    ) {
+        this.pepAddonService.setDefaultTranslateLang(translate);
+    }
+    
+    ngDoBootstrap() {
+        this.pepAddonService.defineCustomElement(`settings-element-${config.AddonUUID}`, SettingsComponent, this.injector);
+        this.pepAddonService.defineCustomElement(`viewer-block-element-${config.AddonUUID}`, BlockComponent, this.injector);
+        this.pepAddonService.defineCustomElement(`viewer-block-editor-element-${config.AddonUUID}`, BlockEditorComponent, this.injector);
+        this.pepAddonService.defineCustomElement(`data-config-block-element-${config.AddonUUID}`, DataConfigurationBlockComponent, this.injector);
+        this.pepAddonService.defineCustomElement(`data-config-block-editor-element-${config.AddonUUID}`, DataConfigurationBlockEditorComponent, this.injector);
+    }
+}

@@ -11,6 +11,7 @@ import { PepGroupButtonsModule } from '@pepperi-addons/ngx-lib/group-buttons';
 import { PepImageModule } from '@pepperi-addons/ngx-lib/image';
 import { PepSelectModule } from '@pepperi-addons/ngx-lib/select';
 import { DraggableCardFieldsComponent } from './draggable-card-fields.component'
+import { config } from '../addon.config';
 import { pepIconArrowDown, pepIconArrowUp, PepIconRegistry, pepIconSystemBin, pepIconSystemMove } from '@pepperi-addons/ngx-lib/icon';
 
 const pepIcons = [
@@ -34,9 +35,9 @@ const pepIcons = [
         TranslateModule.forChild({
             loader: {
                 provide: TranslateLoader,
-                useFactory: (http: HttpClient, fileService: PepFileService, addonService: PepAddonService) => 
-                    PepAddonService.createDefaultMultiTranslateLoader(http, fileService, addonService),
-                deps: [HttpClient, PepFileService, PepAddonService],
+                useFactory: (addonService: PepAddonService) => 
+                    PepAddonService.createMultiTranslateLoader(config.AddonUUID, addonService, ['ngx-lib', 'ngx-composite-lib']),
+                deps: [PepAddonService]
             }, isolate: false
         }),
     ],

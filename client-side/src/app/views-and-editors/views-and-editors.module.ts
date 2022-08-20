@@ -13,6 +13,7 @@ import { PepPageLayoutModule } from '@pepperi-addons/ngx-lib/page-layout';
 import { TableComponent } from './table/table.component';
 import { PepMenuModule } from '@pepperi-addons/ngx-lib/menu';
 import { PepSizeDetectorModule } from '@pepperi-addons/ngx-lib/size-detector';
+import { config } from '../addon.config';
 
 
 
@@ -41,7 +42,8 @@ export const routes: Routes = [
     TranslateModule.forChild({
       loader: {
           provide: TranslateLoader,
-          useFactory: PepAddonService.createMultiTranslateLoader,
+          useFactory: (addonService: PepAddonService) => 
+              PepAddonService.createMultiTranslateLoader(config.AddonUUID, addonService, ['ngx-lib', 'ngx-composite-lib']),
           deps: [PepAddonService]
       }, isolate: false
     }),

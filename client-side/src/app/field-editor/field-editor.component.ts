@@ -19,6 +19,7 @@ export class FieldEditorComponent implements OnInit {
      ) {
     this.dialogRef = this.injector.get(MatDialogRef, null)
     this.dialogData = this.injector.get(MAT_DIALOG_DATA, null)
+    
    }
 
   ngOnInit(): void {
@@ -40,6 +41,7 @@ export class FieldEditorComponent implements OnInit {
   }
 
   onCancelButtonClicked(){
-    this.dialogRef.close()
+    this.dialogRef.close(false)
   }
+  
 }

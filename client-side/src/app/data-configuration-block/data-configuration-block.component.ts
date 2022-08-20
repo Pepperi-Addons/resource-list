@@ -25,7 +25,6 @@ export class DataConfigurationBlockComponent implements OnInit {
 
     constructor(private translate: TranslateService,
        private dataViewService: DataViewService) {
-      // this.typeMap = new TypeMap()
       // this.typeMap.init()
       
     }

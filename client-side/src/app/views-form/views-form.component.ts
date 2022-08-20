@@ -42,7 +42,6 @@ export class ViewsFormComponent implements OnInit {
     private editorsService: EditorsService,
     private utilitiesService: UtilitiesService
     ){ 
-      this.genericResourceService.pluginUUID = config.AddonUUID
     }
     
   ngOnInit(): void {
