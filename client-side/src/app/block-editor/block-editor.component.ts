@@ -102,4 +102,6 @@ export class BlockEditorComponent implements OnInit {
         this.viewsList = this.viewsList.filter((card) => card.id != event.id)
         this.updateConfigurationField('viewsList', this.viewsList)
     }
+
+    
 }

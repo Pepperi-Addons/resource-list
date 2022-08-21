@@ -55,6 +55,7 @@ import { BlockEditorComponent } from './block-editor';
         PepButtonModule,
         MatTabsModule,
         MatIconModule,
+        MatIconModule,
         PepGenericFormModule,
         PepSelectModule,
         PepProfileDataViewsListModule,
@@ -70,6 +71,7 @@ import { BlockEditorComponent } from './block-editor';
         PepSeparatorModule,
         PepCheckboxModule,
         PepSizeDetectorModule,
+        PepIconModule,
         PepIconModule,
         TranslateModule.forRoot({
             loader: {

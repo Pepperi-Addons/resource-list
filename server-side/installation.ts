@@ -17,6 +17,7 @@ import { EditorsService } from './services/editors.service';
 export async function install(client: Client, request: Request): Promise<any> {
     await createPageBlockRelation(client);
     await createSettingsRelation(client);
+    await createSettingsRelation(client);
     const viewsService = new ViewsService(client)
     const editorsService = new EditorsService(client)
     await viewsService.createSchema()
@@ -29,6 +30,7 @@ export async function uninstall(client: Client, request: Request): Promise<any> 
 
 export async function upgrade(client: Client, request: Request): Promise<any> {
     createPageBlockRelation(client);
+    createSettingsRelation(client);;
     createSettingsRelation(client);
     return {success:true,resultObject:{}}
 }

@@ -11,6 +11,7 @@ import { ViewsFormComponent } from './views-form/views-form.component';
 })
 export class EmptyRouteComponent {}
 
+// Old - used in angular 12.
 const routes: Routes = [
     {
         path: '',
