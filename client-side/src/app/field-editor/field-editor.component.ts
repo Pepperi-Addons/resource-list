@@ -42,7 +42,7 @@ export class FieldEditorComponent implements OnInit {
   }
 
   onCancelButtonClicked(){
-    this.dialogRef.close(falsefalse)
+    this.dialogRef.close(false)
   }
   
   
