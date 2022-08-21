@@ -92,7 +92,7 @@ export class GenericViewerComponent implements OnInit {
     async initLineMenuItems(viewKey: string){
       const lineMenuDataView = await this.getLineMenuDataView(viewKey)
       this.lineMenuItemsMap = new Map()
-      lineMenuDataView.Fields?.forEach(dataViewField => {
+      lineMenuDataView?.Fields?.forEach(dataViewField => {
         this.lineMenuItemsMap.set(dataViewField.FieldID, dataViewField)
       })
     }
