@@ -8,15 +8,17 @@ import { UtilitiesService } from '../services/utilities-service';
 import { ViewsService } from '../services/views.service';
 
 import { config } from '../addon.config';
+import { ViewsAndEditorsModule } from '../views-and-editors';
 
 @NgModule({
     declarations: [
-        SettingsComponent
+        SettingsComponent,
     ],
     imports: [
         CommonModule,
         PepNgxLibModule,
         SettingsRoutingModule,
+        ViewsAndEditorsModule,
         TranslateModule.forChild({
             loader: {
                 provide: TranslateLoader,

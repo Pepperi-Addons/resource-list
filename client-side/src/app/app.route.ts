@@ -7,32 +7,15 @@ import { ViewsFormComponent } from './views-form/views-form.component';
 // Important for single spa
 @Component({
     selector: 'app-empty-route',
-    template: '<div></div>',
+    template: '<div>route does not exist</div>',
 })
 export class EmptyRouteComponent {}
 
 // Old - used in angular 12.
 const routes: Routes = [
     {
-        path: `settings/:addon_uuid`,
-        children: [
-            {
-                path: 'views_and_editors',
-                component: ViewsAndEditorsComponent,
-                // TODO: solve routing
-                // path: '**',
-                // loadChildren: () => import('./addon/addon.module').then(m => m.AddonModule)
-            },
-            {
-                path: 'views_and_editors/editor/:key',
-                component: EditorsFormComponent
-            },
-            {
-                path: 'views_and_editors/:key',
-                component: ViewsFormComponent
-            },
-
-        ]
+        path: '',
+        loadChildren: () => import('./settings/settings.module').then(m => m.SettingsModule)
     },
     {
         path: '**',
@@ -41,7 +24,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-    imports: [RouterModule.forRoot(routes, { relativeLinkResolution: 'legacy' })],
+    imports: [RouterModule.forRoot(routes)],
     exports: [RouterModule]
 })
 export class AppRoutingModule { }

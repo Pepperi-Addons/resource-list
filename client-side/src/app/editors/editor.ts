@@ -1,9 +1,8 @@
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { GenericResourceService } from '../services/generic-resource-service'
-import { config } from '../addon.config';
 import { View, Editor } from '../../../../shared/entities';
 import { IDataService } from '../metadata';
+import { GenericResourceService } from '../services/generic-resource-service'
 
 export abstract class AbstractEditor{
     key: string

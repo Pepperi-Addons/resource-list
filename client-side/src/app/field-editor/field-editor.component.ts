@@ -15,10 +15,11 @@ export class FieldEditorComponent implements OnInit {
   dialogData
   constructor(private injector: Injector,
      private genericResourceService: GenericResourceService,
-     private utilitiesService: UtilitiesService,
+     private utilitiesService: UtilitiesService
      ) {
     this.dialogRef = this.injector.get(MatDialogRef, null)
     this.dialogData = this.injector.get(MAT_DIALOG_DATA, null)
+    
     
    }
 
@@ -33,6 +34,7 @@ export class FieldEditorComponent implements OnInit {
     catch(err){
       console.log(err)
       //show dialog here
+      this.dialogRef.close(false)
       this.utilitiesService.showDialog('Error', 'UpdateErrorMSG', 'close')
       return
     }
@@ -42,5 +44,6 @@ export class FieldEditorComponent implements OnInit {
   onCancelButtonClicked(){
     this.dialogRef.close(false)
   }
+  
   
 }

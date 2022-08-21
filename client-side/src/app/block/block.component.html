@@ -1,43 +1,11 @@
 <pep-page-layout>
     <ng-container pep-main-area>
-        <pep-generic-list class="generic-list" 
-            [showTopBar]="true"
-            [dataSource]="datasource"
-            [showSearch]="true"
-            [title] = "title"
-            [inline] ="false"
-            [actions] = "actions"
-            uuidMapping = 'Key'>
-            <ng-container right-buttons>
-                <pep-select *ngIf="dropDownOfViews.length > 0"
-                    class="buttons-holder"
-                    [value]="currentViewKey"
-                    label="select view"
-                    type="select"
-                    [mandatory]="false"
-                    xAlignment="left"
-                    [options]="dropDownOfViews"
-                    [renderTitle]="false"
-                    (valueChange)="onViewChange($event)"
-                    [emptyOption]="false"
-                ></pep-select>
-                <pep-button
-                    class='pep-spacing-element'
-                    value = "{{'New' | translate }}"
-                    styleType=strong
-                    styleStateType=system
-                    sizeType=md
-                    classNames='new'
-                    [disabled]='false'
-                    iconPosition='end'
-                    [visible]='true'
-                    (buttonClick)='onNewButtonClicked()'
-                ></pep-button>
-            </ng-container>
-        </pep-generic-list>
+            <app-generic-viewer
+                *ngIf="hasViewToDisplay" 
+                class="generic-viewer"
+                [configurationObject]="configurationObject"
+                (pressedDoneEvent) = "onDonePressed($event)"
+            ></app-generic-viewer>
     </ng-container>
 </pep-page-layout>
-
 <pep-size-detector></pep-size-detector>
-
-<!-- <pep-dimx #dimx [DIMXAddonUUID]="udcUUID" [DIMXResource]="resourceName" (DIMXProcessDone)='onDIMXProcessDone($event);'></pep-dimx> -->

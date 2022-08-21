@@ -39,39 +39,43 @@ export async function downgrade(client: Client, request: Request): Promise<any> 
 
 async function createPageBlockRelation(client: Client): Promise<any> {
     try {
-        let blockName = 'DataViewerBlock';
-        let filename = 'data_viewer_block';
+        const fileName = `file_${client.AddonUUID}`;
 
         const dataViewerRelation: Relation = {
             RelationName: "PageBlock",
-            Name: blockName,
+            Name: 'DataViewerBlock',
             Description: `data viewer`,
             Type: "NgComponent",
             SubType: "NG14",
             AddonUUID: client.AddonUUID,
-            AddonRelativeURL: filename,
+            AddonRelativeURL: fileName,
             ComponentName: `BlockComponent`, // This is should be the block component name (from the client-side)
             ModuleName: `BlockModule`, // This is should be the block module name (from the client-side)
             EditorComponentName: `BlockEditorComponent`, // This is should be the block editor component name (from the client-side)
-            EditorModuleName: `BlockEditorModule` // This is should be the block editor module name (from the client-side)
+            EditorModuleName: `BlockEditorModule`, // This is should be the block editor module name (from the client-side)
+            ElementsModule: 'WebComponents',
+            ElementName: `viewer-block-element-${client.AddonUUID}`,
+            EditorElementName: `viewer-block-editor-element-${client.AddonUUID}`
+
         };
         const service = new AddonService(client);
         const dataViewerResult = await service.upsertRelation(dataViewerRelation);
         
-        filename = 'data_configuration_block';
-        blockName = 'DataConfigurationBlock';
         const dataConfigurationBlockRelation: Relation = {
             RelationName: "PageBlock",
-            Name: blockName,
+            Name: 'DataConfigurationBlock',
             Description: `data configuration`,
             Type: "NgComponent",
             SubType: "NG14",
             AddonUUID: client.AddonUUID,
-            AddonRelativeURL: filename,
+            AddonRelativeURL: fileName,
             ComponentName: `DataConfigurationBlockComponent`, // This is should be the block component name (from the client-side)
             ModuleName: `DataConfigurationBlockModule`, // This is should be the block module name (from the client-side)
             EditorComponentName: `DataConfigurationBlockEditorComponent`, // This is should be the block editor component name (from the client-side)
-            EditorModuleName: `DataConfigurationBlockEditorModule` // This is should be the block editor module name (from the client-side)
+            EditorModuleName: `DataConfigurationBlockEditorModule`, // This is should be the block editor module name (from the client-side)
+            ElementsModule: 'WebComponents',
+            ElementName: `data-config-block-element-${client.AddonUUID}`,
+            EditorElementName: `data-config-block-editor-element-${client.AddonUUID}`
         };
         const dataConfigurationResult = await service.upsertRelation(dataConfigurationBlockRelation);
         return { success:true, resultObject: {dataViewerResult, dataConfigurationResult}};
@@ -82,20 +86,23 @@ async function createPageBlockRelation(client: Client): Promise<any> {
 
 async function createSettingsRelation(client: Client): Promise<any> {
     try {
-        const settingsName = 'Settings';
-        let filename = 'data_viewer_configuration_settings';
+        const compName = 'ViewsAndEditors';
+        const fileName = `file_${client.AddonUUID}`;
 
         const settingsBlockRelation: Relation = {
             RelationName: "SettingsBlock",
             GroupName: 'Views&Editors',
+            SlugName: 'views_and_editors',
             Name: 'views_and_editors',
             Description: 'views and editors',
             Type: "NgComponent",
             SubType: "NG14",
             AddonUUID: client.AddonUUID,
-            AddonRelativeURL: filename,
-            ComponentName: `${settingsName}Component`,
-            ModuleName: `${settingsName}Module`,
+            AddonRelativeURL: fileName,
+            ComponentName: `${compName}Component`,
+            ModuleName: `${compName}Module`,
+            ElementsModule: 'WebComponents',
+            ElementName: `settings-element-${client.AddonUUID}`,
         }; 
         
         const service = new AddonService(client);

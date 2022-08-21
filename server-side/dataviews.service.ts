@@ -1,6 +1,7 @@
 import { Client } from "@pepperi-addons/debug-server/dist";
 import AddonService from "./addon.service";
-import { DataView, FormDataView, GridDataView } from "@pepperi-addons/papi-sdk";
+import { DataView, FormDataView, GridDataView, MenuDataView } from "@pepperi-addons/papi-sdk";
+import { Fields } from "@pepperi-addons/papi-sdk/dist/endpoints";
 
 export class DataViewsService {  
     addonService: AddonService = new AddonService(this.client);
@@ -9,10 +10,64 @@ export class DataViewsService {
     async postDefaultDataView(key: string, profileID: number, type: "view" | "editor"){
         const dataViewKey = key.replace(/-/g, '')
         const defaultDataView = type == "view" ? this.getDefaultGridDataView(dataViewKey,profileID) : this.getDefaultFormDataView(dataViewKey,profileID)
-        return await this.postDataView(defaultDataView)
+        return await this.addonService.papiClient.metaData.dataViews.upsert(defaultDataView)
     }
-    async postDataView(dataView: DataView){
-        return await this.addonService.papiClient.metaData.dataViews.upsert(dataView)
+
+    async postDefaultLineMenuDataView(key: string, profileID: number){
+        const menuDataView: MenuDataView = {
+            Type: "Menu",
+            Context: {
+                Name: `RV_${key}_LineMenu`,
+                Profile: {
+                    InternalID : profileID,
+                    Name: "Rep"
+                },
+                ScreenSize: "Landscape",
+            },
+            Fields: [
+                {
+                    FieldID: "Edit",
+                    Title: "Edit",
+                },
+                {
+                    FieldID: "Delete",
+                    Title: "Delete",
+                },
+            ]
+        }
+        return await this.addonService.papiClient.metaData.dataViews.upsert(menuDataView)
+    }
+    async postDefaultMenuDataView(key: string, profileID: number){
+        const menuDataView: MenuDataView = {
+            Type: "Menu",
+            Context: {
+                Name: `GV_${key}_Menu`,
+                Profile: {
+                    InternalID : profileID,
+                    Name: "Rep"
+                },
+                ScreenSize: "Landscape",
+            },
+            Fields: [
+                {
+                    FieldID: "Add",
+                    Title: "Add",
+                },
+                {
+                    FieldID: "Export",
+                    Title: "Export",
+                },
+                {
+                    FieldID: "Import",
+                    Title: "Import",
+                },
+                {
+                    FieldID: "RecycleBin",
+                    Title: "Recycle Bin",
+                }
+            ]
+        }
+        return await this.addonService.papiClient.metaData.dataViews.upsert(menuDataView)
     }
     getDefaultGridDataView(key: string, profileID: number): GridDataView{
         return {

@@ -28,5 +28,8 @@
     "SaveDialogMSG": "Saved successfully",
     "New": "New",
     "Error": "Error",
-    "UpdateErrorMSG": "Error occurred"
+    "UpdateErrorMSG": "There is an error occurred, please fill mandatory fields before you update.",
+    "Menu": "Menu",
+    "LineMenu": "Line Menu",
+    "Done": "Done"
 }

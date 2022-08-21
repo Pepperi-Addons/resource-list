@@ -17,7 +17,6 @@ import { PepSizeDetectorModule } from '@pepperi-addons/ngx-lib/size-detector';
 import { GenericResourceService } from '../services/generic-resource-service';
 import { UtilitiesService } from '../services/utilities-service';
 import { EditorsService } from '../services/editors.service';
-import { ViewsService } from '../services/views.service';
 
 export const routes: Routes = [
     {
@@ -54,7 +53,6 @@ export const routes: Routes = [
         TranslateStore,
         // When loading this module from route we need to add this here (because only this module is loading).
         UtilitiesService,
-        ViewsService,
         GenericResourceService,
         EditorsService
     ]
