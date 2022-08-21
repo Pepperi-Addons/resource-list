@@ -17,7 +17,6 @@ import { EditorsService } from './services/editors.service';
 export async function install(client: Client, request: Request): Promise<any> {
     await createPageBlockRelation(client);
     await createSettingsRelation(client);
-    await createSettingsRelation(client);
     const viewsService = new ViewsService(client)
     const editorsService = new EditorsService(client)
     await viewsService.createSchema()
@@ -30,7 +29,6 @@ export async function uninstall(client: Client, request: Request): Promise<any> 
 
 export async function upgrade(client: Client, request: Request): Promise<any> {
     createPageBlockRelation(client);
-    createSettingsRelation(client);;
     createSettingsRelation(client);
     return {success:true,resultObject:{}}
 }
@@ -55,7 +53,7 @@ async function createPageBlockRelation(client: Client): Promise<any> {
             ModuleName: `BlockModule`, // This is should be the block module name (from the client-side)
             EditorComponentName: `BlockEditorComponent`, // This is should be the block editor component name (from the client-side)
             EditorModuleName: `BlockEditorModule`, // This is should be the block editor module name (from the client-side)
-            ElementModule: 'WebComponents',
+            ElementsModule: 'WebComponents',
             ElementName: `viewer-block-element-${client.AddonUUID}`,
             EditorElementName: `viewer-block-editor-element-${client.AddonUUID}`
 
@@ -75,7 +73,7 @@ async function createPageBlockRelation(client: Client): Promise<any> {
             ModuleName: `DataConfigurationBlockModule`, // This is should be the block module name (from the client-side)
             EditorComponentName: `DataConfigurationBlockEditorComponent`, // This is should be the block editor component name (from the client-side)
             EditorModuleName: `DataConfigurationBlockEditorModule`, // This is should be the block editor module name (from the client-side)
-            ElementModule: 'WebComponents',
+            ElementsModule: 'WebComponents',
             ElementName: `data-config-block-element-${client.AddonUUID}`,
             EditorElementName: `data-config-block-editor-element-${client.AddonUUID}`
         };
