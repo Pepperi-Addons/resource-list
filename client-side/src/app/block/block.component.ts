@@ -11,7 +11,6 @@ export class BlockComponent implements OnInit {
       resource: undefined,
       viewsList: [],
     }
-    isSelectionList: boolean = false
     hasViewToDisplay: boolean = false
     @Output() hostEvents: EventEmitter<any> = new EventEmitter<any>();
 
@@ -34,7 +33,7 @@ export class BlockComponent implements OnInit {
       }
     } 
     ngOnChanges(e: any): void {
-      this.loadGenericView(e)
+      this.loadGenericView(e.hostObject.currentValue)
     }
     onDonePressed(numOfSelectedRows: number){
       //will be implemented in the future      
