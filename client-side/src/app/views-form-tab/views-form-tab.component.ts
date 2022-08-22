@@ -8,6 +8,7 @@ import { DataViewService } from '../services/data-view-service';
 import { GenericResourceService } from '../services/generic-resource-service';
 import { ProfileService } from '../services/profile-service';
 import { UtilitiesService } from '../services/utilities-service';
+import { TypeMap } from '../type-map';
 
 @Component({
   selector: 'app-views-form-tab',
@@ -30,7 +31,18 @@ export class ViewsFormTabComponent extends AbstractProfileCardsTabComponent impl
   }
   async getFields(){    
     const collection = await this.genericResource.getResource(this.resourceName)
-    return  [...collection?.ListView?.Fields as Field[] || [], ...defaultCollectionFields]
+    const typeMap = new TypeMap()
+    const fields: GridDataViewField[] = Object.keys(collection.Fields).map(fieldID => {
+      return {
+        FieldID: fieldID,
+        Mandatory: collection.Fields[fieldID].Mandatory,
+        ReadOnly: true,
+        Title: fieldID,
+        Type: typeMap.get(collection.Fields[fieldID].Type)
+      }
+    })
+    debugger
+    return  [...fields, ...defaultCollectionFields ]
   }
   mappedFieldToDataViewField(mappedField: IMappedField, index: number): IDataViewField{
     return {
