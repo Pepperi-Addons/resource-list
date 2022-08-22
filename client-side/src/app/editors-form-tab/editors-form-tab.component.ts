@@ -8,6 +8,7 @@ import { GenericResourceService } from '../services/generic-resource-service';
 import { ProfileService } from '../services/profile-service';
 import { UtilitiesService } from '../services/utilities-service';
 import { Field } from '../../../../shared/entities'
+import { TypeMap } from '../type-map';
 @Component({
   selector: 'app-editors-form-tab',
   templateUrl: './editors-form-tab.component.html',
@@ -28,9 +29,8 @@ export class EditorsFormTabComponent extends AbstractProfileCardsTabComponent im
     this.dataViewContextName = `GV_${this.key}_Editor`
   }
 
-  async getFields(){    
-    const collection = await this.genericResource.getResource(this.resourceName)
-    return  [...collection?.ListView?.Fields as Field[] || [], ...defaultCollectionFields]
+  async getFields(){
+    return await this.genericResource.getResourceFieldsAsDataViewFields(this.resourceName)    
   }
 
   fieldToEditorMappedField(field: BaseFormDataViewField): IMappedField{

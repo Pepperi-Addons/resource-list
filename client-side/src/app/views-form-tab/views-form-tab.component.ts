@@ -8,6 +8,7 @@ import { DataViewService } from '../services/data-view-service';
 import { GenericResourceService } from '../services/generic-resource-service';
 import { ProfileService } from '../services/profile-service';
 import { UtilitiesService } from '../services/utilities-service';
+import { TypeMap } from '../type-map';
 
 @Component({
   selector: 'app-views-form-tab',
@@ -28,9 +29,8 @@ export class ViewsFormTabComponent extends AbstractProfileCardsTabComponent impl
   setDataViewContextName(): void {
     this.dataViewContextName = `GV_${this.key}_View`
   }
-  async getFields(){    
-    const collection = await this.genericResource.getResource(this.resourceName)
-    return  [...collection?.ListView?.Fields as Field[] || [], ...defaultCollectionFields]
+  async getFields(){
+    return await this.genericResource.getResourceFieldsAsDataViewFields(this.resourceName)    
   }
   mappedFieldToDataViewField(mappedField: IMappedField, index: number): IDataViewField{
     return {
