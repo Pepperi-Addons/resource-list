@@ -29,20 +29,8 @@ export class ViewsFormTabComponent extends AbstractProfileCardsTabComponent impl
   setDataViewContextName(): void {
     this.dataViewContextName = `GV_${this.key}_View`
   }
-  async getFields(){    
-    const collection = await this.genericResource.getResource(this.resourceName)
-    const typeMap = new TypeMap()
-    const fields: GridDataViewField[] = Object.keys(collection.Fields).map(fieldID => {
-      return {
-        FieldID: fieldID,
-        Mandatory: collection.Fields[fieldID].Mandatory,
-        ReadOnly: true,
-        Title: fieldID,
-        Type: typeMap.get(collection.Fields[fieldID].Type)
-      }
-    })
-    debugger
-    return  [...fields, ...defaultCollectionFields ]
+  async getFields(){
+    return await this.genericResource.getResourceFieldsAsDataViewFields(this.resourceName)    
   }
   mappedFieldToDataViewField(mappedField: IMappedField, index: number): IDataViewField{
     return {

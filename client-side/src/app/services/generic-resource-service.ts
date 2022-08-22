@@ -1,4 +1,6 @@
 import { Injectable } from "@angular/core";
+import { defaultCollectionFields, IDataViewField } from "../metadata";
+import { TypeMap } from "../type-map";
 import { UtilitiesService } from './utilities-service'
 
 
@@ -29,5 +31,19 @@ export class GenericResourceService{
     }
     async getResource(name: string){
         return await this.utilitiesService.papiClient.resources.resource('resources').key(name).get()
+    }
+    async getResourceFieldsAsDataViewFields(resourceName: string){
+        const resource = await this.getResource(resourceName)
+        const typeMap = new TypeMap()
+        const fields: IDataViewField[] = Object.keys(resource.Fields).map(fieldID => {
+          return {
+            FieldID: fieldID,
+            Mandatory: resource.Fields[fieldID].Mandatory,
+            ReadOnly: true,
+            Title: fieldID,
+            Type: typeMap.get(resource.Fields[fieldID].Type)
+          }
+        })
+        return  [...fields, ...defaultCollectionFields ]
     }
 }

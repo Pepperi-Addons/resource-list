@@ -29,19 +29,8 @@ export class EditorsFormTabComponent extends AbstractProfileCardsTabComponent im
     this.dataViewContextName = `GV_${this.key}_Editor`
   }
 
-  async getFields(){    
-    const collection = await this.genericResource.getResource(this.resourceName)
-    const typeMap = new TypeMap()
-    const fields: BaseFormDataViewField[] = Object.keys(collection.Fields).map(fieldID => {
-      return {
-        FieldID: fieldID,
-        Mandatory: collection.Fields[fieldID].Mandatory,
-        ReadOnly: true,
-        Title: fieldID,
-        Type: typeMap.get(collection.Fields[fieldID].Type)
-      }
-    })
-    return  [...fields, ...defaultCollectionFields]
+  async getFields(){
+    return await this.genericResource.getResourceFieldsAsDataViewFields(this.resourceName)    
   }
 
   fieldToEditorMappedField(field: BaseFormDataViewField): IMappedField{
