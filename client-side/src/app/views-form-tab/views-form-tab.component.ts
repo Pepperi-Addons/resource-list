@@ -1,20 +1,19 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { IPepDraggableItem } from '@pepperi-addons/ngx-lib/draggable-items';
 import { GridDataViewField } from '@pepperi-addons/papi-sdk';
-import { Field } from '../../../../shared/entities';
 import { AbstractProfileCardsTabComponent } from '../abstract-profile-cards-tab/abstract-profile-cards-tab.component';
-import { defaultCollectionFields, IDataViewField, IMappedField, IViewMappedField } from '../metadata';
+import { IDataViewField, IMappedField, IViewMappedField } from '../metadata';
 import { DataViewService } from '../services/data-view-service';
 import { GenericResourceService } from '../services/generic-resource-service';
 import { ProfileService } from '../services/profile-service';
 import { UtilitiesService } from '../services/utilities-service';
-import { TypeMap } from '../type-map';
 
 @Component({
   selector: 'app-views-form-tab',
   templateUrl: './views-form-tab.component.html',
   styleUrls: ['./views-form-tab.component.scss']
 })
+//unnecessary
 export class ViewsFormTabComponent extends AbstractProfileCardsTabComponent implements OnInit {
   @Input() resourceName: string
   constructor(private genericResource: GenericResourceService,

@@ -2,13 +2,11 @@ import { Component, Input, OnInit } from '@angular/core';
 import { IPepDraggableItem } from '@pepperi-addons/ngx-lib/draggable-items';
 import { BaseFormDataViewField, MenuDataViewField } from '@pepperi-addons/papi-sdk';
 import { AbstractProfileCardsTabComponent } from '../abstract-profile-cards-tab/abstract-profile-cards-tab.component';
-import { defaultCollectionFields, IDataViewField, IEditorMappedField, IMappedField } from '../metadata';
+import { IMappedField } from '../metadata';
 import { DataViewService } from '../services/data-view-service';
 import { GenericResourceService } from '../services/generic-resource-service';
 import { ProfileService } from '../services/profile-service';
 import { UtilitiesService } from '../services/utilities-service';
-import { Field } from '../../../../shared/entities'
-import { TypeMap } from '../type-map';
 @Component({
   selector: 'app-editors-form-tab',
   templateUrl: './editors-form-tab.component.html',
