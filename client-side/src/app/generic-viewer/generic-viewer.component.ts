@@ -148,7 +148,7 @@ export class GenericViewerComponent implements OnInit {
     }
     getFixedArrayField(item, fieldID, type){
       if(type == "Resource"){
-        return `${item[fieldID].length} items selected`
+        return `${item[fieldID].length.toString()}  selected`
       }
       return item[fieldID].join(',')
     }
