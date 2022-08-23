@@ -15,16 +15,9 @@ export class TypeMap{
         this.map['Bool'] = "Boolean"
         this.map['DateTime'] = "DateAndTime"
         this.map["Resource"] = "Button"
-        return this
+        this.map["Array"] = "TextBox"
     }
-    get(key:string, optionalValues = []): DataViewFieldType{
-        if(key == 'Array'){
-            return optionalValues?.length > 0? "MultiTickBox" : "TextArea"
-        }
-        else if(optionalValues.length > 0){
-            return "ComboBox"
-        }
-        const result = this.map[key]
-        return result; 
+    get(key:string): DataViewFieldType{
+       return this.map[key]
     }
 }

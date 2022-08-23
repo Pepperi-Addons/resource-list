@@ -130,6 +130,28 @@ export class GenericViewerComponent implements OnInit {
       }
       return (await this.dataViewService.getDataViews(`GV_${viewKey}_Menu`))[0]
     }
+    reformatItems(items, resourceFields){
+      return items.map(item => {
+        return this.reformatItem(item, resourceFields)
+      })
+    }
+    reformatItem(item, resourceFields){
+      Object.keys(item).forEach(fieldID => {
+        item[fieldID] = resourceFields[fieldID] != undefined? this.getFixedField(item, fieldID, resourceFields): item[fieldID]
+      })
+    }
+    getFixedField(item, fieldID, resourceFields){
+      if(resourceFields[fieldID].Type == "Array"){
+        return this.getFixedArrayField(item, fieldID, resourceFields[fieldID].Items.Type)
+      }
+      return item[fieldID]
+    }
+    getFixedArrayField(item, fieldID, type){
+      if(type == "Resource"){
+        return `${item[fieldID].length.toString()}  selected`
+      }
+      return item[fieldID].join(',')
+    }
     async DisplayViewInList(viewKey){
       const dataViews = await this.dataViewService.getDataViewsByProfile(`GV_${viewKey}_View`, "Rep");
       if(dataViews.length > 0){
@@ -150,6 +172,9 @@ export class GenericViewerComponent implements OnInit {
       const fields = dataView.Fields || []
       const columns = dataView.Columns || []
       const items = await this.genericResourceService.getItems(this.resource)
+      const resourceFields = (await this.genericResourceService.getResource(this.resource))?.Fields || {}
+      //in order to support arrays and references we should check the "real" type of each field, and reformat the corresponding item
+      const formatedItems = this.reformatItems(items, resourceFields)
       this.dataSource = new DataSource(items, fields,columns)
     }
 
