@@ -13,7 +13,7 @@ import { UtilitiesService } from '../services/utilities-service';
   templateUrl: './views-form-tab.component.html',
   styleUrls: ['./views-form-tab.component.scss']
 })
-//unnecessary
+
 export class ViewsFormTabComponent extends AbstractProfileCardsTabComponent implements OnInit {
   @Input() resourceName: string
   constructor(private genericResource: GenericResourceService,
