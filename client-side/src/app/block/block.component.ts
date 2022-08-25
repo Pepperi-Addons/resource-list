@@ -26,10 +26,18 @@ export class BlockComponent implements OnInit {
       this.hasViewToDisplay = true
       this.setConfigurationObject(hostObject)
     }
+    createDropDownOfViews(viewsList){
+      return viewsList.map(card => {
+        return {
+          key: card.selectedView.key,
+          value: card.selectedView.value
+        }
+      })
+    }
     setConfigurationObject(hostObject): void{
       this.configurationObject = {
         resource: hostObject?.configuration?.resource,
-        viewsList: hostObject?.configuration?.viewsList || [],
+        viewsList: this.createDropDownOfViews(hostObject?.configuration?.viewsList || []),
       }
     } 
     ngOnChanges(e: any): void {

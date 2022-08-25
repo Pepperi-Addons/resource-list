@@ -1,9 +1,7 @@
 import { TranslateService } from '@ngx-translate/core';
-import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Injector, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { GenericResourceService } from '../services/generic-resource-service';
 import { PepMenuItem } from "@pepperi-addons/ngx-lib/menu";
-import { config } from '../addon.config'
-import { ViewsCard } from '../draggable-card-fields/cards.model';
 import { DataView, GridDataView, MenuDataViewField } from '@pepperi-addons/papi-sdk';
 import { DataSource } from '../data-source/data-source'
 import { PepSelectionData } from '@pepperi-addons/ngx-lib/list';
@@ -14,6 +12,7 @@ import { ViewsService } from '../services/views.service';
 import { FieldEditorComponent } from '../field-editor/field-editor.component';
 import { IGenericViewerConfigurationObject } from '../metadata';
 import { GenericListComponent } from '@pepperi-addons/ngx-composite-lib/generic-list';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
     selector: 'app-generic-viewer',
@@ -26,7 +25,6 @@ export class GenericViewerComponent implements OnInit {
     @Output() pressedDoneEvent: EventEmitter<number> = new EventEmitter<number>()
     dataSource: DataSource
     menuItems: PepMenuItem[] = []
-    viewsList: ViewsCard[] = []
     items: any[] = []
     actions: any = {}
     dropDownOfViews: SelectOption[] = []
@@ -37,18 +35,32 @@ export class GenericViewerComponent implements OnInit {
     lineMenuItemsMap: Map<string, MenuDataViewField>
     buttonTitle: string
     isButtonConfigured: boolean = false
-
+    dialogRef = null
+    dialogData = null
 
     constructor(private translate: TranslateService,
          private genericResourceService: GenericResourceService,
          private dataViewService: DataViewService,
          private dialogService : PepDialogService,
-         private viewService: ViewsService) 
+         private viewService: ViewsService,
+         private injector: Injector ) 
     {
           this.actions.get = this.getActionsCallBack()
+          this.dialogRef = this.injector.get(MatDialogRef, null)
+          this.dialogData = this.injector.get(MAT_DIALOG_DATA, null)
     }
     ngOnInit(): void {
+      this.loadConfigurationObject()
       this.init()
+    }
+    loadConfigurationObject(){
+      if(!this.configurationObject){
+        this.configurationObject = {
+          resource: this.dialogData?.resource ,
+          viewsList: this.dialogData?.viewsList,
+          selectionList: this.dialogData?.selectionList
+        }
+      }
     }
     async init(){
       this.setConfigurationObjectVariable()
@@ -72,7 +84,6 @@ export class GenericViewerComponent implements OnInit {
       }
     }
     async configureViews(){
-      this.createDropDownOfViews()
       await this.setCurrentViewAndKey()
     }
 
@@ -82,7 +93,7 @@ export class GenericViewerComponent implements OnInit {
       await this.initLineMenuItems(this.currentViewKey)
     }
     setConfigurationObjectVariable():void{
-      this.viewsList = this.configurationObject?.viewsList || []
+      this.dropDownOfViews =  this.configurationObject?.viewsList || []
       this.resource = this.configurationObject?.resource || undefined
     }
     async setCurrentViewAndKey(){
@@ -176,15 +187,6 @@ export class GenericViewerComponent implements OnInit {
       //in order to support arrays and references we should check the "real" type of each field, and reformat the corresponding item
       const formatedItems = this.reformatItems(items, resourceFields)
       this.dataSource = new DataSource(items, fields,columns)
-    }
-
-    createDropDownOfViews(){
-      this.dropDownOfViews = this.viewsList.map(card => {
-        return {
-          key: card.selectedView.key,
-          value: card.selectedView.value
-        }
-      })
     }
     async initRecycleBin(){
       const deletedItems = await this.genericResourceService.getItems(this.resource, true)
@@ -309,5 +311,6 @@ export class GenericViewerComponent implements OnInit {
     }
     onDoneButtonClicked(){
       this.pressedDoneEvent.emit(this.genericList?.getSelectedItems()?.rows?.length || 0)
+      this.dialogRef?.close()
     }
 }

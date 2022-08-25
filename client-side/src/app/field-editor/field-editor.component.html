@@ -31,6 +31,7 @@
         <pep-generic-form
             [dataSource]="dataSource"
             [dataView]="dataView"
+            (fieldClick)="onReferenceClicked($event)"
         ></pep-generic-form>
     </ng-container>
 </pep-page-layout>
