@@ -1,4 +1,4 @@
-import { AddonDataScheme } from "@pepperi-addons/papi-sdk"
+
 
 export const viewsSchema: ItemSchema = {
     Name: "views",

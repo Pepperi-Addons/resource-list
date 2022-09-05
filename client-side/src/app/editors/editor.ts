@@ -118,7 +118,6 @@ export abstract class AbstractEditor{
     getDataView(){
         return this.dataView
     }
-    abstract update()
     getName(){
         return this.content.Name
     }

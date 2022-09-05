@@ -1,6 +1,7 @@
 import { IPepDraggableItem } from "@pepperi-addons/ngx-lib/draggable-items"
 import { BaseFormDataViewField, DataViewField, DataViewFieldType, GridDataViewField, MenuDataViewField } from "@pepperi-addons/papi-sdk"
 import { SelectOption } from "../../../shared/entities"
+import { AddFormComponent } from "./add-form/add-form.component"
 import { ViewsCard } from "./draggable-card-fields/cards.model"
 
 export const CREATION_DATE_TIME_TITLE = "Creation Date Time"
@@ -31,7 +32,7 @@ export type MenuField = MenuDataViewField & {OriginalName: string}
 
 export interface IDataService{
   getItems(key?: string , includeDeleted?: boolean)
-  upsertItem(item: any)
+  upsertItem(item: any),
 }
 
 export interface IFieldConvertor {
@@ -64,7 +65,6 @@ export const defaultCollectionFields = [
     ReadOnly: true,
   }
 ]
-
 export interface IGenericViewerConfigurationObject{
   resource: string,
   viewsList: SelectOption[],
@@ -72,3 +72,6 @@ export interface IGenericViewerConfigurationObject{
     none: boolean
   }
 }
+export const SELECTION_LIST = "SelectionList"
+export const DROP_DOWN = "DropDown"
+export const SELECTION_TYPE = "SelectionType"

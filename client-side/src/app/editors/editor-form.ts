@@ -13,7 +13,8 @@ export class EditorForm extends AbstractForm{
             AddonUUID: "",
             Name: ""
           },
-          OpenMode: "same-page"
+          OpenMode: "same-page",
+          ReferenceFields: []
         }
       }
       else{
@@ -26,13 +27,6 @@ export class EditorForm extends AbstractForm{
           throw new Error("Editor does not exist")
         }
       }
-  }
-  async update() {
-    this.content.Name = this.dataSource.Name
-    this.content.Description = this.dataSource.Description
-    this.content.Resource.Name = this.dataSource.Resource
-    this.content.OpenMode = this.dataSource.OpenMode
-    this.service.upsertItem(this.content)
   }
   setOpenMode(openMode: OpenMode){
     this.dataSource.OpenMode = openMode
