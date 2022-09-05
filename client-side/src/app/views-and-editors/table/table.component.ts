@@ -1,13 +1,15 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewContainerRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { DataSource } from '../../data-source/data-source';
 import { PepMenuItem } from "@pepperi-addons/ngx-lib/menu";
 import { PepSelectionData } from '@pepperi-addons/ngx-lib/list';
-import { IDataService } from '../../metadata';
+import { EXPORT, IDataService } from '../../metadata';
 import { PepDialogData, PepDialogService } from '@pepperi-addons/ngx-lib/dialog';
 import { IPepGenericListActions } from '@pepperi-addons/ngx-composite-lib/generic-list';
 import { AddFormComponent } from '../../add-form/add-form.component'
+import { DIMXHostObject, PepDIMXHelperService } from '@pepperi-addons/ngx-composite-lib';
+import { config } from '../../addon.config'
 @Component({
   selector: 'app-table',
   templateUrl: './table.component.html',
@@ -44,11 +46,15 @@ export class TableComponent{
     private translate: TranslateService,
     private router: Router,
     private route: ActivatedRoute,
-    private dialogService: PepDialogService)
+    private dialogService: PepDialogService,
+    private viewContainerRef: ViewContainerRef,
+    private dimxService: PepDIMXHelperService
+    )
     {
 
     }
   ngOnInit(){
+    this.initDimxService()
     this.listFields = this.generateListFields()
     this.title = this.translate.instant(this.name)
     this.menuItems = this.getTableMenuItems()
@@ -59,6 +65,15 @@ export class TableComponent{
     this.fields = await this.service.getItems(undefined, recycleBin)
     this.items = this.fieldsToListItems(this.fields)
     this.dataSource = new DataSource(this.items, this.listFields, this.widthArray, this.searchCB)
+  }
+  initDimxService(){
+    const dimxHostObject: DIMXHostObject = {
+      DIMXAddonUUID: config.AddonUUID,
+      DIMXResource: this.name.toLowerCase()
+    }
+    this.dimxService.register(this.viewContainerRef, dimxHostObject, (onDIMXProcessDoneEvent: any) => {
+      this.onDIMXProcessDone(onDIMXProcessDoneEvent);
+    })
   }
   fieldsToListItems(items: any[]){
     return items.map((field) => {
@@ -143,7 +158,17 @@ export class TableComponent{
         this.backToList()
         break
       }
+      case EXPORT: {
+        this.handleExportAction()
+      }
     }
+  }
+  handleExportAction(){
+    this.dimxService?.export({
+      DIMXExportFormat: 'json',
+      DIMXExportIncludeDeleted: false,
+      DIMXExportFileName: EXPORT,
+    })
   }
   async backToList(){
     this.menuItems = this.getTableMenuItems()
@@ -157,6 +182,11 @@ export class TableComponent{
       {
         key:'recycleBin',
         text: this.translate.instant('Recycle Bin'),
+        hidden: false
+      },
+      {
+        key: EXPORT,
+        text: this.translate.instant(EXPORT),
         hidden: false
       }
     ]
@@ -215,5 +245,8 @@ export class TableComponent{
     field.Hidden = true
     await this.service.upsertItem(field)
     this.loadGenericList(false)
+  }
+  onDIMXProcessDone(event){
+    console.log(`DONE!!!`);
   }
 }

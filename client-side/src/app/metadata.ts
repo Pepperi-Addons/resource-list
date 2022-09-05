@@ -75,3 +75,4 @@ export interface IGenericViewerConfigurationObject{
 export const SELECTION_LIST = "SelectionList"
 export const DROP_DOWN = "DropDown"
 export const SELECTION_TYPE = "SelectionType"
+export const EXPORT = "Export"
