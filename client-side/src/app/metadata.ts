@@ -1,5 +1,6 @@
 import { IPepDraggableItem } from "@pepperi-addons/ngx-lib/draggable-items"
 import { BaseFormDataViewField, DataViewField, DataViewFieldType, GridDataViewField, MenuDataViewField } from "@pepperi-addons/papi-sdk"
+import { SelectOption } from "../../../shared/entities"
 import { ViewsCard } from "./draggable-card-fields/cards.model"
 
 export const CREATION_DATE_TIME_TITLE = "Creation Date Time"
@@ -66,7 +67,7 @@ export const defaultCollectionFields = [
 
 export interface IGenericViewerConfigurationObject{
   resource: string,
-  viewsList: ViewsCard[],
+  viewsList: SelectOption[],
   selectionList?: {
     none: boolean
   }
