@@ -52,8 +52,13 @@ export class FieldEditorComponent implements OnInit {
   async getResourceNameToOpen(resourceName: string, field: string): Promise<string>{
     const currentResource = await this.genericResourceService.getResource(resourceName)
     const fieldIDOfResourceToOpen = Object.keys(currentResource.Fields).find(fieldID => fieldID == field)
+    if(!fieldIDOfResourceToOpen){
+      this.utilitiesService.showDialog('Error', 'ReferenceFieldDoesNotExistMSG', 'close')
+      return undefined
+    }
    return currentResource.Fields[fieldIDOfResourceToOpen].Resource
   }
+
   async getViewsOfResource(resourceName: string): Promise<View[]>{
     const views = await this.viewsService.getItems()
    return views.filter(view => view.Resource.Name == resourceName)
@@ -75,7 +80,7 @@ export class FieldEditorComponent implements OnInit {
       }
     }
     const config = this.dialogService.getDialogConfig({
-
+    
     }, 'large')
     this.dialogService.openDialog(GenericViewerComponent, configurationObj, config).afterClosed().subscribe((async isUpdatePreformed => {
       //will be implemented in the future.
@@ -83,6 +88,9 @@ export class FieldEditorComponent implements OnInit {
   }
   async onReferenceClicked($event){
     const resourceNameToOpen = await this.getResourceNameToOpen(this.dialogData.resourceName, $event.ApiName)
+    if(!resourceNameToOpen){
+      return 
+    }
     const viewsOfResourceToOpen = await this.getViewsOfResource(resourceNameToOpen)
     const viewsDropDown = this.getViewsDropDown(viewsOfResourceToOpen)
     this.showReferenceDialog(resourceNameToOpen, viewsDropDown)
