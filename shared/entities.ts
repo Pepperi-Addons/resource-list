@@ -1,3 +1,5 @@
+
+
 export interface SelectOption{
     key: string,
     value: string
@@ -25,7 +27,8 @@ export interface Editor{
     Name: string,
     Description: string,
     Resource: Resource,
-    OpenMode: OpenMode
+    OpenMode: OpenMode,
+    ReferenceFields?: IReferenceField[]
 }
 
 export type OpenMode = "popup" | "same-page"
@@ -39,3 +42,12 @@ export interface Sorting{
     FieldKey: string,
     Ascending: boolean
 }
+
+export interface IReferenceField {
+    DisplayField: string,
+    Resource: string,
+    SelectionType: "dropDown" | "list",
+    SelectionList?: string
+  }
+  
+  export const  REFERENCE_TYPE = "Resource"

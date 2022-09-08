@@ -41,6 +41,8 @@ import { config } from './addon.config';
 import { SettingsComponent } from './settings';
 import { BlockComponent } from './block';
 import { BlockEditorComponent } from './block-editor';
+import { ReferenceFieldsTableModule } from './reference-fields-table/reference-fields-table.module';
+
 
 @NgModule({
     imports: [
@@ -73,6 +75,7 @@ import { BlockEditorComponent } from './block-editor';
         PepSizeDetectorModule,
         PepIconModule,
         PepIconModule,
+        ReferenceFieldsTableModule,
         TranslateModule.forRoot({
             loader: {
                 provide: TranslateLoader,

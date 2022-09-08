@@ -1,26 +1,29 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { config } from '../addon.config';
 import { GenericResourceService } from '../services/generic-resource-service';
 import { EditorForm } from '../editors/editor-form'
 import { IPepOption } from '@pepperi-addons/ngx-lib';
-import { OpenMode } from '../../../../shared/entities'
+import { Editor, OpenMode } from '../../../../shared/entities'
 import { EditorsService } from '../services/editors.service';
 import { PepDialogActionsType, PepDialogData, PepDialogService } from '@pepperi-addons/ngx-lib/dialog';
+import { IReferenceField } from '../../../../shared/entities';
+import { ReferenceFieldsTableComponent } from '../reference-fields-table/reference-fields-table.component';
 
 @Component({
   selector: 'app-editors-form',
   templateUrl: './editors-form.component.html',
-  styleUrls: ['./editors-form.component.scss']
+  styleUrls: ['./editors-form.component.scss'],
 })
 export class EditorsFormComponent implements OnInit {
+  @ViewChild(ReferenceFieldsTableComponent) referenceFieldsTableComponent
   dataSource: any = {}
   dataView: any = {
     Type: "Form",
     Fields: [],
     Context: {
-      Name: "",
+      Name: "", 
       Profile: {},
       ScreenSize: 'Tablet'
     }
@@ -33,6 +36,7 @@ export class EditorsFormComponent implements OnInit {
   editCard: boolean = false
   resourceName: string
   loadCompleted: boolean = false
+  editorReferenceFields: IReferenceField[] = []
 
   constructor(
     private router: Router,
@@ -59,10 +63,14 @@ export class EditorsFormComponent implements OnInit {
     this.initGeneralTab()
   }
   async initGeneralTab(){
+    await this.loadEditorForm()
+    this.editorReferenceFields = this.editorForm.content.ReferenceFields || []
+    this.loadCompleted = true
+  }
+  async loadEditorForm(){
     this.editorForm = this.createEditorForm()
     await this.editorForm.init()
     this.loadVariablesFromForm()
-    this.loadCompleted = true
   }
   loadVariablesFromForm(){
     this.editorName = this.editorForm.getName()
@@ -83,8 +91,15 @@ export class EditorsFormComponent implements OnInit {
   onBackToList(){
     this.router.navigate(["../.."],{ relativeTo: this.route },)
   }
-  onUpdate(){
-    this.editorForm.update()
+  
+  async onUpdate(){
+    const dataSource = this.editorForm.content
+    const referenceFields = this.referenceFieldsTableComponent.getResourceFields()
+    const editor: Editor = {
+      ...dataSource,
+      ReferenceFields: referenceFields,
+    }
+    await this.editorsService.upsertItem(editor)
     this.showDialog('Update', 'UpdateDialogMSG', 'close')
   }
   onOpenModeChange(event){
