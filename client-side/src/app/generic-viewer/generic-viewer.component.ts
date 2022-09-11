@@ -5,7 +5,7 @@ import { PepMenuItem } from "@pepperi-addons/ngx-lib/menu";
 import { DataView, GridDataView, MenuDataViewField } from '@pepperi-addons/papi-sdk';
 import { DataSource } from '../data-source/data-source'
 import { PepSelectionData } from '@pepperi-addons/ngx-lib/list';
-import { SelectOption, View } from '../../../../shared/entities';
+import { Editor, SelectOption, View } from '../../../../shared/entities';
 import { DataViewService } from '../services/data-view-service';
 import { PepDialogService } from '@pepperi-addons/ngx-lib/dialog';
 import { ViewsService } from '../services/views.service';
@@ -13,6 +13,7 @@ import { FieldEditorComponent } from '../field-editor/field-editor.component';
 import { IGenericViewerConfigurationObject } from '../metadata';
 import { GenericListComponent } from '@pepperi-addons/ngx-composite-lib/generic-list';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { EditorsService } from '../services/editors.service';
 
 @Component({
     selector: 'app-generic-viewer',
@@ -37,13 +38,15 @@ export class GenericViewerComponent implements OnInit {
     isButtonConfigured: boolean = false
     dialogRef = null
     dialogData = null
+    editor: Editor
 
     constructor(private translate: TranslateService,
          private genericResourceService: GenericResourceService,
          private dataViewService: DataViewService,
          private dialogService : PepDialogService,
          private viewService: ViewsService,
-         private injector: Injector ) 
+         private injector: Injector,
+         private editorsService: EditorsService ) 
     {
           this.actions.get = this.getActionsCallBack()
           this.dialogRef = this.injector.get(MatDialogRef, null)
@@ -69,6 +72,9 @@ export class GenericViewerComponent implements OnInit {
 
     async loadViewBlock(){
       await this.configureViews()
+      if(this.currentView.Editor){
+        this.editor = await this.editorsService.getItems(this.currentView.Editor)
+      }
       if(this.configurationObject.selectionList){
         await this.configureSelectionList()
       }else{
@@ -86,9 +92,21 @@ export class GenericViewerComponent implements OnInit {
     async configureViews(){
       await this.setCurrentViewAndKey()
     }
-
+    async loadEditor(editorKey: string){
+      this.editorDataView = await this.getEditorDataView(editorKey)
+      this.editor = await this.getEditor(editorKey)
+    }
+    async getEditor(editorKey: string): Promise<Editor | undefined>{
+      const editors = await this.editorsService.getItems(editorKey)
+      if(editors.length > 0){
+        return editors[0]
+      }
+      return undefined
+    }
     async configureGenericViewerList(){
-      this.editorDataView = await this.getEditorDataView(this.currentView?.Editor)
+      if(this.currentView.Editor){
+        await this.loadEditor(this.currentView.Editor)
+      }
       await this.initMenuItems(this.currentViewKey)
       await this.initLineMenuItems(this.currentViewKey)
     }
@@ -130,10 +148,11 @@ export class GenericViewerComponent implements OnInit {
       })
     }
     async getEditorDataView(editorKey: string | undefined): Promise<DataView | undefined>{
-      if(editorKey == undefined){
-        return 
+      const editorDataviews = await this.dataViewService.getDataViews(`GV_${editorKey}_Editor`)
+      if(editorDataviews.length > 0){
+        return editorDataviews[0]
       }
-      return (await this.dataViewService.getDataViews(`GV_${editorKey}_Editor`))[0]
+      return undefined
     }
     async getMenuDataview(viewKey: string | undefined){
       if(viewKey == undefined){
@@ -242,17 +261,18 @@ export class GenericViewerComponent implements OnInit {
       return async (data: PepSelectionData) => {
           const actions = []
           if(data && data.rows.length == 1 && this.lineMenuItemsMap != undefined){
-            if(this.editorDataView && this.lineMenuItemsMap.has("Edit")){
+            if(this.editor && this.editorDataView && this.lineMenuItemsMap.has("Edit")){
               actions.push({
                   title: this.lineMenuItemsMap.get("Edit").Title,
                   handler : async (selectedRows) => {
                     const selectedItemKey = selectedRows.rows[0]
                     const items = this.dataSource.getItems()
                     const item = items.find(item => item.Key == selectedItemKey)
+                    //needs to send editor
                     const dialogData = {
                       item : item,
                       editorDataView: this.editorDataView,
-                      resourceName: this.resource
+                      editor: this.editor
                     }
                     const config = this.dialogService.getDialogConfig({
   
@@ -310,7 +330,8 @@ export class GenericViewerComponent implements OnInit {
       }
     }
     onDoneButtonClicked(){
-      this.pressedDoneEvent.emit(this.genericList?.getSelectedItems()?.rows?.length || 0)
-      this.dialogRef?.close()
+      debugger
+      this.pressedDoneEvent.emit(this.genericList?.getSelectedItems()?.rows || [])
+      this.dialogRef?.close(this.genericList?.getSelectedItems()?.rows || [])
     }
 }

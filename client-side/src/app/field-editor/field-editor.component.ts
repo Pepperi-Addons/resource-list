@@ -1,7 +1,8 @@
 import { Component, Injector, Input, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { PepDialogService } from '@pepperi-addons/ngx-lib/dialog';
-import { SelectOption, View } from '../../../../shared/entities';
+import { BaseFormDataViewField, FormDataView } from '@pepperi-addons/papi-sdk';
+import { Editor, IReferenceField, SelectOption, View } from '../../../../shared/entities';
 import { GenericViewerComponent } from '../generic-viewer/generic-viewer.component';
 import { IGenericViewerConfigurationObject } from '../metadata';
 import { GenericResourceService } from '../services/generic-resource-service';
@@ -16,8 +17,10 @@ import { ViewsService } from '../services/views.service';
 export class FieldEditorComponent implements OnInit {
   @Input() dataView
   @Input() dataSource
+  @Input() editor: Editor
   dialogRef = null
   dialogData
+  loadCompleted: boolean = false
   constructor(private injector: Injector,
      private genericResourceService: GenericResourceService,
      private utilitiesService: UtilitiesService,
@@ -29,16 +32,40 @@ export class FieldEditorComponent implements OnInit {
    }
 
   ngOnInit(): void {
+    this.init()
+  }
+  ngOnChanges($event){
+    this.init()
+  }
+  async init(){
     this.dataSource = this.dataSource || this.dialogData?.item 
     this.dataView = this.dataView || this.dialogData?.editorDataView
+    debugger
+    this.editor = this.editor || this.dialogData?.editor
+    debugger
+    this.fixReferenceFields(this.editor.ReferenceFields, this.dataView)
+    this.loadCompleted = true
+  }
+  fixReferenceFields(referenceFields: IReferenceField[] = [], dataView: FormDataView){
+    referenceFields.forEach(referenceField => {
+      this.fixReferenceField(referenceField, dataView)
+    })
+  }
+  fixReferenceField(field: IReferenceField, dataView: FormDataView){
+    const dataViewField = dataView.Fields?.find(dataViewField => dataViewField.FieldID == field.FieldID)
+    if(field?.SelectionType == "list"){
+      dataViewField.Type == "Button"
+    }
+    else if(field?.SelectionType == 'dropDown'){
+      dataViewField.Type = "ComboBox"
+    }
   }
   async onUpdateButtonClick(){
     try{
-      await this.genericResourceService.postItem(this.dialogData.resourceName, this.dataSource)
+      await this.genericResourceService.postItem(this.editor.Resource.Name, this.dataSource)
     }
     catch(err){
       console.log(err)
-      //show dialog here
       this.dialogRef.close(false)
       this.utilitiesService.showDialog('Error', 'UpdateErrorMSG', 'close')
       return
@@ -71,28 +98,44 @@ export class FieldEditorComponent implements OnInit {
       }
     })
   }
-  showReferenceDialog(resourceName: string, viewsDropDown: SelectOption[]){
+  showReferenceDialog(resourceName: string, viewsDropDown: SelectOption[], currentFieldConfiguration: IReferenceField){
     const configurationObj: IGenericViewerConfigurationObject = {
       resource: resourceName,
       viewsList: viewsDropDown,
       selectionList: {
-        none: false
+        none: false,
+        selection: 'single'
       }
     }
-    const config = this.dialogService.getDialogConfig({
-    
-    }, 'large')
-    this.dialogService.openDialog(GenericViewerComponent, configurationObj, config).afterClosed().subscribe((async isUpdatePreformed => {
-      //will be implemented in the future.
+    const config = this.dialogService.getDialogConfig({}, 'large')
+    debugger
+    this.dialogService.openDialog(GenericViewerComponent, configurationObj, config).afterClosed().subscribe((async data => {
+      if(data && data.length > 0){
+        this.dataSource[currentFieldConfiguration.DisplayField] = data[0]
+      }
      }))
   }
   async onReferenceClicked($event){
-    const resourceNameToOpen = await this.getResourceNameToOpen(this.dialogData.resourceName, $event.ApiName)
-    if(!resourceNameToOpen){
+    const refFieldsConfiguration = this.editor.ReferenceFields || []
+    const currentRefFieldConfiguration = refFieldsConfiguration.find(refField => refField.DisplayField == $event.ApiName)
+    let resourceNameToOpen = currentRefFieldConfiguration?.Resource
+    if(!currentRefFieldConfiguration || !resourceNameToOpen){
       return 
     }
-    const viewsOfResourceToOpen = await this.getViewsOfResource(resourceNameToOpen)
-    const viewsDropDown = this.getViewsDropDown(viewsOfResourceToOpen)
-    this.showReferenceDialog(resourceNameToOpen, viewsDropDown)
+    let selectionListKey = currentRefFieldConfiguration?.SelectionListKey
+    let selectionList = currentRefFieldConfiguration?.SelectionList
+    if(!selectionListKey || !selectionList){
+      const defaultView = await this.viewsService.getDefaultView(resourceNameToOpen)
+      selectionListKey = defaultView?.Key
+      selectionList = defaultView?.Name
+    }
+    const viewsDropDown =
+    [
+      {
+        key: selectionListKey,
+        value: selectionList
+      }
+    ] 
+    this.showReferenceDialog(resourceNameToOpen, viewsDropDown, currentRefFieldConfiguration)
   }
 }

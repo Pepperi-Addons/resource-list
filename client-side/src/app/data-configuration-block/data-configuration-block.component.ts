@@ -3,6 +3,8 @@ import { Component, EventEmitter, Inject, Input, OnInit, Output } from '@angular
 import { DataSource } from '../data-source/data-source';
 import { PepMenuItem } from '@pepperi-addons/ngx-lib/menu';
 import { DataViewService } from '../services/data-view-service';
+import { EditorsService } from '../services/editors.service';
+import { Editor } from '../../../../shared/entities';
 @Component({
     selector: 'data-configuration-block',
     templateUrl: './data-configuration-block.component.html',
@@ -21,10 +23,12 @@ export class DataConfigurationBlockComponent implements OnInit {
     fields: any[] = []
     dataView: any
     currentEditorKey: string
+    editor: Editor
     @Output() hostEvents: EventEmitter<any> = new EventEmitter<any>();
 
     constructor(private translate: TranslateService,
-       private dataViewService: DataViewService) {
+       private dataViewService: DataViewService,
+       private editorsService: EditorsService) {
       // this.typeMap.init()
       
     }
@@ -37,8 +41,10 @@ export class DataConfigurationBlockComponent implements OnInit {
     async loadBlock(){
       this.currentEditorKey = this.hostObject?.configuration?.currentEditorKey
       if(this.currentEditorKey != undefined){
+        this.editor = await this.editorsService.getItems(this.currentEditorKey)
         const editorDataViews = await this.dataViewService.getDataViews(`GV_${this.currentEditorKey}_Editor`)
         this.dataView = editorDataViews[0] 
+
       }else{
         this.dataView = {}
       }

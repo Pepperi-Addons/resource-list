@@ -49,13 +49,13 @@ export class ReferenceFieldsTableComponent implements OnInit {
   private updateItemInList(item, newItem){
     item.SelectionList = newItem.SelectionList
     item.SelectionType = newItem.SelectionType
+    item.SelectionListKey = newItem.SelectionListKey
   }
   private openEditDialog(fieldID){
     const item = this.dataSource.getItems().find(item => item.DisplayField == fieldID)
     const formData = {
       //I'm using the spread operator in order to deep copy the *non-nested* object
       item: {...item},
-      resourceName: this.resourceName
     }
     const config = this.dialogService.getDialogConfig({
     }, 'large');
@@ -94,10 +94,12 @@ export class ReferenceFieldsTableComponent implements OnInit {
     Object.keys(resourceFields).forEach(fieldID => {
       if(resourceFields[fieldID].Type == REFERENCE_TYPE){
         referenceFieldsArray.push({
-          DisplayField: fieldID,
+          FieldID: fieldID,
+          DisplayField: fieldID, //temporary
           SelectionType: undefined,
           SelectionList: undefined,
-          Resource: resourceFields[fieldID].Resource
+          Resource: resourceFields[fieldID].Resource,
+          SelectionListKey: undefined
         })
       }
     })

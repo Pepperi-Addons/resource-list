@@ -2,11 +2,12 @@ import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { GenericFormComponent } from '@pepperi-addons/ngx-composite-lib/generic-form';
+import { BaseFormDataViewField, FormDataView } from '@pepperi-addons/papi-sdk';
 import { debug } from 'console';
 import { DROP_DOWN, SELECTION_LIST, SELECTION_TYPE } from 'src/app/metadata';
 import { GenericResourceService } from 'src/app/services/generic-resource-service';
 import { ViewsService } from 'src/app/services/views.service';
-import { View } from '../../../../../shared/entities';
+import { SelectOption, View } from '../../../../../shared/entities';
 
 @Component({
   selector: 'block-reference-field-edit-dialog',
@@ -21,6 +22,7 @@ export class ReferenceFieldEditDialogComponent implements OnInit {
   referenceField
   resourceName: string
   isLoaded = false
+  selectionListsDropDown: {Key: string, Value: string}[] = []
   @ViewChild(GenericFormComponent) genericForm  
   constructor(
     @Inject(MAT_DIALOG_DATA) public incoming: any,
@@ -35,7 +37,8 @@ export class ReferenceFieldEditDialogComponent implements OnInit {
   private async init(){
     //I'm using the spread operator in order to deep copy the *non-nested* object
     this.dataSource = this.incoming.item
-    this.resourceName = this.incoming.resourceName
+    this.resourceName = this.incoming.item.Resource
+    this.selectionListsDropDown = await this.getSelectionLists()
     this.dataView = await this.getDataView()
     this.isLoaded = true
   }
@@ -58,7 +61,6 @@ export class ReferenceFieldEditDialogComponent implements OnInit {
         Type: 'TextBox',
         FieldID: "DisplayField",
         Mandatory: false,
-
         Layout: {
             Origin: {
               X: 0,
@@ -93,7 +95,7 @@ export class ReferenceFieldEditDialogComponent implements OnInit {
         Title: this.translate.instant('SelectionList'),
         Type: 'ComboBox',
         FieldID: "SelectionList",
-        OptionalValues: await this.getSelectionLists(),
+        OptionalValues: this.selectionListsDropDown,
         Mandatory: false,
         Layout: {
             Origin: {
@@ -116,7 +118,7 @@ export class ReferenceFieldEditDialogComponent implements OnInit {
   private getDropDownOfViews(views: View[]){
     return views.map(view => {
       return {
-        Key: view.Name,
+        Key: view.Key,
         Value: view.Name
       }
     })
@@ -142,6 +144,12 @@ export class ReferenceFieldEditDialogComponent implements OnInit {
     this.dialogRef.close(this.dataSource)
   }
   valueChange($event){
+    if($event.ApiName == SELECTION_LIST){
+      debugger
+      const selectionList = this.selectionListsDropDown?.find(selectionList => selectionList.Key == $event.Value)
+      this.dataSource.SelectionList = selectionList.Value
+      this.dataSource.SelectionListKey = selectionList.Key
+    }
     if($event.ApiName == SELECTION_TYPE){
       this.dataView.Fields[2].ReadOnly = !($event.Value == SELECTION_LIST)
     }
