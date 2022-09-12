@@ -32,9 +32,6 @@ export class GenericResourceService{
     async getResource(name: string){
         return await this.utilitiesService.papiClient.resources.resource('resources').key(name).get()
     }
-    async getItemFromResourceByKey(resourceName: string, key: string){
-        return await this.utilitiesService.papiClient.resources.resource(resourceName).get({where: `Key=${key}`})
-    }
     async getResourceFieldsAsDataViewFields(resourceName: string){
         const resource = await this.getResource(resourceName)
         const typeMap = new TypeMap()
