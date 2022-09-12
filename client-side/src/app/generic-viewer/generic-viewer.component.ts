@@ -1,5 +1,5 @@
 import { TranslateService } from '@ngx-translate/core';
-import { Component, EventEmitter, Injector, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Injector, Input, OnInit, Output, ViewChild, ViewContainerRef } from '@angular/core';
 import { GenericResourceService } from '../services/generic-resource-service';
 import { PepMenuItem } from "@pepperi-addons/ngx-lib/menu";
 import { DataView, GridDataView, MenuDataViewField } from '@pepperi-addons/papi-sdk';
@@ -10,10 +10,11 @@ import { DataViewService } from '../services/data-view-service';
 import { PepDialogService } from '@pepperi-addons/ngx-lib/dialog';
 import { ViewsService } from '../services/views.service';
 import { FieldEditorComponent } from '../field-editor/field-editor.component';
-import { IGenericViewerConfigurationObject } from '../metadata';
+import { EXPORT, IGenericViewerConfigurationObject } from '../metadata';
 import { GenericListComponent } from '@pepperi-addons/ngx-composite-lib/generic-list';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { EditorsService } from '../services/editors.service';
+import { DIMXHostObject, PepDIMXHelperService } from '@pepperi-addons/ngx-composite-lib';
 
 @Component({
     selector: 'app-generic-viewer',
@@ -46,7 +47,9 @@ export class GenericViewerComponent implements OnInit {
          private dialogService : PepDialogService,
          private viewService: ViewsService,
          private injector: Injector,
-         private editorsService: EditorsService ) 
+         private editorsService: EditorsService,
+         private viewContainerRef: ViewContainerRef,
+         private dimxService: PepDIMXHelperService ) 
     {
           this.actions.get = this.getActionsCallBack()
           this.dialogRef = this.injector.get(MatDialogRef, null)
@@ -70,8 +73,25 @@ export class GenericViewerComponent implements OnInit {
       await this.loadViewBlock()
     }
 
+    initDimxService(){
+      if(this.currentView){
+        const dimxHostObject: DIMXHostObject = {
+          DIMXAddonUUID: this.currentView.Resource.AddonUUID,
+          DIMXResource: this.currentView.Resource.Name
+        }
+        this.dimxService.register(this.viewContainerRef, dimxHostObject, (onDIMXProcessDoneEvent: any) => {
+          this.onDIMXProcessDone(onDIMXProcessDoneEvent);
+        })
+      }
+    }
+
+    onDIMXProcessDone(event){
+      console.log(`DONE!!!`);
+    }
+
     async loadViewBlock(){
       await this.configureViews()
+      this.initDimxService()
       if(this.currentView.Editor){
         this.editor = await this.editorsService.getItems(this.currentView.Editor)
       }
@@ -204,7 +224,7 @@ export class GenericViewerComponent implements OnInit {
       const items = await this.genericResourceService.getItems(this.resource)
       const resourceFields = (await this.genericResourceService.getResource(this.resource))?.Fields || {}
       //in order to support arrays and references we should check the "real" type of each field, and reformat the corresponding item
-      const formatedItems = this.reformatItems(items, resourceFields)
+      this.reformatItems(items, resourceFields)
       this.dataSource = new DataSource(items, fields,columns)
     }
     async initRecycleBin(){
@@ -255,7 +275,16 @@ export class GenericViewerComponent implements OnInit {
           break;
         case 'BackToList': 
           this.backToList()
+        case EXPORT:
+          this.export()
       }
+    }
+    export(){
+      this.dimxService?.export({
+        DIMXExportFormat: 'json',
+        DIMXExportIncludeDeleted: false,
+        DIMXExportFileName: EXPORT,
+      })
     }
      getActionsCallBack(){
       return async (data: PepSelectionData) => {
