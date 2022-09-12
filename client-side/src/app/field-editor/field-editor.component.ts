@@ -40,9 +40,7 @@ export class FieldEditorComponent implements OnInit {
   async init(){
     this.dataSource = this.dataSource || this.dialogData?.item 
     this.dataView = this.dataView || this.dialogData?.editorDataView
-    debugger
     this.editor = this.editor || this.dialogData?.editor
-    debugger
     this.fixReferenceFields(this.editor.ReferenceFields, this.dataView)
     this.loadCompleted = true
   }
@@ -108,7 +106,6 @@ export class FieldEditorComponent implements OnInit {
       }
     }
     const config = this.dialogService.getDialogConfig({}, 'large')
-    debugger
     this.dialogService.openDialog(GenericViewerComponent, configurationObj, config).afterClosed().subscribe((async data => {
       if(data && data.length > 0){
         this.dataSource[currentFieldConfiguration.DisplayField] = data[0]
@@ -124,6 +121,7 @@ export class FieldEditorComponent implements OnInit {
     }
     let selectionListKey = currentRefFieldConfiguration?.SelectionListKey
     let selectionList = currentRefFieldConfiguration?.SelectionList
+    selectionList = undefined
     if(!selectionListKey || !selectionList){
       const defaultView = await this.viewsService.getDefaultView(resourceNameToOpen)
       selectionListKey = defaultView?.Key

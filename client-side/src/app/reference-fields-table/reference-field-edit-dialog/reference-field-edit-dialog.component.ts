@@ -2,12 +2,9 @@ import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { GenericFormComponent } from '@pepperi-addons/ngx-composite-lib/generic-form';
-import { BaseFormDataViewField, FormDataView } from '@pepperi-addons/papi-sdk';
-import { debug } from 'console';
 import { DROP_DOWN, SELECTION_LIST, SELECTION_TYPE } from 'src/app/metadata';
-import { GenericResourceService } from 'src/app/services/generic-resource-service';
 import { ViewsService } from 'src/app/services/views.service';
-import { SelectOption, View } from '../../../../../shared/entities';
+import {  View } from '../../../../../shared/entities';
 
 @Component({
   selector: 'block-reference-field-edit-dialog',
@@ -145,7 +142,6 @@ export class ReferenceFieldEditDialogComponent implements OnInit {
   }
   valueChange($event){
     if($event.ApiName == SELECTION_LIST){
-      debugger
       const selectionList = this.selectionListsDropDown?.find(selectionList => selectionList.Key == $event.Value)
       this.dataSource.SelectionList = selectionList.Value
       this.dataSource.SelectionListKey = selectionList.Key

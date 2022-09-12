@@ -330,7 +330,6 @@ export class GenericViewerComponent implements OnInit {
       }
     }
     onDoneButtonClicked(){
-      debugger
       this.pressedDoneEvent.emit(this.genericList?.getSelectedItems()?.rows || [])
       this.dialogRef?.close(this.genericList?.getSelectedItems()?.rows || [])
     }

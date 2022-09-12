@@ -6,7 +6,7 @@ import { FindOptions, Profile } from "@pepperi-addons/papi-sdk";
 import { DataViewsService } from "../dataviews.service";
 export abstract class ItemsService {
     addonService: AddonService = new AddonService(this.client);
-    constructor(private client: Client){
+    constructor(protected client: Client){
        
     }
     async getItems(options: FindOptions = {}){
