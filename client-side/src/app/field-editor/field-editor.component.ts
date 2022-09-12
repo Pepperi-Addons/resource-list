@@ -112,28 +112,36 @@ export class FieldEditorComponent implements OnInit {
       }
      }))
   }
-  async onReferenceClicked($event){
+  getReferenceFieldConfiguration(displayField: string){
     const refFieldsConfiguration = this.editor.ReferenceFields || []
-    const currentRefFieldConfiguration = refFieldsConfiguration.find(refField => refField.DisplayField == $event.ApiName)
-    let resourceNameToOpen = currentRefFieldConfiguration?.Resource
-    if(!currentRefFieldConfiguration || !resourceNameToOpen){
-      return 
-    }
-    let selectionListKey = currentRefFieldConfiguration?.SelectionListKey
-    let selectionList = currentRefFieldConfiguration?.SelectionList
-    selectionList = undefined
-    if(!selectionListKey || !selectionList){
-      const defaultView = await this.viewsService.getDefaultView(resourceNameToOpen)
+    return refFieldsConfiguration.find(refField => refField.DisplayField == displayField)
+  }
+  async getSelectionListAndKey(refFieldConfiguration: IReferenceField){
+    let selectionList = refFieldConfiguration.SelectionList
+    let selectionListKey = refFieldConfiguration.SelectionListKey
+    if(!selectionList || !selectionListKey){
+      const defaultView = await this.viewsService.getDefaultView(refFieldConfiguration.Resource)
       selectionListKey = defaultView?.Key
       selectionList = defaultView?.Name
     }
+    return {selectionList: selectionList, selectionListKey: selectionListKey}
+  }
+  async openSelectionListOfRefField(refFieldConfiguration: IReferenceField){
+    const {selectionList, selectionListKey} = await this.getSelectionListAndKey(refFieldConfiguration)
     const viewsDropDown =
     [
       {
         key: selectionListKey,
         value: selectionList
       }
-    ] 
-    this.showReferenceDialog(resourceNameToOpen, viewsDropDown, currentRefFieldConfiguration)
+    ]
+    this.showReferenceDialog(refFieldConfiguration.Resource, viewsDropDown, refFieldConfiguration) 
+  }
+  async onReferenceClicked($event){
+    const currentRefFieldConfiguration = this.getReferenceFieldConfiguration($event.ApiName)
+    if(!currentRefFieldConfiguration?.Resource){
+      return 
+    }
+    await this.openSelectionListOfRefField(currentRefFieldConfiguration)
   }
 }
