@@ -144,21 +144,9 @@ export class ReferenceFieldEditDialogComponent implements OnInit {
   valueChange($event){
     if($event.ApiName == SELECTION_TYPE){
       this.dataView.Fields[2].ReadOnly = !($event.Value == SELECTION_LIST)
-      // this.genericForm.updateFields(
-      //   [
-      //     {
-      //       FieldId: SELECTION_LIST,
-      //       Params: {
-      //         Enabled: ($event.Value == SELECTION_LIST)
-      //       } 
-      //     }
-      //   ]
-      // )
     }
     //WORKAROUND - generic from updated only when a new reference to the dataview is created!!!
-    console.log(`is valid before dataview overriden ${this.isValid}`);
     this.dataView = JSON.parse(JSON.stringify(this.dataView))
-    console.log(`is valid after dataview overriden ${this.isValid}`);
   }
   onValidtation(event){
     this.isValid = event

@@ -1,28 +1,3 @@
-<!-- <pep-dialog [title]="'Add' | translate">
-    <ng-container pep-dialog-content>
-        <pep-generic-form [dataSource]="dataSource" [dataView]="dataView" (formValidationChange)="isValid = $event" >
-        </pep-generic-form>
-    </ng-container>
-    <ng-container pep-dialog-actions>
-        <div class="pep-spacing-element-negative" style="display: flex;">         
-            <pep-button 
-                class="pep-spacing-element"
-                [sizeType]="'md'" 
-                [value]="'Cancel' | translate" 
-                [styleType]="'weak'" 
-                (buttonClick)="onCancel()"
-            ></pep-button>
-            <pep-button 
-                class="pep-spacing-element"
-                [sizeType]="'md'" 
-                [value]="'Save' | translate" 
-                [styleType]="'strong'" 
-                (buttonClick)="onSave()"
-                [disabled]="!isValid"
-            ></pep-button>
-        </div>
-    </ng-container>
-</pep-dialog> -->
 <pep-dialog [title]="title">
     <ng-container pep-dialog-content>
         <pep-generic-form *ngIf="isLoaded"
@@ -47,9 +22,7 @@
                 [value]="'Save' | translate" 
                 [styleType]="'strong'" 
                 (buttonClick)="onSave()"
-
             ></pep-button>
         </div>
     </ng-container>
-
 </pep-dialog>
