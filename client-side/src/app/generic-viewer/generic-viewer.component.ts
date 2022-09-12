@@ -10,7 +10,7 @@ import { DataViewService } from '../services/data-view-service';
 import { PepDialogService } from '@pepperi-addons/ngx-lib/dialog';
 import { ViewsService } from '../services/views.service';
 import { FieldEditorComponent } from '../field-editor/field-editor.component';
-import { EXPORT, IGenericViewerConfigurationObject } from '../metadata';
+import { EXPORT, IGenericViewerConfigurationObject, IMPORT } from '../metadata';
 import { GenericListComponent } from '@pepperi-addons/ngx-composite-lib/generic-list';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { EditorsService } from '../services/editors.service';
@@ -85,8 +85,8 @@ export class GenericViewerComponent implements OnInit {
       }
     }
 
-    onDIMXProcessDone(event){
-      console.log(`DONE!!!`);
+    async onDIMXProcessDone(event){
+      await this.loadViewBlock()
     }
 
     async loadViewBlock(){
@@ -277,7 +277,16 @@ export class GenericViewerComponent implements OnInit {
           this.backToList()
         case EXPORT:
           this.export()
+        case IMPORT:
+          this.import()
       }
+    }
+    import(){
+      this.dimxService?.import({
+        OverwriteObject: true,
+        OwnerID: this.currentView.Resource.AddonUUID
+      })
+      
     }
     export(){
       this.dimxService?.export({
