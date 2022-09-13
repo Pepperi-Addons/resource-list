@@ -2,9 +2,10 @@ import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { GenericFormComponent } from '@pepperi-addons/ngx-composite-lib/generic-form';
-import { DROP_DOWN, SELECTION_LIST, SELECTION_TYPE } from 'src/app/metadata';
+import { SELECTION_TYPE } from 'src/app/metadata';
+import { GenericResourceService } from 'src/app/services/generic-resource-service';
 import { ViewsService } from 'src/app/services/views.service';
-import {  View } from '../../../../../shared/entities';
+import {  DROP_DOWN, SELECTION_LIST, View } from '../../../../../shared/entities';
 
 @Component({
   selector: 'block-reference-field-edit-dialog',
@@ -25,7 +26,8 @@ export class ReferenceFieldEditDialogComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public incoming: any,
     private dialogRef: MatDialogRef<ReferenceFieldEditDialogComponent>,
     private translate: TranslateService,
-    private viewsService: ViewsService
+    private viewsService: ViewsService,
+    private genericResourceService: GenericResourceService
   ) { }
 
   ngOnInit(): void {
@@ -50,13 +52,29 @@ export class ReferenceFieldEditDialogComponent implements OnInit {
       }
     }
   }
+  private async getDisplayFields(){
+    //get resource fields,
+    const resourceFields = (await this.genericResourceService.getResource(this.resourceName))?.Fields
+    //convert to drop down and return
+    const res =  this.convertResourceFieldsToDropDown(resourceFields)
+    return res
+  }
+  convertResourceFieldsToDropDown(resourceFields){
+    return Object.keys(resourceFields).map(fieldID => {
+      return {
+        Key: fieldID,
+        Value: fieldID
+      }
+    })
+  }
   private async getFields(){
     return [
       {
-        ReadOnly: true,
+        ReadOnly: false,
         Title: this.translate.instant('DisplayField'),
-        Type: 'TextBox',
+        Type: 'ComboBox',
         FieldID: "DisplayField",
+        OptionalValues: await this.getDisplayFields(),
         Mandatory: false,
         Layout: {
             Origin: {

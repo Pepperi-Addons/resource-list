@@ -2,7 +2,7 @@ import { Component, Injector, Input, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { PepDialogService } from '@pepperi-addons/ngx-lib/dialog';
 import { BaseFormDataViewField, FormDataView } from '@pepperi-addons/papi-sdk';
-import { Editor, IReferenceField, SelectOption, View } from '../../../../shared/entities';
+import { DROP_DOWN, Editor, IReferenceField, SELECTION_LIST, SelectOption, View } from '../../../../shared/entities';
 import { GenericViewerComponent } from '../generic-viewer/generic-viewer.component';
 import { IGenericViewerConfigurationObject } from '../metadata';
 import { GenericResourceService } from '../services/generic-resource-service';
@@ -21,6 +21,8 @@ export class FieldEditorComponent implements OnInit {
   dialogRef = null
   dialogData
   loadCompleted: boolean = false
+  resourceFields //should be input in the future
+  resourcesMap
   constructor(private injector: Injector,
      private genericResourceService: GenericResourceService,
      private utilitiesService: UtilitiesService,
@@ -38,25 +40,47 @@ export class FieldEditorComponent implements OnInit {
     this.init()
   }
   async init(){
+    this.resourcesMap = new Map()
     this.dataSource = this.dataSource || this.dialogData?.item 
     this.dataView = this.dataView || this.dialogData?.editorDataView
     this.editor = this.editor || this.dialogData?.editor
-    this.fixReferenceFields(this.editor.ReferenceFields, this.dataView)
+    await this.fixReferenceFields(this.editor.ReferenceFields, this.dataView)
     this.loadCompleted = true
   }
-  fixReferenceFields(referenceFields: IReferenceField[] = [], dataView: FormDataView){
-    referenceFields.forEach(referenceField => {
-      this.fixReferenceField(referenceField, dataView)
-    })
+  async fixReferenceFields(referenceFields: IReferenceField[] = [], dataView: any){
+    await Promise.all(referenceFields.map(async referenceField => await this.fixReferenceField(referenceField, dataView)))
   }
-  fixReferenceField(field: IReferenceField, dataView: FormDataView){
+  async fixReferenceField(field: IReferenceField, dataView: any){
     const dataViewField = dataView.Fields?.find(dataViewField => dataViewField.FieldID == field.FieldID)
-    if(field?.SelectionType == "list"){
+    if(field?.SelectionType == SELECTION_LIST){
       dataViewField.Type == "Button"
     }
-    else if(field?.SelectionType == 'dropDown'){
+    else if(field?.SelectionType == DROP_DOWN){
       dataViewField.Type = "ComboBox"
+      if(field.DisplayField){
+        await this.addOptionalValuesToDataViewField(field, dataViewField)
+      }
+      else{
+        dataViewField.ReadOnly = true
+      }
     }
+  }
+  async addOptionalValuesToDataViewField(field: IReferenceField, dataViewField: any){
+    let resourceItems = this.resourcesMap.get(field.Resource)
+    if(!resourceItems){
+      resourceItems = await this.genericResourceService.getItems(field.Resource)
+      this.resourcesMap.set(field.Resource, resourceItems )
+    }
+    dataViewField['OptionalValues'] = resourceItems.map(item => {
+      return {
+        Key: item['Key'],
+        Value: item[field.DisplayField]
+      }
+    })
+    //get its resource
+    //validate that display field is a field of that resource
+    //if not open error dialog
+    //if yes, return drop down of key and value of fields
   }
   async onUpdateButtonClick(){
     try{

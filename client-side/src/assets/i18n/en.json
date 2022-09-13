@@ -36,5 +36,6 @@
     "DisplayField": "Display field",
     "SelectionType": "Selection type",
     "SelectionList": "Selection list",
-    "DropDown": "Drop down"
+    "DropDown": "Drop down",
+    "DisplayFieldError": "Display field is not a field of that resource"
 }
