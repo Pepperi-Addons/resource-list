@@ -15,6 +15,7 @@ import { ViewsService } from './services/views.service';
 import { EditorsService } from './services/editors.service';
 
 export async function install(client: Client, request: Request): Promise<any> {
+    await createAddonBlockRelation(client)
     await createPageBlockRelation(client);
     await createSettingsRelation(client);
     const viewsService = new ViewsService(client)
@@ -28,8 +29,9 @@ export async function uninstall(client: Client, request: Request): Promise<any> 
 }
 
 export async function upgrade(client: Client, request: Request): Promise<any> {
-    createPageBlockRelation(client);
-    createSettingsRelation(client);
+    await createAddonBlockRelation(client)
+    await createPageBlockRelation(client);
+    await createSettingsRelation(client);
     return {success:true,resultObject:{}}
 }
 
@@ -37,6 +39,24 @@ export async function downgrade(client: Client, request: Request): Promise<any> 
     return {success:true,resultObject:{}}
 }
 
+async function createAddonBlockRelation(client: Client){
+    const blockName = "ResourceSelection"
+    const addonBlockRelation: Relation = {
+        RelationName: "AddonBlock",
+        Name: blockName,
+        Description: `${blockName} addon block`,
+        Type: "NgComponent",
+        SubType: "NG14",
+        AddonUUID: client.AddonUUID,
+        AddonRelativeURL: `file_${client.AddonUUID}`,
+        ComponentName: `${blockName}Component`,
+        ModuleName: `${blockName}Module`,
+        ElementsModule: 'WebComponents',
+        ElementName: `resource-selection-element-${client.AddonUUID}`,
+    };
+    const addonService = new AddonService(client)
+    addonService.upsertRelation(addonBlockRelation) 
+}
 async function createPageBlockRelation(client: Client): Promise<any> {
     try {
         const fileName = `file_${client.AddonUUID}`;
