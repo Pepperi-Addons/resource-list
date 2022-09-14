@@ -130,15 +130,15 @@ export class FieldEditorComponent implements OnInit {
       }
     }
     const config = this.dialogService.getDialogConfig({}, 'large')
-    this.dialogService.openDialog(GenericViewerComponent, configurationObj, config).afterClosed().subscribe((async data => {
+    this.dialogService.openDialog(GenericViewerComponent, configurationObj, config).afterClosed().subscribe((async data => {      
       if(data && data.length > 0){
-        this.dataSource[currentFieldConfiguration.DisplayField] = data[0]
+        this.dataSource[currentFieldConfiguration.FieldID] = data[0]
       }
      }))
   }
-  getReferenceFieldConfiguration(displayField: string){
+  getReferenceFieldConfiguration(fieldID: string){
     const refFieldsConfiguration = this.editor.ReferenceFields || []
-    return refFieldsConfiguration.find(refField => refField.DisplayField == displayField)
+    return refFieldsConfiguration.find(refField => refField.FieldID == fieldID)
   }
   async getSelectionListAndKey(refFieldConfiguration: IReferenceField){
     let selectionList = refFieldConfiguration.SelectionList

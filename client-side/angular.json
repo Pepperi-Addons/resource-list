@@ -11,7 +11,7 @@
             },
             "root": "",
             "sourceRoot": "src",
-            "prefix": "block",
+            "prefix": "",
             "architect": {
                 "build": {
                     "builder": "ngx-build-plus:browser",

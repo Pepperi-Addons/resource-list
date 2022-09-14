@@ -55,7 +55,7 @@ async function createAddonBlockRelation(client: Client){
         ElementName: `resource-selection-element-${client.AddonUUID}`,
     };
     const addonService = new AddonService(client)
-    addonService.upsertRelation(addonBlockRelation) 
+    await addonService.upsertRelation(addonBlockRelation) 
 }
 async function createPageBlockRelation(client: Client): Promise<any> {
     try {

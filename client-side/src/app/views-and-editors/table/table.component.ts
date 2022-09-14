@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewContainerRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { DataSource } from '../../data-source/data-source';
@@ -8,6 +8,7 @@ import { IDataService } from '../../metadata';
 import { PepDialogData, PepDialogService } from '@pepperi-addons/ngx-lib/dialog';
 import { IPepGenericListActions } from '@pepperi-addons/ngx-composite-lib/generic-list';
 import { AddFormComponent } from '../../add-form/add-form.component'
+import { PepAddonBlockLoaderService } from '@pepperi-addons/ngx-lib/remote-loader';
 @Component({
   selector: 'app-table',
   templateUrl: './table.component.html',
@@ -44,7 +45,9 @@ export class TableComponent{
     private translate: TranslateService,
     private router: Router,
     private route: ActivatedRoute,
-    private dialogService: PepDialogService)
+    private dialogService: PepDialogService,
+    private addonBlockService: PepAddonBlockLoaderService,
+    private viewContainerRef: ViewContainerRef)
     {
 
     }
@@ -215,5 +218,15 @@ export class TableComponent{
     field.Hidden = true
     await this.service.upsertItem(field)
     this.loadGenericList(false)
+  }
+  onOpenABI(){
+    this.addonBlockService.loadAddonBlockInDialog({
+      container: this.viewContainerRef,
+      name: 'ResourceSelection',
+      hostObject: {},
+      hostEventsCallback: () => {
+        return "hello world"
+      }
+    })
   }
 }

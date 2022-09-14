@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
 @Component({
   selector: 'block-resource-selection',
@@ -6,7 +6,9 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./resource-selection.component.scss']
 })
 export class ResourceSelectionComponent implements OnInit {
-
+  @Input() hostObject: any;
+  @Output() hostEvents: EventEmitter<any> = new EventEmitter<any>();
+  
   constructor() { }
 
   ngOnInit(): void {
