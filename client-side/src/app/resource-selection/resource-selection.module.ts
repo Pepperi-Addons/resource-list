@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ResourceSelectionComponent } from './resource-selection.component';
+import { GenericViewerModule } from '../generic-viewer/generic-viewer.module';
 
 
 
@@ -9,7 +10,8 @@ import { ResourceSelectionComponent } from './resource-selection.component';
     ResourceSelectionComponent
   ],
   imports: [
-    CommonModule
+    CommonModule,
+    GenericViewerModule
   ]
 })
 export class ResourceSelectionModule { }

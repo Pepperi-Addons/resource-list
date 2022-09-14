@@ -1,5 +1,6 @@
-<p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Eaque, voluptas? Quis quisquam nam eos quidem libero labore soluta molestiae ipsa, ex dolore! Voluptates officia eaque accusantium quasi laborum id sed?
-Deserunt explicabo cupiditate nisi rerum, error voluptate. Voluptates animi neque id nesciunt saepe officia reiciendis fugit iste veniam deleniti omnis, maiores pariatur sed quidem impedit ad magnam odio voluptas adipisci!
-Ipsa inventore minima harum quod, reprehenderit eveniet vitae, asperiores ipsum corporis quidem ea possimus sapiente, praesentium tempora quasi. Molestias, illo maiores pariatur commodi porro doloribus fuga. Qui labore distinctio sint.
-At cupiditate ratione libero. Quos, sapiente error ea, dolores blanditiis sequi itaque enim fuga fugit nesciunt aut suscipit animi quam cumque, ab ipsam. Maiores aut tenetur nulla deleniti amet accusamus.
-Distinctio recusandae necessitatibus placeat, neque suscipit sunt veritatis quidem libero ducimus nisi. Laborum, laudantium consequuntur debitis necessitatibus possimus corporis rem nihil illo ullam qui molestiae facilis deserunt ipsam. Natus, sunt.</p>
+<app-generic-viewer
+    *ngIf="loadCompleted" 
+    class="generic-viewer"
+    [configurationObject]="configurationObj"
+    (pressedDoneEvent) = "onDonePressed($event)"
+></app-generic-viewer>
