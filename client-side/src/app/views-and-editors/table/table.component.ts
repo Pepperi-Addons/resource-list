@@ -219,14 +219,4 @@ export class TableComponent{
     await this.service.upsertItem(field)
     this.loadGenericList(false)
   }
-  onOpenABI(){
-    this.addonBlockService.loadAddonBlockInDialog({
-      container: this.viewContainerRef,
-      name: 'ResourceSelection',
-      hostObject: {},
-      hostEventsCallback: () => {
-        return "hello world"
-      }
-    })
-  }
 }
