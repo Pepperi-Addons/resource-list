@@ -32,6 +32,7 @@
     "Menu": "Menu",
     "LineMenu": "Line Menu",
     "Done": "Done",
+    "ReferenceFieldDoesNotExistMSG": "Reference field does not exist",
     "DisplayField": "Display field",
     "SelectionType": "Selection type",
     "SelectionList": "Selection list",
