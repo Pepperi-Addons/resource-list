@@ -4,7 +4,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { DataSource } from '../../data-source/data-source';
 import { PepMenuItem } from "@pepperi-addons/ngx-lib/menu";
 import { PepSelectionData } from '@pepperi-addons/ngx-lib/list';
-import { EXPORT, IDataService } from '../../metadata';
+import { EXPORT, IDataService, IMPORT } from '../../metadata';
 import { PepDialogData, PepDialogService } from '@pepperi-addons/ngx-lib/dialog';
 import { IPepGenericListActions } from '@pepperi-addons/ngx-composite-lib/generic-list';
 import { AddFormComponent } from '../../add-form/add-form.component'
@@ -54,6 +54,9 @@ export class TableComponent{
 
     }
   ngOnInit(){
+    this.init()
+  }
+  init(){
     this.initDimxService()
     this.listFields = this.generateListFields()
     this.title = this.translate.instant(this.name)
@@ -160,8 +163,19 @@ export class TableComponent{
       }
       case EXPORT: {
         this.handleExportAction()
+        break
+      }
+      case IMPORT: {
+        this.handleImportAction()
+        break
       }
     }
+  }
+  handleImportAction(){
+    this.dimxService?.import({
+      OverwriteObject: true,
+      OwnerID: config.AddonUUID
+    })
   }
   handleExportAction(){
     this.dimxService?.export({
@@ -187,6 +201,11 @@ export class TableComponent{
       {
         key: EXPORT,
         text: this.translate.instant(EXPORT),
+        hidden: false
+      },
+      {
+        key: IMPORT,
+        text: this.translate.instant(IMPORT),
         hidden: false
       }
     ]
@@ -248,5 +267,6 @@ export class TableComponent{
   }
   onDIMXProcessDone(event){
     console.log(`DONE!!!`);
+    this.init()
   }
 }
