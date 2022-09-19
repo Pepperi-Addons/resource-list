@@ -41,6 +41,19 @@
             [visible]='isButtonConfigured'
             (buttonClick)='onButtonClicked()'
         ></pep-button>
+        
+        <pep-button
+        class='pep-spacing-element'
+        value = "{{'Cancel' | translate}}"
+        styleType= weak
+        styleStateType=system
+        sizeType= md
+        classNames='new'
+        [disabled]='false'
+        iconPosition='end'
+        [visible]='configurationObject.selectionList != undefined'
+        (buttonClick)='onCancelClicked()'
+    ></pep-button>
     </ng-container>
 </pep-generic-list>
 

@@ -74,6 +74,14 @@ export interface IGenericViewerConfigurationObject{
   }
 }
 
+export interface ResourcePicker {
+  resource: string,
+  view: string,
+  selectedObjectKeys?: string[],
+  selectionMode: 'single' | 'multi',
+  allowNone: boolean
+}
+
 export const SELECTION_TYPE = "SelectionType"
 export const EXPORT = "Export"
 export const IMPORT = "Import"

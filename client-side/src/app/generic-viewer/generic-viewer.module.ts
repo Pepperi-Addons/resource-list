@@ -5,6 +5,7 @@ import { PepGenericListModule } from '@pepperi-addons/ngx-composite-lib/generic-
 import { PepMenuModule } from '@pepperi-addons/ngx-lib/menu';
 import { PepSelectModule } from '@pepperi-addons/ngx-lib/select';
 import { PepButtonModule } from '@pepperi-addons/ngx-lib/button';
+import { TranslateModule } from '@ngx-translate/core';
 
 
 
@@ -15,7 +16,8 @@ import { PepButtonModule } from '@pepperi-addons/ngx-lib/button';
     PepGenericListModule,
     PepMenuModule,
     PepSelectModule,
-    PepButtonModule
+    PepButtonModule,
+    TranslateModule
   ],
   exports: [GenericViewerComponent]
 })

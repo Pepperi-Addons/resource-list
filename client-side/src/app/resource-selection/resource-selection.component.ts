@@ -38,13 +38,12 @@ export class ResourceSelectionComponent implements OnInit {
     }
     const resource = this.hostObject.resource
     const viewsDropDown = await this.getViewsDropDown()
-    const selectionMode = this.hostObject.selectionMode
     return {
       resource: resource,
       viewsList: viewsDropDown,
       selectionList: {
-        none: false,
-        selection: selectionMode
+        none: this.hostObject.allowNone,
+        selection: this.hostObject.selectionMode
       }
     }
   }
@@ -64,7 +63,7 @@ export class ResourceSelectionComponent implements OnInit {
     })
   }
   async getViewsArrayFromHostObject(): Promise<View[]>{
-    if(this.hostObject.useDefaultView){
+    if(!this.hostObject.view){
       const defaultView = await this.viewsService.getDefaultView(this.hostObject.resource)
       return defaultView ? [defaultView] : []
     }
@@ -76,8 +75,20 @@ export class ResourceSelectionComponent implements OnInit {
   isValidHostObject(): boolean{
     return true
   }
+  
   onDonePressed($event){
-    this.hostEvents.emit($event)
+    this.hostEvents.emit({
+      action: 'on-save',
+      data: {
+        selectedObjectKeys: $event
+      }
+    })
+  }
+  onCancelPressed(){
+    this.hostEvents.emit({
+      action: 'on-cancel',
+      data: {}
+    })
   }
 
 

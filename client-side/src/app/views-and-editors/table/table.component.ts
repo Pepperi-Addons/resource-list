@@ -45,9 +45,7 @@ export class TableComponent{
     private translate: TranslateService,
     private router: Router,
     private route: ActivatedRoute,
-    private dialogService: PepDialogService,
-    private addonBlockService: PepAddonBlockLoaderService,
-    private viewContainerRef: ViewContainerRef)
+    private dialogService: PepDialogService)
     {
 
     }
