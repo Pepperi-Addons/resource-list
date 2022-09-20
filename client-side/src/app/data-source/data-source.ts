@@ -3,15 +3,8 @@ import { GridDataViewColumn } from "@pepperi-addons/papi-sdk";
 import { IPepListSortingChangeEvent } from "@pepperi-addons/ngx-lib/list";
 
 export class DataSource implements IPepGenericListDataSource{
-    inputs?: IPepGenericListListInputs = 
-    {
-      pager:{
-      type: 'scroll'
-      },
-      selectionType: 'multi'
-    }
 
-    constructor(private items: any[], private fields: any[], private widthArray: GridDataViewColumn[] = [], private searchCB = (str, items) => items ){
+    constructor(private items: any[], private fields: any[], private widthArray: GridDataViewColumn[] = [], private searchCB = (str, items) => items){
     }
     async init(params: { searchString?: string; filter?: any; sorting?: IPepListSortingChangeEvent; fromIndex: number; toIndex: number; }): Promise<IPepGenericListInitData> {
       const searchString = params?.searchString || ""
