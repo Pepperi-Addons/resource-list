@@ -9,6 +9,7 @@ import { PepDialogData, PepDialogService } from '@pepperi-addons/ngx-lib/dialog'
 import { IPepGenericListActions } from '@pepperi-addons/ngx-composite-lib/generic-list';
 import { AddFormComponent } from '../../add-form/add-form.component'
 import { PepAddonBlockLoaderService } from '@pepperi-addons/ngx-lib/remote-loader';
+import { DialogRef } from '@angular/cdk/dialog';
 @Component({
   selector: 'app-table',
   templateUrl: './table.component.html',
@@ -45,7 +46,9 @@ export class TableComponent{
     private translate: TranslateService,
     private router: Router,
     private route: ActivatedRoute,
-    private dialogService: PepDialogService)
+    private dialogService: PepDialogService,
+    private addonBlockService: PepAddonBlockLoaderService,
+    private viewContainerRef: ViewContainerRef)
     {
 
     }
@@ -216,5 +219,25 @@ export class TableComponent{
     field.Hidden = true
     await this.service.upsertItem(field)
     this.loadGenericList(false)
+  }
+  onOpenABI(){
+    this.addonBlockService.loadAddonBlockInDialog({
+      container: this.viewContainerRef,
+      name: 'ResourceSelection',
+      hostObject: {
+        resource: "ResourceHolder",
+        selectionMode: 'single',
+        // view: "2917c57e-80f9-480e-b178-632e76fc406b"
+
+      },
+      hostEventsCallback: ($event) => {
+        if($event.action == 'on-save'){
+          this.viewContainerRef.clear()
+        }
+        if($event.action == 'on-cancel'){
+
+        }
+      }
+    })
   }
 }
