@@ -37,5 +37,12 @@
     "SelectionType": "Selection type",
     "SelectionList": "Selection list",
     "DropDown": "Drop down",
-    "DisplayFieldError": "Display field is not a field of that resource"
+    "DisplayFieldError": "Display field is not a field of that resource",
+    "NoResourceError": "Resource is required",
+    "ViewNotOfThatResourceError": "View must be of the resource you sent",
+    "IllegalSelectionModeError": "Selection mode has to be single or multi",
+    "SelectedKeysSingleSelectionError": "The number of selected object keys cannot be greater than one if the selection mode is single",
+    "SelectedKeysMustBeArrayOrUndefinedError": "Selected object keys must be an array of strings or undefined",
+    "NoSuchViewError": "The view you sent is not exist",
+    "ResourceDoesNotExistOrHaveNoViewsError": "The resource you sent is not exist or it has no views "
 }

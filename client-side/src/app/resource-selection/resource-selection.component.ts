@@ -89,32 +89,6 @@ export class ResourceSelectionComponent implements OnInit {
     return {
       data: undefined,
     }
-
-    
-    //resource is mandatory 
-    //if has view he needs to be of that resource 
-    //allowNone must be boolean
-    //selectionMode must be single or multi 
-    //selected object keys must be an array of strings
-    //if selection mode is single and selected object keys has length greater than 1 then throw error
-  }
-  async getGenericViewerConfigurationObject(): Promise<IGenericViewerConfigurationObject | undefined>{
-    const resource = this.hostObject.resource
-    const view = await this.getView(resource, this.hostObject.view)
-    if(!view){
-      this.utilitiesService.showDialog('Error', 'NoViewError', 'close')
-      return undefined
-    }
-
-    const viewsDropDown = await this.getViewsDropDown()
-    return {
-      resource: resource,
-      viewsList: viewsDropDown,
-      selectionList: {
-        none: this.hostObject.allowNone,
-        selection: this.hostObject.selectionMode
-      }
-    }
   }
   async getView(resource: string, viewKey: string): Promise<ResultObject<View>>{
       if(viewKey){
@@ -140,41 +114,6 @@ export class ResourceSelectionComponent implements OnInit {
         }
       }
   }
-  async getViewsDropDown(): Promise<SelectOption[]>{
-    const views = await this.getViewsArrayFromHostObject()
-    if(views){
-      return this.convertViewsArrayToViewsDropDown(views)
-    }
-    return []
-  }
-  convertViewsArrayToViewsDropDown(views: View[]): SelectOption[]{
-    return views.map(view => {
-      return {
-        key: view.Key,
-        value: view.Name
-      }
-    })
-  }
-  async getViewsArrayFromHostObject(): Promise<View[]>{
-    if(!this.hostObject.view){
-      const defaultView = await this.viewsService.getDefaultView(this.hostObject.resource)
-      return defaultView ? [defaultView] : []
-    }
-    else{
-      return await this.viewsService.getItems(this.hostObject.view)
-    }
-  }
-
-  isValidHostObject(): boolean{
-    //resource is mandatory 
-    //if has view he needs to be of that resource 
-    //allowNone must be boolean
-    //selectionMode must be single or multi 
-    //selected object keys must be an array of strings
-    //if selection mode is single and selected object keys has length greater than 1 then throw error
-    return true
-  }
-  
   onDonePressed($event){
     this.hostEvents.emit({
       action: 'on-save',
