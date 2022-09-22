@@ -5,7 +5,7 @@
     [inline] ="false"
     [actions] = "actions"
     uuidMapping = 'Key'
-    [selectionType] = 'configurationObject?.selectionList?.selection'>
+    >
     <ng-container right-buttons>
         <pep-menu
             iconName="system_menu" 
@@ -42,16 +42,10 @@
             (buttonClick)='onButtonClicked()'
         ></pep-button>
         
-        <pep-button
+        <pep-button *ngIf='configurationObject.selectionList != undefined'
         class='pep-spacing-element'
         value = "{{'Cancel' | translate}}"
-        styleType= weak
-        styleStateType=system
-        sizeType= md
         classNames='new'
-        [disabled]='false'
-        iconPosition='end'
-        [visible]='configurationObject.selectionList != undefined'
         (buttonClick)='onCancelClicked()'
     ></pep-button>
     </ng-container>
