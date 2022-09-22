@@ -7,7 +7,7 @@
     </ng-container>
     <!--Body-->
     <ng-container pep-main-area>
-        <mat-tab-group #tabGroup class="editor-tabs" (selectedTabChange)="onTabChanged($event)">
+        <mat-tab-group #tabGroup class="views-and-editors-tabs" (selectedTabChange)="onTabChanged($event)">
             <mat-tab label= "{{'Tabs.Views' | translate}}">
                 <app-table 
                     *ngIf="currentTabIndex == 0"
