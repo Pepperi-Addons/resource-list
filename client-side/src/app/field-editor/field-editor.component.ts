@@ -43,6 +43,7 @@ export class FieldEditorComponent implements OnInit {
     this.resourcesMap = new Map()
     this.dataSource = this.dataSource || this.dialogData?.item 
     this.dataView = this.dataView || this.dialogData?.editorDataView
+    debugger
     this.editor = this.editor || this.dialogData?.editor
     await this.fixReferenceFields(this.editor.ReferenceFields, this.dataView)
     this.loadCompleted = true

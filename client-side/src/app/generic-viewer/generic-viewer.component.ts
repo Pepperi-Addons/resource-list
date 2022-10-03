@@ -349,7 +349,8 @@ export class GenericViewerComponent implements OnInit {
       const dialogData = {
         item : {},
         editorDataView: this.editorDataView,
-        resourceName: this.resource
+        resourceName: this.resource,
+        editor: this.editor
       }
       const config = this.dialogService.getDialogConfig({
       }, 'large')
