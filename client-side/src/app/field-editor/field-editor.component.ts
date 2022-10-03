@@ -77,10 +77,6 @@ export class FieldEditorComponent implements OnInit {
         Value: item[field.DisplayField]
       }
     })
-    //get its resource
-    //validate that display field is a field of that resource
-    //if not open error dialog
-    //if yes, return drop down of key and value of fields
   }
   async onUpdateButtonClick(){
     try{
