@@ -36,6 +36,50 @@ export async function upgrade(client: Client, request: Request): Promise<any> {
     createDIMXRelation(client)
     return {success:true,resultObject:{}}
 }
+function getDIMXRelationObjects(){
+    return [
+        {
+            RelationName: "DataExportResource",
+            AddonUUID: AddonConfig.AddonUUID,
+            Name: viewsSchema.Name,
+            Description: "Data export relation for views table",
+            Type: "AddonAPI",
+        },
+        {
+            RelationName: "DataExportResource",
+            AddonUUID: AddonConfig.AddonUUID,
+            Name: editorSchema.Name,
+            Description: "Data export relation for editors table",
+            Type: "AddonAPI",
+        },
+        {
+            RelationName: "DataImportResource",
+            AddonUUID: AddonConfig.AddonUUID,
+            Name: viewsSchema.Name,
+            Description: "Data import relation for views table",
+            Type: "AddonAPI",
+        },
+        {
+            RelationName: "DataImportResource",
+            AddonUUID: AddonConfig.AddonUUID,
+            Name: editorSchema.Name,
+            Description: "Data import relation for editors table",
+            Type: "AddonAPI",
+        }
+    ]
+}
+async function createDIMXRelation(client: Client){
+    try {
+        const service = new AddonService(client)
+        const result = await Promise.all(getDIMXRelationObjects().map(async relation => {
+            await service.upsertRelation(relation)
+        }))
+        return  { success:true, resultObject: {result}};
+    }catch(e){
+        return { success: false, resultObject: e , errorMessage: `Error in upsert relation. error - ${e}`};
+    }
+
+}
 
 async function createDIMXRelation(client: Client){
     const exportViewsRelation: Relation = {
