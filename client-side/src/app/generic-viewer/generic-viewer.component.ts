@@ -275,10 +275,13 @@ export class GenericViewerComponent implements OnInit {
           break;
         case 'BackToList': 
           this.backToList()
+          break
         case EXPORT:
           this.export()
+          break
         case IMPORT:
           this.import()
+          break
       }
     }
     import(){
