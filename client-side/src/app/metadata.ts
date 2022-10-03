@@ -76,10 +76,10 @@ export interface IGenericViewerConfigurationObject{
 
 export interface ResourcePicker {
   resource: string,
-  view: string,
+  view?: string,
   selectedObjectKeys?: string[],
   selectionMode: 'single' | 'multi',
-  allowNone: boolean
+  allowNone?: boolean
 }
 
 export const SELECTION_TYPE = "SelectionType"

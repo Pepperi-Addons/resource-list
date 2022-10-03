@@ -48,7 +48,6 @@ export class ResourceSelectionComponent implements OnInit {
       key: view.Key,
       value: view.Name
     }]
-    debugger
     return {
       data: {
         resource: resource,

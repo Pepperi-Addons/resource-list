@@ -58,7 +58,6 @@ export class GenericViewerComponent implements OnInit {
     }
     ngOnInit(): void {
       this.loadConfigurationObject()
-      debugger
       this.init()
     }
     loadConfigurationObject(){
