@@ -24,4 +24,7 @@ export class ViewsService implements IDataService{
     async upsertItem(view: any){
         return await this.pepHttp.postPapiApiCall(`/addons/api/${config.AddonUUID}/api/views`, view).toPromise()
     }
+    async getDefaultView(resourceName: string): Promise<View | undefined>{
+        return await this.utilitiesService.papiClient.addons.api.uuid(config.AddonUUID).file('api').func('get_default_view').get({resource: resourceName})
+    }
 }

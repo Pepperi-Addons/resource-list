@@ -36,6 +36,16 @@ export async function views(client: Client, request: Request){
         throw new Error(`expected to receive GET/POST method, but instead received ' + ${request.method}`);
     }
 }
+export async function  get_default_view(client: Client, request: Request){
+    if(request.method != 'GET'){
+        throw new Error('request should be a GET method')
+    }
+    if(!request.query || !request.query.resource){
+        throw new Error('there is no resource that sent in the query')
+    }
+    const service = new ViewsService(client)
+    return await service.getDefaultView(request.query.resource)
+}
 
 export async function editors(client: Client, request: Request){
     const service = new EditorsService(client);

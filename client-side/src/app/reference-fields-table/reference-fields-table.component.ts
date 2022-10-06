@@ -47,15 +47,16 @@ export class ReferenceFieldsTableComponent implements OnInit {
     }
   }
   private updateItemInList(item, newItem){
+    item.DisplayField = newItem.DisplayField
     item.SelectionList = newItem.SelectionList
     item.SelectionType = newItem.SelectionType
+    item.SelectionListKey = newItem.SelectionListKey
   }
   private openEditDialog(fieldID){
-    const item = this.dataSource.getItems().find(item => item.DisplayField == fieldID)
+    const item = this.dataSource.getItems().find(item => item.FieldID == fieldID)
     const formData = {
       //I'm using the spread operator in order to deep copy the *non-nested* object
       item: {...item},
-      resourceName: this.resourceName
     }
     const config = this.dialogService.getDialogConfig({
     }, 'large');
@@ -84,9 +85,10 @@ export class ReferenceFieldsTableComponent implements OnInit {
   }
   private setConfiguredReferenceFields(listArray: IReferenceField[]): void{
     this.referenceFields?.map(referenceField => {
-      const index = listArray.findIndex(field => field.DisplayField == referenceField.DisplayField)
-      if(index > -1)
-      listArray[index] = referenceField
+      const index = listArray.findIndex(field => field.FieldID == referenceField.FieldID)
+      if(index > -1){
+        listArray[index] = referenceField
+      }
     })
   }
   private getReferenceFieldsArray(resourceFields): IReferenceField[]{
@@ -94,10 +96,12 @@ export class ReferenceFieldsTableComponent implements OnInit {
     Object.keys(resourceFields).forEach(fieldID => {
       if(resourceFields[fieldID].Type == REFERENCE_TYPE){
         referenceFieldsArray.push({
-          DisplayField: fieldID,
+          FieldID: fieldID,
+          DisplayField: undefined, //temporary
           SelectionType: undefined,
           SelectionList: undefined,
-          Resource: resourceFields[fieldID].Resource
+          Resource: resourceFields[fieldID].Resource,
+          SelectionListKey: undefined
         })
       }
     })

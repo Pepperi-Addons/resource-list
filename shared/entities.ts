@@ -1,5 +1,3 @@
-
-
 export interface SelectOption{
     key: string,
     value: string
@@ -19,7 +17,9 @@ export interface View{
     Resource: Resource,
     Filter?: any,
     Sorting?: Sorting,
-    Editor?: string
+    Editor?: string,
+    CreationDateTime: string,
+    ModificationDateTime: string
 }
 
 export interface Editor{
@@ -44,10 +44,14 @@ export interface Sorting{
 }
 
 export interface IReferenceField {
+    FieldID: string,
     DisplayField: string,
     Resource: string,
-    SelectionType: "dropDown" | "list",
-    SelectionList?: string
+    SelectionType: "SelectionList" | "DropDown"
+    SelectionList?: string,
+    SelectionListKey: string
   }
   
   export const  REFERENCE_TYPE = "Resource"
+  export const SELECTION_LIST = "SelectionList"
+  export const DROP_DOWN = "DropDown"

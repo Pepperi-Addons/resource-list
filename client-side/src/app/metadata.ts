@@ -69,7 +69,8 @@ export interface IGenericViewerConfigurationObject{
   resource: string,
   viewsList: SelectOption[],
   selectionList?: {
-    none: boolean
+    none: boolean,
+    selection: 'single' | 'multi'
   }
 }
 export const SELECTION_LIST = "SelectionList"

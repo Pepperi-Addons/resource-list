@@ -28,7 +28,7 @@
         </div>
     </ng-container>
     <ng-container pep-main-area>
-        <pep-generic-form
+        <pep-generic-form *ngIf="loadCompleted"
             [dataSource]="dataSource"
             [dataView]="dataView"
             (fieldClick)="onReferenceClicked($event)"

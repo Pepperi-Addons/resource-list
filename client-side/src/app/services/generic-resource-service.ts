@@ -1,4 +1,5 @@
 import { Injectable } from "@angular/core";
+import { AddonDataScheme } from "@pepperi-addons/papi-sdk";
 import { defaultCollectionFields, IDataViewField } from "../metadata";
 import { TypeMap } from "../type-map";
 import { UtilitiesService } from './utilities-service'
@@ -30,7 +31,7 @@ export class GenericResourceService{
         return await this.utilitiesService.papiClient.resources.resource(resourceName).post(item)
     }
     async getResource(name: string){
-        return await this.utilitiesService.papiClient.resources.resource('resources').key(name).get()
+        return await this.utilitiesService.papiClient.resources.resource('resources').key(name).get() as AddonDataScheme
     }
     async getItemFromResourceByKey(resourceName: string, key: string){
         return await this.utilitiesService.papiClient.resources.resource(resourceName).get({where: `Key=${key}`})
@@ -41,7 +42,7 @@ export class GenericResourceService{
         const fields: IDataViewField[] = Object.keys(resource.Fields).map(fieldID => {
           return {
             FieldID: fieldID,
-            Mandatory: resource.Fields[fieldID].Mandatory,
+            Mandatory: true,
             ReadOnly: true,
             Title: fieldID,
             Type: typeMap.get(resource.Fields[fieldID].Type)
