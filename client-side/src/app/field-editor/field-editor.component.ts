@@ -1,7 +1,7 @@
 import { Component, Injector, Input, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { PepDialogService } from '@pepperi-addons/ngx-lib/dialog';
-import { BaseFormDataViewField, FormDataView } from '@pepperi-addons/papi-sdk';
+import { BaseFormDataViewField, FormDataView, SchemeField } from '@pepperi-addons/papi-sdk';
 import { DROP_DOWN, Editor, IReferenceField, SELECTION_LIST, SelectOption, View } from '../../../../shared/entities';
 import { GenericViewerComponent } from '../generic-viewer/generic-viewer.component';
 import { IGenericViewerConfigurationObject } from '../metadata';
@@ -21,7 +21,6 @@ export class FieldEditorComponent implements OnInit {
   dialogRef = null
   dialogData
   loadCompleted: boolean = false
-  resourceFields //should be input in the future
   resourcesMap
   constructor(private injector: Injector,
      private genericResourceService: GenericResourceService,
@@ -74,7 +73,7 @@ export class FieldEditorComponent implements OnInit {
     dataViewField['OptionalValues'] = resourceItems.map(item => {
       return {
         Key: item['Key'],
-        Value: item[field.DisplayField]
+        Value: item[field.DisplayField] || 'field dost not exist'
       }
     })
   }

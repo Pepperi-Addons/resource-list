@@ -37,6 +37,9 @@ export async function views(client: Client, request: Request){
     }
 }
 export async function  get_default_view(client: Client, request: Request){
+    if(request.method != 'GET'){
+        throw new Error('request should be a GET method')
+    }
     if(!request.query || !request.query.resource){
         throw new Error('there is no resource that sent in the query')
     }

@@ -286,7 +286,7 @@ export class GenericViewerComponent implements OnInit {
     }
     import(){
       this.dimxService?.import({
-        OverwriteObject: true,
+        OverwriteObject: false,
         OwnerID: this.currentView.Resource.AddonUUID
       })
       
@@ -295,7 +295,7 @@ export class GenericViewerComponent implements OnInit {
       this.dimxService?.export({
         DIMXExportFormat: 'json',
         DIMXExportIncludeDeleted: false,
-        DIMXExportFileName: EXPORT,
+        DIMXExportFileName: this.currentView.Name,
       })
     }
      getActionsCallBack(){
