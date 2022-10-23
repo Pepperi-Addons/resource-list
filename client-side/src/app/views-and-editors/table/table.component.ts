@@ -4,12 +4,13 @@ import { TranslateService } from '@ngx-translate/core';
 import { DataSource } from '../../data-source/data-source';
 import { PepMenuItem } from "@pepperi-addons/ngx-lib/menu";
 import { PepSelectionData } from '@pepperi-addons/ngx-lib/list';
-import { IDataService } from '../../metadata';
+import { EXPORT, IDataService, IMPORT } from '../../metadata';
 import { PepDialogData, PepDialogService } from '@pepperi-addons/ngx-lib/dialog';
 import { IPepGenericListActions } from '@pepperi-addons/ngx-composite-lib/generic-list';
 import { AddFormComponent } from '../../add-form/add-form.component'
+import { DIMXHostObject, PepDIMXHelperService } from '@pepperi-addons/ngx-composite-lib';
 import { PepAddonBlockLoaderService } from '@pepperi-addons/ngx-lib/remote-loader';
-import { DialogRef } from '@angular/cdk/dialog';
+import { config } from '../../addon.config'
 @Component({
   selector: 'app-table',
   templateUrl: './table.component.html',
@@ -47,12 +48,19 @@ export class TableComponent{
     private router: Router,
     private route: ActivatedRoute,
     private dialogService: PepDialogService,
+    private viewContainerRef: ViewContainerRef,
+    private dimxService: PepDIMXHelperService,
     private addonBlockService: PepAddonBlockLoaderService,
-    private viewContainerRef: ViewContainerRef)
+
+    )
     {
 
     }
   ngOnInit(){
+    this.init()
+  }
+  init(){
+    this.initDimxService()
     this.listFields = this.generateListFields()
     this.title = this.translate.instant(this.name)
     this.menuItems = this.getTableMenuItems()
@@ -63,6 +71,15 @@ export class TableComponent{
     this.fields = await this.service.getItems(undefined, recycleBin)
     this.items = this.fieldsToListItems(this.fields)
     this.dataSource = new DataSource(this.items, this.listFields, this.widthArray, this.searchCB)
+  }
+  initDimxService(){
+    const dimxHostObject: DIMXHostObject = {
+      DIMXAddonUUID: config.AddonUUID,
+      DIMXResource: this.name.toLowerCase()
+    }
+    this.dimxService.register(this.viewContainerRef, dimxHostObject, (onDIMXProcessDoneEvent: any) => {
+      this.onDIMXProcessDone(onDIMXProcessDoneEvent);
+    })
   }
   fieldsToListItems(items: any[]){
     return items.map((field) => {
@@ -147,7 +164,28 @@ export class TableComponent{
         this.backToList()
         break
       }
+      case EXPORT: {
+        this.handleExportAction()
+        break
+      }
+      case IMPORT: {
+        this.handleImportAction()
+        break
+      }
     }
+  }
+  handleExportAction(){
+    this.dimxService?.export({
+      DIMXExportFormat: 'json',
+      DIMXExportIncludeDeleted: false,
+      DIMXExportFileName: EXPORT,
+    })
+  }
+  handleImportAction(){
+    this.dimxService?.import({
+      OverwriteObject: true,
+      OwnerID: config.AddonUUID
+    })
   }
   async backToList(){
     this.menuItems = this.getTableMenuItems()
@@ -161,6 +199,16 @@ export class TableComponent{
       {
         key:'recycleBin',
         text: this.translate.instant('Recycle Bin'),
+        hidden: false
+      },
+      {
+        key: EXPORT,
+        text: this.translate.instant(EXPORT),
+        hidden: false
+      },
+      {
+        key: IMPORT,
+        text: this.translate.instant(IMPORT),
         hidden: false
       }
     ]
@@ -220,23 +268,27 @@ export class TableComponent{
     await this.service.upsertItem(field)
     this.loadGenericList(false)
   }
-  // onOpenABI(){
-  //   this.addonBlockService.loadAddonBlockInDialog({
-  //     container: this.viewContainerRef,
-  //     name: 'ResourceSelection',
-  //     hostObject: {
-  //       resource: "ResourceHolder",
-  //       selectionMode: 'single',
-  //       view: "6a22f8ee-86f9-484b-8a66-e05b163f34b0"
-  //     },
-  //     hostEventsCallback: ($event) => {
-  //       if($event.action == 'on-save'){
-  //         this.viewContainerRef.clear()
-  //       }
-  //       if($event.action == 'on-cancel'){
+  onDIMXProcessDone(event){
+    console.log(`DONE!!!`);
+    this.init()
+  }
+  onOpenABI(){
+    this.addonBlockService.loadAddonBlockInDialog({
+      container: this.viewContainerRef,
+      name: 'ResourceSelection',
+      hostObject: {
+        resource: "ResourceHolder",
+        selectionMode: 'single',
+        view: "6a22f8ee-86f9-484b-8a66-e05b163f34b0"
+      },
+      hostEventsCallback: ($event) => {
+        if($event.action == 'on-save'){
+          this.viewContainerRef.clear()
+        }
+        if($event.action == 'on-cancel'){
 
-  //       }
-  //     }
-  //   })
-  // }
+        }
+      }
+    })
+  }
 }

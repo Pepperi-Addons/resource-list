@@ -5,6 +5,7 @@
     [inline] ="false"
     [actions] = "actions"
     uuidMapping = 'Key'
+    [selectionType]="configurationObject?.selectionList?.selection || 'multi'"
     >
     <ng-container right-buttons>
         <pep-menu
@@ -50,4 +51,3 @@
     ></pep-button>
     </ng-container>
 </pep-generic-list>
-

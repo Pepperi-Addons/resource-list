@@ -13,11 +13,14 @@ import { Relation } from '@pepperi-addons/papi-sdk'
 import AddonService from './addon.service';
 import { ViewsService } from './services/views.service';
 import { EditorsService } from './services/editors.service';
+import * as AddonConfig from '../addon.config.json'
+import { editorSchema, viewsSchema } from './metadata';
 
 export async function install(client: Client, request: Request): Promise<any> {
     await createAddonBlockRelation(client)
     await createPageBlockRelation(client);
     await createSettingsRelation(client);
+    await createDIMXRelation(client)
     const viewsService = new ViewsService(client)
     const editorsService = new EditorsService(client)
     await viewsService.createSchema()
@@ -32,8 +35,80 @@ export async function upgrade(client: Client, request: Request): Promise<any> {
     await createAddonBlockRelation(client)
     await createPageBlockRelation(client);
     await createSettingsRelation(client);
+    createDIMXRelation(client)
     return {success:true,resultObject:{}}
 }
+function getDIMXRelationObjects(){
+    return [
+        {
+            RelationName: "DataExportResource",
+            AddonUUID: AddonConfig.AddonUUID,
+            Name: viewsSchema.Name,
+            Description: "Data export relation for views table",
+            Type: "AddonAPI",
+        },
+        {
+            RelationName: "DataExportResource",
+            AddonUUID: AddonConfig.AddonUUID,
+            Name: editorSchema.Name,
+            Description: "Data export relation for editors table",
+            Type: "AddonAPI",
+        },
+        {
+            RelationName: "DataImportResource",
+            AddonUUID: AddonConfig.AddonUUID,
+            Name: viewsSchema.Name,
+            Description: "Data import relation for views table",
+            Type: "AddonAPI",
+        },
+        {
+            RelationName: "DataImportResource",
+            AddonUUID: AddonConfig.AddonUUID,
+            Name: editorSchema.Name,
+            Description: "Data import relation for editors table",
+            Type: "AddonAPI",
+        }
+    ]
+}
+async function createDIMXRelation(client: Client){
+    try {
+        const service = new AddonService(client)
+        const result = await Promise.all(getDIMXRelationObjects().map(async relation => {
+            await service.upsertRelation(relation)
+        }))
+        return  { success:true, resultObject: {result}};
+    }catch(e){
+        return { success: false, resultObject: e , errorMessage: `Error in upsert relation. error - ${e}`};
+    }
+
+}
+
+// async function createDIMXRelation(client: Client){
+//     const exportViewsRelation: Relation = {
+//         RelationName: "DataExportResource",
+//         AddonUUID: AddonConfig.AddonUUID,
+//         Name: viewsSchema.Name,
+//         Description: "Data export relation for views table",
+//         Type: "AddonAPI",
+//     }
+//     const exportEditorsRelation: Relation = {
+//         RelationName: "DataExportResource",
+//         AddonUUID: AddonConfig.AddonUUID,
+//         Name: editorSchema.Name,
+//         Description: "Data export relation for editors table",
+//         Type: "AddonAPI",
+//     }
+//     try {
+//         const service = new AddonService(client)
+//         const result = await Promise.all([
+//             service.upsertRelation(exportViewsRelation),
+//             service.upsertRelation(exportEditorsRelation)])
+//         return  { success:true, resultObject: {result}};
+//     }catch(e){
+//         return { success: false, resultObject: e , errorMessage: `Error in upsert relation. error - ${e}`};
+//     }
+
+// }
 
 export async function downgrade(client: Client, request: Request): Promise<any> {
     return {success:true,resultObject:{}}

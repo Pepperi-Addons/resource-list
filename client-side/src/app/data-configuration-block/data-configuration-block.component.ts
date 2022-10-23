@@ -29,9 +29,8 @@ export class DataConfigurationBlockComponent implements OnInit {
     constructor(private translate: TranslateService,
        private dataViewService: DataViewService,
        private editorsService: EditorsService) {
-      // this.typeMap.init()
-      
-    }
+
+       }
     ngOnInit(): void {
       this.loadBlock()
     }
@@ -64,7 +63,7 @@ export class DataConfigurationBlockComponent implements OnInit {
     //   this.updateItem(key)
     // }
     // ngOnChanges(e: any): void {
-    //   if(this.hostObject?.configuration?.cardsList){
+    //   if(this.hostObject?.configuration.cardsList){
     //     this.rebuildDataview()
     //   }
     //   if(this.hostObject?.parameters){

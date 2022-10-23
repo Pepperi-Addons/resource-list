@@ -276,15 +276,18 @@ export class GenericViewerComponent implements OnInit {
           break;
         case 'BackToList': 
           this.backToList()
+          break
         case EXPORT:
           this.export()
+          break
         case IMPORT:
           this.import()
+          break
       }
     }
     import(){
       this.dimxService?.import({
-        OverwriteObject: true,
+        OverwriteObject: false,
         OwnerID: this.currentView.Resource.AddonUUID
       })
       
@@ -293,7 +296,7 @@ export class GenericViewerComponent implements OnInit {
       this.dimxService?.export({
         DIMXExportFormat: 'json',
         DIMXExportIncludeDeleted: false,
-        DIMXExportFileName: EXPORT,
+        DIMXExportFileName: this.currentView.Name,
       })
     }
      getActionsCallBack(){

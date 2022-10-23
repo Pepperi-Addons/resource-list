@@ -95,3 +95,5 @@ type ErrorObject = {
   error: string
 }
 export type ResultObject<T> = SussesObject<T> | ErrorObject
+export const SELECTION_LIST = "SelectionList"
+export const DROP_DOWN = "DropDown"

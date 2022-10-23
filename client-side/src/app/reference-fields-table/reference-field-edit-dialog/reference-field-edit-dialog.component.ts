@@ -53,11 +53,8 @@ export class ReferenceFieldEditDialogComponent implements OnInit {
     }
   }
   private async getDisplayFields(){
-    //get resource fields,
     const resourceFields = (await this.genericResourceService.getResource(this.resourceName))?.Fields
-    //convert to drop down and return
-    const res =  this.convertResourceFieldsToDropDown(resourceFields)
-    return res
+    return this.convertResourceFieldsToDropDown(resourceFields)
   }
   convertResourceFieldsToDropDown(resourceFields){
     return Object.keys(resourceFields).map(fieldID => {
