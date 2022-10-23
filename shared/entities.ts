@@ -1,3 +1,5 @@
+import { BaseFormDataView, GridDataView, MenuDataView } from "@pepperi-addons/papi-sdk"
+
 export interface SelectOption{
     key: string,
     value: string
@@ -52,6 +54,15 @@ export interface IReferenceField {
     SelectionListKey: string
   }
   
+  export interface IGenericViewer{
+    view: View,
+    viewDataview: GridDataView
+    editor?: Editor
+    editorDataView?: BaseFormDataView,
+    menuItems?: MenuDataView,
+    lineMenuItems?: MenuDataView
+  }
+
   export const  REFERENCE_TYPE = "Resource"
   export const SELECTION_LIST = "SelectionList"
   export const DROP_DOWN = "DropDown"

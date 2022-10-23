@@ -1,6 +1,6 @@
 import { IPepDraggableItem } from "@pepperi-addons/ngx-lib/draggable-items"
-import { BaseFormDataViewField, DataViewField, DataViewFieldType, GridDataViewField, MenuDataViewField } from "@pepperi-addons/papi-sdk"
-import { SelectOption } from "../../../shared/entities"
+import { BaseFormDataView, BaseFormDataViewField, DataViewField, DataViewFieldType, GridDataView, GridDataViewField, MenuDataView, MenuDataViewField } from "@pepperi-addons/papi-sdk"
+import { Editor, IGenericViewer, SelectOption, View } from "../../../shared/entities"
 import { AddFormComponent } from "./add-form/add-form.component"
 import { ViewsCard } from "./draggable-card-fields/cards.model"
 
@@ -71,9 +71,9 @@ export interface IGenericViewerConfigurationObject{
   selectionList?: {
     none: boolean,
     selection: 'single' | 'multi'
-  }
+  },
+  genericViewer: IGenericViewer
 }
-
 export interface ResourcePicker {
   resource: string,
   view?: string,

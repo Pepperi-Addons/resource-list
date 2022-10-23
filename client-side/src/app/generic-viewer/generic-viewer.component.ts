@@ -15,6 +15,7 @@ import { GenericListComponent } from '@pepperi-addons/ngx-composite-lib/generic-
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { EditorsService } from '../services/editors.service';
 import { DIMXHostObject, PepDIMXHelperService } from '@pepperi-addons/ngx-composite-lib';
+import { IGenericViewer } from '../../../../shared/entities';
 
 @Component({
     selector: 'app-generic-viewer',
@@ -41,6 +42,7 @@ export class GenericViewerComponent implements OnInit {
     dialogRef = null
     dialogData = null
     editor: Editor
+    genericViewer: IGenericViewer
 
     constructor(private translate: TranslateService,
          private genericResourceService: GenericResourceService,
@@ -56,21 +58,28 @@ export class GenericViewerComponent implements OnInit {
           this.dialogRef = this.injector.get(MatDialogRef, null)
           this.dialogData = this.injector.get(MAT_DIALOG_DATA, null)
     }
+
     ngOnInit(): void {
+      console.table(this.configurationObject)
       this.loadConfigurationObject()
-      this.init()
+      if(this.configurationObject.genericViewer && this.configurationObject.resource){
+        this.init()
+      }
     }
+
     loadConfigurationObject(){
       if(!this.configurationObject){
         this.configurationObject = {
           resource: this.dialogData?.resource ,
           viewsList: this.dialogData?.viewsList,
-          selectionList: this.dialogData?.selectionList
+          selectionList: this.dialogData?.selectionList,
+          genericViewer: this.dialogData?.genericViewer
         }
       }
     }
     async init(){
       this.setConfigurationObjectVariable()
+      this.currentView = this.genericViewer.view
       await this.loadViewBlock()
     }
 
@@ -91,11 +100,11 @@ export class GenericViewerComponent implements OnInit {
     }
 
     async loadViewBlock(){
-      await this.configureViews()
+      // await this.configureViews()
       this.initDimxService()
-      if(this.currentView.Editor){
-        this.editor = await this.editorsService.getItems(this.currentView.Editor)
-      }
+      // if(this.currentView.Editor){
+      //   this.editor = await this.editorsService.getItems(this.currentView.Editor)
+      // }
       if(this.configurationObject.selectionList){
         await this.configureSelectionList()
       }else{
@@ -113,47 +122,47 @@ export class GenericViewerComponent implements OnInit {
     async configureViews(){
       await this.setCurrentViewAndKey()
     }
-    async loadEditor(editorKey: string){
-      this.editorDataView = await this.getEditorDataView(editorKey)
-      this.editor = await this.getEditor(editorKey)
-    }
-    async getEditor(editorKey: string): Promise<Editor | undefined>{
-      const editors = await this.editorsService.getItems(editorKey)
-      if(editors.length > 0){
-        return editors[0]
-      }
-      return undefined
-    }
+    // async loadEditor(editorKey: string){
+    //   this.editorDataView = await this.getEditorDataView(editorKey)
+    //   this.editor = await this.getEditor(editorKey)
+    // }
+    // async getEditor(editorKey: string): Promise<Editor | undefined>{
+    //   const editors = await this.editorsService.getItems(editorKey)
+    //   if(editors.length > 0){
+    //     return editors[0]
+    //   }
+    //   return undefined
+    // }
     async configureGenericViewerList(){
-      if(this.currentView.Editor){
-        await this.loadEditor(this.currentView.Editor)
-      }
-      await this.initMenuItems(this.currentViewKey)
-      await this.initLineMenuItems(this.currentViewKey)
+      // if(this.currentView.Editor){
+      //   // await this.loadEditor(this.currentView.Editor)
+      //   this.editor = 
+      // }
+      this.editor = this.genericViewer.editor
+      await this.initMenuItems()
+      await this.initLineMenuItems()
     }
     setConfigurationObjectVariable():void{
       this.dropDownOfViews =  this.configurationObject?.viewsList || []
-      this.resource = this.configurationObject?.resource || undefined
+      this.resource = this.configurationObject?.resource
+      this.genericViewer = this.configurationObject.genericViewer
+
     }
     async setCurrentViewAndKey(){
       this.currentViewKey = this.dropDownOfViews?.length > 0? this.dropDownOfViews[0].key : undefined
       this.currentView = (await this.viewService.getItems(this.currentViewKey))[0]
     }
-    async initLineMenuItems(viewKey: string){
-      const lineMenuDataView = await this.getLineMenuDataView(viewKey)
+    async initLineMenuItems(){
+      // const lineMenuDataView = await this.getLineMenuDataView(viewKey)
+      const lineMenuDataView = this.genericViewer.lineMenuItems
       this.lineMenuItemsMap = new Map()
       lineMenuDataView?.Fields?.forEach(dataViewField => {
         this.lineMenuItemsMap.set(dataViewField.FieldID, dataViewField)
       })
     }
-    async getLineMenuDataView(viewKey: string){
-      if(viewKey == undefined){
-        return 
-      }
-      return (await this.dataViewService.getDataViews(`RV_${viewKey}_LineMenu`))[0]
-    }
-    async initMenuItems(viewKey: string){
-      const menuDataView = await this.getMenuDataview(viewKey)
+    async initMenuItems(){
+      // const menuDataView = await this.getMenuDataview(viewKey)
+      const menuDataView = this.genericViewer.menuItems
       this.menuItems = []
       menuDataView?.Fields?.forEach(field => {
         if(field.FieldID != "Add"){
@@ -204,9 +213,10 @@ export class GenericViewerComponent implements OnInit {
       return item[fieldID].join(',')
     }
     async DisplayViewInList(viewKey){
-      const dataViews = await this.dataViewService.getDataViewsByProfile(`GV_${viewKey}_View`, "Rep");
-      if(dataViews.length > 0){
-        this.loadList(dataViews[0] as GridDataView)
+      // const dataViews = await this.dataViewService.getDataViewsByProfile(`GV_${viewKey}_View`, "Rep");
+      const dataView = this.genericViewer.viewDataview
+      if(dataView){
+        this.loadList(dataView)
       }
       //if there is no dataview we will display an empty list
       else{
@@ -226,6 +236,7 @@ export class GenericViewerComponent implements OnInit {
       const resourceFields = (await this.genericResourceService.getResource(this.resource))?.Fields || {}
       //in order to support arrays and references we should check the "real" type of each field, and reformat the corresponding item
       this.reformatItems(items, resourceFields)
+      debugger
       this.dataSource = new DataSource(items, fields,columns)
     }
     async initRecycleBin(){

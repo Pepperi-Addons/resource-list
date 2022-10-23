@@ -127,7 +127,9 @@ export class FieldEditorComponent implements OnInit {
       selectionList: {
         none: false,
         selection: 'single'
-      }
+      },
+      //TODO make this work with the new interface
+      genericViewer: undefined
     }
     const config = this.dialogService.getDialogConfig({}, 'large')
     this.dialogService.openDialog(GenericViewerComponent, configurationObj, config).afterClosed().subscribe((async data => {      

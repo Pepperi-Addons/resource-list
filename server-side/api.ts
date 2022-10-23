@@ -2,6 +2,7 @@ import { Client, Request } from '@pepperi-addons/debug-server'
 import { ViewsService } from './services/views.service';
 import { EditorsService } from './services/editors.service';
 import { UDCService } from './udc.service';
+import { GenericViewService } from './services/generic-view.service';
 
 export async function get_all_collections(client: Client, request: Request){
     validateRequest('GET', request)
@@ -42,6 +43,26 @@ export async function  get_default_view(client: Client, request: Request){
     }
     const service = new ViewsService(client)
     return await service.getDefaultView(request.query.resource)
+}
+export async function get_generic_view(client: Client, request: Request){
+    validateRequest('GET', request)
+    const key = request.query.Key 
+    if(!key){
+        throw new Error('request header must contain a generic viewer key')
+    }
+    const service = new GenericViewService(client)
+    return await service.getGenericView(key)
+}
+
+export async function get_selection_list(client: Client, request: Request){
+    validateRequest('GET', request)
+    const key = request.query.Key
+    const isDefaultView = request.query.IsDefaultView
+    if(!key){
+        throw new Error('request header must contain a generic viewer key')
+    }
+    const service = new GenericViewService(client)
+    return await service.getSelectionList(key, isDefaultView)
 }
 
 export async function editors(client: Client, request: Request){

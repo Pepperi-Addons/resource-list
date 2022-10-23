@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { IGenericViewerConfigurationObject } from '../metadata';
+import { GenericResourceService } from '../services/generic-resource-service';
 @Component({
     selector: 'block',
     templateUrl: './block.component.html',
@@ -10,21 +11,38 @@ export class BlockComponent implements OnInit {
     configurationObject: IGenericViewerConfigurationObject = {
       resource: undefined,
       viewsList: [],
+      genericViewer: undefined
     }
     hasViewToDisplay: boolean = false
     @Output() hostEvents: EventEmitter<any> = new EventEmitter<any>();
-
-    constructor() {}
+    //get the views list and the resource from the host object
+    //get the generic view of the first view in the views list
+    //send it to the generic viewer component
+    constructor(private  genericResourceService: GenericResourceService) {}
     ngOnInit(): void {
       this.loadGenericView(this.hostObject)
     }
-    loadGenericView(hostObject){
-      if(hostObject?.configuration?.viewsList?.length == 0){
+    async loadGenericView(hostObject){
+      if(hostObject?.configuration?.viewsList?.length == 0 || !hostObject.configuration?.resource){
+        console.dir(hostObject.configuration)
         this.hasViewToDisplay = false
         return
       }
       this.hasViewToDisplay = true
-      this.setConfigurationObject(hostObject)
+      this.configurationObject = await this.createConfigurationObject(hostObject)
+      //get the generic view
+      // this.setConfigurationObject(resource, dropDownOfViews, genericView)
+    }
+    async createConfigurationObject(hostObject): Promise<IGenericViewerConfigurationObject>{
+      const resource = hostObject.configuration.resource 
+      const dropDownOfViews = this.createDropDownOfViews(hostObject.configuration.viewsList)
+      const genericView = await this.genericResourceService.getGenericView(dropDownOfViews[0].key)
+      debugger
+      return {
+        resource: resource,
+        viewsList: dropDownOfViews,
+        genericViewer: genericView
+      }
     }
     createDropDownOfViews(viewsList){
       return viewsList.map(card => {
@@ -34,12 +52,12 @@ export class BlockComponent implements OnInit {
         }
       })
     }
-    setConfigurationObject(hostObject): void{
-      this.configurationObject = {
-        resource: hostObject?.configuration?.resource,
-        viewsList: this.createDropDownOfViews(hostObject?.configuration?.viewsList || []),
-      }
-    } 
+    // setConfigurationObject(hostObject): void{
+    //   this.configurationObject = {
+    //     resource: hostObject?.configuration?.resource,
+    //     viewsList: this.createDropDownOfViews(hostObject?.configuration?.viewsList || []),
+    //   }
+    // } 
     ngOnChanges(e: any): void {
       this.loadGenericView(e.hostObject.currentValue)
     }

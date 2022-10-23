@@ -1,3 +1,5 @@
+import { BaseFormDataView, GridDataView, MenuDataView } from "@pepperi-addons/papi-sdk"
+import { Editor, View } from "../shared/entities"
 
 
 export const viewsSchema: ItemSchema = {

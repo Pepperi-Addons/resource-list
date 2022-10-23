@@ -55,7 +55,9 @@ export class ResourceSelectionComponent implements OnInit {
         selectionList: {
           none: this.hostObject.allowNone,
           selection: this.hostObject.selectionMode
-        }
+        },
+        //TODO make this work with the new interface
+        genericViewer: undefined
       }
     }
   }
