@@ -62,13 +62,14 @@ export class GenericViewerComponent implements OnInit {
     loadConfigurationObject(){
       if(!this.configurationObject){
         this.configurationObject = {
-          resource: this.dialogData?.resource ,
-          viewsList: this.dialogData?.viewsList,
-          selectionList: this.dialogData?.selectionList
+          resource: this.dialogData?.configurationObj.resource ,
+          viewsList: this.dialogData?.configurationObj.viewsList,
+          selectionList: this.dialogData?.configurationObj.selectionList
         }
+        this.genericViewer = this.dialogData?.genericViewer
       }
     }
-
+    
     async init(){
       this.setConfigurationObjectVariable()
       await this.loadViewBlock()
