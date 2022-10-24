@@ -37,9 +37,9 @@ export class GenericViewerService  {
             const editorDataViewKey = view.Editor.replace(/-/g, '')
             const [[editor], [editorDataView]] = await Promise.all([
                 editorService.getItems({where: `Key = "${view.Editor}"`}),
-                dataViewService.getDataView(editorDataViewKey)
+                dataViewService.getDataView(`GV_${editorDataViewKey}_Editor`)
 
-            ])
+            ])    
             result.editor = editor,
             result.editorDataView = editorDataView
         }

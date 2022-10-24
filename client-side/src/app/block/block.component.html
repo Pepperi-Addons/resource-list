@@ -1,7 +1,7 @@
-
-            <app-generic-viewer 
-                *ngIf="hasViewToDisplay" 
-                class="generic-viewer"
-                [configurationObject]="configurationObject"
-                (pressedDoneEvent) = "onDonePressed($event)"
-            ></app-generic-viewer>
+<app-generic-viewer 
+    *ngIf="hasViewToDisplay" 
+    class="generic-viewer"
+    [configurationObject]="configurationObject"
+    (pressedDoneEvent) = "onDonePressed($event)"
+    [genericViewer]="genericViewer"
+></app-generic-viewer>

@@ -1,5 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { IGenericViewer } from '../../../../shared/entities';
 import { IGenericViewerConfigurationObject } from '../metadata';
+import { GenericResourceService } from '../services/generic-resource-service';
 @Component({
     selector: 'block',
     templateUrl: './block.component.html',
@@ -7,6 +9,7 @@ import { IGenericViewerConfigurationObject } from '../metadata';
 })
 export class BlockComponent implements OnInit {
     @Input() hostObject: any;
+    genericViewer: IGenericViewer
     configurationObject: IGenericViewerConfigurationObject = {
       resource: undefined,
       viewsList: [],
@@ -14,17 +17,18 @@ export class BlockComponent implements OnInit {
     hasViewToDisplay: boolean = false
     @Output() hostEvents: EventEmitter<any> = new EventEmitter<any>();
 
-    constructor() {}
+    constructor(private genericResourceService: GenericResourceService) {}
     ngOnInit(): void {
       this.loadGenericView(this.hostObject)
     }
-    loadGenericView(hostObject){
+    async loadGenericView(hostObject){
       if(hostObject?.configuration?.viewsList?.length == 0){
         this.hasViewToDisplay = false
         return
       }
-      this.hasViewToDisplay = true
       this.setConfigurationObject(hostObject)
+      this.genericViewer = await this.genericResourceService.getGenericView(this.configurationObject.viewsList[0].key)
+      this.hasViewToDisplay = true
     }
     createDropDownOfViews(viewsList){
       return viewsList.map(card => {
@@ -41,9 +45,11 @@ export class BlockComponent implements OnInit {
       }
     } 
     ngOnChanges(e: any): void {
+      debugger
       this.loadGenericView(e.hostObject.currentValue)
     }
     onDonePressed(numOfSelectedRows: number){
+      debugger
       //will be implemented in the future      
     }
 }
