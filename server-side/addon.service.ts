@@ -21,8 +21,8 @@ class AddonService {
     }
     
     // For page block template
-    upsertRelation(relation): Promise<any> {
-        return this.papiClient.post('/addons/data/relations', relation);
+    async upsertRelation(relation): Promise<any> {
+        return await this.papiClient.post('/addons/data/relations', relation);
     }
     getAddons(): Promise<InstalledAddon[]> {
         return this.papiClient.addons.installedAddons.find({});

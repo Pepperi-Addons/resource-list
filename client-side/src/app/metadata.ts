@@ -73,8 +73,19 @@ export interface IGenericViewerConfigurationObject{
     selection: 'single' | 'multi'
   }
 }
-export const SELECTION_LIST = "SelectionList"
-export const DROP_DOWN = "DropDown"
+
 export const SELECTION_TYPE = "SelectionType"
 export const EXPORT = "Export"
 export const IMPORT = "Import"
+
+type SussesObject<T> = {
+  data: T
+  error?: undefined
+}
+type ErrorObject = {
+  data?: undefined
+  error: string
+}
+export type ResultObject<T> = SussesObject<T> | ErrorObject
+export const SELECTION_LIST = "SelectionList"
+export const DROP_DOWN = "DropDown"

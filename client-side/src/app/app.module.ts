@@ -42,6 +42,7 @@ import { SettingsComponent } from './settings';
 import { BlockComponent } from './block';
 import { BlockEditorComponent } from './block-editor';
 import { ReferenceFieldsTableModule } from './reference-fields-table/reference-fields-table.module';
+import { ResourceSelectionComponent } from './resource-selection/resource-selection.component';
 
 
 @NgModule({
@@ -121,5 +122,6 @@ export class AppModule implements DoBootstrap {
         this.pepAddonService.defineCustomElement(`viewer-block-editor-element-${config.AddonUUID}`, BlockEditorComponent, this.injector);
         this.pepAddonService.defineCustomElement(`data-config-block-element-${config.AddonUUID}`, DataConfigurationBlockComponent, this.injector);
         this.pepAddonService.defineCustomElement(`data-config-block-editor-element-${config.AddonUUID}`, DataConfigurationBlockEditorComponent, this.injector);
+        this.pepAddonService.defineCustomElement(`resource-selection-element-${config.AddonUUID}`, ResourceSelectionComponent, this.injector)
     }
 }

@@ -9,6 +9,7 @@ import { PepDialogData, PepDialogService } from '@pepperi-addons/ngx-lib/dialog'
 import { IPepGenericListActions } from '@pepperi-addons/ngx-composite-lib/generic-list';
 import { AddFormComponent } from '../../add-form/add-form.component'
 import { DIMXHostObject, PepDIMXHelperService } from '@pepperi-addons/ngx-composite-lib';
+import { PepAddonBlockLoaderService } from '@pepperi-addons/ngx-lib/remote-loader';
 import { config } from '../../addon.config'
 @Component({
   selector: 'app-table',
@@ -48,7 +49,9 @@ export class TableComponent{
     private route: ActivatedRoute,
     private dialogService: PepDialogService,
     private viewContainerRef: ViewContainerRef,
-    private dimxService: PepDIMXHelperService
+    private dimxService: PepDIMXHelperService,
+    private addonBlockService: PepAddonBlockLoaderService,
+
     )
     {
 
@@ -171,17 +174,17 @@ export class TableComponent{
       }
     }
   }
-  handleImportAction(){
-    this.dimxService?.import({
-      OverwriteObject: true,
-      OwnerID: config.AddonUUID
-    })
-  }
   handleExportAction(){
     this.dimxService?.export({
       DIMXExportFormat: 'json',
       DIMXExportIncludeDeleted: false,
       DIMXExportFileName: EXPORT,
+    })
+  }
+  handleImportAction(){
+    this.dimxService?.import({
+      OverwriteObject: false,
+      OwnerID: config.AddonUUID
     })
   }
   async backToList(){
@@ -269,4 +272,23 @@ export class TableComponent{
     console.log(`DONE!!!`);
     this.init()
   }
+  // onOpenABI(){
+  //   this.addonBlockService.loadAddonBlockInDialog({
+  //     container: this.viewContainerRef,
+  //     name: 'ResourceSelection',
+  //     hostObject: {
+  //       resource: "ResourceHolder",
+  //       selectionMode: 'single',
+  //       view: "6a22f8ee-86f9-484b-8a66-e05b163f34b0"
+  //     },
+  //     hostEventsCallback: ($event) => {
+  //       if($event.action == 'on-save'){
+  //         this.viewContainerRef.clear()
+  //       }
+  //       if($event.action == 'on-cancel'){
+
+  //       }
+  //     }
+  //   })
+  // }
 }

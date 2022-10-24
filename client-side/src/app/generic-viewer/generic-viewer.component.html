@@ -5,7 +5,8 @@
     [inline] ="false"
     [actions] = "actions"
     uuidMapping = 'Key'
-    [selectionType] = 'configurationObject?.selectionList?.selection'>
+    [selectionType]="configurationObject?.selectionList?.selection || 'multi'"
+    >
     <ng-container right-buttons>
         <pep-menu
             iconName="system_menu" 
@@ -41,6 +42,12 @@
             [visible]='isButtonConfigured'
             (buttonClick)='onButtonClicked()'
         ></pep-button>
+        
+        <pep-button *ngIf='configurationObject.selectionList != undefined'
+        class='pep-spacing-element'
+        value = "{{'Cancel' | translate}}"
+        classNames='new'
+        (buttonClick)='onCancelClicked()'
+    ></pep-button>
     </ng-container>
 </pep-generic-list>
-

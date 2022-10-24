@@ -21,6 +21,7 @@ export class FieldEditorComponent implements OnInit {
   dialogRef = null
   dialogData
   loadCompleted: boolean = false
+  resourceFields //should be input in the future
   resourcesMap
   constructor(private injector: Injector,
      private genericResourceService: GenericResourceService,
@@ -73,9 +74,13 @@ export class FieldEditorComponent implements OnInit {
     dataViewField['OptionalValues'] = resourceItems.map(item => {
       return {
         Key: item['Key'],
-        Value: item[field.DisplayField] || 'field dost not exist'
+        Value: item[field.DisplayField]
       }
     })
+    //get its resource
+    //validate that display field is a field of that resource
+    //if not open error dialog
+    //if yes, return drop down of key and value of fields
   }
   async onUpdateButtonClick(){
     try{
@@ -125,15 +130,15 @@ export class FieldEditorComponent implements OnInit {
       }
     }
     const config = this.dialogService.getDialogConfig({}, 'large')
-    this.dialogService.openDialog(GenericViewerComponent, configurationObj, config).afterClosed().subscribe((async data => {
+    this.dialogService.openDialog(GenericViewerComponent, configurationObj, config).afterClosed().subscribe((async data => {      
       if(data && data.length > 0){
-        this.dataSource[currentFieldConfiguration.DisplayField] = data[0]
+        this.dataSource[currentFieldConfiguration.FieldID] = data[0]
       }
      }))
   }
-  getReferenceFieldConfiguration(displayField: string){
+  getReferenceFieldConfiguration(fieldID: string){
     const refFieldsConfiguration = this.editor.ReferenceFields || []
-    return refFieldsConfiguration.find(refField => refField.DisplayField == displayField)
+    return refFieldsConfiguration.find(refField => refField.FieldID == fieldID)
   }
   async getSelectionListAndKey(refFieldConfiguration: IReferenceField){
     let selectionList = refFieldConfiguration.SelectionList

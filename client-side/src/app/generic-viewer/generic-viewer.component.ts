@@ -25,6 +25,7 @@ export class GenericViewerComponent implements OnInit {
     @ViewChild(GenericListComponent) genericList;
     @Input() configurationObject: IGenericViewerConfigurationObject
     @Output() pressedDoneEvent: EventEmitter<number> = new EventEmitter<number>()
+    @Output() pressedCancelEvent: EventEmitter<void> = new EventEmitter<void>()
     dataSource: DataSource
     menuItems: PepMenuItem[] = []
     items: any[] = []
@@ -373,5 +374,9 @@ export class GenericViewerComponent implements OnInit {
     onDoneButtonClicked(){
       this.pressedDoneEvent.emit(this.genericList?.getSelectedItems()?.rows || [])
       this.dialogRef?.close(this.genericList?.getSelectedItems()?.rows || [])
+    }
+    onCancelClicked(){
+      this.pressedCancelEvent.emit()
+      this.dialogRef?.close()
     }
 }
