@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { IGenericViewer, SelectOption, View } from '../../../../shared/entities';
-import { IGenericViewerConfigurationObject, ResultObject } from '../metadata';
+import { IGenericViewer } from '../../../../shared/entities';
+import { IGenericViewerConfigurationObject } from '../metadata';
 import { GenericResourceService } from '../services/generic-resource-service';
 import { UtilitiesService } from '../services/utilities-service';
 
