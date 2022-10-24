@@ -1,5 +1,5 @@
 import { TranslateService } from '@ngx-translate/core';
-import { Component, EventEmitter, Injector, Input, OnInit, Output, ViewChild, ViewContainerRef } from '@angular/core';
+import { Component, EventEmitter, Injector, Input, OnInit, Output, SimpleChanges, ViewChild, ViewContainerRef } from '@angular/core';
 import { GenericResourceService } from '../services/generic-resource-service';
 import { PepMenuItem } from "@pepperi-addons/ngx-lib/menu";
 import { DataView, GridDataView, MenuDataViewField } from '@pepperi-addons/papi-sdk';
@@ -53,7 +53,7 @@ export class GenericViewerComponent implements OnInit {
           this.dialogRef = this.injector.get(MatDialogRef, null)
           this.dialogData = this.injector.get(MAT_DIALOG_DATA, null)
     }
-    
+
     ngOnInit(): void {
       this.loadConfigurationObject()
       this.init()
@@ -235,8 +235,10 @@ export class GenericViewerComponent implements OnInit {
         return actions
       }
     }
-    ngOnChanges(e: any): void {
-      this.init()
+    ngOnChanges(changes: SimpleChanges): void {
+      if(!(changes.configurationObject?.isFirstChange() && changes.genericViewer?.isFirstChange())){
+        this.init()
+      }
     }
     async backToList(){
       const items = await this.genericResourceService.getItems(this.resource)

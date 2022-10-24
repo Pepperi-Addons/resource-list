@@ -45,11 +45,9 @@ export class BlockComponent implements OnInit {
       }
     } 
     ngOnChanges(e: any): void {
-      debugger
       this.loadGenericView(e.hostObject.currentValue)
     }
     onDonePressed(numOfSelectedRows: number){
-      debugger
       //will be implemented in the future      
     }
 }

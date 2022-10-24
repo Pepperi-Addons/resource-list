@@ -55,4 +55,16 @@ export class GenericResourceService{
         let url = `/addons/api/${config.AddonUUID}/api/get_generic_view?Key=${viewKey}`
         return await this.pepHttp.getPapiApiCall(url).toPromise()
     }
+    async getSelectionList(viewKey?: string, resource?: string){
+        let url = `/addons/api/${config.AddonUUID}/api/get_selection_list?`
+        if(viewKey){
+            return await this.pepHttp.getPapiApiCall(url + `Key=${viewKey}`).toPromise()
+        }
+        else if(resource){
+            return await this.pepHttp.getPapiApiCall(url + `Resource=${resource}`).toPromise()
+        }
+        else{
+            return undefined
+        }
+    }
 }
