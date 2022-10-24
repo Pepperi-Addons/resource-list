@@ -1,4 +1,4 @@
-import { DataViewsService } from "../dataviews.service"
+import { DataViewsService } from "./dataviews.service"
 import { ItemSchema, viewsSchema } from "../metadata"
 import { ItemsService } from "./items.service"
 import { View } from '../../shared/entities'

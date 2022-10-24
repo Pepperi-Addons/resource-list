@@ -3,7 +3,7 @@ import AddonService from "../addon.service";
 import { ItemSchema } from "../metadata";
 import { v4 as uuidv4 } from 'uuid';
 import { FindOptions, Profile } from "@pepperi-addons/papi-sdk";
-import { DataViewsService } from "../dataviews.service";
+import { DataViewsService } from "./dataviews.service";
 export abstract class ItemsService {
     addonService: AddonService = new AddonService(this.client);
     constructor(protected client: Client){

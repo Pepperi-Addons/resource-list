@@ -1,5 +1,5 @@
 import { Client } from "@pepperi-addons/debug-server/dist";
-import AddonService from "./addon.service";
+import AddonService from "../addon.service";
 import { DataView, FormDataView, GridDataView, MenuDataView } from "@pepperi-addons/papi-sdk";
 import { Fields } from "@pepperi-addons/papi-sdk/dist/endpoints";
 
@@ -234,6 +234,10 @@ export class DataViewsService {
                 }
             ]
         }
+    }
+    async getDataView(key: string){
+        const query = {where: `Context.Name=${key}`}
+        return await this.addonService.papiClient.metaData.dataViews.find(query) 
     }
 
 }
