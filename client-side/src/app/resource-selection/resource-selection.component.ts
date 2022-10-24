@@ -36,9 +36,6 @@ export class ResourceSelectionComponent implements OnInit {
   async  createGenericViewerConfiguration(): Promise<ResultObject<IGenericViewerConfigurationObject>>{
     const resource = this.hostObject.resource
     const resultOfView = await this.getView(resource, this.hostObject.view)
-    if(resultOfView.error){
-      resultOfView
-    }
     const view = resultOfView.data
     const resultObject = this.validateHostObject(this.hostObject, view)
     if(resultObject.error){
