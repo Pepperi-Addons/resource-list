@@ -1,16 +1,13 @@
 import { Client } from "@pepperi-addons/debug-server/dist";
 import { GridDataView } from "@pepperi-addons/papi-sdk";
 import { IGenericViewer, View } from "../../shared/entities";
-import AddonService from "../addon.service";
 import { DataViewsService } from "./dataviews.service";
 import { EditorsService } from "./editors.service";
 import { ViewsService } from "./views.service";
 
 
 export class GenericViewerService  {
-    addonService: AddonService = new AddonService(this.client)
     constructor(private client: Client){
-
      }
 
     //this method assume that the view always exist

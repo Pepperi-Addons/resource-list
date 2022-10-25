@@ -21,15 +21,15 @@ export class ResourceSelectionComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.init()
+    this.createGenericViewerConfiguration().then(config => {
+      this.configurationObj = config
+      if(!config){
+        this.utilitiesService.showDialog('Error', 'ResourcePickerErr', 'close')
+      }
+      this.loadCompleted = true
+    })
   }
-  async init(){
-    this.configurationObj = await this.createGenericViewerConfiguration()
-    if(!this.configurationObj){
-      this.utilitiesService.showDialog('Error', 'ResourcePickerErr', 'close')
-    }
-    this.loadCompleted = true
-  }
+
   async  createGenericViewerConfiguration(): Promise<IGenericViewerConfigurationObject>{
     const resource = this.hostObject.resource
     this.genericViewer = await this.genericResourceService.getSelectionList(this.hostObject.view, resource)
@@ -64,6 +64,4 @@ export class ResourceSelectionComponent implements OnInit {
       data: {}
     })
   }
-
-
 }
