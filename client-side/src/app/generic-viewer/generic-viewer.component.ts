@@ -138,7 +138,7 @@ export class GenericViewerComponent implements OnInit {
       const menuDataView = this.genericViewer.menuItems
       this.menuItems = []
       menuDataView?.Fields?.forEach(field => {
-        if(field.FieldID != "Add"){
+        if(field.FieldID != "New"){
           this.menuItems.push({
             key: field.FieldID,
             text: field.Title
@@ -334,7 +334,7 @@ export class GenericViewerComponent implements OnInit {
       const dialogData = {
         item : {},
         editorDataView: this.genericViewer.editorDataView,
-        resourceName: this.resource
+        editor: this.genericViewer.editor
       }
       const config = this.dialogService.getDialogConfig({
       }, 'large')

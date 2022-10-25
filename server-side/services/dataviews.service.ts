@@ -50,8 +50,8 @@ export class DataViewsService {
             },
             Fields: [
                 {
-                    FieldID: "Add",
-                    Title: "Add",
+                    FieldID: "New",
+                    Title: "New",
                 },
                 {
                     FieldID: "Export",
