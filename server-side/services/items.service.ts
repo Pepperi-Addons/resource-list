@@ -12,6 +12,9 @@ export abstract class ItemsService {
     async getItems(options: FindOptions = {}){
         return await this.addonService.papiClient.addons.data.uuid(this.client.AddonUUID).table(this.getSchema().Name).find(options);
     }
+    async getItemByKey(key: string){
+        return await this.addonService.papiClient.addons.data.uuid(this.client.AddonUUID).table(this.getSchema().Name).key(key).get()
+    }
     async postItem(item: any){
         if(item.Key == undefined){
             item.Key =  uuidv4()

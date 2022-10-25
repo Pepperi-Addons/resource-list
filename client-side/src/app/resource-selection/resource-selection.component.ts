@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { IGenericViewer, SelectOption, View } from '../../../../shared/entities';
-import { IGenericViewerConfigurationObject, ResultObject } from '../metadata';
+import { IGenericViewer } from '../../../../shared/entities';
+import { IGenericViewerConfigurationObject } from '../metadata';
 import { GenericResourceService } from '../services/generic-resource-service';
 import { UtilitiesService } from '../services/utilities-service';
 
@@ -21,15 +21,15 @@ export class ResourceSelectionComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.init()
+    this.createGenericViewerConfiguration().then(config => {
+      this.configurationObj = config
+      if(!config){
+        this.utilitiesService.showDialog('Error', 'ResourcePickerErr', 'close')
+      }
+      this.loadCompleted = true
+    })
   }
-  async init(){
-    this.configurationObj = await this.createGenericViewerConfiguration()
-    if(!this.configurationObj){
-      this.utilitiesService.showDialog('Error', 'ResourcePickerErr', 'close')
-    }
-    this.loadCompleted = true
-  }
+
   async  createGenericViewerConfiguration(): Promise<IGenericViewerConfigurationObject>{
     const resource = this.hostObject.resource
     this.genericViewer = await this.genericResourceService.getSelectionList(this.hostObject.view, resource)
@@ -64,6 +64,4 @@ export class ResourceSelectionComponent implements OnInit {
       data: {}
     })
   }
-
-
 }

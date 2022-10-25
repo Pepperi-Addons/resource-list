@@ -183,7 +183,7 @@ export class TableComponent{
   }
   handleImportAction(){
     this.dimxService?.import({
-      OverwriteObject: true,
+      OverwriteObject: false,
       OwnerID: config.AddonUUID
     })
   }
@@ -271,24 +271,5 @@ export class TableComponent{
   onDIMXProcessDone(event){
     console.log(`DONE!!!`);
     this.init()
-  }
-  onOpenABI(){
-    this.addonBlockService.loadAddonBlockInDialog({
-      container: this.viewContainerRef,
-      name: 'ResourceSelection',
-      hostObject: {
-        resource: "ResourceHolder",
-        selectionMode: 'single',
-        view: "6a22f8ee-86f9-484b-8a66-e05b163f34b0"
-      },
-      hostEventsCallback: ($event) => {
-        if($event.action == 'on-save'){
-          this.viewContainerRef.clear()
-        }
-        if($event.action == 'on-cancel'){
-
-        }
-      }
-    })
   }
 }
