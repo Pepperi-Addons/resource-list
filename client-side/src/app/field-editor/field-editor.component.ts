@@ -77,10 +77,6 @@ export class FieldEditorComponent implements OnInit {
         Value: item[field.DisplayField]
       }
     })
-    //get its resource
-    //validate that display field is a field of that resource
-    //if not open error dialog
-    //if yes, return drop down of key and value of fields
   }
   async onUpdateButtonClick(){
     try{
@@ -132,14 +128,6 @@ export class FieldEditorComponent implements OnInit {
       },
       genericViewer: genericViewer
     }
-    // const configurationObj: IGenericViewerConfigurationObject = {
-    //   resource: resourceName,
-    //   viewsList: viewsDropDown,
-    //   selectionList: {
-    //     none: false,
-    //     selection: 'single'
-    //   },
-    // }
     const config = this.dialogService.getDialogConfig({}, 'large')
     this.dialogService.openDialog(GenericViewerComponent, configuration, config).afterClosed().subscribe((async data => {      
       if(data && data.length > 0){

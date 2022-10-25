@@ -80,35 +80,7 @@ async function createDIMXRelation(client: Client){
     }catch(e){
         return { success: false, resultObject: e , errorMessage: `Error in upsert relation. error - ${e}`};
     }
-
 }
-
-// async function createDIMXRelation(client: Client){
-//     const exportViewsRelation: Relation = {
-//         RelationName: "DataExportResource",
-//         AddonUUID: AddonConfig.AddonUUID,
-//         Name: viewsSchema.Name,
-//         Description: "Data export relation for views table",
-//         Type: "AddonAPI",
-//     }
-//     const exportEditorsRelation: Relation = {
-//         RelationName: "DataExportResource",
-//         AddonUUID: AddonConfig.AddonUUID,
-//         Name: editorSchema.Name,
-//         Description: "Data export relation for editors table",
-//         Type: "AddonAPI",
-//     }
-//     try {
-//         const service = new AddonService(client)
-//         const result = await Promise.all([
-//             service.upsertRelation(exportViewsRelation),
-//             service.upsertRelation(exportEditorsRelation)])
-//         return  { success:true, resultObject: {result}};
-//     }catch(e){
-//         return { success: false, resultObject: e , errorMessage: `Error in upsert relation. error - ${e}`};
-//     }
-
-// }
 
 export async function downgrade(client: Client, request: Request): Promise<any> {
     return {success:true,resultObject:{}}
