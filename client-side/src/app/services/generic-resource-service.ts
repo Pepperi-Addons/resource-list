@@ -1,5 +1,8 @@
 import { Injectable } from "@angular/core";
+import { PepHttpService } from "@pepperi-addons/ngx-lib";
 import { AddonDataScheme } from "@pepperi-addons/papi-sdk";
+import { IGenericViewer } from "../../../../shared/entities";
+import { config } from "../addon.config";
 import { defaultCollectionFields, IDataViewField } from "../metadata";
 import { TypeMap } from "../type-map";
 import { UtilitiesService } from './utilities-service'
@@ -11,6 +14,7 @@ export class GenericResourceService{
     pluginUUID;
     constructor(
         private utilitiesService: UtilitiesService,
+        private pepHttp: PepHttpService
     ){
     }
     async getResources(): Promise<any[]>{
@@ -46,5 +50,21 @@ export class GenericResourceService{
           }
         })
         return  [...fields, ...defaultCollectionFields ]
+    }
+    async getGenericView(viewKey: string){
+        let url = `/addons/api/${config.AddonUUID}/api/get_generic_view?Key=${viewKey}`
+        return await this.pepHttp.getPapiApiCall(url).toPromise()
+    }
+    async getSelectionList(viewKey?: string, resource?: string){
+        let url = `/addons/api/${config.AddonUUID}/api/get_selection_list?`
+        if(viewKey){
+            return await this.pepHttp.getPapiApiCall(url + `Key=${viewKey}`).toPromise()
+        }
+        else if(resource){
+            return await this.pepHttp.getPapiApiCall(url + `Resource=${resource}`).toPromise()
+        }
+        else{
+            return undefined
+        }
     }
 }

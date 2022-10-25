@@ -3,7 +3,7 @@ import AddonService from "../addon.service";
 import { ItemSchema } from "../metadata";
 import { v4 as uuidv4 } from 'uuid';
 import { FindOptions, Profile } from "@pepperi-addons/papi-sdk";
-import { DataViewsService } from "../dataviews.service";
+import { DataViewsService } from "./dataviews.service";
 export abstract class ItemsService {
     addonService: AddonService = new AddonService(this.client);
     constructor(protected client: Client){
@@ -11,6 +11,9 @@ export abstract class ItemsService {
     }
     async getItems(options: FindOptions = {}){
         return await this.addonService.papiClient.addons.data.uuid(this.client.AddonUUID).table(this.getSchema().Name).find(options);
+    }
+    async getItemByKey(key: string){
+        return await this.addonService.papiClient.addons.data.uuid(this.client.AddonUUID).table(this.getSchema().Name).key(key).get()
     }
     async postItem(item: any){
         if(item.Key == undefined){

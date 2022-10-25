@@ -10,6 +10,7 @@
             [addPadding]="false"
             [title] = "title"
             uuidMapping = 'Key'
+            selectionType="single"
             selectionType="single">
             <ng-container right-buttons>
                 <pep-menu
@@ -31,16 +32,6 @@
                     [visible]="true"
                     (buttonClick)="onAddClick()"
                 ></pep-button>
-                <!-- <pep-button
-                    class= 'pep-spacing-element'
-                    value = 'ABI'
-                    styleType= 'strong'
-                    sizeType= 'md'
-                    classNames= 'save'
-                    [disabled]= 'false'
-                    [visible]= 'true'
-                    (buttonClick)='onOpenABI()'
-                ></pep-button> -->
             </ng-container>
         </pep-generic-list>
     </ng-container>

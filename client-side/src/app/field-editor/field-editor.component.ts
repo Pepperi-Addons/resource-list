@@ -2,7 +2,7 @@ import { Component, Injector, Input, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { PepDialogService } from '@pepperi-addons/ngx-lib/dialog';
 import { BaseFormDataViewField, FormDataView, SchemeField } from '@pepperi-addons/papi-sdk';
-import { DROP_DOWN, Editor, IReferenceField, SELECTION_LIST, SelectOption, View } from '../../../../shared/entities';
+import { DROP_DOWN, Editor, IGenericViewer, IReferenceField, SELECTION_LIST, SelectOption, View } from '../../../../shared/entities';
 import { GenericViewerComponent } from '../generic-viewer/generic-viewer.component';
 import { IGenericViewerConfigurationObject } from '../metadata';
 import { GenericResourceService } from '../services/generic-resource-service';
@@ -77,10 +77,6 @@ export class FieldEditorComponent implements OnInit {
         Value: item[field.DisplayField]
       }
     })
-    //get its resource
-    //validate that display field is a field of that resource
-    //if not open error dialog
-    //if yes, return drop down of key and value of fields
   }
   async onUpdateButtonClick(){
     try{
@@ -120,17 +116,20 @@ export class FieldEditorComponent implements OnInit {
       }
     })
   }
-  showReferenceDialog(resourceName: string, viewsDropDown: SelectOption[], currentFieldConfiguration: IReferenceField){
-    const configurationObj: IGenericViewerConfigurationObject = {
-      resource: resourceName,
-      viewsList: viewsDropDown,
-      selectionList: {
-        none: false,
-        selection: 'single'
-      }
+  showReferenceDialog(resourceName: string, viewsDropDown: SelectOption[], currentFieldConfiguration: IReferenceField, genericViewer: IGenericViewer){
+    const configuration = {
+      configurationObj: {
+        resource: resourceName,
+        viewsList: viewsDropDown,
+        selectionList: {
+          none: false,
+          selection: 'single'
+        },
+      },
+      genericViewer: genericViewer
     }
     const config = this.dialogService.getDialogConfig({}, 'large')
-    this.dialogService.openDialog(GenericViewerComponent, configurationObj, config).afterClosed().subscribe((async data => {      
+    this.dialogService.openDialog(GenericViewerComponent, configuration, config).afterClosed().subscribe((async data => {      
       if(data && data.length > 0){
         this.dataSource[currentFieldConfiguration.FieldID] = data[0]
       }
@@ -152,6 +151,7 @@ export class FieldEditorComponent implements OnInit {
   }
   async openSelectionListOfRefField(refFieldConfiguration: IReferenceField){
     const {selectionList, selectionListKey} = await this.getSelectionListAndKey(refFieldConfiguration)
+    const genericViewer = await this.genericResourceService.getSelectionList(selectionListKey)
     const viewsDropDown =
     [
       {
@@ -159,7 +159,7 @@ export class FieldEditorComponent implements OnInit {
         value: selectionList
       }
     ]
-    this.showReferenceDialog(refFieldConfiguration.Resource, viewsDropDown, refFieldConfiguration) 
+    this.showReferenceDialog(refFieldConfiguration.Resource, viewsDropDown, refFieldConfiguration ,genericViewer) 
   }
   async onReferenceClicked($event){
     const currentRefFieldConfiguration = this.getReferenceFieldConfiguration($event.ApiName)

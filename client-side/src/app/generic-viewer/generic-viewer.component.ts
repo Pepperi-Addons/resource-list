@@ -1,11 +1,11 @@
 import { TranslateService } from '@ngx-translate/core';
-import { Component, EventEmitter, Injector, Input, OnInit, Output, ViewChild, ViewContainerRef } from '@angular/core';
+import { Component, EventEmitter, Injector, Input, OnInit, Output, SimpleChanges, ViewChild, ViewContainerRef } from '@angular/core';
 import { GenericResourceService } from '../services/generic-resource-service';
 import { PepMenuItem } from "@pepperi-addons/ngx-lib/menu";
 import { DataView, GridDataView, MenuDataViewField } from '@pepperi-addons/papi-sdk';
 import { DataSource } from '../data-source/data-source'
 import { PepSelectionData } from '@pepperi-addons/ngx-lib/list';
-import { Editor, SelectOption, View } from '../../../../shared/entities';
+import { Editor, IGenericViewer, SelectOption, View } from '../../../../shared/entities';
 import { DataViewService } from '../services/data-view-service';
 import { PepDialogService } from '@pepperi-addons/ngx-lib/dialog';
 import { ViewsService } from '../services/views.service';
@@ -26,21 +26,18 @@ export class GenericViewerComponent implements OnInit {
     @Input() configurationObject: IGenericViewerConfigurationObject
     @Output() pressedDoneEvent: EventEmitter<number> = new EventEmitter<number>()
     @Output() pressedCancelEvent: EventEmitter<void> = new EventEmitter<void>()
+    @Input() genericViewer: IGenericViewer
     dataSource: DataSource
     menuItems: PepMenuItem[] = []
     items: any[] = []
     actions: any = {}
     dropDownOfViews: SelectOption[] = []
-    currentViewKey : string
     resource: string
-    editorDataView: DataView
-    currentView: View
     lineMenuItemsMap: Map<string, MenuDataViewField>
     buttonTitle: string
     isButtonConfigured: boolean = false
     dialogRef = null
     dialogData = null
-    editor: Editor
 
     constructor(private translate: TranslateService,
          private genericResourceService: GenericResourceService,
@@ -56,29 +53,33 @@ export class GenericViewerComponent implements OnInit {
           this.dialogRef = this.injector.get(MatDialogRef, null)
           this.dialogData = this.injector.get(MAT_DIALOG_DATA, null)
     }
+
     ngOnInit(): void {
       this.loadConfigurationObject()
       this.init()
     }
+
     loadConfigurationObject(){
       if(!this.configurationObject){
         this.configurationObject = {
-          resource: this.dialogData?.resource ,
-          viewsList: this.dialogData?.viewsList,
-          selectionList: this.dialogData?.selectionList
+          resource: this.dialogData?.configurationObj.resource ,
+          viewsList: this.dialogData?.configurationObj.viewsList,
+          selectionList: this.dialogData?.configurationObj.selectionList
         }
+        this.genericViewer = this.dialogData?.genericViewer
       }
     }
+    
     async init(){
       this.setConfigurationObjectVariable()
       await this.loadViewBlock()
     }
 
     initDimxService(){
-      if(this.currentView){
+      if(this.genericViewer.view){
         const dimxHostObject: DIMXHostObject = {
-          DIMXAddonUUID: this.currentView.Resource.AddonUUID,
-          DIMXResource: this.currentView.Resource.Name
+          DIMXAddonUUID: this.genericViewer.view.Resource.AddonUUID,
+          DIMXResource: this.genericViewer.view.Resource.Name
         }
         this.dimxService.register(this.viewContainerRef, dimxHostObject, (onDIMXProcessDoneEvent: any) => {
           this.onDIMXProcessDone(onDIMXProcessDoneEvent);
@@ -91,17 +92,13 @@ export class GenericViewerComponent implements OnInit {
     }
 
     async loadViewBlock(){
-      await this.configureViews()
       this.initDimxService()
-      if(this.currentView.Editor){
-        this.editor = await this.editorsService.getItems(this.currentView.Editor)
-      }
       if(this.configurationObject.selectionList){
         await this.configureSelectionList()
       }else{
         await this.configureGenericViewerList()
       }
-      this.DisplayViewInList(this.currentViewKey)
+      this.DisplayViewInList(this.genericViewer.view.Key)
     }
 
     async configureSelectionList(){
@@ -110,13 +107,7 @@ export class GenericViewerComponent implements OnInit {
         this.buttonTitle = this.translate.instant("Done")
       }
     }
-    async configureViews(){
-      await this.setCurrentViewAndKey()
-    }
-    async loadEditor(editorKey: string){
-      this.editorDataView = await this.getEditorDataView(editorKey)
-      this.editor = await this.getEditor(editorKey)
-    }
+
     async getEditor(editorKey: string): Promise<Editor | undefined>{
       const editors = await this.editorsService.getItems(editorKey)
       if(editors.length > 0){
@@ -124,36 +115,27 @@ export class GenericViewerComponent implements OnInit {
       }
       return undefined
     }
+
     async configureGenericViewerList(){
-      if(this.currentView.Editor){
-        await this.loadEditor(this.currentView.Editor)
-      }
-      await this.initMenuItems(this.currentViewKey)
-      await this.initLineMenuItems(this.currentViewKey)
+      await this.initMenuItems()
+      await this.initLineMenuItems()
     }
+
     setConfigurationObjectVariable():void{
       this.dropDownOfViews =  this.configurationObject?.viewsList || []
       this.resource = this.configurationObject?.resource || undefined
     }
-    async setCurrentViewAndKey(){
-      this.currentViewKey = this.dropDownOfViews?.length > 0? this.dropDownOfViews[0].key : undefined
-      this.currentView = (await this.viewService.getItems(this.currentViewKey))[0]
-    }
-    async initLineMenuItems(viewKey: string){
-      const lineMenuDataView = await this.getLineMenuDataView(viewKey)
+
+    async initLineMenuItems(){
+      const lineMenuDataView = this.genericViewer.lineMenuItems
       this.lineMenuItemsMap = new Map()
       lineMenuDataView?.Fields?.forEach(dataViewField => {
         this.lineMenuItemsMap.set(dataViewField.FieldID, dataViewField)
       })
     }
-    async getLineMenuDataView(viewKey: string){
-      if(viewKey == undefined){
-        return 
-      }
-      return (await this.dataViewService.getDataViews(`RV_${viewKey}_LineMenu`))[0]
-    }
-    async initMenuItems(viewKey: string){
-      const menuDataView = await this.getMenuDataview(viewKey)
+
+    async initMenuItems(){
+      const menuDataView = this.genericViewer.menuItems
       this.menuItems = []
       menuDataView?.Fields?.forEach(field => {
         if(field.FieldID != "Add"){
@@ -204,9 +186,8 @@ export class GenericViewerComponent implements OnInit {
       return item[fieldID].join(',')
     }
     async DisplayViewInList(viewKey){
-      const dataViews = await this.dataViewService.getDataViewsByProfile(`GV_${viewKey}_View`, "Rep");
-      if(dataViews.length > 0){
-        this.loadList(dataViews[0] as GridDataView)
+      if(this.genericViewer.viewDataview){
+        this.loadList(this.genericViewer.viewDataview)
       }
       //if there is no dataview we will display an empty list
       else{
@@ -214,9 +195,8 @@ export class GenericViewerComponent implements OnInit {
       }
     }
     async onViewChange($event){
-      this.currentViewKey = $event
-      this.currentView = (await this.viewService.getItems(this.currentViewKey))[0]
-      this.DisplayViewInList(this.currentViewKey)
+      this.genericViewer = await this.genericResourceService.getGenericView($event)
+      this.loadViewBlock()
     }
   
     async loadList(dataView: GridDataView){
@@ -256,8 +236,10 @@ export class GenericViewerComponent implements OnInit {
         return actions
       }
     }
-    ngOnChanges(e: any): void {
-      this.init()
+    ngOnChanges(changes: SimpleChanges): void {
+      if(!(changes.configurationObject?.isFirstChange() && changes.genericViewer?.isFirstChange())){
+        this.init()
+      }
     }
     async backToList(){
       const items = await this.genericResourceService.getItems(this.resource)
@@ -288,7 +270,7 @@ export class GenericViewerComponent implements OnInit {
     import(){
       this.dimxService?.import({
         OverwriteObject: false,
-        OwnerID: this.currentView.Resource.AddonUUID
+        OwnerID: this.genericViewer.view.Resource.AddonUUID
       })
       
     }
@@ -296,14 +278,14 @@ export class GenericViewerComponent implements OnInit {
       this.dimxService?.export({
         DIMXExportFormat: 'json',
         DIMXExportIncludeDeleted: false,
-        DIMXExportFileName: this.currentView.Name,
+        DIMXExportFileName: this.genericViewer.view.Name,
       })
     }
      getActionsCallBack(){
       return async (data: PepSelectionData) => {
           const actions = []
           if(data && data.rows.length == 1 && this.lineMenuItemsMap != undefined){
-            if(this.editor && this.editorDataView && this.lineMenuItemsMap.has("Edit")){
+            if(this.genericViewer.editor && this.genericViewer.editorDataView && this.lineMenuItemsMap.has("Edit")){
               actions.push({
                   title: this.lineMenuItemsMap.get("Edit").Title,
                   handler : async (selectedRows) => {
@@ -313,8 +295,8 @@ export class GenericViewerComponent implements OnInit {
                     //needs to send editor
                     const dialogData = {
                       item : item,
-                      editorDataView: this.editorDataView,
-                      editor: this.editor
+                      editorDataView: this.genericViewer.editorDataView,
+                      editor: this.genericViewer.editor
                     }
                     const config = this.dialogService.getDialogConfig({
   
@@ -351,7 +333,7 @@ export class GenericViewerComponent implements OnInit {
     onNewButtonClicked(){
       const dialogData = {
         item : {},
-        editorDataView: this.editorDataView,
+        editorDataView: this.genericViewer.editorDataView,
         resourceName: this.resource
       }
       const config = this.dialogService.getDialogConfig({

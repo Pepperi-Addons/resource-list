@@ -44,5 +44,6 @@
     "SelectedKeysSingleSelectionError": "The number of selected object keys cannot be greater than one if the selection mode is single",
     "SelectedKeysMustBeArrayOrUndefinedError": "Selected object keys must be an array of strings or undefined",
     "NoSuchViewError": "The view you sent is not exist",
-    "ResourceDoesNotExistOrHaveNoViewsError": "The resource you sent is not exist or it has no views "
+    "ResourceDoesNotExistOrHaveNoViewsError": "The resource you sent is not exist or it has no views",
+    "ResourcePickerErr": "the parameters that sent to the resource picker are wrong, please make sure you sent a resource name or a view key!"
 }
