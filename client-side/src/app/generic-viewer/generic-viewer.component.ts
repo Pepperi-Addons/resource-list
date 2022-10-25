@@ -69,7 +69,7 @@ export class GenericViewerComponent implements OnInit {
         this.genericViewer = this.dialogData?.genericViewer
       }
     }
-
+    
     async init(){
       this.setConfigurationObjectVariable()
       await this.loadViewBlock()
