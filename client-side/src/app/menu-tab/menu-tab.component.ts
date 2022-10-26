@@ -20,8 +20,8 @@ export class MenuTabComponent extends AbstractProfileCardsTabComponent implement
   getFields(){    
     return [
       {
-        FieldID: "Add",
-        Title: "Add"
+        FieldID: "New",
+        Title: "New"
       },
       {
         FieldID: "Export",
