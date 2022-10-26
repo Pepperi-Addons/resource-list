@@ -15,7 +15,7 @@ import { ViewsService } from '../services/views.service';
   styleUrls: ['./field-editor.component.scss']
 })
 export class FieldEditorComponent implements OnInit {
-  @Input() dataView
+  @Input() dataView: any
   @Input() dataSource
   @Input() editor: Editor
   dialogRef = null
@@ -44,7 +44,9 @@ export class FieldEditorComponent implements OnInit {
     this.dataSource = this.dataSource || this.dialogData?.item 
     this.dataView = this.dataView || this.dialogData?.editorDataView
     this.editor = this.editor || this.dialogData?.editor
-    await this.fixReferenceFields(this.editor.ReferenceFields, this.dataView)
+    if(this.editor?.ReferenceFields && this.dataView){
+      await this.fixReferenceFields(this.editor.ReferenceFields, this.dataView)
+    }
     this.loadCompleted = true
   }
   async fixReferenceFields(referenceFields: IReferenceField[] = [], dataView: any){
@@ -77,6 +79,7 @@ export class FieldEditorComponent implements OnInit {
         Value: item[field.DisplayField]
       }
     })
+    console.log(`${dataViewField}`);
   }
   async onUpdateButtonClick(){
     try{

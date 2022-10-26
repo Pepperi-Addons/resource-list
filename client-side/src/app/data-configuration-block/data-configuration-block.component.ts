@@ -40,7 +40,7 @@ export class DataConfigurationBlockComponent implements OnInit {
     async loadBlock(){
       this.currentEditorKey = this.hostObject?.configuration?.currentEditorKey
       if(this.currentEditorKey != undefined){
-        this.editor = await this.editorsService.getItems(this.currentEditorKey)
+        [this.editor] = await this.editorsService.getItems(this.currentEditorKey)
         const editorDataViews = await this.dataViewService.getDataViews(`GV_${this.currentEditorKey}_Editor`)
         this.dataView = editorDataViews[0] 
 
@@ -48,56 +48,4 @@ export class DataConfigurationBlockComponent implements OnInit {
         this.dataView = {}
       }
     }
-
-    // loadVariablesFromHostObject(){
-    //   this.currentResourceName = this.hostObject?.configuration?.currentResourceName
-    //   this.minHeight = this.hostObject?.configuration?.minHeight || 20
-    //   this.relativeHeight = this.hostObject?.configuration?.relativeHeight || 100
-    // }
-    // ngOnInit(): void {
-    //   this.loadVariablesFromHostObject()
-    //   this.loadObjectFromPageParam()
-    // }
-    // loadObjectFromPageParam(){
-    //   const key = this.hostObject?.parameters? this.hostObject?.parameters[`collection_${this.currentResourceName}`] : undefined;
-    //   this.updateItem(key)
-    // }
-    // ngOnChanges(e: any): void {
-    //   if(this.hostObject?.configuration.cardsList){
-    //     this.rebuildDataview()
-    //   }
-    //   if(this.hostObject?.parameters){
-    //     this.loadObjectFromPageParam()
-    //   }
-    //   if(this.hostObject?.configuration?.currentResourceName && this.hostObject?.configuration?.currentResourceName != this.currentResourceName){
-    //     this.item = {}
-    //     this.loadVariablesFromHostObject()
-    //   }
-    // }
-    // rebuildDataview() : void{
-    //   this.dataView =  {
-    //     Type: "Form",
-    //     Fields: this.generateDataViewFormFields(),
-    //     Context: {
-    //       Name: "",
-    //       Profile: {},
-    //       ScreenSize: 'Tablet'
-    //     }
-    //   };
-    // }
-    // generateDataViewFormFields(): DataView[]{
-    //   return this.fields = this.hostObject.configuration.cardsList.map(card => card.value)
-    // }
-    // async updateItem(key: string){
-    //   const items = await this.udcService.getItems(this.currentResourceName)
-    //   this.item = items.find(item => item.Key == key) || {}
-    //   this.rebuildDataview()
-    // }
-    // onSaveButtonClick(){
-    //   this.udcService.postItem(this.currentResourceName, this.item)
-    // }
-    // onCancelClick(){
-    //   this.item = {}
-    //   this.rebuildDataview()
-    // }
 }
