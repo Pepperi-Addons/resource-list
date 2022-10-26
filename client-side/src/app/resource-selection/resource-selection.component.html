@@ -1,6 +1,5 @@
 <app-generic-viewer
     *ngIf="loadCompleted" 
-    class="generic-viewer"
     [configurationObject]="configurationObj"
     (pressedDoneEvent) = "onDonePressed($event)"
     (pressedCancelEvent)="onCancelPressed()"
