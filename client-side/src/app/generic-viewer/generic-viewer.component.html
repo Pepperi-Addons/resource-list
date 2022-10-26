@@ -18,7 +18,7 @@
             [disabled]="false" 
             (menuItemClick)="menuItemClick($event)">
         </pep-menu>
-        <pep-select *ngIf="dropDownOfViews.length > 0"
+        <pep-select *ngIf="dropDownOfViews.length > 1"
             class="buttons-holder"
             [value]="genericViewer.view.Key"
             label="select view"
@@ -30,7 +30,7 @@
             (valueChange)="onViewChange($event)"
             [emptyOption]="false"
         ></pep-select>
-        <pep-button
+        <pep-button *ngIf="isButtonConfigured"
             class='pep-spacing-element'
             [value] = "buttonTitle"
             styleType=strong
@@ -39,7 +39,6 @@
             classNames='new'
             [disabled]='false'
             iconPosition='end'
-            [visible]='isButtonConfigured'
             (buttonClick)='onButtonClicked()'
         ></pep-button>
         
