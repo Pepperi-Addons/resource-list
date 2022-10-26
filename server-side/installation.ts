@@ -90,7 +90,7 @@ async function createAddonBlockRelation(client: Client){
     const blockName = "ResourceSelection"
     const addonBlockRelation: Relation = {
         RelationName: "AddonBlock",
-        Name: blockName,
+        Name: "ResourcePicker",
         Description: `${blockName} addon block`,
         Type: "NgComponent",
         SubType: "NG14",
