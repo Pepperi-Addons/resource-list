@@ -2,7 +2,7 @@
   "name": "shared",
   "version": "1.0.0",
   "description": "",
-  "main": "./build/shared/src/index.js",
+  "main": "./build/shared/index.js",
   "scripts": {
     "build": "npm run prepare",
     "prepare": "tsc && npm run lint",
