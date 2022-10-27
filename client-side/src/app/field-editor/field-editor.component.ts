@@ -2,6 +2,7 @@ import { Component, Injector, Input, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { PepDialogService } from '@pepperi-addons/ngx-lib/dialog';
 import { BaseFormDataViewField, FormDataView, SchemeField } from '@pepperi-addons/papi-sdk';
+import { map } from 'rxjs';
 import { DROP_DOWN, Editor, IGenericViewer, IReferenceField, SELECTION_LIST, SelectOption, View } from '../../../../shared/entities';
 import { GenericViewerComponent } from '../generic-viewer/generic-viewer.component';
 import { IGenericViewerConfigurationObject } from '../metadata';
@@ -23,6 +24,8 @@ export class FieldEditorComponent implements OnInit {
   loadCompleted: boolean = false
   resourceFields //should be input in the future
   resourcesMap
+  dataViewArrayFields: any[] = []
+  isArrayFieldsReady: boolean = false
   constructor(private injector: Injector,
      private genericResourceService: GenericResourceService,
      private utilitiesService: UtilitiesService,
@@ -34,6 +37,7 @@ export class FieldEditorComponent implements OnInit {
    }
 
   ngOnInit(): void {
+    console.log(`init the editor !!!!`);
     this.init()
   }
   ngOnChanges($event){
@@ -44,12 +48,52 @@ export class FieldEditorComponent implements OnInit {
     this.dataSource = this.dataSource || this.dialogData?.item 
     this.dataView = this.dataView || this.dialogData?.editorDataView
     this.editor = this.editor || this.dialogData?.editor
-    if(this.editor?.ReferenceFields && this.dataView){
-      await this.fixReferenceFields(this.editor.ReferenceFields, this.dataView)
+    if(this.dataView){
+      await this.reformatFields()
     }
+    // this.dataSource = JSON.parse(JSON.stringify(this.dataSource))
+    this.dataView = JSON.parse(JSON.stringify(this.dataView))
     this.loadCompleted = true
   }
-  async fixReferenceFields(referenceFields: IReferenceField[] = [], dataView: any){
+  async reformatFields(){
+    this.isArrayFieldsReady = false
+    await this.reformatArrayFields()
+    if(this.editor?.ReferenceFields){
+      await this.reformatReferenceFields(this.editor.ReferenceFields, this.dataView)
+    }
+    this.isArrayFieldsReady
+  }
+  async reformatArrayFields(){
+    const arrayFieldsMap = await this.createArrayFieldsMap(this.dataView)
+    this.dataViewArrayFields  = this.dataView.Fields.filter(dataViewField => arrayFieldsMap.has(dataViewField.FieldID))
+    this.removeArrayFieldsFromDataView(arrayFieldsMap)
+    
+  }
+  removeArrayFieldsFromDataView(arrayFieldsMap){
+    this.fixLayoutOfDataView(arrayFieldsMap)
+    this.dataView.Fields = this.dataView.Fields.filter(dataViewField => !arrayFieldsMap.has(dataViewField.FieldID))
+  }
+  fixLayoutOfDataView(arrayFieldsMap){
+    let counter = 0;
+    this.dataView.Fields.forEach(field => {
+      if(!arrayFieldsMap.has(field.FieldID)){
+        field.Layout.Origin.Y = counter
+        counter++
+      }
+    })
+  }
+  async createArrayFieldsMap(dataView: any){
+    const resource = await this.genericResourceService.getResource(this.editor.Resource.Name)
+    const resourceFields = resource.Fields
+    const map = new Map()
+    Object.keys(resourceFields).map(fieldID => {
+      if(resourceFields[fieldID].Type == 'Array'){
+        map.set(fieldID, resourceFields[fieldID])
+      }
+    })
+    return map
+  }
+  async reformatReferenceFields(referenceFields: IReferenceField[] = [], dataView: any){
     await Promise.all(referenceFields.map(async referenceField => await this.fixReferenceField(referenceField, dataView)))
   }
   async fixReferenceField(field: IReferenceField, dataView: any){
@@ -97,15 +141,15 @@ export class FieldEditorComponent implements OnInit {
   onCancelButtonClicked(){
     this.dialogRef.close(false)
   }
-  async getResourceNameToOpen(resourceName: string, field: string): Promise<string>{
-    const currentResource = await this.genericResourceService.getResource(resourceName)
-    const fieldIDOfResourceToOpen = Object.keys(currentResource.Fields).find(fieldID => fieldID == field)
-    if(!fieldIDOfResourceToOpen){
-      this.utilitiesService.showDialog('Error', 'ReferenceFieldDoesNotExistMSG', 'close')
-      return undefined
-    }
-   return currentResource.Fields[fieldIDOfResourceToOpen].Resource
-  }
+  // async getResourceNameToOpen(resourceName: string, field: string): Promise<string>{
+  //   const currentResource = await this.genericResourceService.getResource(resourceName)
+  //   const fieldIDOfResourceToOpen = Object.keys(currentResource.Fields).find(fieldID => fieldID == field)
+  //   if(!fieldIDOfResourceToOpen){
+  //     this.utilitiesService.showDialog('Error', 'ReferenceFieldDoesNotExistMSG', 'close')
+  //     return undefined
+  //   }
+  //  return currentResource.Fields[fieldIDOfResourceToOpen].Resource
+  // }
 
   async getViewsOfResource(resourceName: string): Promise<View[]>{
     const views = await this.viewsService.getItems()
