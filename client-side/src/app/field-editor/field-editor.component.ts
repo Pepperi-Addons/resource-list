@@ -61,7 +61,7 @@ export class FieldEditorComponent implements OnInit {
     if(this.editor?.ReferenceFields){
       await this.reformatReferenceFields(this.editor.ReferenceFields, this.dataView)
     }
-    this.isArrayFieldsReady
+    this.isArrayFieldsReady = true
   }
   async reformatArrayFields(){
     const arrayFieldsMap = await this.createArrayFieldsMap(this.dataView)
