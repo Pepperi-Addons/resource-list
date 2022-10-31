@@ -35,7 +35,10 @@
         ></pep-generic-form>
         <array-fields
             *ngFor="let dataViewOfArrayField of dataViewArrayFields"
-            [dataViewOfArrayField] = "dataViewOfArrayField" >
+                class="array-field"
+                [dataViewOfArrayField] = "dataViewOfArrayField"
+                [dataSource] = 'dataSource'
+                >
         </array-fields>
         <!-- <draggable-card-fields
         cdkDrag 
