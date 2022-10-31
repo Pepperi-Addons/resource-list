@@ -1,41 +1,5 @@
-<!-- <div [ngStyle]="{'min-height': minHeight+'rem', 'height': relativeHeight + '%'}">
-    <pep-generic-form
-        [dataSource]="item"
-        [dataView]="dataView" 
-    ></pep-generic-form>
-    </div>
-    <div class="buttons-holder">         
-        <pep-button
-            class="pep-spacing-element"
-            value = "Cancel"
-            styleType="weak"
-            styleStateType="system"
-            sizeType="md"
-            classNames="save"
-            [disabled]="false"
-            iconPosition="end"
-            [visible]="true"
-            (buttonClick)="onCancelClick()"
-        ></pep-button>
-        <pep-button
-            class="pep-spacing-element"
-            value = "Save"
-            styleType="strong"
-            styleStateType="system"
-            sizeType="md"
-            classNames="save"
-            [disabled]="false"
-            iconPosition="end"
-            [visible]="true"
-            (buttonClick)="onSaveButtonClick()"
-        ></pep-button>
-</div>
-
- -->
- 
- <!-- <pep-generic-form
-    [dataSource]="item"
-    [dataView]="dataView" 
-></pep-generic-form> -->
-
-<app-field-editor [dataSource] ="editorDataSource" [dataView] = "dataView" [editor]="editor"></app-field-editor>
+<app-field-editor
+    [dataSource] ="editorDataSource" 
+    [dataView] = "dataView" 
+[editor]="editor">
+</app-field-editor>
