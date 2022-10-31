@@ -1,3 +1,4 @@
+
 import { Component, Input, OnInit } from '@angular/core';
 
 @Component({
@@ -6,11 +7,16 @@ import { Component, Input, OnInit } from '@angular/core';
   styleUrls: ['./array-fields.component.scss']
 })
 export class ArrayFieldsComponent implements OnInit {
-  @Input() dataViewOfArrayField: any 
+  @Input() dataViewOfArrayField: any
+  @Input() dataSource: any
+  title: string = "" 
   constructor() { }
 
   ngOnInit(): void {
-    debugger
+    
+  }
+  onAddClick(){
+
   }
 
 }

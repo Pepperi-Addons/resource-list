@@ -11,6 +11,8 @@ import { PepSizeDetectorModule } from '@pepperi-addons/ngx-lib/size-detector';
 import { config } from '../addon.config';
 import { ArrayFieldsComponent } from '../array-fields/array-fields.component';
 import { PrimitiveArrayFieldComponent } from '../array-fields/primitive-array-field/primitive-array-field.component';
+import { PepGenericListModule } from '@pepperi-addons/ngx-composite-lib/generic-list';
+import { PrimitiveArrayAddFormComponent } from '../array-fields/primitive-array-field/primitive-array-add-form/primitive-array-add-form.component';
 
 
 export const routes: Routes = [
@@ -24,7 +26,8 @@ export const routes: Routes = [
   declarations: [
     FieldEditorComponent,
     ArrayFieldsComponent,
-    PrimitiveArrayFieldComponent
+    PrimitiveArrayFieldComponent,
+    PrimitiveArrayAddFormComponent
   ],
   imports: [
     CommonModule,
@@ -32,6 +35,7 @@ export const routes: Routes = [
     PepButtonModule,
     PepPageLayoutModule,
     PepSizeDetectorModule,
+    PepGenericListModule,
     TranslateModule.forChild({
       loader: {
           provide: TranslateLoader,

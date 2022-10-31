@@ -1,1 +1,12 @@
-<p>Array Field!!!</p>
+<ng-container
+    *ngIf="dataViewOfArrayField.Type == 'Contained'; then complexArrayFields; else primitiveArrayFields"
+></ng-container>
+
+
+<ng-template #complexArrayFields>
+
+</ng-template>
+
+<ng-template #primitiveArrayFields>
+    <primitive-array-field [dataViewOfArrayField]="dataViewOfArrayField" [editorDataSource]="dataSource"></primitive-array-field>
+</ng-template>

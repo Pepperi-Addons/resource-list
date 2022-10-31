@@ -1,0 +1,42 @@
+<pep-generic-form [dataSource]="dataSource" [dataView]="dataView">
+</pep-generic-form>
+<!-- 
+<pep-button
+    class= 'pep-spacing-element'
+    value = 'Save'
+    styleType= 'strong'
+    sizeType= 'md'
+    classNames= 'save'
+    [disabled]= 'false'
+    [visible]= 'true'
+    (buttonClick)='onSaveButtonClick()'
+></pep-button>
+<pep-button
+    class= 'pep-spacing-element'
+    value = 'Cancel'
+    styleType= 'weak'
+    sizeType= 'md'
+    classNames= 'cancel'
+    [disabled]= 'false'
+    [visible]= 'true'
+    (buttonClick)='onCancelButtonClicked()'
+></pep-button> -->
+
+<ng-container pep-dialog-actions>
+    <div class="pep-spacing-element-negative" style="display: flex;">         
+        <pep-button 
+            class="pep-spacing-element"
+            [sizeType]="'md'" 
+            [value]="'Cancel' | translate" 
+            [styleType]="'weak'" 
+            (buttonClick)="onCancelButtonClicked()"
+        ></pep-button>
+        <pep-button 
+            class="pep-spacing-element"
+            [sizeType]="'md'" 
+            [value]="'Save' | translate" 
+            [styleType]="'strong'" 
+            (buttonClick)="onSaveButtonClick()"
+        ></pep-button>
+    </div>
+</ng-container>
