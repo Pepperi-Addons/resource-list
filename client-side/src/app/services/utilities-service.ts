@@ -37,7 +37,10 @@ export class UtilitiesService{
           content: this.translate.instant(content)
         });
         this.dialogService.openDefaultDialog(dataMsg)
-      }
+    }
+    isDataViewFieldOfPrimitiveTypeArray(){
+        
+    }
 
 
 }

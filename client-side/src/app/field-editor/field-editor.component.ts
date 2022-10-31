@@ -25,7 +25,6 @@ export class FieldEditorComponent implements OnInit {
   resourceFields //should be input in the future
   resourcesMap
   dataViewArrayFields: any[] = []
-  isArrayFieldsReady: boolean = false
   constructor(private injector: Injector,
      private genericResourceService: GenericResourceService,
      private utilitiesService: UtilitiesService,
@@ -37,31 +36,32 @@ export class FieldEditorComponent implements OnInit {
    }
 
   ngOnInit(): void {
-    console.log(`init the editor !!!!`);
+    debugger
     this.init()
   }
   ngOnChanges($event){
-    this.init()
+    if($event?.editor && $event?.editor.previousValue != $event?.editor.currentValue){
+      this.init()
+    }
+      
   }
   async init(){
+    this.loadCompleted = false
     this.resourcesMap = new Map()
     this.dataSource = this.dataSource || this.dialogData?.item 
     this.dataView = this.dataView || this.dialogData?.editorDataView
     this.editor = this.editor || this.dialogData?.editor
     if(this.dataView){
       await this.reformatFields()
+      this.dataView = JSON.parse(JSON.stringify(this.dataView))
     }
-    // this.dataSource = JSON.parse(JSON.stringify(this.dataSource))
-    this.dataView = JSON.parse(JSON.stringify(this.dataView))
     this.loadCompleted = true
   }
   async reformatFields(){
-    this.isArrayFieldsReady = false
     await this.reformatArrayFields()
     if(this.editor?.ReferenceFields){
-      await this.reformatReferenceFields(this.editor.ReferenceFields, this.dataView)
+      await this.reformatReferenceFields(this.editor.ReferenceFields)
     }
-    this.isArrayFieldsReady = true
   }
   async reformatArrayFields(){
     const arrayFieldsMap = await this.createArrayFieldsMap(this.dataView)
@@ -93,11 +93,11 @@ export class FieldEditorComponent implements OnInit {
     })
     return map
   }
-  async reformatReferenceFields(referenceFields: IReferenceField[] = [], dataView: any){
-    await Promise.all(referenceFields.map(async referenceField => await this.fixReferenceField(referenceField, dataView)))
+  async reformatReferenceFields(referenceFields: IReferenceField[] = []){
+    await Promise.all(referenceFields.map(async referenceField => await this.fixReferenceField(referenceField)))
   }
-  async fixReferenceField(field: IReferenceField, dataView: any){
-    const dataViewField = dataView.Fields?.find(dataViewField => dataViewField.FieldID == field.FieldID)
+  async fixReferenceField(field: IReferenceField){
+    const dataViewField = this.dataView.Fields?.find(dataViewField => dataViewField.FieldID == field.FieldID)
     if(field?.SelectionType == SELECTION_LIST){
       dataViewField.Type == "Button"
     }

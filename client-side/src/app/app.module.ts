@@ -44,7 +44,6 @@ import { BlockEditorComponent } from './block-editor';
 import { ReferenceFieldsTableModule } from './reference-fields-table/reference-fields-table.module';
 import { ResourceSelectionComponent } from './resource-selection/resource-selection.component';
 
-
 @NgModule({
     imports: [
         BrowserModule,
@@ -98,6 +97,7 @@ import { ResourceSelectionComponent } from './resource-selection/resource-select
         LineMenuTabComponent,
         EditorsFormTabComponent,
         ViewsFormTabComponent,
+
     ],
     providers: [
         TranslateStore

@@ -9,6 +9,8 @@ import { PepButtonModule } from '@pepperi-addons/ngx-lib/button';
 import { PepPageLayoutModule } from '@pepperi-addons/ngx-lib/page-layout';
 import { PepSizeDetectorModule } from '@pepperi-addons/ngx-lib/size-detector';
 import { config } from '../addon.config';
+import { ArrayFieldsComponent } from '../array-fields/array-fields.component';
+import { PrimitiveArrayFieldComponent } from '../array-fields/primitive-array-field/primitive-array-field.component';
 
 
 export const routes: Routes = [
@@ -20,7 +22,9 @@ export const routes: Routes = [
 
 @NgModule({
   declarations: [
-    FieldEditorComponent
+    FieldEditorComponent,
+    ArrayFieldsComponent,
+    PrimitiveArrayFieldComponent
   ],
   imports: [
     CommonModule,
