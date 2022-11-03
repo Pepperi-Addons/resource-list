@@ -39,23 +39,9 @@
                     class="array-field"
                     [dataViewOfArrayField] = "dataViewOfArrayField"
                     [dataSource] = 'dataSource'
-                    (editEvent) = "onEditItemInArrayEvent($event)"
-                    (deleteEvent) = "onDeleteItemInArrayEvent($event)"
-                    (addEvent) = "onAddItemToArrayEvent($event)"
                     >
             </array-fields>
         </div>
-        <!-- <draggable-card-fields
-        cdkDrag 
-        *ngFor="let card of viewsList"
-        (removeClick)='onCardRemoveClick($event);'
-        (updateCard) = "updateConfigurationField('viewsList', this.viewsList)"
-        [card] = "card"
-        [cdkDragDisabled]="false"
-        style="cursor: grab;"
-        (cdkDragStarted)="onDragStart($event)"
-        (cdkDragEnded)="onDragEnd($event)">
-    </draggable-card-fields> -->
     </ng-container>
 </pep-page-layout>
 <pep-size-detector></pep-size-detector>

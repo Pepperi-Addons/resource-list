@@ -73,8 +73,6 @@ export class FieldEditorComponent implements OnInit {
     const arrayFieldsMap: Map<string,any> = await this.createArrayFieldsMap()
     this.fixDataSourceArrayFields(arrayFieldsMap)
     this.dataViewArrayFields = this.createDataViewArrayFieldsFromMap(arrayFieldsMap, this.dataView.Fields)
-    // const dataSource = this.dataSource
-    // this.dataViewArrayFields  = this.dataView.Fields.filter(dataViewField => arrayFieldsMap.has(dataViewField.FieldID))
     this.removeArrayFieldsFromDataView(arrayFieldsMap)
     
   }
@@ -83,29 +81,13 @@ export class FieldEditorComponent implements OnInit {
     for(let key of arrayFieldsMap.keys()){
         this.fixDataSourceArrayField(arrayFieldsMap.get(key), castingMap, this.dataSource[key], key)
     }
-    // dataViewArrayFields.map(dataViewField => {
-    //   if(this.dataSource[dataViewField.FieldID]){
-    //     this.fixDataSourceArrayField(dataViewField, castingMap, this.dataSource[dataViewField.FieldID]) 
-    //   }
-    // })
   }
   fixDataSourceArrayField(field: any, castingMap: CastingMap, data: string | undefined, key: string){
     const type = field.Items.Type
     const arr = data?.split(',').map(val => castingMap.cast(type, val)) || []
     this.dataSource[key] = arr
   }
-
-  //array field events:
-  onAddItemToArrayEvent(data: any){
-
-  }
-  onEditItemInArrayEvent(data: any){
-  }
-  onDeleteItemInArrayEvent(data: any){
-
-  }
-
-
+  
   createDataViewArrayFieldsFromMap(map: Map<any,any>, dataViewFields: any[]): any[]{
     return dataViewFields.reduce((prev, curr) => {
       const field = map.get(curr.FieldID)
@@ -119,13 +101,6 @@ export class FieldEditorComponent implements OnInit {
       }
       return prev
     }, [])
-    // for(const [key, value] of map){
-    //   arr.push({
-    //     FieldID: key,
-    //     ...value
-    //   })
-    // }
-    // return arr
   }
   removeArrayFieldsFromDataView(arrayFieldsMap){
     this.fixLayoutOfDataView(arrayFieldsMap)
@@ -200,20 +175,12 @@ export class FieldEditorComponent implements OnInit {
   onCancelButtonClicked(){
     this.dialogRef.close(false)
   }
-  // async getResourceNameToOpen(resourceName: string, field: string): Promise<string>{
-  //   const currentResource = await this.genericResourceService.getResource(resourceName)
-  //   const fieldIDOfResourceToOpen = Object.keys(currentResource.Fields).find(fieldID => fieldID == field)
-  //   if(!fieldIDOfResourceToOpen){
-  //     this.utilitiesService.showDialog('Error', 'ReferenceFieldDoesNotExistMSG', 'close')
-  //     return undefined
-  //   }
-  //  return currentResource.Fields[fieldIDOfResourceToOpen].Resource
-  // }
 
   async getViewsOfResource(resourceName: string): Promise<View[]>{
     const views = await this.viewsService.getItems()
    return views.filter(view => view.Resource.Name == resourceName)
   }
+
   getViewsDropDown(views: View[]): SelectOption[]{
    return  views.map(view => {
       return {
@@ -222,6 +189,7 @@ export class FieldEditorComponent implements OnInit {
       }
     })
   }
+
   showReferenceDialog(resourceName: string, viewsDropDown: SelectOption[], currentFieldConfiguration: IReferenceField, genericViewer: IGenericViewer){
     const configuration = {
       configurationObj: {
@@ -241,10 +209,12 @@ export class FieldEditorComponent implements OnInit {
       }
      }))
   }
+
   getReferenceFieldConfiguration(fieldID: string){
     const refFieldsConfiguration = this.editor.ReferenceFields || []
     return refFieldsConfiguration.find(refField => refField.FieldID == fieldID)
   }
+
   async getSelectionListAndKey(refFieldConfiguration: IReferenceField){
     let selectionList = refFieldConfiguration.SelectionList
     let selectionListKey = refFieldConfiguration.SelectionListKey
@@ -255,6 +225,7 @@ export class FieldEditorComponent implements OnInit {
     }
     return {selectionList: selectionList, selectionListKey: selectionListKey}
   }
+
   async openSelectionListOfRefField(refFieldConfiguration: IReferenceField){
     const {selectionList, selectionListKey} = await this.getSelectionListAndKey(refFieldConfiguration)
     const genericViewer = await this.genericResourceService.getSelectionList(selectionListKey)
