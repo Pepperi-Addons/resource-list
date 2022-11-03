@@ -303,8 +303,9 @@ export class GenericViewerComponent implements OnInit {
                     }, 'large')
                     this.dialogService.openDialog(FieldEditorComponent, dialogData, config).afterClosed().subscribe((async isUpdatePreformed => {
                       if(isUpdatePreformed){
-                        this.items = await this.genericResourceService.getItems(this.resource)
-                        this.dataSource = new DataSource(this.items, this.dataSource.getFields(), this.dataSource.getColumns())
+                        // this.items = await this.genericResourceService.getItems(this.resource)
+                        // this.dataSource = new DataSource(this.items, this.dataSource.getFields(), this.dataSource.getColumns())
+                        await this.loadList(this.genericViewer.viewDataview)
                       }
                      }))
                   }
@@ -320,8 +321,9 @@ export class GenericViewerComponent implements OnInit {
                   if(item){
                     item.Hidden = true
                     await this.genericResourceService.postItem(this.resource,item)
-                    this.items = await this.genericResourceService.getItems(this.resource)
-                    this.dataSource = new DataSource(this.items, this.dataSource.getFields(),this.dataSource.getColumns())
+                    await this.loadList(this.genericViewer.viewDataview)
+                    // this.items = await this.genericResourceService.getItems(this.resource)
+                    // this.dataSource = new DataSource(this.items, this.dataSource.getFields(),this.dataSource.getColumns())
                   }
                 }
               })

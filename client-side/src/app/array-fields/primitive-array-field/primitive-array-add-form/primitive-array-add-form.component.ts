@@ -12,7 +12,7 @@ export class PrimitiveArrayAddFormComponent implements OnInit {
   dataView:any
   fieldID: string
   type: string
-  dataSource: any = {}
+  dataSource: any
   constructor(
     @Inject(MAT_DIALOG_DATA) public incoming: any,
     private dialogRef: MatDialogRef<PrimitiveArrayAddFormComponent>,
@@ -22,6 +22,7 @@ export class PrimitiveArrayAddFormComponent implements OnInit {
   ngOnInit(): void {
     this.fieldID = this.incoming.FieldID
     this.type = this.incoming.Type
+    this.dataSource = this.incoming.Item || {}
     this.createGenericForm()
   }
   onSaveButtonClick(){

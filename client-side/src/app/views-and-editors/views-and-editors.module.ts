@@ -14,6 +14,8 @@ import { TableComponent } from './table/table.component';
 import { PepMenuModule } from '@pepperi-addons/ngx-lib/menu';
 import { PepSizeDetectorModule } from '@pepperi-addons/ngx-lib/size-detector';
 import { config } from '../addon.config';
+import { PepDialogModule } from '@pepperi-addons/ngx-lib/dialog';
+import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 
 
@@ -39,6 +41,8 @@ export const routes: Routes = [
     PepPageLayoutModule,
     PepMenuModule,
     PepSizeDetectorModule,
+    PepDialogModule,
+    MatDialogModule,
     TranslateModule.forChild({
       loader: {
           provide: TranslateLoader,

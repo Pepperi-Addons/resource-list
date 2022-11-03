@@ -2,6 +2,7 @@ import { Component, Injector, Input, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { PepDialogService } from '@pepperi-addons/ngx-lib/dialog';
 import { BaseFormDataViewField, FormDataView, SchemeField } from '@pepperi-addons/papi-sdk';
+import { debug } from 'console';
 import { map } from 'rxjs';
 import { DROP_DOWN, Editor, IGenericViewer, IReferenceField, SELECTION_LIST, SelectOption, View } from '../../../../shared/entities';
 import { CastingMap } from '../casting-map';
@@ -18,7 +19,7 @@ import { ViewsService } from '../services/views.service';
 })
 export class FieldEditorComponent implements OnInit {
   @Input() dataView: any
-  @Input() dataSource
+  dataSource = {}
   @Input() editor: Editor
   dialogRef = null
   dialogData
@@ -42,14 +43,21 @@ export class FieldEditorComponent implements OnInit {
   ngOnChanges($event){
     if($event?.editor && $event?.editor.previousValue != $event?.editor.currentValue){
       this.init()
+      
     }
+  }
+  loadEditorVariablesAsDialog(){
+    //deep copy data source in order to not change it on the list.
+    this.dataSource = JSON.parse(JSON.stringify(this.dialogData.item))
+    this.dataView = JSON.parse(JSON.stringify(this.dialogData.editorDataView))
+    this.editor = this.dialogData.editor
   }
   async init(){
     this.loadCompleted = false
     this.resourcesMap = new Map()
-    this.dataSource = this.dataSource || this.dialogData?.item 
-    this.dataView = this.dataView || this.dialogData?.editorDataView
-    this.editor = this.editor || this.dialogData?.editor
+    if(this.dialogData){
+      this.loadEditorVariablesAsDialog()
+    }
     if(this.dataView){
       await this.reformatFields()
       this.dataView = JSON.parse(JSON.stringify(this.dataView))
@@ -63,36 +71,53 @@ export class FieldEditorComponent implements OnInit {
     }
   }
   async reformatArrayFields(){
-    const arrayFieldsMap = await this.createArrayFieldsMap(this.dataView)
+    const arrayFieldsMap: Map<string,any> = await this.createArrayFieldsMap()
+    this.fixDataSourceArrayFields(arrayFieldsMap)
     this.dataViewArrayFields = this.createDataViewArrayFieldsFromMap(arrayFieldsMap, this.dataView.Fields)
-    this.fixDataSourceArrayFields(this.dataViewArrayFields)
-    const dataSource = this.dataSource
+    // const dataSource = this.dataSource
     // this.dataViewArrayFields  = this.dataView.Fields.filter(dataViewField => arrayFieldsMap.has(dataViewField.FieldID))
     this.removeArrayFieldsFromDataView(arrayFieldsMap)
     
   }
-  fixDataSourceArrayFields(dataViewArrayFields: any[]){
+  fixDataSourceArrayFields(arrayFieldsMap: Map<string,any>){
     const castingMap = new CastingMap()
-    dataViewArrayFields.map(dataViewField => {
-      if(this.dataSource[dataViewField.FieldID]){
-        this.fixDataSourceArrayField(dataViewField, castingMap, this.dataSource[dataViewField.FieldID]) 
+    for(let key of arrayFieldsMap.keys()){
+      if(this.dataSource[key]){
+        this.fixDataSourceArrayField(arrayFieldsMap.get(key), castingMap, this.dataSource[key], key)
       }
-    })
+    }
+    // dataViewArrayFields.map(dataViewField => {
+    //   if(this.dataSource[dataViewField.FieldID]){
+    //     this.fixDataSourceArrayField(dataViewField, castingMap, this.dataSource[dataViewField.FieldID]) 
+    //   }
+    // })
   }
-  fixDataSourceArrayField(field: any, castingMap: CastingMap, data: string){
-    const type = field.Type
-    const arr = data.split(',').map(val => castingMap.cast(type, val))
-    this.dataSource[field.FieldID] = arr
+  fixDataSourceArrayField(field: any, castingMap: CastingMap, data: string, key: string){
+    const type = field.Items.Type
+    const arr = data.split(',')?.map(val => castingMap.cast(type, val)) || []
+    this.dataSource[key] = arr
   }
+
+  //array field events:
+  onAddItemToArrayEvent(data: any){
+
+  }
+  onEditItemInArrayEvent(data: any){
+  }
+  onDeleteItemInArrayEvent(data: any){
+
+  }
+
+
   createDataViewArrayFieldsFromMap(map: Map<any,any>, dataViewFields: any[]): any[]{
-    // const arr = []
     return dataViewFields.reduce((prev, curr) => {
       const field = map.get(curr.FieldID)
       if(field){
         prev.push({
           Type: field.Items.Type,
           FieldID: curr.FieldID,
-          Title: curr.Title
+          Title: curr.Title,
+          Array : this.dataSource[curr.FieldID]
         })
       }
       return prev
@@ -118,10 +143,10 @@ export class FieldEditorComponent implements OnInit {
       }
     })
   }
-  async createArrayFieldsMap(dataView: any){
+  async createArrayFieldsMap(){
     const resource = await this.genericResourceService.getResource(this.editor.Resource.Name)
     const resourceFields = resource.Fields
-    const map = new Map()
+    const map = new Map<string,any>()
     Object.keys(resourceFields).map(fieldID => {
       if(resourceFields[fieldID].Type == 'Array'){
         map.set(fieldID, resourceFields[fieldID])

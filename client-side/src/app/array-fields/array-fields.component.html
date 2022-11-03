@@ -8,5 +8,11 @@
 </ng-template>
 
 <ng-template #primitiveArrayFields>
-    <primitive-array-field [dataViewOfArrayField]="dataViewOfArrayField" [editorDataSource]="dataSource"></primitive-array-field>
+    <primitive-array-field 
+        [dataViewOfArrayField]="dataViewOfArrayField" 
+        [editorDataSource]="dataSource"
+        (editEvent) = "onEditItemInArrayEvent($event)"
+        (deleteEvent) = "onDeleteItemInArrayEvent($event)"
+        (addEvent) = "onAddItemToArrayEvent($event)">
+</primitive-array-field>
 </ng-template>

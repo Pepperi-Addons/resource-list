@@ -33,13 +33,18 @@
             [dataView]="dataView"
             (fieldClick)="onReferenceClicked($event)"
         ></pep-generic-form>
-        <array-fields
-            *ngFor="let dataViewOfArrayField of dataViewArrayFields"
-                class="array-field"
-                [dataViewOfArrayField] = "dataViewOfArrayField"
-                [dataSource] = 'dataSource'
-                >
-        </array-fields>
+        <div *ngIf="loadCompleted">
+            <array-fields
+                *ngFor="let dataViewOfArrayField of dataViewArrayFields"
+                    class="array-field"
+                    [dataViewOfArrayField] = "dataViewOfArrayField"
+                    [dataSource] = 'dataSource'
+                    (editEvent) = "onEditItemInArrayEvent($event)"
+                    (deleteEvent) = "onDeleteItemInArrayEvent($event)"
+                    (addEvent) = "onAddItemToArrayEvent($event)"
+                    >
+            </array-fields>
+        </div>
         <!-- <draggable-card-fields
         cdkDrag 
         *ngFor="let card of viewsList"

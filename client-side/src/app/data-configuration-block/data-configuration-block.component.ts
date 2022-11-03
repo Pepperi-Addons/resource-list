@@ -13,7 +13,7 @@ import { Editor } from '../../../../shared/entities';
 export class DataConfigurationBlockComponent implements OnInit {
     @Input() hostObject: any;
     datasource: DataSource
-    editorDataSource = {}
+    // editorDataSource = {}
     menuItems: PepMenuItem[] = [];
     typeMap: any;
     currentResourceName: string = ""
