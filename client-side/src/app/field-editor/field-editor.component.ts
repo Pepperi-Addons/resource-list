@@ -160,6 +160,7 @@ export class FieldEditorComponent implements OnInit {
       }
     })
     console.log(`${dataViewField}`);
+    console.log(`${dataViewField}`);
   }
   async onUpdateButtonClick(){
     try{
