@@ -64,3 +64,5 @@ export interface IReferenceField {
   export const  REFERENCE_TYPE = "Resource"
   export const SELECTION_LIST = "SelectionList"
   export const DROP_DOWN = "DropDown"
+  export const ARRAY_TYPE = "Array"
+  export const CONTAINED_RESOURCE_TYPE = "ContainedResource"
