@@ -43,7 +43,6 @@ export class FieldEditorComponent implements OnInit {
   ngOnChanges($event){
     if($event?.editor && $event?.editor.previousValue != $event?.editor.currentValue){
       this.init()
-      
     }
   }
   loadEditorVariablesAsDialog(){
@@ -82,9 +81,7 @@ export class FieldEditorComponent implements OnInit {
   fixDataSourceArrayFields(arrayFieldsMap: Map<string,any>){
     const castingMap = new CastingMap()
     for(let key of arrayFieldsMap.keys()){
-      if(this.dataSource[key]){
         this.fixDataSourceArrayField(arrayFieldsMap.get(key), castingMap, this.dataSource[key], key)
-      }
     }
     // dataViewArrayFields.map(dataViewField => {
     //   if(this.dataSource[dataViewField.FieldID]){
@@ -92,9 +89,9 @@ export class FieldEditorComponent implements OnInit {
     //   }
     // })
   }
-  fixDataSourceArrayField(field: any, castingMap: CastingMap, data: string, key: string){
+  fixDataSourceArrayField(field: any, castingMap: CastingMap, data: string | undefined, key: string){
     const type = field.Items.Type
-    const arr = data.split(',')?.map(val => castingMap.cast(type, val)) || []
+    const arr = data?.split(',').map(val => castingMap.cast(type, val)) || []
     this.dataSource[key] = arr
   }
 
