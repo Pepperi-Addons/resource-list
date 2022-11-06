@@ -43,8 +43,6 @@ import { BlockComponent } from './block';
 import { BlockEditorComponent } from './block-editor';
 import { ReferenceFieldsTableModule } from './reference-fields-table/reference-fields-table.module';
 import { ResourceSelectionComponent } from './resource-selection/resource-selection.component';
-import { PrimitiveArrayAddFormComponent } from './array-fields/primitive-array-field/primitive-array-add-form/primitive-array-add-form.component';
-
 @NgModule({
     imports: [
         BrowserModule,
@@ -98,7 +96,6 @@ import { PrimitiveArrayAddFormComponent } from './array-fields/primitive-array-f
         LineMenuTabComponent,
         EditorsFormTabComponent,
         ViewsFormTabComponent,
-
     ],
     providers: [
         TranslateStore

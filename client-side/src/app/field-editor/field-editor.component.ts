@@ -1,7 +1,7 @@
 import { Component, Injector, Input, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { PepDialogService } from '@pepperi-addons/ngx-lib/dialog';
-import { BaseFormDataViewField, FormDataView, SchemeField } from '@pepperi-addons/papi-sdk';
+import { AddonDataScheme, BaseFormDataViewField, FormDataView, SchemeField } from '@pepperi-addons/papi-sdk';
 import { debug } from 'console';
 import { map } from 'rxjs';
 import { DROP_DOWN, Editor, IGenericViewer, IReferenceField, SELECTION_LIST, SelectOption, View } from '../../../../shared/entities';
@@ -24,7 +24,7 @@ export class FieldEditorComponent implements OnInit {
   dialogRef = null
   dialogData
   loadCompleted: boolean = false
-  resourceFields //should be input in the future
+  resourceFields: AddonDataScheme['Fields'] //should be input in the future
   resourcesMap
   dataViewArrayFields: any[] = []
   constructor(private injector: Injector,
@@ -64,13 +64,18 @@ export class FieldEditorComponent implements OnInit {
     this.loadCompleted = true
   }
   async reformatFields(){
+    const resource  = await this.genericResourceService.getResource(this.editor.Resource.Name)
+    this.resourceFields = resource.Fields || {}
     await this.reformatArrayFields()
-    if(this.editor?.ReferenceFields){
-      await this.reformatReferenceFields(this.editor.ReferenceFields)
+    const referenceFieldsWithoutContainedArray = this.editor.ReferenceFields?.filter(referenceField => {
+      this.resourceFields[referenceField.FieldID]?.Type ==  'Array'
+    })
+    if(referenceFieldsWithoutContainedArray?.length > 0){
+      await this.reformatReferenceFields(referenceFieldsWithoutContainedArray)
     }
   }
   async reformatArrayFields(){
-    const arrayFieldsMap: Map<string,any> = await this.createArrayFieldsMap()
+    const arrayFieldsMap: Map<string,any> = this.createArrayFieldsMap(this.resourceFields)
     this.fixDataSourceArrayFields(arrayFieldsMap)
     this.dataViewArrayFields = this.createDataViewArrayFieldsFromMap(arrayFieldsMap, this.dataView.Fields)
     this.removeArrayFieldsFromDataView(arrayFieldsMap)
@@ -115,9 +120,7 @@ export class FieldEditorComponent implements OnInit {
       }
     })
   }
-  async createArrayFieldsMap(){
-    const resource = await this.genericResourceService.getResource(this.editor.Resource.Name)
-    const resourceFields = resource.Fields
+  createArrayFieldsMap(resourceFields: AddonDataScheme['Fields']){
     const map = new Map<string,any>()
     Object.keys(resourceFields).map(fieldID => {
       if(resourceFields[fieldID].Type == 'Array'){

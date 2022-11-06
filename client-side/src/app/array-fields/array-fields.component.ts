@@ -9,7 +9,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 export class ArrayFieldsComponent implements OnInit {
   @Input() dataViewOfArrayField: any
   @Input() dataSource: any
-  
+  @Input() referenceFields
   constructor() { }
 
   ngOnInit(): void {

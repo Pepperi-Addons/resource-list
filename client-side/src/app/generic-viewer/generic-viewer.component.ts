@@ -180,8 +180,8 @@ export class GenericViewerComponent implements OnInit {
       return item[fieldID]
     }
     getFixedArrayField(item, fieldID, type){
-      if(type == "Resource"){
-        return `${item[fieldID].length.toString()}  selected`
+      if(type == "Resource" || type == "ContainedResource"){
+        return `${item[fieldID].length.toString()} items selected`
       }
       return item[fieldID].join(',')
     }
