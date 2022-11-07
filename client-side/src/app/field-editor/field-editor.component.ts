@@ -131,6 +131,9 @@ export class FieldEditorComponent implements OnInit {
   }
   async fixReferenceField(field: IReferenceField){
     const dataViewField = this.dataView.Fields?.find(dataViewField => dataViewField.FieldID == field.FieldID)
+    if(!dataViewField){
+      return
+    }
     if(field?.SelectionType == SELECTION_LIST){
       dataViewField.Type == "Button"
     }
