@@ -14,6 +14,7 @@ import { PrimitiveArrayFieldComponent } from '../array-fields/primitive-array-fi
 import { PepGenericListModule } from '@pepperi-addons/ngx-composite-lib/generic-list';
 import { PrimitiveArrayAddFormComponent } from '../array-fields/primitive-array-field/primitive-array-add-form/primitive-array-add-form.component';
 import { ContainedResourceArrayFieldComponent } from '../array-fields/contained-resource-array-field/contained-resource-array-field.component';
+import { GenericViewerModule } from '../generic-viewer/generic-viewer.module';
 
 
 export const routes: Routes = [
@@ -38,6 +39,7 @@ export const routes: Routes = [
     PepPageLayoutModule,
     PepSizeDetectorModule,
     PepGenericListModule,
+    GenericViewerModule,
     TranslateModule.forChild({
       loader: {
           provide: TranslateLoader,

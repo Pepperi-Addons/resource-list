@@ -1,1 +1,5 @@
-<p>contained-resource-array-field works!</p>
+<app-generic-viewer
+    *ngIf="loadCompleted"
+    [genericViewer]="genericViewer"
+    [configurationObject] ="genericViewerConfiguration"
+></app-generic-viewer>
