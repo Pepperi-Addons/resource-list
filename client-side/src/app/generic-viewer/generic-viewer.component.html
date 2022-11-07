@@ -9,7 +9,7 @@
     [selectionType]="configurationObject?.selectionList?.selection || 'multi'"
     >
     <ng-container right-buttons>
-        <pep-menu
+        <pep-menu *ngIf="configurationObject.selectionList == undefined"
             iconName="system_menu" 
             type="action" 
             styleType="weak" 
