@@ -10,6 +10,7 @@
     >
     <ng-container right-buttons>
         <pep-menu
+            *ngIf="!configurationObject.selectionList"
             iconName="system_menu" 
             type="action" 
             styleType="weak" 
