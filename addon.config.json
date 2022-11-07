@@ -22,7 +22,7 @@
     ],
     "Dependencies": {
       "generic_resource": "0.0.11",
-      "dimx": "0.0.163"
+      "dimx": "0.7.29"
 
     },
     "CPISide": [
