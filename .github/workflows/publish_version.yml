@@ -5,6 +5,7 @@ on:
     branches:
       - master
       - main
+      - v0.7
 
 jobs:
   publish-addon:

@@ -30,29 +30,33 @@
         <hr>
     </ng-container>
     <ng-container pep-main-area>  
-        <mat-tab-group #tabgroup class="views-tabs">
-            <mat-tab label= "{{'Tabs.General' | translate}}">
-                <h5> {{'ViewsEditorFirstLine' | translate}}</h5>
-                <pep-generic-form
-                [dataSource]="dataSource"
-                [dataView]="dataView" 
-                ></pep-generic-form>
+        <mat-tab-group #tabgroup class="views-tabs" (selectedTabChange)="onTabChanged($event)">
+            <mat-tab label= "{{'Tabs.General' | translate}}" >
+                <div *ngIf="currentTab == 0">                    
+                    <h5> {{'ViewsEditorFirstLine' | translate}}</h5>
+                    <pep-generic-form
+                    [dataSource]="dataSource"
+                    [dataView]="dataView" 
+                    ></pep-generic-form>
+                </div>
             </mat-tab>
-            <mat-tab label = "{{'Tabs.Form' | translate}}">
-                <app-views-form-tab *ngIf="loadCompleted == true"
+            <mat-tab label = "{{'Tabs.Form' | translate}}"  *ngIf="loadCompleted">
+                <app-views-form-tab *ngIf="currentTab == 1"
                     [key] ="viewKey"
                     [resourceName]="dataSource.Resource">
                 </app-views-form-tab>
             </mat-tab>
             <!--Menu Tab-->
-            <mat-tab label="{{'Menu' | translate}}">
+            <mat-tab label="{{'Menu' | translate}}"  *ngIf="loadCompleted" >
                 <app-menu-tab
+                *ngIf="currentTab == 2 "
                 [key] = "viewKey">
                 </app-menu-tab>
             </mat-tab>
             <!--Line Menu Tab-->
-            <mat-tab label="{{'LineMenu' | translate}}">
+            <mat-tab label="{{'LineMenu' | translate}}" *ngIf="loadCompleted">
                 <app-line-menu-tab
+                *ngIf="currentTab == 3"
                 [key] = "viewKey">
                 </app-line-menu-tab>
             </mat-tab>
