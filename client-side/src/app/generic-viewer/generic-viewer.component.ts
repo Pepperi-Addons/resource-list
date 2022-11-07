@@ -145,7 +145,7 @@ export class GenericViewerComponent implements OnInit {
           })
         }
         else{
-          this.isButtonConfigured = true
+          this.isButtonConfigured = this.genericViewer.editor != undefined
           this.buttonTitle = field.Title
         }
       })
