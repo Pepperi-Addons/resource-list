@@ -32,6 +32,7 @@ export class ViewsFormComponent implements OnInit {
   viewKey: string
   currentView: View
   loadCompleted: boolean = false
+  currentTab = 0
 
   constructor(
     private route: ActivatedRoute,
@@ -67,6 +68,9 @@ export class ViewsFormComponent implements OnInit {
         Value: editor.Name
       }
     })
+  }
+  onTabChanged(event){
+    this.currentTab = event.index
   }
   convertViewToDataSource(view: View){
     return {
