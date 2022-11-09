@@ -84,7 +84,8 @@ export class FieldEditorComponent implements OnInit {
   fixDataSourceArrayFields(arrayFieldsMap: Map<string,any>){
     const castingMap = new CastingMap()
     for(let key of arrayFieldsMap.keys()){
-        this.fixDataSourceArrayField(arrayFieldsMap.get(key), castingMap, this.dataSource[key], key)
+        // dataSource[key] || undefined will return undefined in case the string is empty! 
+        this.fixDataSourceArrayField(arrayFieldsMap.get(key), castingMap, this.dataSource[key] || undefined, key)
     }
   }
   fixDataSourceArrayField(field: any, castingMap: CastingMap, data: string | undefined, key: string){
@@ -165,8 +166,22 @@ export class FieldEditorComponent implements OnInit {
     console.log(`${dataViewField}`);
     console.log(`${dataViewField}`);
   }
+  castStringArray<T>(arr: string[], type: string): T[]{
+    const castingMap = new CastingMap()
+    return arr.map(val => castingMap.cast(type, val))
+  } 
+  castPrimitiveArraysInDataSource(){
+    Object.keys(this.dataSource).forEach(key => {
+      //cast only arrays that not contained resource
+      if(this.resourceFields[key]?.Type == 'Array' && this.resourceFields[key].Items.Type != 'ContainedResource'){
+        this.dataSource[key] = this.castStringArray(this.dataSource[key], this.resourceFields[key].Items.Type)
+      }
+    })
+  }
+
   async onUpdateButtonClick(){
     try{
+      this.castPrimitiveArraysInDataSource()
       await this.genericResourceService.postItem(this.editor.Resource.Name, this.dataSource)
     }
     catch(err){

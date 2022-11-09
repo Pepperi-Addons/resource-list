@@ -67,9 +67,7 @@ export class PrimitiveArrayFieldComponent implements OnInit {
   onAddClick(){
     const cb = (value) => {
       if(value){
-        const castingMap = new CastingMap()
-        const newItem = castingMap.cast(this.configurationObject.Type, value)
-        this.configurationObject.Array.push(newItem)
+        this.configurationObject.Array.push(value)
         const newDataSource = this.crateListDataSource()
         this.dataSource = new DataSource(newDataSource, this.dataSource.getFields(), this.dataSource.getColumns())
       }
@@ -78,9 +76,7 @@ export class PrimitiveArrayFieldComponent implements OnInit {
   }
 
   editArrayItem(value: any, index: number){
-    const castingMap = new CastingMap()
-    const newItem = castingMap.cast(this.configurationObject.Type, value)
-    this.configurationObject.Array[index] = newItem
+    this.configurationObject.Array[index] = value
     const newDataSource = this.crateListDataSource()
     this.dataSource = new DataSource(newDataSource, this.dataSource.getFields(), this.dataSource.getColumns())
   }
@@ -89,7 +85,13 @@ export class PrimitiveArrayFieldComponent implements OnInit {
     const selectedItemKey = selectedRows.rows[0]
     const items = this.dataSource.getItems()
     const item = items.find(item => item.Index == selectedItemKey)
-    this.openFormDialog(item, (value => { this.editArrayItem(value, Number(item.Index))}))
+    this.openFormDialog(item, value => 
+      { 
+        if(value){
+          this.editArrayItem(value, Number(item.Index))
+        }
+      }
+    )
   }
 
   deleteHandler(selectedRows: any){

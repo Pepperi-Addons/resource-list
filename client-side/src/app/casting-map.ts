@@ -8,7 +8,7 @@ export class CastingMap{
     init(){
         this.map['Integer'] = (val) => Number(val)
         this.map['Double'] = (val) => Number(val)
-        this.map['Bool'] = (val) => Boolean(val)
+        this.map['Bool'] = (val) => !(val == 'false')
     }
     cast(type:string, val: any): any{
         const castFunction = this.map[type]
