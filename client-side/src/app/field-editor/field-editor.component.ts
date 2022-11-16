@@ -3,9 +3,10 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { PepDialogService } from '@pepperi-addons/ngx-lib/dialog';
 import { AddonDataScheme, BaseFormDataViewField, FormDataView, SchemeField } from '@pepperi-addons/papi-sdk';
 import { debug } from 'console';
-import { map } from 'rxjs';
+import { BehaviorSubject, map, Subject } from 'rxjs';
 import { DROP_DOWN, Editor, IGenericViewer, IReferenceField, SELECTION_LIST, SelectOption, View } from '../../../../shared/entities';
 import { CastingMap } from '../casting-map';
+import { IGenericViewerDataSource, RegularGVDataSource } from '../generic-viewer-data-source';
 import { GenericViewerComponent } from '../generic-viewer/generic-viewer.component';
 import { IGenericViewerConfigurationObject } from '../metadata';
 import { GenericResourceService } from '../services/generic-resource-service';
@@ -27,6 +28,8 @@ export class FieldEditorComponent implements OnInit {
   resourceFields: AddonDataScheme['Fields'] //should be input in the future
   resourcesMap
   dataViewArrayFields: any[] = []
+  originalValue: any = {}
+  gvDataSource: IGenericViewerDataSource
   constructor(private injector: Injector,
      private genericResourceService: GenericResourceService,
      private utilitiesService: UtilitiesService,
@@ -50,6 +53,8 @@ export class FieldEditorComponent implements OnInit {
     this.dataSource = JSON.parse(JSON.stringify(this.dialogData.item))
     this.dataView = JSON.parse(JSON.stringify(this.dialogData.editorDataView))
     this.editor = this.dialogData.editor
+    this.originalValue = this.dialogData.originalValue
+    this.gvDataSource = this.dialogData.gvDataSource
   }
   async init(){
     this.loadCompleted = false
@@ -98,11 +103,13 @@ export class FieldEditorComponent implements OnInit {
     return dataViewFields.reduce((prev, curr) => {
       const field = map.get(curr.FieldID)
       if(field){
+        const eventsSubject: BehaviorSubject<any> = new BehaviorSubject<any>({});
         prev.push({
           Type: field.Items.Type,
           FieldID: curr.FieldID,
           Title: curr.Title,
-          Array : this.dataSource[curr.FieldID]
+          Array : this.dataSource[curr.FieldID],
+          Event: eventsSubject
         })
       }
       return prev
@@ -181,8 +188,17 @@ export class FieldEditorComponent implements OnInit {
 
   async onUpdateButtonClick(){
     try{
+      this.dataViewArrayFields.map(field => {
+        if(field.Type == 'ContainedResource'){
+          const result = {}
+          field.Event.next(result)
+          this.dataSource[field.FieldID] = result['value']
+        }
+      })
       this.castPrimitiveArraysInDataSource()
-      await this.genericResourceService.postItem(this.editor.Resource.Name, this.dataSource)
+      // await this.genericResourceService.postItem(this.editor.Resource.Name, this.dataSource)
+      await this.gvDataSource.update(this.dataSource)
+      // await this.
     }
     catch(err){
       console.log(err)
@@ -211,7 +227,7 @@ export class FieldEditorComponent implements OnInit {
     })
   }
 
-  showReferenceDialog(resourceName: string, viewsDropDown: SelectOption[], currentFieldConfiguration: IReferenceField, genericViewer: IGenericViewer){
+  showReferenceDialog(resourceName: string, viewsDropDown: SelectOption[], currentFieldConfiguration: IReferenceField, genericViewer: IGenericViewer, gvDataSource: IGenericViewerDataSource){
     const configuration = {
       configurationObj: {
         resource: resourceName,
@@ -221,7 +237,8 @@ export class FieldEditorComponent implements OnInit {
           selection: 'single'
         },
       },
-      genericViewer: genericViewer
+      genericViewer: genericViewer,
+      gvDataSource: gvDataSource
     }
     const config = this.dialogService.getDialogConfig({}, 'large')
     this.dialogService.openDialog(GenericViewerComponent, configuration, config).afterClosed().subscribe((async data => {      
@@ -257,7 +274,8 @@ export class FieldEditorComponent implements OnInit {
         value: selectionList
       }
     ]
-    this.showReferenceDialog(refFieldConfiguration.Resource, viewsDropDown, refFieldConfiguration ,genericViewer) 
+    const gvDataSource = new RegularGVDataSource(genericViewer, this.genericResourceService)
+    this.showReferenceDialog(refFieldConfiguration.Resource, viewsDropDown, refFieldConfiguration ,genericViewer, gvDataSource) 
   }
   async onReferenceClicked($event){
     const currentRefFieldConfiguration = this.getReferenceFieldConfiguration($event.ApiName)
