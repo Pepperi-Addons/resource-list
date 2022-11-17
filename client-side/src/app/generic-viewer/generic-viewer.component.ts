@@ -22,12 +22,13 @@ import { IGenericViewerDataSource, isRegularGVDataSource, RegularGVDataSource } 
 })
 export class GenericViewerComponent implements OnInit {
     @ViewChild(GenericListComponent) genericList;
+
     @Input() configurationObject: IGenericViewerConfigurationObject
     @Output() pressedDoneEvent: EventEmitter<number> = new EventEmitter<number>()
     @Output() pressedCancelEvent: EventEmitter<void> = new EventEmitter<void>()
     @Input() genericViewer: IGenericViewer
     @Input() genericViewerDataSource: IGenericViewerDataSource
-    // @Input() itemsHandler: IItemsHandler
+
     dataSource: DataSource
     menuItems: PepMenuItem[] = []
     items: any[] = []
@@ -44,7 +45,6 @@ export class GenericViewerComponent implements OnInit {
          private genericResourceService: GenericResourceService,
          private dialogService : PepDialogService,
          private injector: Injector,
-         private editorsService: EditorsService,
          private viewContainerRef: ViewContainerRef,
          private dimxService: PepDIMXHelperService ) 
     {
@@ -106,14 +106,6 @@ export class GenericViewerComponent implements OnInit {
         this.isButtonConfigured = true
         this.buttonTitle = this.translate.instant("Done")
       }
-    }
-
-    async getEditor(editorKey: string): Promise<Editor | undefined>{
-      const editors = await this.editorsService.getItems(editorKey)
-      if(editors.length > 0){
-        return editors[0]
-      }
-      return undefined
     }
 
     async configureGenericViewerList(){
@@ -196,25 +188,13 @@ export class GenericViewerComponent implements OnInit {
     async loadList(dataView: GridDataView){
       const fields = dataView.Fields || []
       const columns = dataView.Columns || []
-      //needs to take it out (both items and resource fields)
-      // const items = await this.itemsHandler.getItems(this.resource, false)
-      // const items = await this.genericResourceService.getItems(this.resource)
       const items = await this.getItemsCopy()
-      // const itemsForList = JSON.parse(JSON.stringify(this.items))
-      // const resourceFields = (await this.genericResourceService.getResource(this.resource))?.Fields || {}
       const resourceFields = await this.genericViewerDataSource.getFields()
-      // const resourceFields = this.genericViewer.resourceFields || {}
       //in order to support arrays and references we should check the "real" type of each field, and reformat the corresponding item
       this.reformatItems(items, resourceFields)
       this.dataSource = new DataSource(items, fields,columns)
     }
     async initRecycleBin(){
-      //needs also to take it out
-      // const deletedItems = await this.itemsHandler.getItems(this.resource, true)
-      // const deletedItems = await this.genericResourceService.getItems(this.resource, true)
-      if(!isRegularGVDataSource){
-        return 
-      }
       const deletedItems = await (this.genericViewerDataSource as RegularGVDataSource).getDeletedItems()
       this.menuItems.push({
         key: "BackToList",
@@ -231,15 +211,7 @@ export class GenericViewerComponent implements OnInit {
           actions.push({
             title: this.translate.instant('Restore'),
             handler: async (selectedRows) => {
-              const item = this.dataSource.getItems().find(item => item.Key == selectedRows.rows[0])
-              // await this.genericResourceService.postItem(this.resource,item)
-
-              // await this.genericViewerDataSource.postItem(item)
-              // await this.genericViewerDataSource.addItem(item)
-              // await this.itemsHandler.postItem(this.resource, item)
-              // const items = await this.itemsHandler.getItems(this.resource, true)
-              // const items = await this.genericResourceService.getItems(this.resource, true)
-              // const items = await this.genericViewerDataSource.getDeletedItems()
+              const item = (await this.genericViewerDataSource.getDeletedItems()).find(item => item.Key == selectedRows.rows[0])
               const items = await this.genericViewerDataSource.restore(item)
               this.dataSource = new DataSource(items, this.dataSource.getFields(), this.dataSource.getColumns())
               
@@ -255,9 +227,7 @@ export class GenericViewerComponent implements OnInit {
       }
     }
     async backToList(){
-      // const items = await this.genericResourceService.getItems(this.resource)
       const items = await this.getItemsCopy()
-      // const items = await this.itemsHandler.getItems(this.resource, false)
       this.menuItems = this.menuItems.filter(menuItem => menuItem.key != "BackToList")
       this.menuItems.push({
         key: "RecycleBin",
@@ -307,7 +277,6 @@ export class GenericViewerComponent implements OnInit {
                     const selectedItemKey = selectedRows.rows[0]
                     const items = this.dataSource.getItems()
                     const item = items.find(item => item.Key == selectedItemKey)
-                    //needs to send editor
                     const dialogData = {
                       item : item,
                       editorDataView: this.genericViewer.editorDataView,
@@ -331,14 +300,10 @@ export class GenericViewerComponent implements OnInit {
                 title: this.lineMenuItemsMap.get("Delete").Title,
                 handler: async (selectedRows) => {
                   const selectedItemKey = selectedRows.rows[0]
-                  const items = this.dataSource.getItems()
+                  const items = await this.genericViewerDataSource.getItems()
                   const item = items.find(item => item.Key == selectedItemKey)
                   if(item){
-                    // item.Hidden = true
                     await this.genericViewerDataSource.deleteItem(item)
-                    // await this.genericResourceService.postItem(this.resource,item)
-                    // await this.genericViewerDataSource.postItem(item)
-                    // await this.itemsHandler.postItem(this.resource, item)
                     await this.loadList(this.genericViewer.viewDataview)
                   }
                 }
@@ -359,9 +324,7 @@ export class GenericViewerComponent implements OnInit {
       }, 'large')
       this.dialogService.openDialog(FieldEditorComponent, dialogData, config).afterClosed().subscribe((async isUpdatePreformed => {
         if(isUpdatePreformed){
-          // this.items = await this.genericResourceService.getItems(this.resource)
           const items = await this.getItemsCopy()
-          // this.items = await this.itemsHandler.getItems(this.resource, false)
           this.dataSource = new DataSource(items, this.dataSource.getFields(), this.dataSource.getColumns())
         }}))
     }

@@ -1,14 +1,12 @@
 import { Component, Injector, Input, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { PepDialogService } from '@pepperi-addons/ngx-lib/dialog';
-import { AddonDataScheme, BaseFormDataViewField, FormDataView, SchemeField } from '@pepperi-addons/papi-sdk';
-import { debug } from 'console';
-import { BehaviorSubject, map, Subject } from 'rxjs';
+import { AddonDataScheme } from '@pepperi-addons/papi-sdk';
+import { BehaviorSubject } from 'rxjs';
 import { DROP_DOWN, Editor, IGenericViewer, IReferenceField, SELECTION_LIST, SelectOption, View } from '../../../../shared/entities';
 import { CastingMap } from '../casting-map';
 import { IGenericViewerDataSource, RegularGVDataSource } from '../generic-viewer-data-source';
 import { GenericViewerComponent } from '../generic-viewer/generic-viewer.component';
-import { IGenericViewerConfigurationObject } from '../metadata';
 import { GenericResourceService } from '../services/generic-resource-service';
 import { UtilitiesService } from '../services/utilities-service';
 import { ViewsService } from '../services/views.service';
@@ -20,8 +18,9 @@ import { ViewsService } from '../services/views.service';
 })
 export class FieldEditorComponent implements OnInit {
   @Input() dataView: any
-  dataSource = {}
   @Input() editor: Editor
+  
+  dataSource = {}
   dialogRef = null
   dialogData
   loadCompleted: boolean = false
@@ -30,6 +29,7 @@ export class FieldEditorComponent implements OnInit {
   dataViewArrayFields: any[] = []
   originalValue: any = {}
   gvDataSource: IGenericViewerDataSource
+
   constructor(private injector: Injector,
      private genericResourceService: GenericResourceService,
      private utilitiesService: UtilitiesService,
@@ -196,9 +196,7 @@ export class FieldEditorComponent implements OnInit {
         }
       })
       this.castPrimitiveArraysInDataSource()
-      // await this.genericResourceService.postItem(this.editor.Resource.Name, this.dataSource)
       await this.gvDataSource.update(this.dataSource)
-      // await this.
     }
     catch(err){
       console.log(err)
