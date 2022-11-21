@@ -12,7 +12,6 @@ import { UtilitiesService } from '../services/utilities-service';
 export class BlockComponent implements OnInit {
     @Input() hostObject: any;
     genericViewer: IGenericViewer
-    // itemsHandler: IItemsHandler
     configurationObject: IGenericViewerConfigurationObject = {
       resource: undefined,
       viewsList: [],
@@ -35,22 +34,6 @@ export class BlockComponent implements OnInit {
       this.setConfigurationObject(hostObject)
       this.genericViewer = await this.genericResourceService.getGenericView(this.configurationObject.viewsList[0].key)
       this.genericViewerDataSource = new RegularGVDataSource(this.genericViewer, this.genericResourceService)
-      // this.itemsHandler = {
-      //   getItems:  async (resourceName, getDeletedItems) => {
-      //     let query = undefined
-      //     if(getDeletedItems){
-      //         query = {where: 'Hidden=true'}
-      //         query.include_deleted = true
-      //     }
-      //     if(resourceName){
-      //         return await this.utilitiesService.papiClient.resources.resource(resourceName).get(query)
-      //     }
-      //     return [];
-      //   },
-      //   postItem: async (resourceName, item) => {
-      //     return await this.utilitiesService.papiClient.resources.resource(resourceName).post(item)
-      //   }
-      // }
       this.hasViewToDisplay = true
     }
     createDropDownOfViews(viewsList){

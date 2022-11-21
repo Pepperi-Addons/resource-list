@@ -59,10 +59,6 @@ export interface IReferenceField {
     editorDataView?: BaseFormDataView,
     menuItems?: MenuDataView,
     lineMenuItems?: MenuDataView,
-    // resourceFields?: AddonDataScheme['Fields'],
-    // resourceName: string
-    // updateItem?: (val: unknown) => void, 
-    // getItems?: () => unknown[]
   }
   
   export const  REFERENCE_TYPE = "Resource"
