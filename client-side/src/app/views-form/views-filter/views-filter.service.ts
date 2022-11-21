@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { Injectable, Optional } from "@angular/core";
 import { IPepQueryBuilderField } from "@pepperi-addons/ngx-lib/query-builder";
 import { AddonDataScheme } from "@pepperi-addons/papi-sdk";
 
@@ -13,11 +13,14 @@ export class ViewsFilterService{
         const result: IPepQueryBuilderField[] = []
         Object.keys(resourceFields).forEach(fieldID => {
             const resourceField = resourceFields[fieldID]
+            const optionalValuesLength = resourceField['OptionalValues']?.length || 0 
+            const optionalValues = resourceField['OptionalValues']?.map(val => {return {Key: val, Value: val} }) || []
             if(resourceField.Indexed){
                 result.push({
                     FieldID: fieldID, 
                     Title: fieldID,
-                    FieldType: resourceField.Type
+                    FieldType: optionalValuesLength > 0 ? 'ComboBox' : resourceField.Type,
+                    OptionalValues: optionalValues
                 })
 
             }
