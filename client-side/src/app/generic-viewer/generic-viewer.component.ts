@@ -256,7 +256,6 @@ export class GenericViewerComponent implements OnInit {
       this.dataSource = new DataSource(items, this.dataSource.getFields(), this.dataSource.getColumns())
     }
     menuItemClick($event){
-      debugger
       switch($event.source.key){
         case 'RecycleBin':
           this.initRecycleBin()
@@ -281,9 +280,11 @@ export class GenericViewerComponent implements OnInit {
     }
     export(){
       this.dimxService?.export({
-        DIMXExportFormat: 'json',
+        DIMXExportFormat: 'csv',
         DIMXExportIncludeDeleted: false,
         DIMXExportFileName: this.genericViewer.view.Name,
+        DIMXExportDelimiter: ',',
+        DIMXExportFields: (this.genericViewer.viewDataview.Fields?.map(field => field.FieldID) || []).join()
       })
     }
      getActionsCallBack(){
