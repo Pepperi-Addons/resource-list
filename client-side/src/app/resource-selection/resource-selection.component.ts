@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { IGenericViewer } from '../../../../shared/entities';
+import { IGenericViewerDataSource, RegularGVDataSource } from '../generic-viewer-data-source';
 import { IGenericViewerConfigurationObject } from '../metadata';
 import { GenericResourceService } from '../services/generic-resource-service';
 import { UtilitiesService } from '../services/utilities-service';
@@ -15,6 +16,7 @@ export class ResourceSelectionComponent implements OnInit {
   configurationObj: IGenericViewerConfigurationObject
   loadCompleted: boolean = false
   genericViewer: IGenericViewer
+  genericViewerDataSource: IGenericViewerDataSource
   constructor(
     private genericResourceService: GenericResourceService,
     private utilitiesService: UtilitiesService
@@ -26,6 +28,7 @@ export class ResourceSelectionComponent implements OnInit {
       if(!config){
         this.utilitiesService.showDialog('Error', 'ResourcePickerErr', 'close')
       }
+      this.genericViewerDataSource = new RegularGVDataSource(this.genericViewer, this.genericResourceService)
       this.loadCompleted = true
     })
   }

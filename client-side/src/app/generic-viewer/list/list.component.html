@@ -1,0 +1,53 @@
+<div class="generic-view">
+    <pep-generic-list class="generic-list" 
+    [showTopBar]="true"
+    [dataSource]="dataSource"
+    [showSearch]="true"
+    [inline] ="false"
+    [actions]="listOptions.actions"
+    uuidMapping = 'Key'
+    [selectionType]="listOptions.selectionType"
+    >
+    <ng-container right-buttons>
+        <pep-menu *ngIf="listOptions.menuItems.length > 0"
+            iconName="system_menu" 
+            type="action" 
+            styleType="weak" 
+            sizeType="sm" 
+            classNames=""
+            [items]="listOptions.menuItems" 
+            [disabled]="false" 
+            (menuItemClick)="menuItemClick($event)">
+        </pep-menu>
+        <pep-select *ngIf="listOptions.dropDownOfViews.length > 1"
+            class="buttons-holder"
+            [value]="genericViewer.view.Key"
+            label="select view"
+            type="select"
+            [mandatory]="false"
+            xAlignment="left"
+            [options]="listOptions.dropDownOfViews"
+            [renderTitle]="false"
+            (valueChange)="onViewChange($event)"
+            [emptyOption]="false"
+        ></pep-select>
+        <pep-button *ngIf="listOptions.button != undefined"
+            class='pep-spacing-element'
+            [value]="listOptions.button.title"
+            styleType=strong
+            styleStateType=system
+            sizeType=md
+            classNames='new'
+            iconPosition='end'
+            (buttonClick)='onButtonClicked()'
+        ></pep-button>
+        
+        <pep-button *ngIf='listOptions.hasCancelButton'
+            class='pep-spacing-element'
+            value = "{{'Cancel' | translate}}"
+            classNames='new'
+            (buttonClick)='onCancelClicked()'
+        ></pep-button>
+    </ng-container>
+</pep-generic-list>
+</div>

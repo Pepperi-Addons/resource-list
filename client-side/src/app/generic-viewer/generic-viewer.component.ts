@@ -11,9 +11,9 @@ import { FieldEditorComponent } from '../field-editor/field-editor.component';
 import { EXPORT, IGenericViewerConfigurationObject, IMPORT } from '../metadata';
 import { GenericListComponent } from '@pepperi-addons/ngx-composite-lib/generic-list';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { EditorsService } from '../services/editors.service';
 import { DIMXHostObject, PepDIMXHelperService } from '@pepperi-addons/ngx-composite-lib';
 import { IGenericViewerDataSource, isRegularGVDataSource, RegularGVDataSource } from '../generic-viewer-data-source';
+import { ListOptions } from './generic-viewer.model';
 
 @Component({
     selector: 'app-generic-viewer',
@@ -28,6 +28,8 @@ export class GenericViewerComponent implements OnInit {
     @Output() pressedCancelEvent: EventEmitter<void> = new EventEmitter<void>()
     @Input() genericViewer: IGenericViewer
     @Input() genericViewerDataSource: IGenericViewerDataSource
+
+    listOptions: ListOptions
 
     dataSource: DataSource
     menuItems: PepMenuItem[] = []
@@ -52,7 +54,22 @@ export class GenericViewerComponent implements OnInit {
           this.dialogRef = this.injector.get(MatDialogRef, null)
           this.dialogData = this.injector.get(MAT_DIALOG_DATA, null)
     }
-
+    createListOptions(){
+      const actions =  this.actions
+      const selectionType = this.configurationObject.selectionList?.selection || "single"
+      const menuItems = this.menuItems || []
+      const dropDownOfViews = this.dropDownOfViews || []
+      const button = this.isButtonConfigured ? {title: this.buttonTitle} : undefined
+      const hasCancelButton = this.configurationObject.selectionList != undefined
+      return {
+          actions,
+          selectionType,
+          menuItems, 
+          dropDownOfViews, 
+          button,
+          hasCancelButton
+      }
+    }
     ngOnInit(): void {
       this.loadConfigurationObject()
       this.init()
@@ -94,23 +111,23 @@ export class GenericViewerComponent implements OnInit {
     async loadViewBlock(){
       this.initDimxService()
       if(this.configurationObject.selectionList){
-        await this.configureSelectionList()
+        this.configureSelectionList()
       }else{
-        await this.configureGenericViewerList()
+        this.configureGenericViewerList()
       }
       this.DisplayViewInList(this.genericViewer.view.Key)
     }
 
-    async configureSelectionList(){
+    configureSelectionList(){
       if(!this.configurationObject.selectionList.none){
         this.isButtonConfigured = true
         this.buttonTitle = this.translate.instant("Done")
       }
     }
 
-    async configureGenericViewerList(){
-      await this.initMenuItems()
-      await this.initLineMenuItems()
+    configureGenericViewerList(){
+      this.initMenuItems()
+      this.initLineMenuItems()
     }
 
     setConfigurationObjectVariable():void{
@@ -118,7 +135,7 @@ export class GenericViewerComponent implements OnInit {
       this.resource = this.configurationObject?.resource || undefined
     }
 
-    async initLineMenuItems(){
+    initLineMenuItems(){
       const lineMenuDataView = this.genericViewer.lineMenuItems
       this.lineMenuItemsMap = new Map()
       lineMenuDataView?.Fields?.forEach(dataViewField => {
@@ -126,7 +143,7 @@ export class GenericViewerComponent implements OnInit {
       })
     }
 
-    async initMenuItems(){
+    initMenuItems(){
       const menuDataView = this.genericViewer.menuItems
       this.menuItems = []
       menuDataView?.Fields?.forEach(field => {
@@ -137,7 +154,7 @@ export class GenericViewerComponent implements OnInit {
           })
         }
         else{
-          this.isButtonConfigured = true
+          this.isButtonConfigured = this.genericViewer.editor != undefined
           this.buttonTitle = field.Title
         }
       })
@@ -172,8 +189,9 @@ export class GenericViewerComponent implements OnInit {
       else{
         this.dataSource = new DataSource([],[],[])
       }
+      this.listOptions = this.createListOptions()
     }
-    async onViewChange($event){
+    async onViewChanged($event){
       this.genericViewer = await this.genericResourceService.getGenericView($event)
       if(isRegularGVDataSource(this.genericViewerDataSource)){
         this.genericViewerDataSource.setGenericViewer(this.genericViewer)
@@ -196,13 +214,14 @@ export class GenericViewerComponent implements OnInit {
     }
     async initRecycleBin(){
       const deletedItems = await (this.genericViewerDataSource as RegularGVDataSource).getDeletedItems()
-      this.menuItems.push({
+      this.menuItems = [({
         key: "BackToList",
         text: "Back to list"
-      })
+      })]
       this.menuItems = this.menuItems.filter(menuItem => menuItem.key != "RecycleBin")
       this.dataSource = new DataSource(deletedItems, this.dataSource.getFields(), this.dataSource.getColumns())
       this.actions.get = this.getRecycleBinActions()
+      this.listOptions = this.createListOptions()
     }
     getRecycleBinActions(){
       return async(data: PepSelectionData) => {
@@ -237,6 +256,7 @@ export class GenericViewerComponent implements OnInit {
       this.dataSource = new DataSource(items, this.dataSource.getFields(), this.dataSource.getColumns())
     }
     menuItemClick($event){
+      debugger
       switch($event.source.key){
         case 'RecycleBin':
           this.initRecycleBin()
@@ -329,19 +349,20 @@ export class GenericViewerComponent implements OnInit {
         }}))
     }
 
-    onButtonClicked(){
+    onButtonClicked(event){
       if(this.configurationObject.selectionList){
-        this.onDoneButtonClicked()
+        this.onDoneButtonClicked(event)
       }
       else{
         this.onNewButtonClicked()
       }
     }
-    onDoneButtonClicked(){
+    onDoneButtonClicked(event){
       this.pressedDoneEvent.emit(this.genericList?.getSelectedItems()?.rows || [])
       this.dialogRef?.close(this.genericList?.getSelectedItems()?.rows || [])
     }
     onCancelClicked(){
+      console.log(`cancel clicked so your code works !!!!`);
       this.pressedCancelEvent.emit()
       this.dialogRef?.close()
     }

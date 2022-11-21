@@ -6,11 +6,12 @@ import { PepMenuModule } from '@pepperi-addons/ngx-lib/menu';
 import { PepSelectModule } from '@pepperi-addons/ngx-lib/select';
 import { PepButtonModule } from '@pepperi-addons/ngx-lib/button';
 import { TranslateModule } from '@ngx-translate/core';
+import { ListComponent } from './list/list.component';
 
 
 
 @NgModule({
-  declarations: [GenericViewerComponent],
+  declarations: [GenericViewerComponent, ListComponent],
   imports: [
     CommonModule,
     PepGenericListModule,
