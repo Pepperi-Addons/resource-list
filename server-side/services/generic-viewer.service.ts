@@ -1,5 +1,5 @@
 import { Client } from "@pepperi-addons/debug-server/dist";
-import { AddonDataScheme, GridDataView } from "@pepperi-addons/papi-sdk";
+import { GridDataView } from "@pepperi-addons/papi-sdk";
 import { IGenericViewer, View } from "../../shared/entities";
 import { DataViewsService } from "./dataviews.service";
 import { EditorsService } from "./editors.service";
@@ -30,7 +30,7 @@ export class GenericViewerService  {
             editor: undefined,
             editorDataView: undefined,
             resourceName: view.Resource.Name,
-            filter: toApiQueryString(view.Filter) 
+            filter: toApiQueryString(view.Filter) || ''
         }
         if(view.Editor){
             const editorDataViewKey = view.Editor.replace(/-/g, '')
@@ -64,6 +64,7 @@ export class GenericViewerService  {
         return {
             view: view,
             viewDataview: dataview,
+            filter: toApiQueryString(view.Filter) || ''
             // resourceName: view.Resource.Name
         }
     }
