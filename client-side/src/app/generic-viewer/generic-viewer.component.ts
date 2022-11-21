@@ -256,7 +256,6 @@ export class GenericViewerComponent implements OnInit {
       this.dataSource = new DataSource(items, this.dataSource.getFields(), this.dataSource.getColumns())
     }
     menuItemClick($event){
-      debugger
       switch($event.source.key){
         case 'RecycleBin':
           this.initRecycleBin()
