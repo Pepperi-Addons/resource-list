@@ -96,7 +96,7 @@ export class RegularGVDataSource implements IGenericViewerDataSource{
         return await this._getItems(false)
     }
     private async _getItems(deleted:boolean){
-        return await this.genericResourceService.getItems(this.genericViewer.view.Resource.Name, deleted)
+        return await this.genericResourceService.getItems(this.genericViewer.view.Resource.Name, deleted, this.genericViewer.filter)
     }
     async getFields(){
         return (await this.genericResourceService.getResource(this.genericViewer.view.Resource.Name)).Fields || {}

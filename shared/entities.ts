@@ -59,6 +59,7 @@ export interface IReferenceField {
     editorDataView?: BaseFormDataView,
     menuItems?: MenuDataView,
     lineMenuItems?: MenuDataView,
+    filter: string
   }
   
   export const  REFERENCE_TYPE = "Resource"

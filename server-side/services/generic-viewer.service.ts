@@ -5,15 +5,12 @@ import { DataViewsService } from "./dataviews.service";
 import { EditorsService } from "./editors.service";
 import { ViewsService } from "./views.service";
 import { AddonService } from '../addon.service'
-
+import { toApiQueryString } from '@pepperi-addons/pepperi-filters'
 export class GenericViewerService  {
     constructor(private client: Client){
      }
-
     //this method assume that the view always exist
     async getGenericView(viewKey: string): Promise<IGenericViewer>{
-        //needs to get here also the resource fields
-        // const addonService = new AddonService(this.client)
         const viewService = new ViewsService(this.client)
         const dataViewService = new DataViewsService(this.client)
         const editorService = new EditorsService(this.client)
@@ -32,10 +29,9 @@ export class GenericViewerService  {
             menuItems: menuItems,
             editor: undefined,
             editorDataView: undefined,
-            resourceName: view.Resource.Name
+            resourceName: view.Resource.Name,
+            filter: toApiQueryString(view.Filter) 
         }
-        // const resource = await addonService.papiClient.resources.resource('resources').key(view.Resource.Name).get() as AddonDataScheme
-        // result.resourceFields = resource.Fields || {}
         if(view.Editor){
             const editorDataViewKey = view.Editor.replace(/-/g, '')
             const [editor, [editorDataView]] = await Promise.all([
