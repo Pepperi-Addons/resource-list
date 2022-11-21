@@ -1,12 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { ViewsService } from '../services/views.service';
 import { GenericResourceService } from '../services/generic-resource-service';
-import { config } from '../addon.config';
 import { View } from '../../../../shared/entities';
 import { EditorsService } from '../services/editors.service';
 import { UtilitiesService } from '../services/utilities-service';
+import { AddonDataScheme } from '@pepperi-addons/papi-sdk';
 
 @Component({
   selector: 'app-views-form',
@@ -25,6 +25,7 @@ export class ViewsFormComponent implements OnInit {
       ScreenSize: 'Tablet'
     }
   };
+  @ViewChild('views-filter') viewsFilter
   resourceName: string
   dataViewContextName: string
   editCard: boolean = false;
@@ -33,6 +34,10 @@ export class ViewsFormComponent implements OnInit {
   currentView: View
   loadCompleted: boolean = false
   currentTab = 0
+  resourceFields : AddonDataScheme['Fields']
+  initialFilter: any
+  currentFilter: any
+  isJsonFilterFileValid: boolean = true
 
   constructor(
     private route: ActivatedRoute,
@@ -48,13 +53,25 @@ export class ViewsFormComponent implements OnInit {
   ngOnInit(): void {
     this.initComponent()
   }
+
+  onJsonFilterFileChanged(file: any){
+    this.currentFilter = file
+  }
+  onJsonFileValidationChanged(isValid: boolean){
+    this.isJsonFilterFileValid = isValid
+  }
+
+  
   async initComponent(){
     this.viewKey = this.route.snapshot.paramMap.get('key')
     await this.initGeneralTab(this.viewKey)
     this.loadCompleted = true
   }
   async initGeneralTab(key){
-    this.currentView = (await this.viewsService.getItems(key))[0]    
+    this.currentView = (await this.viewsService.getItems(key))[0]
+    this.initialFilter = JSON.parse(JSON.stringify(this.currentView.Filter || {}))
+    this.currentFilter = JSON.parse(JSON.stringify(this.initialFilter))
+    this.resourceFields = await this.genericResourceService.getResourceFields(this.currentView.Resource.Name)    
     const editorOptionalValues = await this.getEditorOptionalValues()
     this.dataSource = this.convertViewToDataSource(this.currentView)
     this.dataView = this.getDataview(editorOptionalValues)
@@ -170,6 +187,7 @@ export class ViewsFormComponent implements OnInit {
     })
   }
   onUpdate(){
+    this.currentView.Filter = this.currentFilter
     this.currentView.Description = this.dataSource.Description
     this.currentView.Editor = this.dataSource.Editor
     this.viewsService.upsertItem(this.currentView)

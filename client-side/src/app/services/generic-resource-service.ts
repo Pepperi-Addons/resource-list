@@ -37,6 +37,11 @@ export class GenericResourceService{
     async getResource(name: string){
         return await this.utilitiesService.papiClient.resources.resource('resources').key(name).get() as AddonDataScheme
     }
+
+    async getResourceFields(resourceName: string): Promise<AddonDataScheme['Fields']>{
+        const resource = await this.getResource(resourceName)
+        return resource?.Fields || {}
+    }
     async getResourceFieldsAsDataViewFields(resourceName: string){
         const resource = await this.getResource(resourceName)
         const typeMap = new TypeMap()
