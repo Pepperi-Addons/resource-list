@@ -1,0 +1,8 @@
+<view-list
+    *ngIf="loadCompleted"
+    [dataSource]="dataSource"
+    [genericViewer]="genericViewer"
+    [listOptions]="listOptions"
+    (buttonClickedEvent)="onDoneClicked($event)"
+    (cancelClickedEvent)="onCancelClicked()">
+</view-list>
