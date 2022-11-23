@@ -22,8 +22,20 @@ export class SelectionListService{
             selectionType: selectionListConfiguration.selectionList?.selection || "single",
             menuItems: [],
             dropDownOfViews: selectionListConfiguration.viewsList || [],
-            button: {title: this.translate.instant("Done")},
-            hasCancelButton: true
+            buttons: [
+                {
+                    key: 'done',
+                    value: "Done",
+                    styleType: "strong",
+                    classNames: "save"
+                },
+                {
+                    key:  'cancel',
+                    value: 'Cancel',
+                    styleType: 'weak',
+                    classNames: "cancel"
+                }
+            ]
 
         }
     }
