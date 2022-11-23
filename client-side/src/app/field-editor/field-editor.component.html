@@ -33,6 +33,20 @@
             [dataView]="dataView"
             (fieldClick)="onReferenceClicked($event)"
         ></pep-generic-form>
+        <div *ngIf="loadCompleted">
+            <array-fields
+                *ngFor="let dataViewOfArrayField of dataViewArrayFields"
+                    id="{{dataViewOfArrayField.FieldID}}"
+                    class="array-field"
+                    [dataViewOfArrayField] = "dataViewOfArrayField"
+                    [dataSource] = 'dataSource'
+                    [referenceFields] ='editor.ReferenceFields'
+                    [resourceName]="editor.Resource.Name"
+                    [originalValue]="originalValue[dataViewOfArrayField.FieldID]"
+                    [event]="dataViewOfArrayField.Event"
+                    >
+            </array-fields>
+        </div>
     </ng-container>
 </pep-page-layout>
 <pep-size-detector></pep-size-detector>

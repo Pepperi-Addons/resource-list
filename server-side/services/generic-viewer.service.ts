@@ -1,34 +1,36 @@
 import { Client } from "@pepperi-addons/debug-server/dist";
-import { GridDataView } from "@pepperi-addons/papi-sdk";
+import { AddonDataScheme, GridDataView } from "@pepperi-addons/papi-sdk";
 import { IGenericViewer, View } from "../../shared/entities";
 import { DataViewsService } from "./dataviews.service";
 import { EditorsService } from "./editors.service";
 import { ViewsService } from "./views.service";
-
+import { AddonService } from '../addon.service'
 
 export class GenericViewerService  {
     constructor(private client: Client){
      }
 
     //this method assume that the view always exist
-    async getGenericView(viewKey: string){
+    async getGenericView(viewKey: string): Promise<IGenericViewer>{
         const viewService = new ViewsService(this.client)
         const dataViewService = new DataViewsService(this.client)
         const editorService = new EditorsService(this.client)
         const dataViewKey = viewKey.replace(/-/g, '')
         const [view,[viewDataview], [lineMenuItems], [menuItems]] = await Promise.all([
-            viewService.getItemByKey(viewKey),
+            viewService.getItemByKey(viewKey) as Promise<View>,
             dataViewService.getDataView(`GV_${dataViewKey}_View`),
             dataViewService.getDataView(`RV_${dataViewKey}_LineMenu`),
             dataViewService.getDataView(`GV_${dataViewKey}_Menu`)
         ])
+        
         let result: any = {
             view : view,
             viewDataview: viewDataview,
             lineMenuItems: lineMenuItems,
             menuItems: menuItems,
             editor: undefined,
-            editorDataView: undefined
+            editorDataView: undefined,
+            resourceName: view.Resource.Name
         }
         if(view.Editor){
             const editorDataViewKey = view.Editor.replace(/-/g, '')
@@ -45,6 +47,7 @@ export class GenericViewerService  {
 
     async getSelectionList(key: string | undefined, resource: string | undefined): Promise<IGenericViewer>{
         let view: View
+        const addonService = new AddonService(this.client)
         const viewsService = new ViewsService(this.client)
         const dataViewService = new DataViewsService(this.client)
         if(!key){
@@ -56,7 +59,7 @@ export class GenericViewerService  {
         const [dataview] = await dataViewService.getDataView(`GV_${dataViewKey}_View`) as GridDataView[]
         return {
             view: view,
-            viewDataview: dataview
+            viewDataview: dataview,
         }
     }
 } 

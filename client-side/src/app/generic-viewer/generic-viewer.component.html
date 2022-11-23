@@ -1,54 +1,10 @@
-<div class="generic-view">
-    <pep-generic-list class="generic-list" 
-    [showTopBar]="true"
+<view-list 
+    *ngIf="listOptions != undefined"
     [dataSource]="dataSource"
-    [showSearch]="true"
-    [inline] ="false"
-    [actions] = "actions"
-    uuidMapping = 'Key'
-    [selectionType]="configurationObject?.selectionList?.selection || 'multi'"
-    >
-    <ng-container right-buttons>
-        <pep-menu *ngIf="configurationObject.selectionList == undefined"
-            iconName="system_menu" 
-            type="action" 
-            styleType="weak" 
-            sizeType="sm" 
-            classNames=""
-            [items]="menuItems" 
-            [disabled]="false" 
-            (menuItemClick)="menuItemClick($event)">
-        </pep-menu>
-        <pep-select *ngIf="dropDownOfViews.length > 1"
-            class="buttons-holder"
-            [value]="genericViewer.view.Key"
-            label="select view"
-            type="select"
-            [mandatory]="false"
-            xAlignment="left"
-            [options]="dropDownOfViews"
-            [renderTitle]="false"
-            (valueChange)="onViewChange($event)"
-            [emptyOption]="false"
-        ></pep-select>
-        <pep-button *ngIf="isButtonConfigured"
-            class='pep-spacing-element'
-            [value] = "buttonTitle"
-            styleType=strong
-            styleStateType=system
-            sizeType=md
-            classNames='new'
-            [disabled]='false'
-            iconPosition='end'
-            (buttonClick)='onButtonClicked()'
-        ></pep-button>
-        
-        <pep-button *ngIf='configurationObject.selectionList != undefined'
-        class='pep-spacing-element'
-        value = "{{'Cancel' | translate}}"
-        classNames='new'
-        (buttonClick)='onCancelClicked()'
-    ></pep-button>
-    </ng-container>
-</pep-generic-list>
-</div>
+    [genericViewer]="genericViewer"
+    [listOptions]="listOptions"
+    (menuItemClickedEvent)="menuItemClick($event)"
+    (buttonClickedEvent)="onButtonClicked($event)"
+    (cancelClickedEvent)="onCancelClicked()"
+    (viewChangedEvent)="onViewChanged($event)">
+</view-list>

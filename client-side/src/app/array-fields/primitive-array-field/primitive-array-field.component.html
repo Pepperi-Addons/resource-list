@@ -1,0 +1,25 @@
+<pep-generic-list
+    *ngIf="loadCompleted" 
+    class="generic-list"
+    [showTopBar]="true"
+    [dataSource]="dataSource"
+    [actions] = "actions"
+    [showSearch]="true"
+    [inline]="false"
+    [addPadding]="false"
+    [title] = "title"
+    uuidMapping = 'Index'
+    selectionType="single">
+    <ng-container right-buttons>
+        <pep-button
+            value="{{'Add' | translate}}"
+            styleType="strong"
+            styleStateType="system"
+            sizeType="md"
+            classNames=""
+            iconPosition="end"
+            [visible]="true"
+            (buttonClick)="onAddClick()"
+        ></pep-button>
+    </ng-container>
+</pep-generic-list>

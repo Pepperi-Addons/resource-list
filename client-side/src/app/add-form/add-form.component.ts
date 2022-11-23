@@ -85,7 +85,7 @@ export class AddFormComponent implements OnInit {
       Title: this.translate.instant('Description'),
       Type: 'TextBox',
       FieldID: "Description",
-      Mandatory: true,
+      Mandatory: false,
       Layout: {
           Origin: {
             X: 1,

@@ -1,0 +1,48 @@
+<div class="generic-view">
+    <pep-generic-list class="generic-list" 
+    [showTopBar]="true"
+    [dataSource]="dataSource"
+    [showSearch]="true"
+    [inline] ="false"
+    [actions]="listOptions.actions"
+    uuidMapping = 'Key'
+    [selectionType]="listOptions.selectionType"
+    >
+    <ng-container right-buttons>
+        <pep-menu *ngIf="listOptions.menuItems.length > 0"
+            iconName="system_menu" 
+            type="action" 
+            styleType="weak" 
+            sizeType="sm" 
+            classNames=""
+            [items]="listOptions.menuItems" 
+            [disabled]="false" 
+            (menuItemClick)="menuItemClick($event)">
+        </pep-menu>
+        <pep-select *ngIf="listOptions.dropDownOfViews.length > 1"
+            class="buttons-holder"
+            [value]="genericViewer.view.Key"
+            label="select view"
+            type="select"
+            [mandatory]="false"
+            xAlignment="left"
+            [options]="listOptions.dropDownOfViews"
+            [renderTitle]="false"
+            (valueChange)="onViewChange($event)"
+            [emptyOption]="false"
+        ></pep-select>
+        <pep-button
+            *ngFor="let button of listOptions.buttons"
+                [key]="button.key"
+                class= 'pep-spacing-element'
+                [value]="button.value"
+                [styleType]="button.styleType"
+                sizeType= 'md'
+                [classNames]="button.className"
+                [disabled]= 'false'
+                [visible]= 'true'
+                (buttonClick)='onButtonClicked($event)'
+        ></pep-button>
+    </ng-container>
+</pep-generic-list>
+</div>

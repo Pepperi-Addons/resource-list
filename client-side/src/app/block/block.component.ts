@@ -1,7 +1,9 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { IGenericViewer } from '../../../../shared/entities';
+import { RegularGVDataSource } from '../generic-viewer-data-source';
 import { IGenericViewerConfigurationObject } from '../metadata';
 import { GenericResourceService } from '../services/generic-resource-service';
+import { UtilitiesService } from '../services/utilities-service';
 @Component({
     selector: 'block',
     templateUrl: './block.component.html',
@@ -15,9 +17,12 @@ export class BlockComponent implements OnInit {
       viewsList: [],
     }
     hasViewToDisplay: boolean = false
+    genericViewerDataSource: RegularGVDataSource
     @Output() hostEvents: EventEmitter<any> = new EventEmitter<any>();
 
-    constructor(private genericResourceService: GenericResourceService) {}
+    constructor(
+      private genericResourceService: GenericResourceService
+      ) {}
     ngOnInit(): void {
       this.loadGenericView(this.hostObject)
     }
@@ -28,6 +33,7 @@ export class BlockComponent implements OnInit {
       }
       this.setConfigurationObject(hostObject)
       this.genericViewer = await this.genericResourceService.getGenericView(this.configurationObject.viewsList[0].key)
+      this.genericViewerDataSource = new RegularGVDataSource(this.genericViewer, this.genericResourceService)
       this.hasViewToDisplay = true
     }
     createDropDownOfViews(viewsList){
