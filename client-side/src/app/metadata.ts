@@ -74,10 +74,7 @@ export interface IGenericViewerConfigurationObject{
   }
 }
 
-export interface IItemsHandler {
-  getItems(resourceName: string, getDeletedItems: boolean): Promise<any>,
-  postItem(resourceName: string, item: any): Promise<AddonData>
-}
+
 
 export const SELECTION_TYPE = "SelectionType"
 export const EXPORT = "Export"

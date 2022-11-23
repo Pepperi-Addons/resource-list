@@ -25,13 +25,14 @@ export class ListComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
+    this.listOptions
   }
 
   onCancelClicked(){
     this.cancelClickedEvent.emit()
   }
 
-  onButtonClicked(){
+  onButtonClicked(event){
     console.log(this.genericList?.getSelectedItems()?.rows || []);
     this.buttonClickedEvent.emit(this.genericList.getSelectedItems()?.rows || [])
   }

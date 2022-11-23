@@ -31,23 +31,34 @@
             (valueChange)="onViewChange($event)"
             [emptyOption]="false"
         ></pep-select>
-        <pep-button *ngIf="listOptions.button != undefined"
+        <pep-button
+            *ngFor="let button of listOptions.buttons"
+                class= 'pep-spacing-element'
+                [value]="button.value"
+                [styleType]="button.styleType"
+                sizeType= 'md'
+                [classNames]="button.className"
+                [disabled]= 'false'
+                [visible]= 'true'
+                (buttonClick)='onButtonClicked($event)'
+        ></pep-button>
+        <!-- <pep-button *ngIf="listOptions.button != undefined"
             class='pep-spacing-element'
-            [value]="listOptions.button.title"
+            [value]="listOptions.button.value"
             styleType=strong
             styleStateType=system
             sizeType=md
             classNames='new'
             iconPosition='end'
             (buttonClick)='onButtonClicked()'
-        ></pep-button>
-        
+        ></pep-button> -->
+<!--         
         <pep-button *ngIf='listOptions.hasCancelButton'
             class='pep-spacing-element'
             value = "{{'Cancel' | translate}}"
             classNames='new'
             (buttonClick)='onCancelClicked()'
-        ></pep-button>
+        ></pep-button> -->
     </ng-container>
 </pep-generic-list>
 </div>
