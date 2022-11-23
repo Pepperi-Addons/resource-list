@@ -61,7 +61,6 @@ export class GenericViewerService  {
             view: view,
             viewDataview: dataview,
             filter: toApiQueryString(view.Filter) || ''
-            // resourceName: view.Resource.Name
         }
     }
 } 
