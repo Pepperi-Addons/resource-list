@@ -21,8 +21,8 @@ export class BlockComponent implements OnInit {
     @Output() hostEvents: EventEmitter<any> = new EventEmitter<any>();
 
     constructor(
-      private genericResourceService: GenericResourceService,
-      private utilitiesService: UtilitiesService) {}
+      private genericResourceService: GenericResourceService
+      ) {}
     ngOnInit(): void {
       this.loadGenericView(this.hostObject)
     }

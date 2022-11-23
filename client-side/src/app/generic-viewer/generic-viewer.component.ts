@@ -13,7 +13,7 @@ import { GenericListComponent } from '@pepperi-addons/ngx-composite-lib/generic-
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { DIMXHostObject, PepDIMXHelperService } from '@pepperi-addons/ngx-composite-lib';
 import { IGenericViewerDataSource, isRegularGVDataSource, RegularGVDataSource } from '../generic-viewer-data-source';
-import { ListOptions } from './generic-viewer.model';
+import { GVButton, ListOptions } from './generic-viewer.model';
 
 @Component({
     selector: 'app-generic-viewer',
@@ -54,20 +54,31 @@ export class GenericViewerComponent implements OnInit {
           this.dialogRef = this.injector.get(MatDialogRef, null)
           this.dialogData = this.injector.get(MAT_DIALOG_DATA, null)
     }
+    createButtonArray(): GVButton[]{
+      const result: GVButton[] = []
+      if(this.isButtonConfigured){
+        result.push({
+          key: "new", 
+          value: this.buttonTitle, 
+          styleType: "strong", 
+          classNames: "save"
+        })
+      }
+      return result
+
+    }
     createListOptions(){
       const actions =  this.actions
       const selectionType = this.configurationObject.selectionList?.selection || "single"
       const menuItems = this.menuItems || []
       const dropDownOfViews = this.dropDownOfViews || []
-      const button = this.isButtonConfigured ? {title: this.buttonTitle} : undefined
-      const hasCancelButton = this.configurationObject.selectionList != undefined
+      const buttons: GVButton[] = this.createButtonArray()
       return {
           actions,
           selectionType,
           menuItems, 
           dropDownOfViews, 
-          button,
-          hasCancelButton
+          buttons,
       }
     }
     ngOnInit(): void {
@@ -351,6 +362,7 @@ export class GenericViewerComponent implements OnInit {
     }
 
     onButtonClicked(event){
+      console.log(event)
       if(this.configurationObject.selectionList){
         this.onDoneButtonClicked(event)
       }
@@ -363,7 +375,6 @@ export class GenericViewerComponent implements OnInit {
       this.dialogRef?.close(this.genericList?.getSelectedItems()?.rows || [])
     }
     onCancelClicked(){
-      console.log(`cancel clicked so your code works !!!!`);
       this.pressedCancelEvent.emit()
       this.dialogRef?.close()
     }
