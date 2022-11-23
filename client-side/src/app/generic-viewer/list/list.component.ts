@@ -33,8 +33,11 @@ export class ListComponent implements OnInit {
   }
 
   onButtonClicked(event){
-    console.log(this.genericList?.getSelectedItems()?.rows || []);
-    this.buttonClickedEvent.emit(this.genericList.getSelectedItems()?.rows || [])
+    this.buttonClickedEvent.emit(event.source.key)
+  }
+
+  getSelectedRows(){
+    return this.genericList?.getSelectedItems()?.rows || []
   }
 
   onViewChange(event){

@@ -33,6 +33,7 @@
         ></pep-select>
         <pep-button
             *ngFor="let button of listOptions.buttons"
+                [key]="button.key"
                 class= 'pep-spacing-element'
                 [value]="button.value"
                 [styleType]="button.styleType"

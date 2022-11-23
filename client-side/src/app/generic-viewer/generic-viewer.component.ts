@@ -360,6 +360,7 @@ export class GenericViewerComponent implements OnInit {
     }
 
     onButtonClicked(event){
+      console.log(event)
       if(this.configurationObject.selectionList){
         this.onDoneButtonClicked(event)
       }
