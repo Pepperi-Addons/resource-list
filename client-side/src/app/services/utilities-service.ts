@@ -38,9 +38,6 @@ export class UtilitiesService{
         });
         this.dialogService.openDefaultDialog(dataMsg)
     }
-    isDataViewFieldOfPrimitiveTypeArray(){
-        
-    }
 
 
 }

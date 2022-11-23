@@ -46,18 +46,14 @@ export class GenericViewerService  {
     }
 
     async getSelectionList(key: string | undefined, resource: string | undefined): Promise<IGenericViewer>{
-        //needs to get here also the resource fields
         let view: View
-        // let resourceScheme: AddonDataScheme
         const addonService = new AddonService(this.client)
         const viewsService = new ViewsService(this.client)
         const dataViewService = new DataViewsService(this.client)
         if(!key){
             view = await viewsService.getDefaultView(resource!) as View;
-            // resourceScheme = await addonService.papiClient.resources.resource('resources').key(resource!).get() as AddonDataScheme
         }else{
             view = await viewsService.getItemByKey(key) as View
-            // resourceScheme = await addonService.papiClient.resources.resource('resources').key(view.Resource.Name).get() as AddonDataScheme
         }
         const dataViewKey = view.Key.replace(/-/g, '');
         const [dataview] = await dataViewService.getDataView(`GV_${dataViewKey}_View`) as GridDataView[]
