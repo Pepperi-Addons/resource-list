@@ -18,7 +18,7 @@ export class SelectionListService{
 
     createListOptions(selectionListConfiguration: IGenericViewerConfigurationObject): ListOptions{
         return {
-            actions: [],
+            actions: {get: () => []},
             selectionType: selectionListConfiguration.selectionList?.selection || "single",
             menuItems: [],
             dropDownOfViews: selectionListConfiguration.viewsList || [],

@@ -30,7 +30,6 @@ export class SelectionListComponent implements OnInit {
 
   constructor(
     private selectionListService: SelectionListService,
-    private dialogService : PepDialogService,
     private injector: Injector,
     ) {
       this.dialogRef = this.injector.get(MatDialogRef, null)
@@ -53,12 +52,12 @@ export class SelectionListComponent implements OnInit {
   }
 
   onDoneClicked(event){
+    this.dialogRef?.close(event)
     this.pressedDoneEvent.emit(event)
-    this.dialogRef?.close()
   }
   onCancelClicked(){
-    this.pressedCancelEvent.emit()
     this.dialogRef?.close()
+    this.pressedCancelEvent.emit()
   }
 
 

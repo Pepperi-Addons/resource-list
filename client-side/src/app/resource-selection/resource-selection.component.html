@@ -10,5 +10,7 @@
     *ngIf="loadCompleted"
     [selectionListConfiguration]="configurationObj"
     [genericViewer]="genericViewer"
-    [genericViewerDataSource]="genericViewerDataSource">
+    [genericViewerDataSource]="genericViewerDataSource"
+    (pressedCancelEvent)="onCancelPressed()"
+    (pressedDoneEvent)="onDonePressed($event)">
 </selection-list>
