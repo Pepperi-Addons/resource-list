@@ -41,9 +41,6 @@ export class SelectionListComponent implements OnInit {
     if(this.dialogData){
       this.loadVariablesFromDialog()
     }
-    // this.listOptions = this.selectionListService.createListOptions(this.selectionListConfiguration)
-    // this.dataSource = this.selectionListService.createDataSource(this.genericViewer, this.genericViewerDataSource)
-    // this.loadCompleted = true
     this.loadList()
   }
   async loadList(){
