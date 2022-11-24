@@ -6,6 +6,7 @@
                 <pep-button
                 class="pep-spacing-element"
                 value="Update"
+                [disabled]="!isJsonFilterFileValid"
                 styleType="strong"
                 styleStateType="system"
                 sizeType="md"
@@ -38,6 +39,13 @@
                     [dataSource]="dataSource"
                     [dataView]="dataView" 
                     ></pep-generic-form>
+                    <views-filter
+                        *ngIf="resourceFields != undefined && currentView != undefined"
+                        [filter]="initialFilter"
+                        (jsonFilterFileEvent)="onJsonFilterFileChanged($event)"
+                        (jsonValidationEvent)="onJsonFileValidationChanged($event)"
+                        [resourceFields]="resourceFields">
+                    </views-filter>
                 </div>
             </mat-tab>
             <mat-tab label = "{{'Tabs.Form' | translate}}"  *ngIf="loadCompleted">

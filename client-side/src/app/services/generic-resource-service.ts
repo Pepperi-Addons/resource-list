@@ -20,22 +20,29 @@ export class GenericResourceService{
     async getResources(): Promise<any[]>{
         return await this.utilitiesService.papiClient.resources.resource('resources').get()
     }
-    async getItems(resourceName: string, getDeletedItems: boolean = false): Promise<any>{
-        let query = undefined
-        if(getDeletedItems){
-            query = {where: 'Hidden=true'}
-            query.include_deleted = true
+    async getItems(resourceName: string, getDeletedItems: boolean = false, filterQuery?: string): Promise<any>{
+        try{
+            const filter = filterQuery ? filterQuery : ''
+            const query = {where: filter, include_deleted: getDeletedItems}
+            if(getDeletedItems){
+                query.where += ' AND Hidden=true'
+            }
+            const result =  await this.utilitiesService.papiClient.resources.resource(resourceName).get(query)
+            return result
+        }catch(e){
+            return []
         }
-        if(resourceName){
-            return await this.utilitiesService.papiClient.resources.resource(resourceName).get(query)
-        }
-        return [];
     }
     async postItem(resourceName, item){
         return await this.utilitiesService.papiClient.resources.resource(resourceName).post(item)
     }
     async getResource(name: string){
         return await this.utilitiesService.papiClient.resources.resource('resources').key(name).get() as AddonDataScheme
+    }
+
+    async getResourceFields(resourceName: string): Promise<AddonDataScheme['Fields']>{
+        const resource = await this.getResource(resourceName)
+        return resource?.Fields || {}
     }
     async getResourceFieldsAsDataViewFields(resourceName: string){
         const resource = await this.getResource(resourceName)

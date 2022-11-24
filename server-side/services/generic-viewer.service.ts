@@ -1,15 +1,14 @@
 import { Client } from "@pepperi-addons/debug-server/dist";
-import { AddonDataScheme, GridDataView } from "@pepperi-addons/papi-sdk";
+import { GridDataView } from "@pepperi-addons/papi-sdk";
 import { IGenericViewer, View } from "../../shared/entities";
 import { DataViewsService } from "./dataviews.service";
 import { EditorsService } from "./editors.service";
 import { ViewsService } from "./views.service";
 import { AddonService } from '../addon.service'
-
+import { toApiQueryString } from '@pepperi-addons/pepperi-filters'
 export class GenericViewerService  {
     constructor(private client: Client){
      }
-
     //this method assume that the view always exist
     async getGenericView(viewKey: string): Promise<IGenericViewer>{
         const viewService = new ViewsService(this.client)
@@ -30,7 +29,8 @@ export class GenericViewerService  {
             menuItems: menuItems,
             editor: undefined,
             editorDataView: undefined,
-            resourceName: view.Resource.Name
+            resourceName: view.Resource.Name,
+            filter: toApiQueryString(view.Filter) || ''
         }
         if(view.Editor){
             const editorDataViewKey = view.Editor.replace(/-/g, '')
@@ -60,6 +60,7 @@ export class GenericViewerService  {
         return {
             view: view,
             viewDataview: dataview,
+            filter: toApiQueryString(view.Filter) || ''
         }
     }
 } 
