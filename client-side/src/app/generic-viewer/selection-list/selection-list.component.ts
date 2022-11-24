@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Injector, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Injector, Input, OnInit, Output, ViewChild, ViewChildren } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { PepDialogService } from '@pepperi-addons/ngx-lib/dialog';
 import { DataSource } from 'src/app/data-source/data-source';
@@ -6,6 +6,7 @@ import { IGenericViewerDataSource } from 'src/app/generic-viewer-data-source';
 import { IGenericViewerConfigurationObject } from 'src/app/metadata';
 import { IGenericViewer } from '../../../../../shared/entities';
 import { ListOptions } from '../generic-viewer.model';
+import { ListComponent } from '../list/list.component';
 import { SelectionListService } from './selection-list.service';
 
 @Component({
@@ -21,7 +22,7 @@ export class SelectionListComponent implements OnInit {
 
   @Output() pressedDoneEvent: EventEmitter<number> = new EventEmitter<number>()
   @Output() pressedCancelEvent: EventEmitter<void> = new EventEmitter<void>()
-
+  @ViewChild(ListComponent) list: ListComponent
   listOptions: ListOptions
   dataSource: DataSource
   loadCompleted: boolean = false
@@ -40,8 +41,14 @@ export class SelectionListComponent implements OnInit {
     if(this.dialogData){
       this.loadVariablesFromDialog()
     }
+    // this.listOptions = this.selectionListService.createListOptions(this.selectionListConfiguration)
+    // this.dataSource = this.selectionListService.createDataSource(this.genericViewer, this.genericViewerDataSource)
+    // this.loadCompleted = true
+    this.loadList()
+  }
+  async loadList(){
     this.listOptions = this.selectionListService.createListOptions(this.selectionListConfiguration)
-    this.dataSource = this.selectionListService.createDataSource(this.genericViewer, this.genericViewerDataSource)
+    this.dataSource = await this.selectionListService.createDataSource(this.genericViewer, this.genericViewerDataSource)
     this.loadCompleted = true
   }
   loadVariablesFromDialog(){
@@ -52,8 +59,10 @@ export class SelectionListComponent implements OnInit {
   }
 
   onDoneClicked(event){
-    this.dialogRef?.close(event)
-    this.pressedDoneEvent.emit(event)
+    debugger
+    const rows  = this.list.getSelectedRows()
+    this.dialogRef?.close(rows)
+    this.pressedDoneEvent.emit(rows)
   }
   onCancelClicked(){
     this.dialogRef?.close()

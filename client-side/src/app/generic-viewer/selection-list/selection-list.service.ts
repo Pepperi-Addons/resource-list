@@ -39,7 +39,10 @@ export class SelectionListService{
 
         }
     }
-    createDataSource(genericViewer: IGenericViewer, gvDataSource: IGenericViewerDataSource): DataSource{
-        return new DataSource([], [] ,[])
+    async createDataSource(genericViewer: IGenericViewer, gvDataSource: IGenericViewerDataSource): Promise<DataSource>{
+        const fields = gvDataSource.genericViewer.viewDataview?.Fields || []
+        const items = await gvDataSource.getItems()
+        const columns = gvDataSource.genericViewer.viewDataview?.Columns || []
+        return new DataSource(items, fields ,columns)
     }
 }
