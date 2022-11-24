@@ -59,7 +59,6 @@ export class SelectionListComponent implements OnInit {
   }
 
   onDoneClicked(event){
-    debugger
     const rows  = this.list.getSelectedRows()
     this.dialogRef?.close(rows)
     this.pressedDoneEvent.emit(rows)
