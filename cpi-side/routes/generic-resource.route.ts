@@ -1,10 +1,24 @@
-import { getItems, postItem, getResource } from "../controllers/generic-resource.controller"
-import * as express from 'express'
+import { getItems, postItem, getResource, getAllResources } from "../controllers/generic-resource.controller"
 
 
-export const router = express.Router()
+
+export const router = Router()
 
 //routes:
+
+//get all resources metadata
+router.get('/resources', getAllResources)
+
+
+/**
+ * get Items of resource.
+ * using post request because get request url is limited to 2,048 bytes, with post we can use the body to pass arguments.
+ * body: {
+ *  filterQuery: string,
+ *  onlyDeletedItems: boolean  
+ * }
+ */
+router.post('/:resource/get_items', getItems)
 
 //get the data of the specific resource
 router.get('/:resource/items', getItems)

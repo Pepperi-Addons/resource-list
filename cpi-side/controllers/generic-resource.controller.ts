@@ -4,8 +4,10 @@ import { GenericResourceService } from "../services/generic-resource.service"
 export async function getItems(req, res, next){
     try{
         const resource: string = req.params.resource
+        const filterQuery: string = req.body.filterString || ''
+        const onlyDeletedItems: boolean = req.body.onlyDeletedItems || false //if onlyDeletedItems is undefined then set it to false
         const service = new GenericResourceService()
-        return res.json(await service.getItems(resource))
+        return res.json(await service.getItems(resource, filterQuery, onlyDeletedItems))
     }
     catch(next){}
 }
@@ -24,4 +26,12 @@ export async function getResource(req, res, next){
     const resource = req.params.resource
     const service = new GenericResourceService()
     return res.json(await service.getResource(resource))
+}
+
+export async function getAllResources(req, res, next){
+    try{
+        const service = new GenericResourceService()
+        return res.json(await service.getAllResources())
+    }
+    catch(next){}
 }
