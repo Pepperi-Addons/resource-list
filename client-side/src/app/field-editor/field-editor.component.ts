@@ -42,6 +42,7 @@ export class FieldEditorComponent implements OnInit {
    }
 
   ngOnInit(): void {
+
     this.init()
   }
   ngOnChanges($event){
@@ -62,6 +63,8 @@ export class FieldEditorComponent implements OnInit {
     this.resourcesMap = new Map()
     if(this.dialogData){
       this.loadEditorVariablesAsDialog()
+      this.dataSource
+      this.dataView
     }
     if(this.dataView){
       await this.reformatFields()
@@ -240,11 +243,14 @@ export class FieldEditorComponent implements OnInit {
       gvDataSource: gvDataSource
     }
     const config = this.dialogService.getDialogConfig({}, 'large')
-    this.dialogService.openDialog(SelectionListComponent, configuration, config).afterClosed().subscribe((async data => {      
+    const dialogRef = this.dialogService.openDialog(SelectionListComponent, configuration, config)
+    dialogRef.componentInstance.pressedCancelEvent.subscribe(() => dialogRef.close() )
+    dialogRef.componentInstance.pressedDoneEvent.subscribe((data) => {
       if(data && data.length > 0){
         this.dataSource[currentFieldConfiguration.FieldID] = data[0]
+        dialogRef.close()
       }
-     }))
+    })
   }
 
   getReferenceFieldConfiguration(fieldID: string){

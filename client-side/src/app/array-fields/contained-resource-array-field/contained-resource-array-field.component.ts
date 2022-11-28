@@ -36,7 +36,6 @@ export class ContainedResourceArrayFieldComponent implements OnInit {
         this.genericViewer.editor.Name = this.resourceName
       }
       this.genericViewerConfiguration = {
-        resource: this.resourceName,
         viewsList: [
           {
             key: this.genericViewer.view.Key,

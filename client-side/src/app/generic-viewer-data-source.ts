@@ -79,6 +79,7 @@ export class ContainedArrayGVDataSource implements IGenericViewerDataSource{
 
 export class RegularGVDataSource implements IGenericViewerDataSource{
     type: "contained" | "regular" = "regular"
+    fields: AddonDataScheme['Fields']
     constructor(
         public genericViewer: IGenericViewer,
         private genericResourceService: GenericResourceService,
@@ -99,7 +100,11 @@ export class RegularGVDataSource implements IGenericViewerDataSource{
         return await this.genericResourceService.getItems(this.genericViewer.view.Resource.Name, deleted, this.genericViewer.filter)
     }
     async getFields(){
-        return (await this.genericResourceService.getResource(this.genericViewer.view.Resource.Name)).Fields || {}
+        if(this.fields){
+            return this.fields
+        }
+        this.fields = (await this.genericResourceService.getResource(this.genericViewer.view.Resource.Name)).Fields || {}
+        return this.fields
     }
     setGenericViewer(genericViewer: IGenericViewer){
         this.genericViewer = genericViewer

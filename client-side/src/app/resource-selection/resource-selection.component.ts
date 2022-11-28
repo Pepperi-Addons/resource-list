@@ -45,7 +45,6 @@ export class ResourceSelectionComponent implements OnInit {
       value: view.Name
     }]
     return {
-        resource: resource,
         viewsList: viewsDropDown,
         selectionList: {
           none: this.hostObject.allowNone,

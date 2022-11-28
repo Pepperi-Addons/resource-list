@@ -89,7 +89,6 @@ export class GenericViewerComponent implements OnInit {
     loadConfigurationObject(){
       if(!this.configurationObject){
         this.configurationObject = {
-          resource: this.dialogData?.configurationObj.resource ,
           viewsList: this.dialogData?.configurationObj.viewsList,
           selectionList: this.dialogData?.configurationObj.selectionList
         }
@@ -143,7 +142,7 @@ export class GenericViewerComponent implements OnInit {
 
     setConfigurationObjectVariable():void{
       this.dropDownOfViews =  this.configurationObject?.viewsList || []
-      this.resource = this.configurationObject?.resource || undefined
+      this.resource = this.genericViewer?.view?.Resource?.Name
     }
 
     initLineMenuItems(){
@@ -318,7 +317,7 @@ export class GenericViewerComponent implements OnInit {
                     }
                     const config = this.dialogService.getDialogConfig({
   
-                    }, 'large')
+                    }, 'large') 
                     this.dialogService.openDialog(FieldEditorComponent, dialogData, config).afterClosed().subscribe((async isUpdatePreformed => {
                       if(isUpdatePreformed){
                         await this.loadList(this.genericViewer.viewDataview)
