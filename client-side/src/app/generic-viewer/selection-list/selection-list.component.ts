@@ -52,14 +52,12 @@ export class SelectionListComponent implements OnInit {
     this.loadCompleted = true
   }
 
-
-
   loadVariablesFromDialog(){
     this.genericViewer = this.dialogData.genericViewer
     this.selectionListConfiguration = this.dialogData.configurationObj
     this.genericViewerDataSource = this.dialogData.gvDataSource
-
   }
+
   onButtonClicked(event){
     switch(event){
       case 'cancel':
@@ -77,6 +75,7 @@ export class SelectionListComponent implements OnInit {
     const rows  = this.list.getSelectedRows()
     this.pressedDoneEvent.emit(rows)
   }
+  
   onCancelClicked(){
     this.pressedCancelEvent.emit()
   }
