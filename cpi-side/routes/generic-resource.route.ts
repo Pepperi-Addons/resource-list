@@ -20,11 +20,8 @@ router.get('/resources', getAllResources)
  */
 router.post('/:resource/get_items', getItems)
 
-//get the data of the specific resource
-router.get('/:resource/items', getItems)
-
 //post data item for the specific resource
-router.post('/:resource/items', postItem)
+router.post('/:resource/post_item', postItem)
 
 //get the metadata of the specific resource
 router.get('/:resource', getResource)
