@@ -3,7 +3,7 @@ import { PepAddonService, PepHttpService } from "@pepperi-addons/ngx-lib";
 import { AddonDataScheme } from "@pepperi-addons/papi-sdk";
 import { IGenericViewer } from "../../../../shared/entities";
 import { config } from "../addon.config";
-import { defaultCollectionFields, IDataViewField } from "../metadata";
+import { defaultCollectionFields, GENERIC_RESOURCE_OFFLINE_URL, IDataViewField } from "../metadata";
 import { TypeMap } from "../type-map";
 import { UtilitiesService } from './utilities-service'
 
@@ -28,16 +28,16 @@ export class GenericResourceService{
             if(getDeletedItems){
                 query.where += ' AND Hidden=true'
             }
-            return await this.addonService.getAddonCPICall(config.AddonUUID, `/addon-cpi/resources/${name}/items`)
+            return await this.addonService.getAddonCPICall(config.AddonUUID, `${GENERIC_RESOURCE_OFFLINE_URL}/${name}/items`)
         }catch(e){
             return []
         }
     }
     async postItem(resourceName, item){
-        return await this.addonService.postAddonCPICall(config.AddonUUID, `/addon-cpi/resources/${resourceName}/items`, item)
+        return await this.addonService.postAddonCPICall(config.AddonUUID, `${GENERIC_RESOURCE_OFFLINE_URL}/${resourceName}/items`, item)
     }
     async getResource(name: string){
-        return await this.addonService.getAddonCPICall(config.AddonUUID, `/addon-cpi/resources/${name}`) as AddonDataScheme
+        return await this.addonService.getAddonCPICall(config.AddonUUID, `${GENERIC_RESOURCE_OFFLINE_URL}/${name}`) as AddonDataScheme
     }
 
     async getResourceFields(resourceName: string): Promise<AddonDataScheme['Fields']>{
