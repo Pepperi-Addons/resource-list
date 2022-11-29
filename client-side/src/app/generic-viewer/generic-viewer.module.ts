@@ -20,6 +20,6 @@ import { ListComponent } from './list/list.component';
     PepButtonModule,
     TranslateModule
   ],
-  exports: [GenericViewerComponent]
+  exports: [GenericViewerComponent, ListComponent]
 })
 export class GenericViewerModule { }

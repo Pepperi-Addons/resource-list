@@ -1,9 +1,8 @@
-<view-list 
-    *ngIf="listOptions != undefined"
+<view-list
+    *ngIf="loadCompleted"
     [dataSource]="dataSource"
     [genericViewer]="genericViewer"
     [listOptions]="listOptions"
-    (menuItemClickedEvent)="menuItemClick($event)"
     (buttonClickedEvent)="onButtonClicked($event)"
-    (viewChangedEvent)="onViewChanged($event)">
+>
 </view-list>

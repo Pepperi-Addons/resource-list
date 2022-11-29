@@ -13,7 +13,6 @@ export class BlockComponent implements OnInit {
     @Input() hostObject: any;
     genericViewer: IGenericViewer
     configurationObject: IGenericViewerConfigurationObject = {
-      resource: undefined,
       viewsList: [],
     }
     hasViewToDisplay: boolean = false
@@ -46,7 +45,6 @@ export class BlockComponent implements OnInit {
     }
     setConfigurationObject(hostObject): void{
       this.configurationObject = {
-        resource: hostObject?.configuration?.resource,
         viewsList: this.createDropDownOfViews(hostObject?.configuration?.viewsList || []),
       }
     } 

@@ -1,7 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { GenericListComponent } from '@pepperi-addons/ngx-composite-lib/generic-list';
 import { DataSource } from 'src/app/data-source/data-source';
-import { IGenericViewerConfigurationObject } from 'src/app/metadata';
 import { IGenericViewer, SelectOption } from '../../../../../shared/entities';
 import { ListOptions } from '../generic-viewer.model';
 
@@ -25,10 +24,6 @@ export class ListComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
-  }
-
-  onCancelClicked(){
-    this.cancelClickedEvent.emit()
   }
 
   onButtonClicked(event){

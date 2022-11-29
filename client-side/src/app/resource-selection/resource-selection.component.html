@@ -1,8 +1,8 @@
-<app-generic-viewer
-    *ngIf="loadCompleted" 
-    [configurationObject]="configurationObj"
+<selection-list
+    *ngIf="loadCompleted"
+    [selectionListConfiguration]="configurationObj"
     [genericViewer]="genericViewer"
     [genericViewerDataSource]="genericViewerDataSource"
-    (pressedDoneEvent)="onDonePressed($event)"
     (pressedCancelEvent)="onCancelPressed()"
-></app-generic-viewer>
+    (pressedDoneEvent)="onDonePressed($event)">
+</selection-list>
