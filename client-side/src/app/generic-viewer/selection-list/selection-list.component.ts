@@ -7,6 +7,7 @@ import { IGenericViewerConfigurationObject } from 'src/app/metadata';
 import { IGenericViewer } from '../../../../../shared/entities';
 import { ListOptions } from '../generic-viewer.model';
 import { ListComponent } from '../list/list.component';
+import { ViewsListsService } from '../viewsLists.service';
 import { SelectionListService } from './selection-list.service';
 
 @Component({
@@ -19,8 +20,7 @@ export class SelectionListComponent implements OnInit {
   @Input() genericViewer: IGenericViewer
   @Input() selectionListConfiguration: IGenericViewerConfigurationObject
   @Input() genericViewerDataSource: IGenericViewerDataSource
-
-  @Output() pressedDoneEvent: EventEmitter<number> = new EventEmitter<number>()
+  @Output() pressedDoneEvent: EventEmitter<string[]> = new EventEmitter<string[]>()
   @Output() pressedCancelEvent: EventEmitter<void> = new EventEmitter<void>()
   @ViewChild(ListComponent) list: ListComponent
   listOptions: ListOptions
@@ -32,6 +32,7 @@ export class SelectionListComponent implements OnInit {
   constructor(
     private selectionListService: SelectionListService,
     private injector: Injector,
+    private viewsListService: ViewsListsService
     ) {
       this.dialogRef = this.injector.get(MatDialogRef, null)
       this.dialogData = this.injector.get(MAT_DIALOG_DATA, null)
@@ -41,34 +42,40 @@ export class SelectionListComponent implements OnInit {
     if(this.dialogData){
       this.loadVariablesFromDialog()
     }
-    // this.listOptions = this.selectionListService.createListOptions(this.selectionListConfiguration)
-    // this.dataSource = this.selectionListService.createDataSource(this.genericViewer, this.genericViewerDataSource)
-    // this.loadCompleted = true
     this.loadList()
   }
+
   async loadList(){
     this.listOptions = this.selectionListService.createListOptions(this.selectionListConfiguration)
-    this.dataSource = await this.selectionListService.createDataSource(this.genericViewer, this.genericViewerDataSource)
+    this.dataSource = await this.viewsListService.createListDataSource(this.genericViewerDataSource, this.genericViewer)
     this.loadCompleted = true
   }
+
   loadVariablesFromDialog(){
     this.genericViewer = this.dialogData.genericViewer
     this.selectionListConfiguration = this.dialogData.configurationObj
     this.genericViewerDataSource = this.dialogData.gvDataSource
-
   }
 
-  onDoneClicked(event){
+  onButtonClicked(event){
+    switch(event){
+      case 'cancel':
+        this.onCancelClicked()
+        break
+      case 'done':
+        this.onDoneClicked()
+        break
+      default:
+        return
+    }
+  }
+
+  onDoneClicked(){
     const rows  = this.list.getSelectedRows()
-    this.dialogRef?.close(rows)
     this.pressedDoneEvent.emit(rows)
   }
+  
   onCancelClicked(){
-    this.dialogRef?.close()
     this.pressedCancelEvent.emit()
   }
-
-
-
-
 }

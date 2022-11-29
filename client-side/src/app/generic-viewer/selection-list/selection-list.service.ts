@@ -1,5 +1,6 @@
 import { Injectable } from "@angular/core";
 import { TranslateService } from "@ngx-translate/core";
+import { GridDataViewColumn, GridDataViewField } from "@pepperi-addons/papi-sdk";
 import { DataSource } from "src/app/data-source/data-source";
 import { IGenericViewerDataSource } from "src/app/generic-viewer-data-source";
 import { IGenericViewerConfigurationObject } from "src/app/metadata";
@@ -38,11 +39,5 @@ export class SelectionListService{
             ]
 
         }
-    }
-    async createDataSource(genericViewer: IGenericViewer, gvDataSource: IGenericViewerDataSource): Promise<DataSource>{
-        const fields = gvDataSource.genericViewer.viewDataview?.Fields || []
-        const items = await gvDataSource.getItems()
-        const columns = gvDataSource.genericViewer.viewDataview?.Columns || []
-        return new DataSource(items, fields ,columns)
     }
 }

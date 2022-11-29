@@ -66,7 +66,6 @@ export const defaultCollectionFields = [
   }
 ]
 export interface IGenericViewerConfigurationObject{
-  resource: string,
   viewsList: SelectOption[],
   selectionList?: {
     none: boolean,
