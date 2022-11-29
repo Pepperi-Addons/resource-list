@@ -20,7 +20,6 @@ export class SelectionListComponent implements OnInit {
   @Input() genericViewer: IGenericViewer
   @Input() selectionListConfiguration: IGenericViewerConfigurationObject
   @Input() genericViewerDataSource: IGenericViewerDataSource
-
   @Output() pressedDoneEvent: EventEmitter<string[]> = new EventEmitter<string[]>()
   @Output() pressedCancelEvent: EventEmitter<void> = new EventEmitter<void>()
   @ViewChild(ListComponent) list: ListComponent

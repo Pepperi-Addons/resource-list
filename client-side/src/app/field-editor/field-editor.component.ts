@@ -63,8 +63,6 @@ export class FieldEditorComponent implements OnInit {
     this.resourcesMap = new Map()
     if(this.dialogData){
       this.loadEditorVariablesAsDialog()
-      this.dataSource
-      this.dataView
     }
     if(this.dataView){
       await this.reformatFields()
