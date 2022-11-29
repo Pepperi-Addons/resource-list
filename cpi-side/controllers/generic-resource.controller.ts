@@ -9,7 +9,9 @@ export async function getItems(req, res, next){
         const service = new GenericResourceService()
         return res.json(await service.getItems(resource, filterQuery, onlyDeletedItems))
     }
-    catch(next){}
+    catch(err){
+        next(err)
+    }
 }
 
 export async function postItem(req, res, next){
@@ -19,13 +21,20 @@ export async function postItem(req, res, next){
         const service = new GenericResourceService()
         return res.json(await service.postItem(resource, item))
     }
-    catch(next){}
+    catch(err){
+        next(err)
+    }
 }
 
 export async function getResource(req, res, next){
-    const resource = req.params.resource
-    const service = new GenericResourceService()
-    return res.json(await service.getResource(resource))
+    try{
+        const resource = req.params.resource
+        const service = new GenericResourceService()
+        return res.json(await service.getResource(resource))
+    }
+    catch(err){
+        next(err)
+    }
 }
 
 export async function getAllResources(req, res, next){
@@ -33,5 +42,7 @@ export async function getAllResources(req, res, next){
         const service = new GenericResourceService()
         return res.json(await service.getAllResources())
     }
-    catch(next){}
+    catch(err){
+        next(err)
+    }
 }
