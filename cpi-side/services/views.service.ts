@@ -25,9 +25,9 @@ export class ViewsService{
             filter: toApiQueryString(view.Filter) || ''
         }
         if(view.Editor){
-            const editorDataViewKey = this.getDataViewKeyFromUUID(view.Editor)
+            const editorDataViewKey = this.getDataViewKeyFromUUID(view.Editor!)
             const [editor, editorDataView] = await Promise.all([
-                this.getEditor(view.Editor),
+                this.getEditor(view.Editor!),
                 this.getDataView(`GV_${editorDataViewKey}_Editor`)
 
             ])    

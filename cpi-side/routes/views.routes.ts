@@ -6,8 +6,7 @@ export const router = Router()
 
 //get the generic view 
 router.get('/generic_view', getGenericView)
-
-router.get('/selction-list', getSelectionList)
+router.get('selection-list', getSelectionList)
 
 
 

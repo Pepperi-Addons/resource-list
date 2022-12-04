@@ -8,9 +8,9 @@ import { ViewsService } from "../services/views.service"
  */
 export async function getGenericView(req, res, next){
     try{
-        const key = req.query.key
+        const key = req.query.Key
         const service  = new ViewsService()
-        return await res.json(service.getGenericView(key))
+        return  res.json(await service.getGenericView(key))
     }
     catch(err){
         next(err)
@@ -30,7 +30,7 @@ export async function getSelectionList(req, res, next){
             throw new Error('request header must contain a generic viewer key  or a resource!')
         }
         const service = new ViewsService()
-        return await res.json(service.getSelectionList(viewKey, resourceKey))
+        return res.json(await service.getSelectionList(viewKey, resourceKey))
     }
     catch(err){
         next(err)
