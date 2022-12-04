@@ -1,6 +1,6 @@
 import { Client } from "@pepperi-addons/debug-server/dist";
 import AddonService from "../addon.service";
-import { ItemSchema } from "../metadata";
+import { ItemScheme } from "../metadata";
 import { v4 as uuidv4 } from 'uuid';
 import { FindOptions, Profile } from "@pepperi-addons/papi-sdk";
 import { DataViewsService } from "./dataviews.service";
@@ -42,6 +42,6 @@ export abstract class ItemsService {
     }
 
     abstract getType(): "view" | "editor"
-    abstract getSchema(): ItemSchema
+    abstract getSchema(): ItemScheme
 }
 

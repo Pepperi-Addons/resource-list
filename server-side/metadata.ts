@@ -1,15 +1,25 @@
+import { AddonDataScheme } from "@pepperi-addons/papi-sdk"
 
 
-export const viewsSchema: ItemSchema = {
+export const viewsSchema: ItemScheme = {
+    SyncData: {
+        Sync: true
+    },
     Name: "views",
-    Type: 'meta_data',
+    Type: 'meta_data'
 }
-export const editorSchema: ItemSchema = {
+
+export const editorSchema: ItemScheme = {
+    SyncData:{
+        Sync: true
+    },
     Name: "editors",
     Type: 'meta_data',
 }
-
-export type ItemSchema = {
-    Name: string,
+export interface ItemScheme extends AddonDataScheme{
+    SyncData: {
+        Sync: boolean
+    },
+    Name: "editors" | "views",
     Type: "meta_data"
 }

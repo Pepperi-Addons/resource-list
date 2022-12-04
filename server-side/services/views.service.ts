@@ -1,5 +1,5 @@
 import { DataViewsService } from "./dataviews.service"
-import { ItemSchema, viewsSchema } from "../metadata"
+import { ItemScheme, viewsSchema } from "../metadata"
 import { ItemsService } from "./items.service"
 import { View } from '../../shared/entities'
 
@@ -7,7 +7,7 @@ export class ViewsService extends ItemsService {
     getType(): "view" | "editor" {
         return "view"
     }
-    getSchema(): ItemSchema {
+    getSchema(): ItemScheme {
         return viewsSchema
     }
     async postDataViews(key: string, repProfileID: number, service: DataViewsService){

@@ -28,7 +28,7 @@ export class GenericResourceService{
             if(getDeletedItems){
                 query.where += ' AND Hidden=true'
             }
-            return await this.addonService.getAddonCPICall(config.AddonUUID, `${GENERIC_RESOURCE_OFFLINE_URL}/${name}/items`)
+            return await this.addonService.getAddonCPICall(config.AddonUUID, `${GENERIC_RESOURCE_OFFLINE_URL}/${resourceName}/items`)
         }catch(e){
             return []
         }
