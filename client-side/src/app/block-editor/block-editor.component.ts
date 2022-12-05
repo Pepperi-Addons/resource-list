@@ -6,7 +6,8 @@ import { config } from '../addon.config'
 import { SelectOption, View } from '../../../../shared/entities';
 import { ViewsService } from '../services/views.service';
 import * as uuid from 'uuid';
-import { GenericResourceOfflineService } from '../services/generic-resource-offline.service';
+import { GenericResourceService } from '../services/generic-resource-service';
+
 @Component({
     selector: 'block-editor',
     templateUrl: './block-editor.component.html',
@@ -21,7 +22,7 @@ export class BlockEditorComponent implements OnInit {
     @Input() hostObject: any;
     @Output() hostEvents: EventEmitter<any> = new EventEmitter<any>();
     viewsList: ViewsCard[]
-    constructor(private genericResourceService: GenericResourceOfflineService,
+    constructor(private genericResourceService: GenericResourceService,
                 private cardsService: CardsService,
                 private viewsService: ViewsService
                ) {
