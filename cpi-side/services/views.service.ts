@@ -14,7 +14,6 @@ export class ViewsService{
             this.getDataView(`RV_${dataViewKey}_LineMenu`),
             this.getDataView(`GV_${dataViewKey}_Menu`)
         ])
-        debugger
         let result: any = {
             view : view,
             viewDataview: viewDataview,
@@ -44,7 +43,6 @@ export class ViewsService{
         }else{
             view = await this.getDefaultView(resourceName!) as View;
         }
-        debugger
         const dataViewKey = this.getDataViewKeyFromUUID(view.Key)
         const dataview = await this.getDataView(`GV_${dataViewKey}_View`) as GridDataView
         return {
@@ -55,7 +53,6 @@ export class ViewsService{
     }
     private async getDefaultView(resourceName: string){
         const views = await this.getViews()
-        debugger
         const viewsOfCurrentResource = views.filter(view => view.Resource?.Name == resourceName)
         const sortedViewsByCreationDataTime =  viewsOfCurrentResource.sort((a,b) => new Date(a.CreationDateTime).getTime() - new Date(b.CreationDateTime).getTime())
         if(sortedViewsByCreationDataTime.length > 0){
