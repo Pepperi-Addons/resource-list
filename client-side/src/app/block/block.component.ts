@@ -3,7 +3,6 @@ import { IGenericViewer } from '../../../../shared/entities';
 import { RegularGVDataSource } from '../generic-viewer-data-source';
 import { IGenericViewerConfigurationObject } from '../metadata';
 import { GenericResourceOfflineService } from '../services/generic-resource-offline.service';
-import { UtilitiesService } from '../services/utilities-service';
 @Component({
     selector: 'block',
     templateUrl: './block.component.html',
