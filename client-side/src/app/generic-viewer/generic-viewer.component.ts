@@ -1,6 +1,5 @@
 import { TranslateService } from '@ngx-translate/core';
 import { Component, EventEmitter, Injector, Input, OnInit, Output, SimpleChanges, ViewChild, ViewContainerRef } from '@angular/core';
-import { GenericResourceService } from '../services/generic-resource-service';
 import { PepMenuItem } from "@pepperi-addons/ngx-lib/menu";
 import { GridDataView, MenuDataViewField } from '@pepperi-addons/papi-sdk';
 import { DataSource } from '../data-source/data-source'
@@ -14,6 +13,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { DIMXHostObject, PepDIMXHelperService } from '@pepperi-addons/ngx-composite-lib';
 import { IGenericViewerDataSource, isRegularGVDataSource, RegularGVDataSource } from '../generic-viewer-data-source';
 import { GVButton, ListOptions } from './generic-viewer.model';
+import { GenericResourceOfflineService } from '../services/generic-resource-offline.service';
 
 @Component({
     selector: 'app-generic-viewer',
@@ -44,7 +44,7 @@ export class GenericViewerComponent implements OnInit {
     dialogData = null
 
     constructor(private translate: TranslateService,
-         private genericResourceService: GenericResourceService,
+         private genericResourceService: GenericResourceOfflineService,
          private dialogService : PepDialogService,
          private injector: Injector,
          private viewContainerRef: ViewContainerRef,

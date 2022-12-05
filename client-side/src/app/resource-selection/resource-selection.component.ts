@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { IGenericViewer } from '../../../../shared/entities';
 import { IGenericViewerDataSource, RegularGVDataSource } from '../generic-viewer-data-source';
 import { IGenericViewerConfigurationObject } from '../metadata';
-import { GenericResourceService } from '../services/generic-resource-service';
+import { GenericResourceOfflineService } from '../services/generic-resource-offline.service';
 import { UtilitiesService } from '../services/utilities-service';
 
 @Component({
@@ -18,7 +18,7 @@ export class ResourceSelectionComponent implements OnInit {
   genericViewer: IGenericViewer
   genericViewerDataSource: IGenericViewerDataSource
   constructor(
-    private genericResourceService: GenericResourceService,
+    private genericResourceService: GenericResourceOfflineService,
     private utilitiesService: UtilitiesService
   ) { }
 

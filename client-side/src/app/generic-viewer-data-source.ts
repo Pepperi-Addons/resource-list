@@ -1,7 +1,7 @@
 import { AddonDataScheme, SchemeField } from "@pepperi-addons/papi-sdk";
 import { IGenericViewer } from "../../../shared/entities";
-import { GenericResourceService } from "./services/generic-resource-service";
 import * as uuid from 'uuid';
+import { GenericResourceOfflineService } from "./services/generic-resource-offline.service";
 
 export interface IGenericViewerDataSource{
     genericViewer: IGenericViewer
@@ -82,7 +82,7 @@ export class RegularGVDataSource implements IGenericViewerDataSource{
     fields: AddonDataScheme['Fields']
     constructor(
         public genericViewer: IGenericViewer,
-        private genericResourceService: GenericResourceService,
+        private genericResourceService: GenericResourceOfflineService,
         private items?: any[]
     ){}
     async restore(item: any){

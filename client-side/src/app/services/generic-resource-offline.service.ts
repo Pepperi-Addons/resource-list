@@ -1,27 +1,21 @@
 import { Injectable } from "@angular/core";
-import { PepAddonService, PepHttpService } from "@pepperi-addons/ngx-lib";
+import { PepAddonService } from "@pepperi-addons/ngx-lib";
 import { AddonDataScheme } from "@pepperi-addons/papi-sdk";
-import { IGenericViewer } from "../../../../shared/entities";
 import { config } from "../addon.config";
-import { defaultCollectionFields, GENERIC_RESOURCE_OFFLINE_URL, GENERIC_VIEWS_RESOURCE, IDataViewField } from "../metadata";
-import { TypeMap } from "../type-map";
-import { UtilitiesService } from './utilities-service'
+import { GENERIC_RESOURCE_OFFLINE_URL, GENERIC_VIEWS_RESOURCE, IDataViewField } from "../metadata";
+
 
 
 
 @Injectable({ providedIn: 'root' })
-export class GenericResourceService{
+export class GenericResourceOfflineService{
     pluginUUID;
     constructor(
         private addonService: PepAddonService,
-        private utilitiesService: UtilitiesService
     ){
     }
-    async getOfflineResources(): Promise<any[]>{
-        return await this.addonService.getAddonCPICall(config.AddonUUID,`${GENERIC_RESOURCE_OFFLINE_URL}/resources`) || []
-    }
     async getResources(): Promise<any[]>{
-        return await this.utilitiesService.papiClient.resources.resource('resources').get()
+        return await this.addonService.getAddonCPICall(config.AddonUUID,`${GENERIC_RESOURCE_OFFLINE_URL}/resources`) || []
     }
     async getItems(resourceName: string, getDeletedItems: boolean = false, filterQuery?: string): Promise<any>{
         try{
@@ -44,20 +38,6 @@ export class GenericResourceService{
     async getResourceFields(resourceName: string): Promise<AddonDataScheme['Fields']>{
         const resource = await this.getResource(resourceName)
         return resource?.Fields || {}
-    }
-    async getResourceFieldsAsDataViewFields(resourceName: string){
-        const resource = await this.getResource(resourceName)
-        const typeMap = new TypeMap()
-        const fields: IDataViewField[] = Object.keys(resource.Fields).map(fieldID => {
-          return {
-            FieldID: fieldID,
-            Mandatory: true,
-            ReadOnly: true,
-            Title: fieldID,
-            Type: typeMap.get(resource.Fields[fieldID].Type)
-          }
-        })
-        return  [...fields, ...defaultCollectionFields ]
     }
     async getGenericView(viewKey: string){
         return await this.addonService.getAddonCPICall(config.AddonUUID, `${GENERIC_VIEWS_RESOURCE}/generic_view?Key=${viewKey}`)

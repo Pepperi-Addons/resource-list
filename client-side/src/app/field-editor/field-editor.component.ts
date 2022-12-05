@@ -6,9 +6,9 @@ import { BehaviorSubject } from 'rxjs';
 import { DROP_DOWN, Editor, IGenericViewer, IReferenceField, SELECTION_LIST, SelectOption, View } from '../../../../shared/entities';
 import { CastingMap } from '../casting-map';
 import { IGenericViewerDataSource, RegularGVDataSource } from '../generic-viewer-data-source';
-import { GenericViewerComponent } from '../generic-viewer/generic-viewer.component';
+
 import { SelectionListComponent } from '../generic-viewer/selection-list/selection-list.component';
-import { GenericResourceService } from '../services/generic-resource-service';
+import { GenericResourceOfflineService } from '../services/generic-resource-offline.service';
 import { UtilitiesService } from '../services/utilities-service';
 import { ViewsService } from '../services/views.service';
 
@@ -32,7 +32,7 @@ export class FieldEditorComponent implements OnInit {
   gvDataSource: IGenericViewerDataSource
 
   constructor(private injector: Injector,
-     private genericResourceService: GenericResourceService,
+     private genericResourceService: GenericResourceOfflineService,
      private utilitiesService: UtilitiesService,
      private viewsService: ViewsService,
      private dialogService: PepDialogService

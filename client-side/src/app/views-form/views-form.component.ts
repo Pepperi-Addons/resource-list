@@ -188,6 +188,7 @@ export class ViewsFormComponent implements OnInit {
   }
   onUpdate(){
     this.currentView.Filter = this.currentFilter
+    debugger
     this.currentView.Description = this.dataSource.Description
     this.currentView.Editor = this.dataSource.Editor
     this.viewsService.upsertItem(this.currentView)

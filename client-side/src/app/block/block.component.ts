@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angu
 import { IGenericViewer } from '../../../../shared/entities';
 import { RegularGVDataSource } from '../generic-viewer-data-source';
 import { IGenericViewerConfigurationObject } from '../metadata';
-import { GenericResourceService } from '../services/generic-resource-service';
+import { GenericResourceOfflineService } from '../services/generic-resource-offline.service';
 import { UtilitiesService } from '../services/utilities-service';
 @Component({
     selector: 'block',
@@ -20,7 +20,7 @@ export class BlockComponent implements OnInit {
     @Output() hostEvents: EventEmitter<any> = new EventEmitter<any>();
 
     constructor(
-      private genericResourceService: GenericResourceService
+      private genericResourceService: GenericResourceOfflineService
       ) {}
     ngOnInit(): void {
       this.loadGenericView(this.hostObject)

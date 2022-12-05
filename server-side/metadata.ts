@@ -6,7 +6,8 @@ export const viewsSchema: ItemScheme = {
         Sync: true
     },
     Name: "views",
-    Type: 'meta_data'
+    Type: 'meta_data',
+    Fields: {}
 }
 
 export const editorSchema: ItemScheme = {
@@ -15,11 +16,13 @@ export const editorSchema: ItemScheme = {
     },
     Name: "editors",
     Type: 'meta_data',
+    Fields: {}
 }
 export interface ItemScheme extends AddonDataScheme{
     SyncData: {
         Sync: boolean
     },
     Name: "editors" | "views",
-    Type: "meta_data"
+    Type: "meta_data",
+    Fields?: any
 }

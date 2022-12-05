@@ -14,6 +14,7 @@ export class ViewsService{
             this.getDataView(`RV_${dataViewKey}_LineMenu`),
             this.getDataView(`GV_${dataViewKey}_Menu`)
         ])
+        debugger
         let result: any = {
             view : view,
             viewDataview: viewDataview,
@@ -36,13 +37,14 @@ export class ViewsService{
         }
         return result
     }
-    async getSelectionList(viewKey: string | undefined, resourceKey: string | undefined){
+    async getSelectionList(viewKey: string | undefined, resourceName: string | undefined){
         let view: View
-        if(!viewKey){
-            view = await this.getDefaultView(resourceKey!) as View;
-        }else{
+        if(viewKey){
             view = await this.getView(viewKey) as View
+        }else{
+            view = await this.getDefaultView(resourceName!) as View;
         }
+        debugger
         const dataViewKey = this.getDataViewKeyFromUUID(view.Key)
         const dataview = await this.getDataView(`GV_${dataViewKey}_View`) as GridDataView
         return {
@@ -51,17 +53,18 @@ export class ViewsService{
             filter: toApiQueryString(view.Filter) || ''
         }
     }
-    private async getDefaultView(resourceKey: string){
+    private async getDefaultView(resourceName: string){
         const views = await this.getViews()
-        const viewsOfCurrentResource = views.filter(view => view.Resource?.Name == resourceKey)
+        debugger
+        const viewsOfCurrentResource = views.filter(view => view.Resource?.Name == resourceName)
         const sortedViewsByCreationDataTime =  viewsOfCurrentResource.sort((a,b) => new Date(a.CreationDateTime).getTime() - new Date(b.CreationDateTime).getTime())
         if(sortedViewsByCreationDataTime.length > 0){
             return sortedViewsByCreationDataTime[0]
         }
         return undefined
     }
-    private async getViews(): Promise<View[]>{
-        return await (await pepperi.addons.data.uuid(AddonUUID).table('views').search({})).Objects as  View[]
+    private async getViews(): Promise<any>{
+        return (await pepperi.addons.data.uuid(AddonUUID).table('views').search({})).Objects
     }
     private async getView(viewKey: string): Promise<View>{
         return await pepperi.addons.data.uuid(AddonUUID).table('views').key(viewKey).get()

@@ -5,7 +5,9 @@ export async function getItems(req, res, next){
     try{
         const resource: string = req.params.resource
         const query = req.body.query
+        debugger
         const service = new GenericResourceService()
+        debugger
         return res.json(await service.getItems(resource, query))
     }
     catch(err){

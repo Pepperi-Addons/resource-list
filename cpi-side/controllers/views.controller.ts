@@ -24,13 +24,13 @@ export async function getGenericView(req, res, next){
 */
 export async function getSelectionList(req, res, next){
     try{
-        const resourceKey: string | undefined = req.query.Resource 
+        const resourceName: string | undefined = req.query.Resource 
         const viewKey: string | undefined = req.query.Key 
-        if(!resourceKey && !viewKey){
+        if(!resourceName && !viewKey){
             throw new Error('request header must contain a generic viewer key  or a resource!')
         }
         const service = new ViewsService()
-        return res.json(await service.getSelectionList(viewKey, resourceKey))
+        return res.json(await service.getSelectionList(viewKey, resourceName))
     }
     catch(err){
         next(err)

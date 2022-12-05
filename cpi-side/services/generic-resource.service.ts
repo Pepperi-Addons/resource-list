@@ -13,7 +13,8 @@ export class GenericResourceService{
     }
 
     async getAllResources(){
-        return await pepperi.resources.resource('resources').get({})
+        const result =  await pepperi.resources.resource('resources').get({})
+        return result
     }
 
     
