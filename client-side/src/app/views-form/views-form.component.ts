@@ -69,8 +69,9 @@ export class ViewsFormComponent implements OnInit {
   }
   async initGeneralTab(key){
     this.currentView = (await this.viewsService.getItems(key))[0]
-    this.initialFilter = JSON.parse(JSON.stringify(this.currentView.Filter || {}))
-    this.currentFilter = JSON.parse(JSON.stringify(this.initialFilter))
+    this.initialFilter = undefined
+    this.currentFilter = undefined
+    
     this.resourceFields = await this.genericResourceService.getResourceFields(this.currentView.Resource.Name)    
     const editorOptionalValues = await this.getEditorOptionalValues()
     this.dataSource = this.convertViewToDataSource(this.currentView)

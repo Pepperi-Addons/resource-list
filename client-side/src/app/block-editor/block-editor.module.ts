@@ -15,6 +15,7 @@ import { PepDialogModule } from '@pepperi-addons/ngx-lib/dialog';
 import { UtilitiesService } from '../services/utilities-service';
 import { ViewsService } from '../services/views.service';
 import { GenericResourceOfflineService } from '../services/generic-resource-offline.service';
+import { GenericResourceService } from '../services/generic-resource-service';
 
 @NgModule({
     declarations: [BlockEditorComponent],
@@ -41,7 +42,7 @@ import { GenericResourceOfflineService } from '../services/generic-resource-offl
     providers: [
         TranslateStore,
         // When loading this module from route we need to add this here (because only this module is loading).
-        GenericResourceOfflineService, 
+        GenericResourceService,
         UtilitiesService,
         ViewsService,
     ]

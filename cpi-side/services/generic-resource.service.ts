@@ -12,10 +12,10 @@ export class GenericResourceService{
         return await pepperi.resources.resource('resources').key(resourceName).get()
     }
 
-    async getAllResources(){
-        const result =  await pepperi.resources.resource('resources').get({})
-        return result
-    }
+    // async getAllResources(){
+    //     const result =  await pepperi.resources.resource('resources').get({})
+    //     return result
+    // }
 
     
 }

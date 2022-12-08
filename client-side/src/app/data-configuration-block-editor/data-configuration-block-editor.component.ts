@@ -3,6 +3,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Editor, SelectOption } from '../../../../shared/entities'
 import { EditorsService } from '../services/editors.service';
 import { GenericResourceOfflineService } from '../services/generic-resource-offline.service';
+import { GenericResourceService } from '../services/generic-resource-service';
 
 @Component({
     selector: 'data-configuration-block-editor',
@@ -21,7 +22,7 @@ export class DataConfigurationBlockEditorComponent implements OnInit {
     @Output() hostEvents: EventEmitter<any> = new EventEmitter<any>();
 
     constructor(private translate: TranslateService,
-        private genericResourceService: GenericResourceOfflineService, 
+        private genericResourceService: GenericResourceService, 
         private editorsService: EditorsService){
     }
     ngOnInit(): void{

@@ -1,4 +1,4 @@
-import { getItems, postItem, getResource, getAllResources } from "../controllers/generic-resource.controller"
+import { getItems, postItem, getResource } from "../controllers/generic-resource.controller"
 
 
 
@@ -7,7 +7,7 @@ export const router = Router()
 //routes:
 
 //get all resources metadata
-router.get('/resources', getAllResources)
+// router.get('/resources', getAllResources)
 
 
 /**
