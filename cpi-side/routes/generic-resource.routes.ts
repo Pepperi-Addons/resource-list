@@ -6,10 +6,6 @@ export const router = Router()
 
 //routes:
 
-//get all resources metadata
-// router.get('/resources', getAllResources)
-
-
 /**
  * get Items of resource.
  * using post request because get request url is limited to 2,048 bytes, with post we can use the body to pass arguments.

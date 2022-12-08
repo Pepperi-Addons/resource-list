@@ -35,13 +35,3 @@ export async function getResource(req, res, next){
         next(err)
     }
 }
-
-export async function getAllResources(req, res, next){
-    try{
-        const service = new GenericResourceService()
-        return res.json(await service.getAllResources())
-    }
-    catch(err){
-        next(err)
-    }
-}
