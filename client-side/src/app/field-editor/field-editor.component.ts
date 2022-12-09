@@ -163,7 +163,7 @@ export class FieldEditorComponent implements OnInit {
   async addOptionalValuesToDataViewField(field: IReferenceField, dataViewField: any){
     let resourceItems = this.resourcesMap.get(field.Resource)
     if(!resourceItems){
-      resourceItems = await this.genericResourceService.getItems(field.Resource)
+      resourceItems = await this.genericResourceService.getItems(field.Resource, false, ['Key', field.DisplayField])
       this.resourcesMap.set(field.Resource, resourceItems )
     }
     dataViewField['OptionalValues'] = resourceItems.map(item => {

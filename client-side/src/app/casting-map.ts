@@ -1,4 +1,4 @@
-import { HashMap } from "./type-map";
+import { HashMap } from "../../../shared/type-map";
 
 export class CastingMap{
     private map: HashMap<(val: any) => any> = {};

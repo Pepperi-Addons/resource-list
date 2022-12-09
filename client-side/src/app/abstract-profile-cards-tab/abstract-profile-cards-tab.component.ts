@@ -37,7 +37,23 @@ export abstract class AbstractProfileCardsTabComponent {
     this.setDataViewContextName()
     const convertor = this.createConvertor()
     const fields = await this.getFields()
-    fields.sort((a,b) => a.FieldID.localeCompare(b.FieldID))
+    fields.sort((a,b) => {
+      if (a.FieldID.indexOf('.') >= 0 && b.FieldID.indexOf('.') < 0) {
+        return 1;
+      } else if (a.FieldID.indexOf('.') < 0 && b.FieldID.indexOf('.') >= 0) {
+        return -1;
+      }
+    
+      // If neither has a period or both have a period, sort alphabetically
+      if (a < b) {
+        return -1;
+      } else if (a > b) {
+        return 1;
+      } else {
+        return 0;
+      }
+    })
+    // fields.sort((a,b) => a.FieldID.localeCompare(b.FieldID))
     this.profileCardsManager = new ProfileCardsManager(
       this.dataViewContextName,
       this.dataViewService,

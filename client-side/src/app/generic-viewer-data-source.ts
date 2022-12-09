@@ -1,7 +1,8 @@
-import { AddonDataScheme, SchemeField } from "@pepperi-addons/papi-sdk";
+import { AddonDataScheme, GridDataViewField, SchemeField } from "@pepperi-addons/papi-sdk";
 import { IGenericViewer } from "../../../shared/entities";
 import * as uuid from 'uuid';
 import { GenericResourceOfflineService } from "./services/generic-resource-offline.service";
+import { IDataViewField } from "./metadata";
 
 export interface IGenericViewerDataSource{
     genericViewer: IGenericViewer
@@ -80,11 +81,14 @@ export class ContainedArrayGVDataSource implements IGenericViewerDataSource{
 export class RegularGVDataSource implements IGenericViewerDataSource{
     type: "contained" | "regular" = "regular"
     fields: AddonDataScheme['Fields']
+    fieldsIDs: string[]
     constructor(
         public genericViewer: IGenericViewer,
         private genericResourceService: GenericResourceOfflineService,
         private items?: any[]
-    ){}
+    ){
+        this.fieldsIDs = (this.genericViewer.viewDataview.Fields || []).map(gridDataViewField => gridDataViewField.FieldID)
+    }
     async restore(item: any){
         item.Hidden = false
         await this.addItem(item)
@@ -97,7 +101,7 @@ export class RegularGVDataSource implements IGenericViewerDataSource{
         return await this._getItems(false)
     }
     private async _getItems(deleted:boolean){
-        return await this.genericResourceService.getItems(this.genericViewer.view.Resource.Name, deleted, this.genericViewer.filter)
+        return await this.genericResourceService.getItems(this.genericViewer.view.Resource.Name, deleted,  this.fieldsIDs, this.genericViewer.filter)
     }
     async getFields(){
         if(!this.fields){

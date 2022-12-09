@@ -73,6 +73,21 @@ export async function get_generic_view(client: Client, request: Request){
     const service = new GenericViewerService(client)
     return await service.getGenericView(key)
 }
+/**
+ * POST endpoint
+ * this is a post endpoint because in get request the url cannot be more than 2048 bytes
+ * body:{
+ * dataView: GridDataView
+ * }
+ * output:
+    for each reference fields return all the fields of the resource that the field refer to
+ */
+export async function get_resource_fields_and_references_fields(client: Client, request: Request){
+    validateRequest('GET', request)
+    const resourceName: string = request.query.ResourceName
+    const service = new GenericViewerService(client)
+    return await service.getResourceFieldsWithRefFieldsAsDataViewFields(resourceName)
+}
 
 export async function get_selection_list(client: Client, request: Request){
     validateRequest('GET', request)

@@ -4,7 +4,7 @@ import { AddonDataScheme } from "@pepperi-addons/papi-sdk";
 import { IGenericViewer } from "../../../../shared/entities";
 import { config } from "../addon.config";
 import { defaultCollectionFields, GENERIC_RESOURCE_OFFLINE_URL, GENERIC_VIEWS_RESOURCE, IDataViewField } from "../metadata";
-import { TypeMap } from "../type-map";
+import { TypeMap } from "../../../../shared/type-map";
 import { UtilitiesService } from './utilities-service'
 
 
@@ -57,6 +57,12 @@ export class GenericResourceService{
         })
         return  [...fields, ...defaultCollectionFields ]
     }
+
+    async getResourceFieldsIncludeReferenceFields(resourceName: string){
+        const url = `/addons/api/${config.AddonUUID}/api/get_resource_fields_and_references_fields?ResourceName=${resourceName}`
+        return [...await this.pepHttp.getPapiApiCall(url).toPromise(), ...defaultCollectionFields]
+    }
+
     async getGenericView(viewKey: string){
         let url = `/addons/api/${config.AddonUUID}/api/get_generic_view?Key=${viewKey}`
         return await this.pepHttp.getPapiApiCall(url).toPromise()

@@ -29,8 +29,9 @@
     },
     "dependencies": {
         "@pepperi-addons/debug-server": "*",
-        "@pepperi-addons/papi-sdk": "^1.43.0",
+        "@pepperi-addons/papi-sdk": "^1.44.0",
         "@pepperi-addons/pepperi-filters": "^1.0.17",
+        "shared": "file:../shared",
         "uuid": "^8.3.2"
     }
 }
