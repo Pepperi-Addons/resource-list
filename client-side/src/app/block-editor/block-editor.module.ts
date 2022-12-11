@@ -11,10 +11,11 @@ import { PepCheckboxModule } from '@pepperi-addons/ngx-lib/checkbox';
 import { DraggableCardFieldsModule } from '../draggable-card-fields/draggable-card-fields.module';
 import { PepButtonModule } from '@pepperi-addons/ngx-lib/button';
 import { DragDropModule } from '@angular/cdk/drag-drop';
-import { GenericResourceService } from '../services/generic-resource-service';
 import { PepDialogModule } from '@pepperi-addons/ngx-lib/dialog';
 import { UtilitiesService } from '../services/utilities-service';
 import { ViewsService } from '../services/views.service';
+import { GenericResourceOfflineService } from '../services/generic-resource-offline.service';
+import { GenericResourceService } from '../services/generic-resource-service';
 
 @NgModule({
     declarations: [BlockEditorComponent],
@@ -41,7 +42,7 @@ import { ViewsService } from '../services/views.service';
     providers: [
         TranslateStore,
         // When loading this module from route we need to add this here (because only this module is loading).
-        GenericResourceService, 
+        GenericResourceService,
         UtilitiesService,
         ViewsService,
     ]

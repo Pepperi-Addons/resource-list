@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { ContainedArrayGVDataSource } from 'src/app/generic-viewer-data-source';
 import { IGenericViewerConfigurationObject } from 'src/app/metadata';
-import { GenericResourceService } from 'src/app/services/generic-resource-service';
+import { GenericResourceOfflineService } from 'src/app/services/generic-resource-offline.service';
 import { IGenericViewer, IReferenceField } from '../../../../../shared/entities';
 @Component({
   selector: 'contained-resource-array-field',
@@ -22,7 +22,7 @@ export class ContainedResourceArrayFieldComponent implements OnInit {
   genericViewer: IGenericViewer
   loadCompleted: boolean = false
   title: string = ""
-  constructor(private genericResourceService: GenericResourceService) { }
+  constructor(private genericResourceService: GenericResourceOfflineService) { }
 
   ngOnInit(): void {
     
