@@ -84,7 +84,7 @@ export class RegularGVDataSource implements IGenericViewerDataSource{
     fieldsIDs: string[]
     constructor(
         public genericViewer: IGenericViewer,
-        private genericResourceService: GenericResourceOfflineOfflineService,
+        private genericResourceService: GenericResourceOfflineService,
         private items?: any[]
     ){
         this.fieldsIDs = (this.genericViewer.viewDataview.Fields || []).map(gridDataViewField => gridDataViewField.FieldID)
