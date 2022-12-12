@@ -14,6 +14,7 @@ export class GenericResourceService{
     pluginUUID;
     constructor(
         private addonService: PepAddonService,
+        private addonService: PepAddonService,
         private utilitiesService: UtilitiesService,
         private pepHttp: PepHttpService
     ){
