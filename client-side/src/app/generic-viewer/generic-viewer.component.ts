@@ -306,10 +306,8 @@ export class GenericViewerComponent implements OnInit {
                   title: this.lineMenuItemsMap.get("Edit").Title,
                   handler : async (selectedRows) => {
                     const selectedItemKey = selectedRows.rows[0]
-                    const items = this.dataSource.getItems()
-                    const item = items.find(item => item.Key == selectedItemKey)
                     const dialogData = {
-                      item : item,
+                      item : await this.genericViewerDataSource.getEditorItemByKey(selectedItemKey) || {},
                       editorDataView: this.genericViewer.editorDataView,
                       editor: this.genericViewer.editor,
                       originalValue: this.items.find(item => item.Key == selectedItemKey),
