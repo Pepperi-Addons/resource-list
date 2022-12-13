@@ -4,7 +4,7 @@ import { PepMenuItem } from "@pepperi-addons/ngx-lib/menu";
 import { GridDataView, MenuDataViewField } from '@pepperi-addons/papi-sdk';
 import { DataSource } from '../data-source/data-source'
 import { PepSelectionData } from '@pepperi-addons/ngx-lib/list';
-import { Editor, IGenericViewer, SelectOption, View } from '../../../../shared/entities';
+import { Editor, IGenericViewer, SelectOption, View } from 'shared';
 import { PepDialogService } from '@pepperi-addons/ngx-lib/dialog';
 import { FieldEditorComponent } from '../field-editor/field-editor.component';
 import { EXPORT, IGenericViewerConfigurationObject, IMPORT } from '../metadata';

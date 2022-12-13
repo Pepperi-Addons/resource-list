@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { GenericListComponent } from '@pepperi-addons/ngx-composite-lib/generic-list';
 import { DataSource } from 'src/app/data-source/data-source';
-import { IGenericViewer, SelectOption } from '../../../../../shared/entities';
+import { IGenericViewer, SelectOption } from 'shared';
 import { ListOptions } from '../generic-viewer.model';
 
 @Component({

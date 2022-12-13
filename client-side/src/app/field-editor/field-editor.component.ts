@@ -3,7 +3,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { PepDialogService } from '@pepperi-addons/ngx-lib/dialog';
 import { AddonDataScheme } from '@pepperi-addons/papi-sdk';
 import { BehaviorSubject } from 'rxjs';
-import { DROP_DOWN, Editor, IGenericViewer, IReferenceField, SELECTION_LIST, SelectOption, View } from '../../../../shared/entities';
+import { DROP_DOWN, Editor, IGenericViewer, IReferenceField, SELECTION_LIST, SelectOption, View } from 'shared';
 import { CastingMap } from '../casting-map';
 import { IGenericViewerDataSource, RegularGVDataSource } from '../generic-viewer-data-source';
 

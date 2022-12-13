@@ -1,6 +1,6 @@
 import { TranslateService } from '@ngx-translate/core';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { Editor, SelectOption } from '../../../../shared/entities'
+import { Editor, SelectOption } from 'shared'
 import { EditorsService } from '../services/editors.service';
 import { GenericResourceOfflineService } from '../services/generic-resource-offline.service';
 import { GenericResourceService } from '../services/generic-resource-service';

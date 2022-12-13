@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { ViewsService } from '../services/views.service';
 import { GenericResourceService } from '../services/generic-resource-service';
-import { View } from '../../../../shared/entities';
+import { View } from 'shared';
 import { EditorsService } from '../services/editors.service';
 import { UtilitiesService } from '../services/utilities-service';
 import { AddonDataScheme } from '@pepperi-addons/papi-sdk';

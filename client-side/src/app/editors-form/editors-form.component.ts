@@ -5,10 +5,10 @@ import { config } from '../addon.config';
 import { GenericResourceService } from '../services/generic-resource-service';
 import { EditorForm } from '../editors/editor-form'
 import { IPepOption } from '@pepperi-addons/ngx-lib';
-import { Editor, OpenMode } from '../../../../shared/entities'
+import { Editor, OpenMode } from 'shared'
 import { EditorsService } from '../services/editors.service';
 import { PepDialogActionsType, PepDialogData, PepDialogService } from '@pepperi-addons/ngx-lib/dialog';
-import { IReferenceField } from '../../../../shared/entities';
+import { IReferenceField } from 'shared';
 import { ReferenceFieldsTableComponent } from '../reference-fields-table/reference-fields-table.component';
 
 @Component({

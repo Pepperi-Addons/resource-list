@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { IGenericViewer } from '../../../../shared/entities';
+import { IGenericViewer } from 'shared';
 import { IGenericViewerDataSource, RegularGVDataSource } from '../generic-viewer-data-source';
 import { IGenericViewerConfigurationObject } from '../metadata';
 import { GenericResourceOfflineService } from '../services/generic-resource-offline.service';

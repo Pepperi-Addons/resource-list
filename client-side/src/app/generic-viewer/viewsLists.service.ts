@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { AddonDataScheme, SchemeField } from "@pepperi-addons/papi-sdk";
-import { IGenericViewer } from "../../../../shared/entities";
+import { IGenericViewer } from "shared";
 import { DataSource } from "../data-source/data-source";
 import { IGenericViewerDataSource } from "../generic-viewer-data-source";
 

@@ -45,9 +45,9 @@ export abstract class AbstractProfileCardsTabComponent {
       }
     
       // If neither has a period or both have a period, sort alphabetically
-      if (a < b) {
+      if (a.FieldID.toLocaleLowerCase() < b.FieldID.toLocaleLowerCase()) {
         return -1;
-      } else if (a > b) {
+      } else if (a.FieldID.toLocaleLowerCase() > b.FieldID.toLocaleLowerCase()) {
         return 1;
       } else {
         return 0;

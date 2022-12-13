@@ -4,7 +4,7 @@ import { IPepGenericListActions } from '@pepperi-addons/ngx-composite-lib/generi
 import { PepDialogData, PepDialogService } from '@pepperi-addons/ngx-lib/dialog';
 import { PepSelectionData } from '@pepperi-addons/ngx-lib/list';
 import { GridDataViewField } from '@pepperi-addons/papi-sdk';
-import { ARRAY_TYPE, CONTAINED_RESOURCE_TYPE, IReferenceField, REFERENCE_TYPE } from '../../../../shared/entities';
+import { ARRAY_TYPE, CONTAINED_RESOURCE_TYPE, IReferenceField, REFERENCE_TYPE } from 'shared';
 import { DataSource } from '../data-source/data-source';
 import { GenericResourceService } from '../services/generic-resource-service';
 import { ReferenceFieldEditDialogComponent } from './reference-field-edit-dialog/reference-field-edit-dialog.component';

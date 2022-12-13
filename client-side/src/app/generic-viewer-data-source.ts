@@ -1,5 +1,5 @@
 import { AddonDataScheme, GridDataViewField, SchemeField } from "@pepperi-addons/papi-sdk";
-import { IGenericViewer } from "../../../shared/entities";
+import { IGenericViewer } from "shared";
 import * as uuid from 'uuid';
 import { GenericResourceOfflineService } from "./services/generic-resource-offline.service";
 import { IDataViewField } from "./metadata";

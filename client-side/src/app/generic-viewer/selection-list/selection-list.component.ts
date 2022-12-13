@@ -4,7 +4,7 @@ import { PepDialogService } from '@pepperi-addons/ngx-lib/dialog';
 import { DataSource } from 'src/app/data-source/data-source';
 import { IGenericViewerDataSource } from 'src/app/generic-viewer-data-source';
 import { IGenericViewerConfigurationObject } from 'src/app/metadata';
-import { IGenericViewer } from '../../../../../shared/entities';
+import { IGenericViewer } from 'shared';
 import { ListOptions } from '../generic-viewer.model';
 import { ListComponent } from '../list/list.component';
 import { ViewsListsService } from '../viewsLists.service';
