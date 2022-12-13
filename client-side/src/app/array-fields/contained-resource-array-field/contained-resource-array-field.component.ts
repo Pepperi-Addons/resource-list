@@ -25,15 +25,14 @@ export class ContainedResourceArrayFieldComponent implements OnInit {
   constructor(private genericResourceService: GenericResourceOfflineService) { }
 
   ngOnInit(): void {
-    
     this.loadGenericViewer()
   }
   async loadGenericViewer(){
-    const referenceField = this.referenceFields.find(referenceField => this.configurationObject.FieldID == referenceField.FieldID )
+    const referenceField = this.referenceFields.find(referenceField => this.configurationObject.FieldID == referenceField.FieldID)
     if(referenceField.SelectionList){
       this.genericViewer = await this.genericResourceService.getGenericView(referenceField.SelectionListKey)
-      if(this.genericViewer.editor){
-        this.genericViewer.editor.Name = this.resourceName
+      if(this.genericViewer?.editor?.Resource?.Name){
+        this.genericViewer.editor.Resource.Name = this.resourceName
       }
       this.genericViewerConfiguration = {
         viewsList: [

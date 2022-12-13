@@ -1,7 +1,7 @@
 import { Component, Injector, Input, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { PepDialogService } from '@pepperi-addons/ngx-lib/dialog';
-import { AddonDataScheme } from '@pepperi-addons/papi-sdk';
+import { AddonDataScheme, FormDataView } from '@pepperi-addons/papi-sdk';
 import { BehaviorSubject } from 'rxjs';
 import { DROP_DOWN, Editor, IGenericViewer, IReferenceField, SELECTION_LIST, SelectOption, View } from 'shared';
 import { CastingMap } from '../casting-map';
@@ -42,27 +42,28 @@ export class FieldEditorComponent implements OnInit {
    }
 
   ngOnInit(): void {
-
     this.init()
   }
+  
   ngOnChanges($event){
     if($event?.editor && $event?.editor.previousValue != $event?.editor.currentValue){
       this.init()
     }
   }
-  loadEditorVariablesAsDialog(){
+  async loadEditorVariablesAsDialog(){
     //deep copy data source in order to not change it on the list.
-    this.dataSource = JSON.parse(JSON.stringify(this.dialogData.item))
-    this.dataView = JSON.parse(JSON.stringify(this.dialogData.editorDataView))
+    this.dataView = JSON.parse(JSON.stringify(this.dialogData.editorDataView || {}))
     this.editor = this.dialogData.editor
-    this.originalValue = this.dialogData.originalValue
     this.gvDataSource = this.dialogData.gvDataSource
+    this.dataSource = this.dialogData.item
+    this.originalValue = JSON.parse(JSON.stringify(this.dataSource))
   }
+
   async init(){
     this.loadCompleted = false
     this.resourcesMap = new Map()
     if(this.dialogData){
-      this.loadEditorVariablesAsDialog()
+      await this.loadEditorVariablesAsDialog()
     }
     if(this.dataView){
       await this.reformatFields()
@@ -89,15 +90,18 @@ export class FieldEditorComponent implements OnInit {
     
   }
   fixDataSourceArrayFields(arrayFieldsMap: Map<string,any>){
-    const castingMap = new CastingMap()
     for(let key of arrayFieldsMap.keys()){
-        // dataSource[key] || undefined will return undefined in case the string is empty! 
-        this.fixDataSourceArrayField(arrayFieldsMap.get(key), castingMap, this.dataSource[key] || undefined, key)
+      /**
+       * if the editor opened in a new mode, then datasource[key] is undefined 
+       * but in case of array we want to see a list, and be able to add items to the list.
+       * so the initial value of a field that is of type array should be [] and not undefined!
+       */
+      this.dataSource[key] = this.dataSource[key] || []
     }
   }
   fixDataSourceArrayField(field: any, castingMap: CastingMap, data: string | undefined, key: string){
     const type = field.Items.Type
-    const arr = data?.split(',').map(val => castingMap.cast(type, val)) || []
+    const arr = data?.split(',')?.map(val => castingMap.cast(type, val)) || []
     this.dataSource[key] = arr
   }
   

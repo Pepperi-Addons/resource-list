@@ -72,7 +72,7 @@ export class ViewsService{
         return dvObject!.dataView
     }
     private async getEditor(editorKey: string){
-        return (await pepperi.addons.data.uuid(AddonUUID).table('editors').search({Where: `Key=${editorKey}`}))
+        return await pepperi.addons.data.uuid(AddonUUID).table('editors').key(editorKey).get()
     }
     private getDataViewKeyFromUUID(uuid: string){
         return uuid.replace(/-/g, '')

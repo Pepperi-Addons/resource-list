@@ -14,6 +14,7 @@ export interface IGenericViewerDataSource{
     getDeletedItems(): Promise<any[]>
     restore(item: any): Promise<any[]>
     update(item: any): Promise<any>
+    getEditorItemByKey(key: string)
 }
 
 export class ContainedArrayGVDataSource implements IGenericViewerDataSource{
@@ -27,6 +28,10 @@ export class ContainedArrayGVDataSource implements IGenericViewerDataSource{
             this.setItems(items)
         }
     }
+    async getEditorItemByKey(key: string) {
+        const item = this.items.find(item => item.Key == key)
+        return JSON.parse(JSON.stringify(item))
+    }
     async update(item: any){
         const index = this.items.findIndex(listItem => item.Key == listItem.Key)
         if(index < 0){
@@ -37,6 +42,7 @@ export class ContainedArrayGVDataSource implements IGenericViewerDataSource{
         return item
 
     }
+    
     async restore(item: any): Promise<any[]> {
         const index = this.deletedItems.findIndex(listItem => listItem.Key == item.Key)
         if(index < 0){
@@ -89,6 +95,14 @@ export class RegularGVDataSource implements IGenericViewerDataSource{
     ){
         this.fieldsIDs = (this.genericViewer.viewDataview.Fields || []).map(gridDataViewField => gridDataViewField.FieldID)
     }
+    
+    async getEditorItemByKey( key: string){
+        const fieldIDsArray = (this.genericViewer.editorDataView?.Fields || []).map(field => field.FieldID)
+        const query = `Key='${key}'`
+        const result = await this.genericResourceService.getItems(this.genericViewer.editor?.Resource?.Name, false, fieldIDsArray, query) || []
+        return result.length > 0? result[0] : {}
+      }
+
     async restore(item: any){
         item.Hidden = false
         await this.addItem(item)

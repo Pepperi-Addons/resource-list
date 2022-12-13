@@ -3,6 +3,7 @@ import { PepAddonService } from "@pepperi-addons/ngx-lib";
 import { AddonDataScheme } from "@pepperi-addons/papi-sdk";
 import { config } from "../addon.config";
 import { GENERIC_RESOURCE_OFFLINE_URL, GENERIC_VIEWS_RESOURCE, IDataViewField } from "../metadata";
+import { UtilitiesService } from "./utilities-service";
 
 
 
@@ -12,6 +13,7 @@ export class GenericResourceOfflineService{
     pluginUUID;
     constructor(
         private addonService: PepAddonService,
+        private utilitiesService: UtilitiesService
     ){
     }
     async getResources(): Promise<any[]>{
@@ -23,8 +25,9 @@ export class GenericResourceOfflineService{
             if(filterQuery){
                 query.where += ` AND ${filterQuery}`
             }
-           return await this.addonService.postAddonCPICall(config.AddonUUID, `${GENERIC_RESOURCE_OFFLINE_URL}/get_items/${resourceName}`, {query: query, fields: fields})
+           return (await this.addonService.postAddonCPICall(config.AddonUUID, `${GENERIC_RESOURCE_OFFLINE_URL}/get_items/${resourceName}`, {query: query, fields: [...fields, "Key"]})).Objects
         }catch(e){
+            console.log(`error: ${e}`)
             return []
         }
     }
@@ -34,6 +37,7 @@ export class GenericResourceOfflineService{
     async getResource(name: string){
         return await this.addonService.getAddonCPICall(config.AddonUUID, `${GENERIC_RESOURCE_OFFLINE_URL}/${name}`) as AddonDataScheme
     }
+
 
     async getResourceFields(resourceName: string): Promise<AddonDataScheme['Fields']>{
         const resource = await this.getResource(resourceName)
