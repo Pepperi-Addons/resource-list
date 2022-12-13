@@ -48,6 +48,7 @@
                     </views-filter>
                 </div>
             </mat-tab>
+            <!-- Form Tab  -->
             <mat-tab label = "{{'Tabs.Form' | translate}}"  *ngIf="loadCompleted">
                 <app-views-form-tab *ngIf="currentTab == 1"
                     [key] ="viewKey"

@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { SelectOption } from '../../../../shared/entities';
+import { SelectOption } from 'shared';
 import { DataConfigurationCard } from '../draggable-card-fields/cards.model';
 
 

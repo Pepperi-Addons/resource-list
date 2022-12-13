@@ -17,13 +17,13 @@ export class GenericResourceOfflineService{
     async getResources(): Promise<any[]>{
         return await this.addonService.getAddonCPICall(config.AddonUUID,`${GENERIC_RESOURCE_OFFLINE_URL}/resources`) || []
     }
-    async getItems(resourceName: string, getDeletedItems: boolean = false, filterQuery?: string): Promise<any>{
+    async getItems(resourceName: string, getDeletedItems: boolean = false, fields: string[], filterQuery?: string): Promise<any>{
         try{
             let query = {where: `Hidden=${getDeletedItems}`, include_deleted: getDeletedItems}
             if(filterQuery){
                 query.where += ` AND ${filterQuery}`
             }
-           return await this.addonService.postAddonCPICall(config.AddonUUID, `${GENERIC_RESOURCE_OFFLINE_URL}/get_items/${resourceName}`, {query: query})
+           return await this.addonService.postAddonCPICall(config.AddonUUID, `${GENERIC_RESOURCE_OFFLINE_URL}/get_items/${resourceName}`, {query: query, fields: fields})
         }catch(e){
             return []
         }

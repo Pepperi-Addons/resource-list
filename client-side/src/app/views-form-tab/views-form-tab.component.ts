@@ -29,7 +29,7 @@ export class ViewsFormTabComponent extends AbstractProfileCardsTabComponent impl
     this.dataViewContextName = `GV_${this.key}_View`
   }
   async getFields(){
-    return await this.genericResource.getResourceFieldsAsDataViewFields(this.resourceName)    
+    return await this.genericResource.getResourceFieldsIncludeReferenceFields(this.resourceName)    
   }
   mappedFieldToDataViewField(mappedField: IMappedField, index: number): IDataViewField{
     return {

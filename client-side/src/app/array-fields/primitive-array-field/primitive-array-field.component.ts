@@ -6,7 +6,7 @@ import { PepDialogData, PepDialogService } from '@pepperi-addons/ngx-lib/dialog'
 import { PepSelectionData } from '@pepperi-addons/ngx-lib/list';
 import { CastingMap } from 'src/app/casting-map';
 import { DataSource } from 'src/app/data-source/data-source';
-import { TypeMap } from 'src/app/type-map';
+import { TypeMap } from 'shared';
 import { PrimitiveArrayAddFormComponent } from './primitive-array-add-form/primitive-array-add-form.component';
 
 @Component({
