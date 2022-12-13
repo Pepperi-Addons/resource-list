@@ -1,6 +1,6 @@
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { View, Editor } from '../../../../shared/entities';
+import { View, Editor } from 'shared';
 import { IDataService } from '../metadata';
 import { GenericResourceService } from '../services/generic-resource-service'
 

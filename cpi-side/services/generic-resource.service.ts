@@ -2,7 +2,6 @@
 export class GenericResourceService{
     
     async getItems(resourceName: string, query: {where: string}, fields: string[]){
-        // return await pepperi.resources.resource(resourceName).get(query)
         return await pepperi.resources.resource(resourceName).search({Fields: fields, Where: query.where})
     }
     async postItem(resourceName: string, item: any){

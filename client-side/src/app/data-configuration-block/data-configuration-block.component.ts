@@ -4,7 +4,7 @@ import { DataSource } from '../data-source/data-source';
 import { PepMenuItem } from '@pepperi-addons/ngx-lib/menu';
 import { DataViewService } from '../services/data-view-service';
 import { EditorsService } from '../services/editors.service';
-import { Editor } from '../../../../shared/entities';
+import { Editor } from 'shared';
 @Component({
     selector: 'data-configuration-block',
     templateUrl: './data-configuration-block.component.html',

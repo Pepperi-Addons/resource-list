@@ -1,7 +1,7 @@
 
 import { DataViewContext, GridDataView } from "@pepperi-addons/papi-sdk";
 import { AddonUUID } from "../../addon.config.json";
-import { View, Editor} from '../../shared/entities'
+import { View, Editor} from 'shared'
 import { toApiQueryString } from '@pepperi-addons/pepperi-filters'
 
 export class ViewsService{

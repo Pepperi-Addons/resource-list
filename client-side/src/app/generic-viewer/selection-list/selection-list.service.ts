@@ -4,7 +4,6 @@ import { GridDataViewColumn, GridDataViewField } from "@pepperi-addons/papi-sdk"
 import { DataSource } from "src/app/data-source/data-source";
 import { IGenericViewerDataSource } from "src/app/generic-viewer-data-source";
 import { IGenericViewerConfigurationObject } from "src/app/metadata";
-import { IGenericViewer } from "../../../../../shared/entities";
 import { ListOptions } from "../generic-viewer.model";
 import { ViewsListsService } from "../viewsLists.service";
 

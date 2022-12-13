@@ -1,7 +1,7 @@
 import { PepHorizontalAlignment, PepSizeType} from "@pepperi-addons/ngx-lib";
 import { PepShadowSettings} from "@pepperi-addons/ngx-composite-lib/shadow-settings";
 import { PepColorSettings } from "@pepperi-addons/ngx-composite-lib/color-settings";
-import { SelectOption, View } from "../../../../shared/entities";
+import { SelectOption, View } from "shared";
 export type textColor = 'system-primary' | 'dimmed' | 'invert' | 'strong';
 export type verticalAlignment = 'start' | 'center' | 'end';
 export type textPositionStyling = 'overlyed' | 'separated';

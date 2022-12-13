@@ -1,7 +1,7 @@
 import { DataViewsService } from "./dataviews.service"
 import { ItemScheme, viewsSchema } from "../metadata"
 import { ItemsService } from "./items.service"
-import { View } from '../../shared/entities'
+import { View } from 'shared'
 
 export class ViewsService extends ItemsService {
     getType(): "view" | "editor" {

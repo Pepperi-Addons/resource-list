@@ -3,7 +3,7 @@ import { BehaviorSubject, Subject } from 'rxjs';
 import { ContainedArrayGVDataSource } from 'src/app/generic-viewer-data-source';
 import { IGenericViewerConfigurationObject } from 'src/app/metadata';
 import { GenericResourceOfflineService } from 'src/app/services/generic-resource-offline.service';
-import { IGenericViewer, IReferenceField } from '../../../../../shared/entities';
+import { IGenericViewer, IReferenceField } from 'shared';
 @Component({
   selector: 'contained-resource-array-field',
   templateUrl: './contained-resource-array-field.component.html',

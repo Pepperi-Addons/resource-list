@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { config } from "../addon.config";
 import { UtilitiesService } from './utilities-service'
-import { View } from "../../../../shared/entities"
+import { View } from "shared"
 import { IDataService } from "../metadata";
 import { PepHttpService } from "@pepperi-addons/ngx-lib";
 @Injectable({ providedIn: 'root' })
