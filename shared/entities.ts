@@ -20,7 +20,8 @@ export interface View{
     Sorting?: Sorting,
     Editor?: string,
     CreationDateTime: string,
-    ModificationDateTime: string
+    ModificationDateTime: string,
+    isFirstFieldDrillDown: boolean
 }
 
 export interface Editor{
@@ -59,7 +60,7 @@ export interface IReferenceField {
     editorDataView?: BaseFormDataView,
     menuItems?: MenuDataView,
     lineMenuItems?: MenuDataView,
-    filter: string
+    filter: string,
   }
   
   export const  REFERENCE_TYPE = "Resource"

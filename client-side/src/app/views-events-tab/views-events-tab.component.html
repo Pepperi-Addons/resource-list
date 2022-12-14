@@ -1,0 +1,16 @@
+
+
+<pep-checkbox
+    [(value)]="isDrillDown"
+    label="{{'isDrillDown' | translate}}"
+    type="checkbox"
+    [mandatory]="false"
+    [disabled]="false"
+    xAlignment="center"
+    [showTitle]="true"
+    [renderTitle]="true"
+    [visible]="true"
+    (valueChange)="onIsDrillDownChanged()"
+></pep-checkbox>
+
+<div #eventsABIContainer></div>

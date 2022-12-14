@@ -60,6 +60,9 @@ export class ViewsFormComponent implements OnInit {
   onJsonFileValidationChanged(isValid: boolean){
     this.isJsonFilterFileValid = isValid
   }
+  onIsDrillDownChanged(event){
+    this.currentView.isFirstFieldDrillDown = event
+  }
 
   
   async initComponent(){
