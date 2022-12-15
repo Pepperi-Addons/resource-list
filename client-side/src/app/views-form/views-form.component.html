@@ -77,6 +77,14 @@
                     *ngIf="currentTab == 4"
                 ></views-events-tab>
             </mat-tab>
+            <!-- Smart Search Tab -->
+            <mat-tab label="{{'SmartSearch' | translate}}" *ngIf="loadCompleted">
+                <views-smart-search-tab
+                    *ngIf="currentTab == 5"
+                    [indexedFields]="indexedFields"
+                    [key] ="viewKey">
+                </views-smart-search-tab>
+            </mat-tab>
         </mat-tab-group>
     </ng-container>
 </pep-page-layout>

@@ -1,5 +1,5 @@
 import { IPepDraggableItem } from "@pepperi-addons/ngx-lib/draggable-items"
-import { AddonData, BaseFormDataViewField, DataViewField, DataViewFieldType, GridDataViewField, MenuDataViewField } from "@pepperi-addons/papi-sdk"
+import { AddonData, BaseFormDataViewField, DataViewField, DataViewFieldType, GridDataViewField, MenuDataViewField, SchemeField } from "@pepperi-addons/papi-sdk"
 import { SelectOption } from "shared"
 import { AddFormComponent } from "./add-form/add-form.component"
 import { ViewsCard } from "./draggable-card-fields/cards.model"
@@ -87,3 +87,5 @@ export const GENERIC_RESOURCE_OFFLINE_URL = CPI_BASE_URL + '/resources'
 export const GENERIC_VIEWS_RESOURCE = CPI_BASE_URL +'/views'
 
 export const DRILL_DOWN_EVENT_KEY = "FirstFieldDrillDown"
+
+export type ResourceField = SchemeField & {FieldID: string}

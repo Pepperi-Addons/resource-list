@@ -40,7 +40,7 @@ export class MenuTabComponent extends AbstractProfileCardsTabComponent implement
   mappedFieldToDataViewField(mappedField: IMappedField, index: number){
     return {
       FieldID: mappedField.field.FieldID,
-      Title: mappedField.field.Title
+      Title: mappedField.field.Title,
     }
   }
   fieldToMappedField(field: MenuDataViewField): IMappedField{
