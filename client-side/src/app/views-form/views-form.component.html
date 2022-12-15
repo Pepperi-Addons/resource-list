@@ -72,9 +72,10 @@
             <!-- Events-Tab -->
             <mat-tab label="{{'Events' | translate}}" *ngIf="loadCompleted">
                 <views-events-tab
+                    *ngIf="currentTab == 4"
+                    [viewKey]="viewKey"
                     [isDrillDown]="currentView.isFirstFieldDrillDown"
                     (drillDownChangedEvent)="onIsDrillDownChanged($event)"
-                    *ngIf="currentTab == 4"
                 ></views-events-tab>
             </mat-tab>
             <!-- Smart Search Tab -->
