@@ -13,6 +13,7 @@ export class ViewsEventsTabComponent implements OnInit, AfterViewInit {
   @ViewChild('eventsABIContainer', { static: false, read: ViewContainerRef }) eventsABIContainer: ViewContainerRef;
   @Input() isDrillDown = false
   @Output() drillDownChangedEvent: EventEmitter<boolean> = new EventEmitter()
+  @Input() viewKey: string = ""
 
   constructor(
     private addonBlockService: PepAddonBlockLoaderService,
@@ -47,13 +48,21 @@ export class ViewsEventsTabComponent implements OnInit, AfterViewInit {
         {
           Title: 'First Field Drill Down',
           EventKey: DRILL_DOWN_EVENT_KEY,
-          // EventFilter: {
-          //   DataObject: {
-          //     View: "put view key here?"
-          //   }
-          // }
+          EventData: {
+              ObjectKey: {
+                Type: "string"
+              },
+              ViewKey: {
+                Type: "string"
+              },
+              ResourceKey: {
+                Type: "string"
+              }
+          },
+          EventFilter: {
+            ViewKey: this.viewKey
+          }
         }
-        
       ]
     }
   }
