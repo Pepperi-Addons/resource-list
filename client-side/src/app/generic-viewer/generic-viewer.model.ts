@@ -1,6 +1,7 @@
 import { PepStyleType } from "@pepperi-addons/ngx-lib"
 import { PepButton } from "@pepperi-addons/ngx-lib/button"
 import { PepMenuItem } from "@pepperi-addons/ngx-lib/menu"
+import { MenuDataView } from "@pepperi-addons/papi-sdk"
 import { SelectOption } from "shared"
 
 export interface ListOptions {
@@ -9,6 +10,7 @@ export interface ListOptions {
     menuItems: PepMenuItem[]
     dropDownOfViews: SelectOption[]
     buttons: GVButton[]
+    smartSearchDataView: {dataView: MenuDataView}
 }
 
 export interface GVButton extends PepButton {

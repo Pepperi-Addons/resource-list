@@ -1,5 +1,5 @@
 
-import { DataViewContext, GridDataView } from "@pepperi-addons/papi-sdk";
+import { DataViewContext, GridDataView, MenuDataView } from "@pepperi-addons/papi-sdk";
 import { AddonUUID } from "../../addon.config.json";
 import { View, Editor} from 'shared'
 import { toApiQueryString } from '@pepperi-addons/pepperi-filters'
@@ -8,11 +8,12 @@ export class ViewsService{
 
     async getGenericView(viewKey: string){
         const dataViewKey = this.getDataViewKeyFromUUID(viewKey)
-        const [view,viewDataview, lineMenuItems, menuItems] = await Promise.all([
+        const [view,viewDataview, lineMenuItems, menuItems, smartSearchDataView] = await Promise.all([
             this.getView(viewKey) as Promise<View>,
             this.getDataView(`GV_${dataViewKey}_View`),
             this.getDataView(`RV_${dataViewKey}_LineMenu`),
-            this.getDataView(`GV_${dataViewKey}_Menu`)
+            this.getDataView(`GV_${dataViewKey}_Menu`),
+            this.getDataView(`GV_${dataViewKey}_SmartSearch`)
         ])
         let result: any = {
             view : view,
@@ -22,7 +23,8 @@ export class ViewsService{
             editor: undefined,
             editorDataView: undefined,
             resourceName: view.Resource.Name,
-            filter: toApiQueryString(view.Filter) || ''
+            filter: toApiQueryString(view.Filter) || '',
+            smartSearchDataView: smartSearchDataView
         }
         if(view.Editor){
             const editorDataViewKey = this.getDataViewKeyFromUUID(view.Editor!)
@@ -45,10 +47,12 @@ export class ViewsService{
         }
         const dataViewKey = this.getDataViewKeyFromUUID(view.Key)
         const dataview = await this.getDataView(`GV_${dataViewKey}_View`) as GridDataView
+        const smartSearchDataView = await this.getDataView(`GV_${dataViewKey}_SmartSearch`) as MenuDataView
         return {
             view: view,
             viewDataview: dataview,
-            filter: toApiQueryString(view.Filter) || ''
+            filter: toApiQueryString(view.Filter) || '',
+            smartSerachDataview: smartSearchDataView
         }
     }
     private async getDefaultView(resourceName: string){

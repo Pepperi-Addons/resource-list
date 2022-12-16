@@ -75,12 +75,16 @@ export class GenericViewerComponent implements OnInit {
       const menuItems = this.menuItems || []
       const dropDownOfViews = this.dropDownOfViews || []
       const buttons: GVButton[] = this.createButtonArray()
+      const smartSearchDataView = this.genericViewer.smartSearchDataView
       return {
           actions,
           selectionType,
           menuItems, 
           dropDownOfViews, 
           buttons,
+          smartSearchDataView: {
+            dataView: smartSearchDataView
+          }
       }
     }
     ngOnInit(): void {
@@ -195,7 +199,7 @@ export class GenericViewerComponent implements OnInit {
     }
     async DisplayViewInList(viewKey){
       if(this.genericViewer.viewDataview){
-        this.loadList(this.genericViewer.viewDataview)
+        await this.loadList(this.genericViewer.viewDataview)
       }
       //if there is no dataview we will display an empty list
       else{
@@ -226,7 +230,7 @@ export class GenericViewerComponent implements OnInit {
         fields[0].Type = "Link"
       }
       this.dataSource = new DataSource(items, fields,columns)
-    }
+      }
 
     async onFieldDrillDown(event: string){
       await this.listViewService.emitDrillDownEvent(event, this.genericViewer.view.Key, this.genericViewer.view.Resource.Name)

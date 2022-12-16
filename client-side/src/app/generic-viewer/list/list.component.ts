@@ -14,19 +14,20 @@ export class ListComponent implements OnInit {
   @Input() dataSource: DataSource
   @Input() genericViewer: IGenericViewer
   @Input() listOptions: ListOptions
-
+  
   @Output() viewChangedEvent: EventEmitter<string> = new EventEmitter<string>()
   @Output() menuItemClickedEvent: EventEmitter<string> = new EventEmitter<string>()
   @Output() buttonClickedEvent: EventEmitter<string[]> = new EventEmitter<string[]>()
   @Output() cancelClickedEvent: EventEmitter<void> = new EventEmitter<void>()
   @Output() fieldDrillDownEvent: EventEmitter<string> = new EventEmitter<string>()
-
   @ViewChild(GenericListComponent) genericList;
-
   constructor() { }
 
   ngOnInit(): void {
+    this.listOptions.smartSearchDataView.dataView.Fields[0]['Type'] = "Bool"
+    this.listOptions.smartSearchDataView.dataView.Fields.pop()
   }
+  
   onFieldClicked(event){
     //event.id is the Key for the item that was clicked
     this.fieldDrillDownEvent.emit(event.id)

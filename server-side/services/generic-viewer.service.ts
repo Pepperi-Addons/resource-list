@@ -1,5 +1,5 @@
 import { Client } from "@pepperi-addons/debug-server/dist";
-import { AddonDataScheme, GridDataView, GridDataViewField, PapiClient } from "@pepperi-addons/papi-sdk";
+import { AddonDataScheme, GridDataView, GridDataViewField, MenuDataView, PapiClient } from "@pepperi-addons/papi-sdk";
 import { IGenericViewer, View } from "shared";
 import { DataViewsService } from "./dataviews.service";
 import { EditorsService } from "./editors.service";
@@ -24,11 +24,12 @@ export class GenericViewerService  {
         const dataViewService = new DataViewsService(this.client)
         const editorService = new EditorsService(this.client)
         const dataViewKey = viewKey.replace(/-/g, '')
-        const [view,[viewDataview], [lineMenuItems], [menuItems]] = await Promise.all([
+        const [view,[viewDataview], [lineMenuItems], [menuItems], [smartSearch]] = await Promise.all([
             viewService.getItemByKey(viewKey) as Promise<View>,
             dataViewService.getDataView(`GV_${dataViewKey}_View`),
             dataViewService.getDataView(`RV_${dataViewKey}_LineMenu`),
-            dataViewService.getDataView(`GV_${dataViewKey}_Menu`)
+            dataViewService.getDataView(`GV_${dataViewKey}_Menu`),
+            dataViewService.getDataView(`GV_${dataViewKey}_SmartSearch`)
         ])
         
         let result: any = {
@@ -39,7 +40,8 @@ export class GenericViewerService  {
             editor: undefined,
             editorDataView: undefined,
             resourceName: view.Resource.Name,
-            filter: toApiQueryString(view.Filter) || ''
+            filter: toApiQueryString(view.Filter) || '',
+            smartSearchDataView: smartSearch
         }
         if(view.Editor){
             const editorDataViewKey = view.Editor.replace(/-/g, '')
@@ -65,10 +67,15 @@ export class GenericViewerService  {
             view = await viewsService.getItemByKey(key) as View
         }
         const dataViewKey = view.Key.replace(/-/g, '');
-        const [dataview] = await dataViewService.getDataView(`GV_${dataViewKey}_View`) as GridDataView[]
+        const [[viewDataView], [smartSearchDataView] ] = await Promise.all([
+            dataViewService.getDataView(`GV_${dataViewKey}_View`),
+            dataViewService.getDataView(`GV_${dataViewKey}_SmartSearch`)
+        ])
+        // const [dataview] = await dataViewService.getDataView(`GV_${dataViewKey}_View`) as GridDataView[]
         return {
             view: view,
-            viewDataview: dataview,
+            viewDataview: viewDataView as GridDataView,
+            smartSearchDataView: smartSearchDataView as MenuDataView,
             filter: toApiQueryString(view.Filter) || ''
         }
     }

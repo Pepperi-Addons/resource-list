@@ -61,6 +61,7 @@ export interface IReferenceField {
     menuItems?: MenuDataView,
     lineMenuItems?: MenuDataView,
     filter: string,
+    smartSearchDataView?: MenuDataView
   }
   
   export const  REFERENCE_TYPE = "Resource"
