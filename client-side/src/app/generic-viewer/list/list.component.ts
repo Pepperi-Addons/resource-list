@@ -24,10 +24,8 @@ export class ListComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
-    this.listOptions.smartSearchDataView.dataView.Fields[0]['Type'] = "Bool"
-    this.listOptions.smartSearchDataView.dataView.Fields.pop()
   }
-  
+
   onFieldClicked(event){
     //event.id is the Key for the item that was clicked
     this.fieldDrillDownEvent.emit(event.id)

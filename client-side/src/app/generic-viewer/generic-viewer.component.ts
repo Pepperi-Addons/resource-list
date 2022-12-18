@@ -69,22 +69,21 @@ export class GenericViewerComponent implements OnInit {
       return result
 
     }
-    createListOptions(){
+    async createListOptions(){
+
       const actions =  this.actions
       const selectionType = this.configurationObject.selectionList?.selection || "single"
       const menuItems = this.menuItems || []
       const dropDownOfViews = this.dropDownOfViews || []
       const buttons: GVButton[] = this.createButtonArray()
-      const smartSearchDataView = this.genericViewer.smartSearchDataView
+      const smartSearchDataView = this.listViewService.getSmartSearchConfiguration(this.genericViewer.smartSearchDataView,  await this.genericViewerDataSource.getFields())
       return {
           actions,
           selectionType,
           menuItems, 
           dropDownOfViews, 
           buttons,
-          smartSearchDataView: {
-            dataView: smartSearchDataView
-          }
+          smartSearchDataView: smartSearchDataView
       }
     }
     ngOnInit(): void {
@@ -205,7 +204,7 @@ export class GenericViewerComponent implements OnInit {
       else{
         this.dataSource = new DataSource([],[],[])
       }
-      this.listOptions = this.createListOptions()
+      this.listOptions = await this.createListOptions()
     }
     async onViewChanged($event){
       this.genericViewer = await this.genericResourceService.getGenericView($event)
@@ -245,7 +244,7 @@ export class GenericViewerComponent implements OnInit {
       this.menuItems = this.menuItems.filter(menuItem => menuItem.key != "RecycleBin")
       this.dataSource = new DataSource(deletedItems, this.dataSource.getFields(), this.dataSource.getColumns())
       this.actions.get = this.getRecycleBinActions()
-      this.listOptions = this.createListOptions()
+      this.listOptions = await this.createListOptions()
     }
     getRecycleBinActions(){
       return async(data: PepSelectionData) => {
