@@ -44,6 +44,7 @@ export class ViewsEventsTabComponent implements OnInit, AfterViewInit {
   getHostObjectForEventsABI(){
     return {
       AddonUUID: config.AddonUUID,
+      Name: this.viewKey,
       PossibleEvents: [
         {
           Title: 'First Field Drill Down',
