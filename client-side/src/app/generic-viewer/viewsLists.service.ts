@@ -1,15 +1,19 @@
 import { Injectable } from "@angular/core";
+import { PepAddonService } from "@pepperi-addons/ngx-lib";
 import { AddonDataScheme, SchemeField } from "@pepperi-addons/papi-sdk";
 import { IGenericViewer } from "shared";
 import { DataSource } from "../data-source/data-source";
 import { IGenericViewerDataSource } from "../generic-viewer-data-source";
+import { DRILL_DOWN_EVENT_KEY } from "../metadata";
 
 @Injectable({
     providedIn: 'root',
 })
 
 export class ViewsListsService{
-    constructor() {}
+    constructor(
+        private addonService: PepAddonService
+    ) {}
 
     reformatListItems(items: any[], resourceFields: AddonDataScheme['Fields']): any[]{
         return items.map(item => this.reformatListItem(item, resourceFields))
@@ -33,8 +37,15 @@ export class ViewsListsService{
     async createListDataSource(genericViewerDataSource: IGenericViewerDataSource, genericViewer: IGenericViewer): Promise<DataSource>{
         let items = await genericViewerDataSource.getItems()
         const fields =  genericViewer.viewDataview.Fields || []
+        if(genericViewer.view.isFirstFieldDrillDown && fields.length > 0){
+            fields[0].Type = "Link"
+        }
         const columns = genericViewer.viewDataview.Columns || []
         items = this.reformatListItems(items, await genericViewerDataSource.getFields())
         return new DataSource(items, fields, columns)
+    }
+
+    async emitDrillDownEvent(itemKey: string, viewKey: string, resourceName:string){
+        await this.addonService.emitEvent(DRILL_DOWN_EVENT_KEY, {ObjectKey: itemKey, ViewKey: viewKey, ResourceKey: resourceName})
     }
 }

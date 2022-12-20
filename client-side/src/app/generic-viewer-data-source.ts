@@ -64,7 +64,7 @@ export class ContainedArrayGVDataSource implements IGenericViewerDataSource{
         return item
     }
     async getItems(): Promise<any[]> {
-        return this.items
+        return this.items || []
     }
     async getFields(): Promise<AddonDataScheme['Fields']> {
         return this.fields
@@ -99,7 +99,7 @@ export class RegularGVDataSource implements IGenericViewerDataSource{
     async getEditorItemByKey( key: string){
         const fieldIDsArray = (this.genericViewer.editorDataView?.Fields || []).map(field => field.FieldID)
         const query = `Key='${key}'`
-        const result = await this.genericResourceService.getItems(this.genericViewer.editor?.Resource?.Name, false, fieldIDsArray, query) || []
+        const result = await this.genericResourceService.getItems(this.genericViewer.editor?.Resource?.Name, false, fieldIDsArray, query)
         return result.length > 0? result[0] : {}
       }
 

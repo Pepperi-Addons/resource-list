@@ -3,6 +3,7 @@ import { GenericListComponent } from '@pepperi-addons/ngx-composite-lib/generic-
 import { DataSource } from 'src/app/data-source/data-source';
 import { IGenericViewer, SelectOption } from 'shared';
 import { ListOptions } from '../generic-viewer.model';
+import { debug } from 'console';
 
 @Component({
   selector: 'view-list',
@@ -18,12 +19,17 @@ export class ListComponent implements OnInit {
   @Output() menuItemClickedEvent: EventEmitter<string> = new EventEmitter<string>()
   @Output() buttonClickedEvent: EventEmitter<string[]> = new EventEmitter<string[]>()
   @Output() cancelClickedEvent: EventEmitter<void> = new EventEmitter<void>()
+  @Output() fieldClickEvent: EventEmitter<any> = new EventEmitter<any>()
 
   @ViewChild(GenericListComponent) genericList;
 
   constructor() { }
 
   ngOnInit(): void {
+  }
+  onFieldClicked(event){
+    //event.id is the Key for the item that was clicked
+    this.fieldClickEvent.emit(event)
   }
 
   onButtonClicked(event){

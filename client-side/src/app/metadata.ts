@@ -85,3 +85,5 @@ export const DROP_DOWN = "DropDown"
 const CPI_BASE_URL = '/addon-cpi'
 export const GENERIC_RESOURCE_OFFLINE_URL = CPI_BASE_URL + '/resources'
 export const GENERIC_VIEWS_RESOURCE = CPI_BASE_URL +'/views'
+
+export const DRILL_DOWN_EVENT_KEY = "FirstFieldDrillDown"

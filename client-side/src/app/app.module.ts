@@ -46,6 +46,7 @@ import { ResourceSelectionComponent } from './resource-selection/resource-select
 import { ViewsFilterComponent } from './views-form/views-filter/views-filter.component';
 import { PepSmartFiltersModule } from '@pepperi-addons/ngx-lib/smart-filters';
 import { PepQueryBuilderModule } from '@pepperi-addons/ngx-lib/query-builder';
+import { ViewsEventsTabComponent } from './views-events-tab/views-events-tab.component';
 @NgModule({
     imports: [
         BrowserModule,
@@ -101,6 +102,7 @@ import { PepQueryBuilderModule } from '@pepperi-addons/ngx-lib/query-builder';
         EditorsFormTabComponent,
         ViewsFormTabComponent,
         ViewsFilterComponent,
+        ViewsEventsTabComponent,
     ],
     providers: [
         TranslateStore

@@ -14,6 +14,7 @@ import { DIMXHostObject, PepDIMXHelperService } from '@pepperi-addons/ngx-compos
 import { IGenericViewerDataSource, isRegularGVDataSource, RegularGVDataSource } from '../generic-viewer-data-source';
 import { GVButton, ListOptions } from './generic-viewer.model';
 import { GenericResourceOfflineService } from '../services/generic-resource-offline.service';
+import { ViewsListsService } from './viewsLists.service';
 
 @Component({
     selector: 'app-generic-viewer',
@@ -48,7 +49,8 @@ export class GenericViewerComponent implements OnInit {
          private dialogService : PepDialogService,
          private injector: Injector,
          private viewContainerRef: ViewContainerRef,
-         private dimxService: PepDIMXHelperService ) 
+         private dimxService: PepDIMXHelperService,
+         private listViewService: ViewsListsService ) 
     {
           this.actions.get = this.getActionsCallBack()
           this.dialogRef = this.injector.get(MatDialogRef, null)
@@ -220,8 +222,21 @@ export class GenericViewerComponent implements OnInit {
       const resourceFields = await this.genericViewerDataSource.getFields()
       //in order to support arrays and references we should check the "real" type of each field, and reformat the corresponding item
       this.reformatItems(items, resourceFields)
+      if(this.genericViewer?.view?.isFirstFieldDrillDown && fields.length > 0){
+        fields[0].Type = "Link"
+      }
       this.dataSource = new DataSource(items, fields,columns)
     }
+
+    async onFieldDrillDown(event: any){
+      const fields = this.genericViewer.viewDataview.Fields
+      const firstField = fields.length > 0 ? fields[0] : undefined
+      
+      if(firstField && firstField.FieldID  == event.key && this.genericViewer.view.isFirstFieldDrillDown){
+        await this.listViewService.emitDrillDownEvent(event, this.genericViewer.view.Key, this.genericViewer.view.Resource.Name)
+      }
+    }
+
     async initRecycleBin(){
       const deletedItems = await (this.genericViewerDataSource as RegularGVDataSource).getDeletedItems()
       this.menuItems = [({

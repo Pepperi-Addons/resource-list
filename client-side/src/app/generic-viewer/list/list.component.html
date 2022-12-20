@@ -7,6 +7,7 @@
     [actions]="listOptions.actions"
     uuidMapping = 'Key'
     [selectionType]="listOptions.selectionType"
+    (fieldClick)="onFieldClicked($event)"
     >
     <ng-container right-buttons>
         <pep-menu *ngIf="listOptions.menuItems.length > 0"
