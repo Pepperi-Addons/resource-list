@@ -19,7 +19,7 @@ export class ListComponent implements OnInit {
   @Output() menuItemClickedEvent: EventEmitter<string> = new EventEmitter<string>()
   @Output() buttonClickedEvent: EventEmitter<string[]> = new EventEmitter<string[]>()
   @Output() cancelClickedEvent: EventEmitter<void> = new EventEmitter<void>()
-  @Output() fieldDrillDownEvent: EventEmitter<any> = new EventEmitter<any>()
+  @Output() fieldClickEvent: EventEmitter<any> = new EventEmitter<any>()
 
   @ViewChild(GenericListComponent) genericList;
 
@@ -29,7 +29,7 @@ export class ListComponent implements OnInit {
   }
   onFieldClicked(event){
     //event.id is the Key for the item that was clicked
-    this.fieldDrillDownEvent.emit(event)
+    this.fieldClickEvent.emit(event)
   }
 
   onButtonClicked(event){
