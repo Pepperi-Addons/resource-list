@@ -1,10 +1,12 @@
 import { Injectable } from "@angular/core";
 import { PepAddonService } from "@pepperi-addons/ngx-lib";
-import { AddonDataScheme } from "@pepperi-addons/papi-sdk";
+import { AddonDataScheme, GridDataViewField } from "@pepperi-addons/papi-sdk";
 import { config } from "../addon.config";
 import { GENERIC_RESOURCE_OFFLINE_URL, GENERIC_VIEWS_RESOURCE, IDataViewField } from "../metadata";
 import { UtilitiesService } from "./utilities-service";
-
+import { IPepGenericListParams } from "@pepperi-addons/ngx-composite-lib/generic-list";
+import { toApiQueryString } from '@pepperi-addons/pepperi-filters'
+import { SmartSearchParser } from "../smart-search-parser/smart-search-parser";
 
 
 
@@ -19,9 +21,13 @@ export class GenericResourceOfflineService{
     async getResources(): Promise<any[]>{
         return await this.addonService.getAddonCPICall(config.AddonUUID,`${GENERIC_RESOURCE_OFFLINE_URL}/resources`) || []
     }
-    async getItems(resourceName: string, getDeletedItems: boolean = false, fields: string[], filterQuery?: string): Promise<any>{
+    async getItems(resourceName: string, getDeletedItems: boolean = false, fields: string[], filterQuery?: string, params?: IPepGenericListParams, dataViewFields?: GridDataViewField[]): Promise<any>{
         try{
             let query = {where: `Hidden=${getDeletedItems}`, include_deleted: getDeletedItems}
+            if(params?.filters && params?.filters.length > 0 && dataViewFields){
+                const jsonFilterQuery = new SmartSearchParser(params.filters, dataViewFields).toString()
+                query.where += ` AND ${jsonFilterQuery}`
+            }
             if(filterQuery){
                 query.where += ` AND ${filterQuery}`
             }

@@ -2,7 +2,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { Component, EventEmitter, Injector, Input, OnInit, Output, SimpleChanges, ViewChild, ViewContainerRef } from '@angular/core';
 import { PepMenuItem } from "@pepperi-addons/ngx-lib/menu";
 import { GridDataView, MenuDataViewField } from '@pepperi-addons/papi-sdk';
-import { DataSource } from '../data-source/data-source'
+import { DataSource, DynamicItemsDataSource } from '../data-source/data-source'
 import { PepSelectionData } from '@pepperi-addons/ngx-lib/list';
 import { Editor, IGenericViewer, SelectOption, View } from 'shared';
 import { PepDialogService } from '@pepperi-addons/ngx-lib/dialog';
@@ -221,14 +221,21 @@ export class GenericViewerComponent implements OnInit {
     async loadList(dataView: GridDataView){
       const fields = dataView.Fields || []
       const columns = dataView.Columns || []
-      const items = await this.getItemsCopy()
-      const resourceFields = await this.genericViewerDataSource.getFields()
-      //in order to support arrays and references we should check the "real" type of each field, and reformat the corresponding item
-      this.reformatItems(items, resourceFields)
+      
       if(this.genericViewer?.view?.isFirstFieldDrillDown && fields.length > 0){
         fields[0].Type = "Link"
       }
-      this.dataSource = new DataSource(items, fields,columns)
+      this.dataSource = new DataSource(new DynamicItemsDataSource(async (params) => {
+        const items = await this.genericViewerDataSource.getItems(params, fields)
+        const resourceFields = await this.genericViewerDataSource.getFields()
+        //in order to support arrays and references we should check the "real" type of each field, and reformat the corresponding item
+        this.reformatItems(items, resourceFields)
+        
+        return {
+          items: items,
+          totalCount: items.length
+        }
+      }), fields,columns)
       }
 
     async onFieldDrillDown(event: string){
