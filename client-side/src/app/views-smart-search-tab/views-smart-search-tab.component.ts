@@ -16,7 +16,7 @@ export class ViewsSmartSearchTabComponent extends AbstractProfileCardsTabCompone
     this.dataViewContextName = `GV_${this.key}_SmartSearch`
   }
   getFields(): IDataViewField[] | Promise<IDataViewField[]> {
-    return this.indexedFields.map(indexedField => {
+    return this.indexedFields.filter(indexedField => indexedField.Type != 'String' && indexedField.Type != "DateTime").map(indexedField => {
       return {
         FieldID: indexedField.FieldID,
         Title: indexedField.FieldID
