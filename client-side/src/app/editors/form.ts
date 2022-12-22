@@ -88,12 +88,12 @@ export abstract class AbstractForm{
             }
             },
             {
-            ReadOnly: false,
+            ReadOnly: true,
             Title: this.translate.instant('Resource'),
-            Type: 'ComboBox',
+            Type: 'TextBox',
             FieldID: "Resource",
-            Mandatory: true,
-            OptionalValues: await this.getResourcesNames(),
+            Mandatory: false,
+            // OptionalValues: await this.getResourcesNames(),
             Layout: {
                 Origin: {
                 X: 0,
