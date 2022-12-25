@@ -3,6 +3,7 @@ import { IPepQueryBuilderField } from '@pepperi-addons/ngx-lib/query-builder';
 import { AddonDataScheme } from '@pepperi-addons/papi-sdk';
 
 import { ViewsFilterService } from './views-filter.service';
+import { AvailableField, View } from 'shared';
 
 @Component({
   selector: 'views-filter',
@@ -12,7 +13,9 @@ import { ViewsFilterService } from './views-filter.service';
 export class ViewsFilterComponent implements OnInit {
   @Input() resourceFields: AddonDataScheme['Fields']
   @Input() filter : any
+  @Input() availableFields: AvailableField[] = []
   fields: Array<IPepQueryBuilderField>
+  variableFields: IPepQueryBuilderField[] = []
   newFilter: any
   isFormValid: boolean = true
   @Output() jsonFilterFileEvent: EventEmitter<any> = new EventEmitter<any>()
@@ -34,5 +37,27 @@ export class ViewsFilterComponent implements OnInit {
   onQueryChanged(event){
     this.newFilter = event
     this.jsonFilterFileEvent.emit(this.newFilter)
+  }
+  onAvailableFieldsChanged(event: AvailableField[]){
+    this.variableFields = event.map(availableField => {
+      return {
+        FieldID: availableField.Name,
+        Title: availableField.Name,
+        FieldType: this.typeNameToPepQueryType(availableField.Type)
+      }
+    })
+  }
+
+   typeNameToPepQueryType(type: string){
+    switch(type){
+      case "String":
+        return "String"
+      case "Boolean":
+        return "Bool"
+      case "Date":
+        return "DateTime"
+      case "Number":
+        return "Double"
+    }
   }
 }

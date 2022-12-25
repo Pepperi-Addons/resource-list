@@ -49,5 +49,9 @@
     "Value": "Value",
     "Events": "Events",
     "isDrillDown": "First field is drill down",
-    "SmartSearch": "Smart Search"
+    "SmartSearch": "Smart Search",
+    "Type": "Type",
+    "Name": "Name",
+    "InputVariables": "Input Variables",
+    "NameAlreadyTaken": "Name is already taken, please choose another name."
 }

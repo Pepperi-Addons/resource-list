@@ -42,6 +42,7 @@
                     <views-filter
                         *ngIf="resourceFields != undefined && currentView != undefined"
                         [filter]="initialFilter"
+                        [availableFields]="currentView.availableFields"
                         (jsonFilterFileEvent)="onJsonFilterFileChanged($event)"
                         (jsonValidationEvent)="onJsonFileValidationChanged($event)"
                         [resourceFields]="resourceFields">

@@ -1,6 +1,15 @@
+<input-variables
+    [availableFields]="availableFields"
+    (availableFieldsChangeEvent)="onAvailableFieldsChanged($event)"
+    >
+</input-variables>
+
+
+
 <pep-query-builder
     [fields]="fields"
     [query]="filter"
     (formValidationChange)="onFormValidationChanged($event)"
-    (queryChange)="onQueryChanged($event)">    
+    (queryChange)="onQueryChanged($event)"
+    [variableFields]="variableFields">    
 </pep-query-builder>

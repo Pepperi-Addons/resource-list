@@ -21,7 +21,8 @@ export interface View{
     Editor?: string,
     CreationDateTime: string,
     ModificationDateTime: string,
-    isFirstFieldDrillDown: boolean
+    isFirstFieldDrillDown: boolean,
+    availableFields: AvailableField[]
 }
 
 export interface Editor{
@@ -69,3 +70,8 @@ export interface IReferenceField {
   export const DROP_DOWN = "DropDown"
   export const ARRAY_TYPE = "Array"
   export const CONTAINED_RESOURCE_TYPE = "ContainedResource"
+
+  export interface AvailableField{
+    Name: string,
+    Type: string
+}
