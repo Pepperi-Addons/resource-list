@@ -8,6 +8,7 @@ import { EditorsService } from '../services/editors.service';
 import { UtilitiesService } from '../services/utilities-service';
 import { AddonData, AddonDataScheme, SchemeField } from '@pepperi-addons/papi-sdk';
 import { ResourceField } from '../metadata';
+import { ViewsFilterComponent } from './views-filter/views-filter.component';
 
 @Component({
   selector: 'app-views-form',
@@ -26,7 +27,7 @@ export class ViewsFormComponent implements OnInit {
       ScreenSize: 'Tablet'
     }
   };
-  @ViewChild('views-filter') viewsFilter
+  @ViewChild('viewsFilters') viewsFilter: ViewsFilterComponent
   resourceName: string
   dataViewContextName: string
   editCard: boolean = false;
@@ -130,7 +131,7 @@ export class ViewsFormComponent implements OnInit {
       }
     }
   }
-  getDataViewFields(editorsOptoinalValues){
+  getDataViewFields(editorsOptionalValues){
     return [
       {
       ReadOnly: true,
@@ -184,12 +185,12 @@ export class ViewsFormComponent implements OnInit {
       }
       },
       {
-        ReadOnly: editorsOptoinalValues.length == 0,
+        ReadOnly: editorsOptionalValues.length == 0,
         Title: this.translate.instant('Editor'),
         Type: 'ComboBox',
         FieldID: "Editor",
         Mandatory: false,
-        OptionalValues: editorsOptoinalValues,
+        OptionalValues: editorsOptionalValues,
         Layout: {
             Origin: {
             X: 1,
@@ -212,6 +213,7 @@ export class ViewsFormComponent implements OnInit {
     this.currentView.Filter = this.currentFilter
     this.currentView.Description = this.dataSource.Description
     this.currentView.Editor = this.dataSource.Editor
+    this.currentView.availableFields = this.viewsFilter.getAvailableFields()
     this.viewsService.upsertItem(this.currentView)
     this.utilitiesService.showDialog("Update", "UpdateDialogMSG", 'close')
   }

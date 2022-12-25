@@ -24,6 +24,7 @@ export class ViewsFilterComponent implements OnInit {
 
   constructor(private viewsFilterService: ViewsFilterService) { }
   ngOnInit(): void {
+    this.availableFields
     this.init()
     
   }
@@ -39,6 +40,7 @@ export class ViewsFilterComponent implements OnInit {
     this.jsonFilterFileEvent.emit(this.newFilter)
   }
   onAvailableFieldsChanged(event: AvailableField[]){
+    this.availableFields = event
     this.variableFields = event.map(availableField => {
       return {
         FieldID: availableField.Name,
@@ -59,5 +61,9 @@ export class ViewsFilterComponent implements OnInit {
       case "Number":
         return "Double"
     }
+  }
+
+  getAvailableFields(){
+    return this.availableFields || []
   }
 }

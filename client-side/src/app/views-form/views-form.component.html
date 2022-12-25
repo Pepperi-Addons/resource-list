@@ -40,6 +40,7 @@
                     [dataView]="dataView" 
                     ></pep-generic-form>
                     <views-filter
+                        #viewsFilters
                         *ngIf="resourceFields != undefined && currentView != undefined"
                         [filter]="initialFilter"
                         [availableFields]="currentView.availableFields"
