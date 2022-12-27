@@ -16,7 +16,7 @@
         cdkDrag 
         *ngFor="let card of viewsList"
         (removeClick)='onCardRemoveClick($event);'
-        (updateCard) = "updateConfigurationField('viewsList', this.viewsList)"
+        (updateCard)="updateConfigurationField('viewsList', this.viewsList)"
         [card] = "card"
         [cdkDragDisabled]="false"
         style="cursor: grab;"

@@ -59,3 +59,18 @@ export interface DataConfigurationCard extends ICardEditor{
     mandatory: boolean
     defaultValue: string  
 }
+
+export type MappedVariable =  DynamicMappedVariable | StaticMappedVariable
+
+type DynamicMappedVariable = {
+    mappedType: "dynamic"
+    value: "AccountUUID"
+    type: string
+    id: string
+}
+type StaticMappedVariable = {
+    mappedType: "static"
+    value: string
+    type: string
+    id: string
+}

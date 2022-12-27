@@ -13,6 +13,7 @@ import { PepSelectModule } from '@pepperi-addons/ngx-lib/select';
 import { DraggableCardFieldsComponent } from './draggable-card-fields.component'
 import { config } from '../addon.config';
 import { pepIconArrowDown, pepIconArrowUp, PepIconRegistry, pepIconSystemBin, pepIconSystemMove } from '@pepperi-addons/ngx-lib/icon';
+import { VariablesMappingComponent } from './variables-mapping/variables-mapping.component';
 
 const pepIcons = [
     pepIconSystemMove,
@@ -21,7 +22,7 @@ const pepIcons = [
     pepIconArrowUp
 ];
 @NgModule({
-    declarations: [DraggableCardFieldsComponent],
+    declarations: [DraggableCardFieldsComponent, VariablesMappingComponent],
     imports: [
         CommonModule,
         DragDropModule,

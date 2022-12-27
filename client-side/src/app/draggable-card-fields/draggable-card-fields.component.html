@@ -24,5 +24,11 @@
             (valueChange)="updateCardsList($event)"
             [emptyOption]="false"
         ></pep-select>
+
+        <variables-mapping
+            *ngIf="loadCompleted"
+            >
+
+        </variables-mapping>
     </div>
 </div>
