@@ -51,13 +51,13 @@ export class ViewsEventsTabComponent implements OnInit, AfterViewInit {
           EventKey: DRILL_DOWN_EVENT_KEY,
           EventData: {
               ObjectKey: {
-                Type: "string"
+                Type: "String"
               },
               ViewKey: {
-                Type: "string"
+                Type: "String"
               },
               ResourceKey: {
-                Type: "string"
+                Type: "String"
               }
           },
           EventFilter: {

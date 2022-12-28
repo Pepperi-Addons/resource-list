@@ -23,7 +23,7 @@
     "Dependencies": {
       "generic_resource": "0.0.11",
       "dimx": "0.7.29",
-      "user_defined_events": "0.5.3"
+      "user_defined_events": "0.5.7"
     },
     "CPISide": [
       "addon-cpi.ts"
