@@ -71,7 +71,6 @@ export class GenericViewerService  {
             dataViewService.getDataView(`GV_${dataViewKey}_View`),
             dataViewService.getDataView(`GV_${dataViewKey}_SmartSearch`)
         ])
-        // const [dataview] = await dataViewService.getDataView(`GV_${dataViewKey}_View`) as GridDataView[]
         return {
             view: view,
             viewDataview: viewDataView as GridDataView,
