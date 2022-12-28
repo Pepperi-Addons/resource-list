@@ -63,15 +63,18 @@ export interface IReferenceField {
     lineMenuItems?: MenuDataView,
     filter: string,
     smartSearchDataView?: MenuDataView
-  }
+ }
   
-  export const  REFERENCE_TYPE = "Resource"
-  export const SELECTION_LIST = "SelectionList"
-  export const DROP_DOWN = "DropDown"
-  export const ARRAY_TYPE = "Array"
-  export const CONTAINED_RESOURCE_TYPE = "ContainedResource"
+export const  REFERENCE_TYPE = "Resource"
+export const SELECTION_LIST = "SelectionList"
+export const DROP_DOWN = "DropDown"
+export const ARRAY_TYPE = "Array"
+export const CONTAINED_RESOURCE_TYPE = "ContainedResource"
 
-  export interface AvailableField{
+export interface AvailableField{
+    id: string
     Name: string,
-    Type: string
+    Type: AvailableFieldType
 }
+
+export type AvailableFieldType = "Date" | "String" | "Number" | "Boolean"

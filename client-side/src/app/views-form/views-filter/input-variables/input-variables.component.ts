@@ -7,6 +7,7 @@ import { PepDialogData, PepDialogService } from '@pepperi-addons/ngx-lib/dialog'
 import { InputVariablesAddFormComponent } from './input-variables-add-form/input-variables-add-form.component';
 import { PepSelectionData } from '@pepperi-addons/ngx-lib/list';
 import { AvailableField } from 'shared';
+import { v4 as uuidv4 } from 'uuid'
 
 @Component({
   selector: 'input-variables',
@@ -93,6 +94,7 @@ export class InputVariablesComponent implements OnInit {
   onAddClick(){
     this.openEditVariableDialog().afterClosed().subscribe((value => {
       if(value){
+        value = {...value, id: uuidv4()}
         const items = this.dataSource.getItems()
         items.push(value)
         this.dataSource = new DataSource(items, this.dataSource.getFields(), this.dataSource.getColumns())

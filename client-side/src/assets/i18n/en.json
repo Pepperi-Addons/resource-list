@@ -53,5 +53,6 @@
     "Type": "Type",
     "Name": "Name",
     "InputVariables": "Input Variables",
-    "NameAlreadyTaken": "Name is already taken, please choose another name."
+    "NameAlreadyTaken": "Name is already taken, please choose another name.",
+    "NoViewExistMsg": "view does not exist, please choose another view."
 }

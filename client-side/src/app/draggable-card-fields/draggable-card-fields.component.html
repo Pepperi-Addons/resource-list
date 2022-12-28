@@ -27,8 +27,9 @@
 
         <variables-mapping
             *ngIf="loadCompleted"
-            >
-
+            [card]="card"
+            [variablesArray]="view.availableFields"
+            (mappedVariableArrayChangedEvent)="onMappedVariablesArrayChanged($event)">
         </variables-mapping>
     </div>
 </div>

@@ -51,6 +51,7 @@ export interface ViewsCard extends ICardEditor{
     views: SelectOption[]
     title: string
     selectedView: SelectOption
+    mappedVariables: MappedVariable[]
 }
 export interface DataConfigurationCard extends ICardEditor{
     key:string
@@ -67,10 +68,12 @@ type DynamicMappedVariable = {
     value: "AccountUUID"
     type: string
     id: string
+    name: string
 }
 type StaticMappedVariable = {
     mappedType: "static"
-    value: string
+    value: any
     type: string
     id: string
+    name: string
 }

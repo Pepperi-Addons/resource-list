@@ -7,7 +7,9 @@ import { toApiQueryString } from '@pepperi-addons/pepperi-filters'
 export class ViewsService{
 
     async getGenericView(viewKey: string){
+        debugger
         const dataViewKey = this.getDataViewKeyFromUUID(viewKey)
+        debugger
         const [view,viewDataview, lineMenuItems, menuItems, smartSearchDataView] = await Promise.all([
             this.getView(viewKey) as Promise<View>,
             this.getDataView(`GV_${dataViewKey}_View`),
@@ -15,6 +17,7 @@ export class ViewsService{
             this.getDataView(`GV_${dataViewKey}_Menu`),
             this.getDataView(`GV_${dataViewKey}_SmartSearch`)
         ])
+        debugger
         let result: any = {
             view : view,
             viewDataview: viewDataview,
@@ -26,13 +29,15 @@ export class ViewsService{
             filter: toApiQueryString(view.Filter) || '',
             smartSearchDataView: smartSearchDataView
         }
+        debugger
         if(view.Editor){
             const editorDataViewKey = this.getDataViewKeyFromUUID(view.Editor!)
             const [editor, editorDataView] = await Promise.all([
                 this.getEditor(view.Editor!),
                 this.getDataView(`GV_${editorDataViewKey}_Editor`)
 
-            ])    
+            ])
+            debugger    
             result.editor = editor,
             result.editorDataView = editorDataView
         }
@@ -73,6 +78,7 @@ export class ViewsService{
     private async getDataView(dataviewKey: string){
         const ctx = {Name: dataviewKey, Profile: { Name: 'Rep'}} as DataViewContext
         const dvObject = await pepperi.UIObject.Create(ctx)
+        debugger
         return dvObject!.dataView
     }
     private async getEditor(editorKey: string){

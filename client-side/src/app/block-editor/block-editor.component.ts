@@ -94,7 +94,8 @@ export class BlockEditorComponent implements OnInit {
             views: this.currentViews,
             showContent: true,
             title: "Grid",
-            selectedView: this.currentViews.length > 0? this.currentViews[0] : undefined
+            selectedView: this.currentViews.length > 0? this.currentViews[0] : undefined,
+            mappedVariables: []
         }
         this.viewsList.push(card)
         this.updateConfigurationField('viewsList', this.viewsList)
