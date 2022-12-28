@@ -238,8 +238,13 @@ export class GenericViewerComponent implements OnInit {
       }), fields,columns)
       }
 
-    async onFieldDrillDown(event: string){
-      await this.listViewService.emitDrillDownEvent(event, this.genericViewer.view.Key, this.genericViewer.view.Resource.Name)
+    async onFieldDrillDown(event: any){
+      const fields = this.genericViewer.viewDataview.Fields
+      const firstField = fields.length > 0 ? fields[0] : undefined
+      
+      if(firstField && firstField.FieldID  == event.key && this.genericViewer.view.isFirstFieldDrillDown){
+        await this.listViewService.emitDrillDownEvent(event, this.genericViewer.view.Key, this.genericViewer.view.Resource.Name)
+      }
     }
 
     async initRecycleBin(){
