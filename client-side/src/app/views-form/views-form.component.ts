@@ -6,7 +6,8 @@ import { GenericResourceService } from '../services/generic-resource-service';
 import { View } from 'shared';
 import { EditorsService } from '../services/editors.service';
 import { UtilitiesService } from '../services/utilities-service';
-import { AddonDataScheme } from '@pepperi-addons/papi-sdk';
+import { AddonData, AddonDataScheme, SchemeField } from '@pepperi-addons/papi-sdk';
+import { ResourceField } from '../metadata';
 
 @Component({
   selector: 'app-views-form',
@@ -35,6 +36,7 @@ export class ViewsFormComponent implements OnInit {
   loadCompleted: boolean = false
   currentTab = 0
   resourceFields : AddonDataScheme['Fields']
+  indexedFields: ResourceField[]
   initialFilter: any
   currentFilter: any
   isJsonFilterFileValid: boolean = true
@@ -75,11 +77,27 @@ export class ViewsFormComponent implements OnInit {
     this.initialFilter = undefined
     this.currentFilter = undefined
     
-    this.resourceFields = await this.genericResourceService.getResourceFields(this.currentView.Resource.Name)    
+    this.resourceFields = await this.genericResourceService.getResourceFields(this.currentView.Resource.Name)
+    this.indexedFields = this.getIndexedFieldsArray(this.resourceFields)    
     const editorOptionalValues = await this.getEditorOptionalValues()
     this.dataSource = this.convertViewToDataSource(this.currentView)
     this.dataView = this.getDataview(editorOptionalValues)
   }
+
+  getIndexedFieldsArray(fields: AddonDataScheme['Fields']): ResourceField[]{
+    const result: ResourceField[] = []
+    Object.keys(fields || {}).forEach((fieldID) => {
+      const field = fields[fieldID]
+      if(field?.Indexed){
+        result.push({
+          FieldID: fieldID,
+          ...field
+        })
+      }
+    })
+    return result
+  }
+
   async getEditorOptionalValues(){
     const editors = await this.editorsService.getItems()
     const editorsOfCurrentView = editors.filter((editor) => editor.Resource.Name == this.currentView.Resource.Name)

@@ -48,5 +48,6 @@
     "ResourcePickerErr": "the parameters that sent to the resource picker are wrong, please make sure you sent a resource name or a view key!",
     "Value": "Value",
     "Events": "Events",
-    "isDrillDown": "First field is drill down"
+    "isDrillDown": "First field is drill down",
+    "SmartSearch": "Smart Search"
 }
