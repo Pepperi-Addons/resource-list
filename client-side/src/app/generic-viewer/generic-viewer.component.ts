@@ -368,8 +368,7 @@ export class GenericViewerComponent implements OnInit {
       }, 'large')
       this.dialogService.openDialog(FieldEditorComponent, dialogData, config).afterClosed().subscribe((async isUpdatePreformed => {
         if(isUpdatePreformed){
-          const items = await this.getItemsCopy()
-          this.dataSource = new DataSource(items, this.dataSource.getFields(), this.dataSource.getColumns())
+          await this.loadList(this.genericViewer.viewDataview)
         }}))
     }
 
