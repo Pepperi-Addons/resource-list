@@ -75,9 +75,8 @@ export class FieldEditorComponent implements OnInit {
     const resource  = await this.genericResourceService.getResource(this.editor.Resource.Name)
     this.resourceFields = resource.Fields || {}
     await this.reformatArrayFields()
-    const referenceFieldsWithoutContainedArray = this.editor.ReferenceFields?.filter(referenceField => {
-      this.resourceFields[referenceField.FieldID]?.Type ==  'Array'
-    })
+    const referenceFieldsWithoutContainedArray = this.editor.ReferenceFields?.filter(referenceField => 
+      this.resourceFields[referenceField.FieldID]?.Type !=  'Array')
     if(referenceFieldsWithoutContainedArray?.length > 0){
       await this.reformatReferenceFields(referenceFieldsWithoutContainedArray)
     }

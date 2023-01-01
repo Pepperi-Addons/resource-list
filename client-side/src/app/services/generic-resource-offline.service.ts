@@ -31,7 +31,11 @@ export class GenericResourceOfflineService{
             if(filterQuery){
                 query.where += ` AND ${filterQuery}`
             }
-           return (await this.addonService.postAddonCPICall(config.AddonUUID, `${GENERIC_RESOURCE_OFFLINE_URL}/get_items/${resourceName}`, {query: query, fields: [...fields, "Key"]})).Objects || []
+            const keyFiledIndex = fields.findIndex(field => field == "Key")
+            if(keyFiledIndex < 0){
+                fields = [...fields, "Key"]
+            }
+           return (await this.addonService.postAddonCPICall(config.AddonUUID, `${GENERIC_RESOURCE_OFFLINE_URL}/get_items/${resourceName}`, {query: query, fields: fields})).Objects || []
         }catch(e){
             console.log(`error: ${e}`)
             return []

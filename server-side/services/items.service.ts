@@ -40,7 +40,9 @@ export abstract class ItemsService {
     async postDataViews(key: string, repProfileID: number, service: DataViewsService){
         await service.postDefaultDataView(key, repProfileID, this.getType())
     }
-
+    // async getResources(){
+    //         return  await this.genericResourceService.getResources()
+    // }
     abstract getType(): "view" | "editor"
     abstract getSchema(): ItemScheme
 }

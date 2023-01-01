@@ -74,9 +74,8 @@ export class ViewsFormComponent implements OnInit {
   }
   async initGeneralTab(key){
     this.currentView = (await this.viewsService.getItems(key))[0]
-    this.initialFilter = undefined
-    this.currentFilter = undefined
-    
+    this.initialFilter = this.currentView.Filter 
+    this.currentFilter = this.currentView.Filter 
     this.resourceFields = await this.genericResourceService.getResourceFields(this.currentView.Resource.Name)
     this.indexedFields = this.getIndexedFieldsArray(this.resourceFields)    
     const editorOptionalValues = await this.getEditorOptionalValues()
@@ -209,7 +208,8 @@ export class ViewsFormComponent implements OnInit {
     })
   }
   onUpdate(){
-    this.currentView.Filter = this.currentFilter
+    //filters is or undefined or and object with some properties, if the object is empty so we want to save the filter as null
+    this.currentView.Filter = this.currentFilter && Object.keys(this.currentFilter).length == 0 ? undefined: this.currentFilter
     this.currentView.Description = this.dataSource.Description
     this.currentView.Editor = this.dataSource.Editor
     this.viewsService.upsertItem(this.currentView)

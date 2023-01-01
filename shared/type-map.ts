@@ -14,7 +14,7 @@ export class TypeMap{
         this.map['Double'] = "NumberReal"
         this.map['Bool'] = "Boolean"
         this.map['DateTime'] = "DateAndTime"
-        this.map["Resource"] = "Button"
+        this.map["Resource"] = "TextBox"
         this.map["Array"] = "TextBox"
     }
     get(key:string): DataViewFieldType{
