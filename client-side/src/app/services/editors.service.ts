@@ -3,14 +3,20 @@ import { config } from "../addon.config";
 import { UtilitiesService } from './utilities-service'
 import { IDataService } from '../metadata'
 import { PepHttpService } from "@pepperi-addons/ngx-lib";
+import { AddonData } from "@pepperi-addons/papi-sdk";
+import { GenericResourceService } from "./generic-resource-service";
 
 @Injectable({ providedIn: 'root' })
 export class EditorsService implements IDataService{
     pluginUUID;
     constructor(
         private utilitiesService: UtilitiesService,
-        private pepHttp: PepHttpService
+        private pepHttp: PepHttpService,
+        private genericResourceService: GenericResourceService
     ){
+    }
+    async getResources(): Promise<AddonData[]> {
+        return (await this.genericResourceService.getResources()).filter(resource => resource.Type != 'papi')
     }
     async getItems(key: string = undefined, includeDeleted = false){
         let url = `/addons/api/${config.AddonUUID}/api/editors`

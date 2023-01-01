@@ -41,7 +41,9 @@ export class AddFormComponent implements OnInit {
 
   ngOnInit(): void {
     this.service = this.incoming.service
-    this.getResourcesNames().then(resourcesNames => {
+    this.service.getResources().then(resources => {
+      this.resources = resources
+      const resourcesNames = this.getResourcesNames(resources)
       this.dataView ={
         Type: "Form",
         Fields: this.getDataViewFields(resourcesNames),
@@ -54,9 +56,8 @@ export class AddFormComponent implements OnInit {
     })
   }
 
-  async getResourcesNames(){
-    this.resources = await this.genericResourceService.getResources()
-    return this.resources.map(resource => {
+  getResourcesNames(resources: any[]){
+    return resources.map(resource => {
         return {Key: resource.Name, Value: resource.Name}
     })
   }

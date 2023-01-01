@@ -33,6 +33,7 @@ export type MenuField = MenuDataViewField & {OriginalName: string}
 export interface IDataService{
   getItems(key?: string , includeDeleted?: boolean)
   upsertItem(item: any),
+  getResources():Promise<AddonData[]>
 }
 
 export interface IFieldConvertor {
