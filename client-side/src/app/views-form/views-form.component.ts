@@ -190,7 +190,8 @@ export class ViewsFormComponent implements OnInit {
     })
   }
   onUpdate(){
-    this.currentView.Filter = this.currentFilter
+    //filters is or undefined or and object with some properties, if the object is empty so we want to save the filter as null
+    this.currentView.Filter = this.currentFilter && Object.keys(this.currentFilter).length == 0 ? undefined: this.currentFilter
     this.currentView.Description = this.dataSource.Description
     this.currentView.Editor = this.dataSource.Editor
     this.viewsService.upsertItem(this.currentView)
