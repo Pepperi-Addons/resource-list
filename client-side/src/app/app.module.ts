@@ -47,6 +47,7 @@ import { ViewsFilterComponent } from './views-form/views-filter/views-filter.com
 import { PepSmartFiltersModule } from '@pepperi-addons/ngx-lib/smart-filters';
 import { PepQueryBuilderModule } from '@pepperi-addons/ngx-lib/query-builder';
 import { ViewsEventsTabComponent } from './views-events-tab/views-events-tab.component';
+import { ViewsSmartSearchTabComponent } from './views-smart-search-tab/views-smart-search-tab.component';
 @NgModule({
     imports: [
         BrowserModule,
@@ -103,6 +104,7 @@ import { ViewsEventsTabComponent } from './views-events-tab/views-events-tab.com
         ViewsFormTabComponent,
         ViewsFilterComponent,
         ViewsEventsTabComponent,
+        ViewsSmartSearchTabComponent,
     ],
     providers: [
         TranslateStore

@@ -14,6 +14,7 @@ export class ViewsService extends ItemsService {
         await service.postDefaultDataView(key, repProfileID, this.getType())
         await service.postDefaultMenuDataView(key, repProfileID)
         await service.postDefaultLineMenuDataView(key, repProfileID)
+        await service.postDefaultSmartSearchDataView(key, repProfileID)
     }
     async getDefaultView(resource: string){
         const views = await this.addonService.papiClient.addons.data.uuid(this.client.AddonUUID).table('views').find()  as View[]
