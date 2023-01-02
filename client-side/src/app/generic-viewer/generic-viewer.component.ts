@@ -78,11 +78,11 @@ export class GenericViewerComponent implements OnInit {
       const buttons: GVButton[] = this.createButtonArray()
       const smartSearchDataView = this.listViewService.getSmartSearchConfiguration(this.genericViewer.smartSearchDataView,  await this.genericViewerDataSource.getFields())
       return {
-          actions,
-          selectionType,
-          menuItems, 
-          dropDownOfViews, 
-          buttons,
+          actions: actions,
+          selectionType: selectionType,
+          menuItems: menuItems, 
+          dropDownOfViews: dropDownOfViews, 
+          buttons: buttons,
           smartSearchDataView: smartSearchDataView
       }
     }
