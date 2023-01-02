@@ -50,7 +50,8 @@ export interface ICardEditor {
 export interface ViewsCard extends ICardEditor{
     views: SelectOption[]
     title: string
-    selectedView: SelectOption
+    selectedView: SelectOption,
+    selectedResource?: string
 }
 export interface DataConfigurationCard extends ICardEditor{
     key:string

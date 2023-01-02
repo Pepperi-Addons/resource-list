@@ -4,7 +4,7 @@
     </div>
     <div class="title-container">
         <span class="body-sm ellipsis">&nbsp;</span>
-        <span class="body-sm color-link bold ellipsis" >{{card.selectedView.value}}</span>
+        <span class="body-sm color-link bold ellipsis" >{{card.selectedView?.value || 'View'}}</span>
     </div>
     <div class="actions" >
         <pep-button classNames="caution" sizeType="xs" iconName="system_bin" (buttonClick)="onRemoveClick();"></pep-button>
@@ -12,16 +12,25 @@
         <pep-button *ngIf="card.showContent" sizeType="xs" iconName="arrow_up" (buttonClick)="onEditClick();"></pep-button>
     </div>
     <div class="editorCont" *ngIf = "card.showContent">
+        <pep-select
+            [value] = 'card.selectedResource'
+            [label] = "'Resource' | translate"
+            type= 'select'
+            [mandatory] = 'false'
+            [disabled] = 'false'
+            [options] = 'resourcesDropDown'
+            (valueChange)='onResourceChanged($event)'>
+        </pep-select>
         <pep-select 
-            [value]="card.selectedView.key"
-            label="select view"
+            [value]="card.selectedView?.key"
+            [label] = "'View' | translate"
             type="select"
             [mandatory]="false"
-            [disabled]="false"
+            [disabled]="viewsDropDown.length == 0"
             xAlignment="left"
-            [options]="card.views"
+            [options]="viewsDropDown"
             [showTitle]="true"
-            (valueChange)="updateCardsList($event)"
+            (valueChange)="onViewChanged($event)"
             [emptyOption]="false"
         ></pep-select>
     </div>
