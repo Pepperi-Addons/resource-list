@@ -8,6 +8,7 @@
     uuidMapping = 'Key'
     [selectionType]="listOptions.selectionType"
     (fieldClick)="onFieldClicked($event)"
+    [smartFilter]="listOptions.smartSearchDataView"
     >
     <ng-container right-buttons>
         <pep-menu *ngIf="listOptions.menuItems.length > 0"

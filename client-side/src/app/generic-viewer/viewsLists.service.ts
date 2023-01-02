@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { PepAddonService } from "@pepperi-addons/ngx-lib";
-import { AddonDataScheme, SchemeField } from "@pepperi-addons/papi-sdk";
+import { AddonDataScheme, MenuDataView, SchemeField } from "@pepperi-addons/papi-sdk";
 import { IGenericViewer } from "shared";
 import { DataSource } from "../data-source/data-source";
 import { IGenericViewerDataSource } from "../generic-viewer-data-source";
@@ -48,4 +48,14 @@ export class ViewsListsService{
     async emitDrillDownEvent(itemKey: string, viewKey: string, resourceName:string){
         await this.addonService.emitEvent(DRILL_DOWN_EVENT_KEY, {ObjectKey: itemKey, ViewKey: viewKey, ResourceKey: resourceName})
     }
+
+    getSmartSearchConfiguration(smartSearchDataView: MenuDataView, resourceFields: AddonDataScheme['Fields']){
+        this.addTypesToSmartSearchDataView(smartSearchDataView, resourceFields)
+        return {
+            dataView: smartSearchDataView
+        }
+    }
+    private addTypesToSmartSearchDataView(smartSearchDataView: MenuDataView,resourceFields: AddonDataScheme['Fields'] ){
+        (smartSearchDataView?.Fields || [] ).forEach(field => field['Type'] = resourceFields[field.FieldID]?.Type)
+    }   
 }

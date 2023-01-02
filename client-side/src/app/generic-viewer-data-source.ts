@@ -1,4 +1,5 @@
 import { AddonDataScheme, GridDataViewField, SchemeField } from "@pepperi-addons/papi-sdk";
+import { IPepGenericListParams } from "@pepperi-addons/ngx-composite-lib/generic-list";
 import { IGenericViewer } from "shared";
 import * as uuid from 'uuid';
 import { GenericResourceOfflineService } from "./services/generic-resource-offline.service";
@@ -9,7 +10,7 @@ export interface IGenericViewerDataSource{
     type: "contained" | "regular"
     addItem(item: any):Promise<any>
     deleteItem(item:any):Promise<any>
-    getItems():Promise<any[]>
+    getItems(params?: IPepGenericListParams, fields?: GridDataViewField[]):Promise<any[]>
     getFields():Promise<AddonDataScheme['Fields']>
     getDeletedItems(): Promise<any[]>
     restore(item: any): Promise<any[]>
@@ -111,11 +112,11 @@ export class RegularGVDataSource implements IGenericViewerDataSource{
     private async postItem(item: any){
         return await this.genericResourceService.postItem(this.genericViewer.view.Resource.Name, item)
     }
-    async getItems(): Promise<any[]>{
-        return await this._getItems(false)
+    async getItems(params?: IPepGenericListParams, fields?:GridDataViewField[]): Promise<any[]>{
+        return await this._getItems(false, params, fields)
     }
-    private async _getItems(deleted:boolean){
-        return await this.genericResourceService.getItems(this.genericViewer.view.Resource.Name, deleted,  this.fieldsIDs, this.genericViewer.filter)
+    private async _getItems(deleted:boolean, params?: IPepGenericListParams, fields? : GridDataViewField[]){
+        return await this.genericResourceService.getItems(this.genericViewer.view.Resource.Name, deleted,  this.fieldsIDs, this.genericViewer.filter, params, fields)
     }
     async getFields(){
         if(!this.fields){

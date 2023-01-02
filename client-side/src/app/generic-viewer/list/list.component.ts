@@ -14,7 +14,7 @@ export class ListComponent implements OnInit {
   @Input() dataSource: DataSource
   @Input() genericViewer: IGenericViewer
   @Input() listOptions: ListOptions
-
+  
   @Output() viewChangedEvent: EventEmitter<string> = new EventEmitter<string>()
   @Output() menuItemClickedEvent: EventEmitter<string> = new EventEmitter<string>()
   @Output() buttonClickedEvent: EventEmitter<string[]> = new EventEmitter<string[]>()
@@ -27,6 +27,7 @@ export class ListComponent implements OnInit {
 
   ngOnInit(): void {
   }
+
   onFieldClicked(event){
     //event.id is the Key for the item that was clicked
     this.fieldClickEvent.emit(event)

@@ -2,7 +2,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { Component, EventEmitter, Injector, Input, OnInit, Output, SimpleChanges, ViewChild, ViewContainerRef } from '@angular/core';
 import { PepMenuItem } from "@pepperi-addons/ngx-lib/menu";
 import { GridDataView, MenuDataViewField } from '@pepperi-addons/papi-sdk';
-import { DataSource } from '../data-source/data-source'
+import { DataSource, DynamicItemsDataSource } from '../data-source/data-source'
 import { PepSelectionData } from '@pepperi-addons/ngx-lib/list';
 import { Editor, IGenericViewer, SelectOption, View } from 'shared';
 import { PepDialogService } from '@pepperi-addons/ngx-lib/dialog';
@@ -69,18 +69,21 @@ export class GenericViewerComponent implements OnInit {
       return result
 
     }
-    createListOptions(){
+    async createListOptions(){
+
       const actions =  this.actions
       const selectionType = this.configurationObject.selectionList?.selection || "single"
       const menuItems = this.menuItems || []
       const dropDownOfViews = this.dropDownOfViews || []
       const buttons: GVButton[] = this.createButtonArray()
+      const smartSearchDataView = this.listViewService.getSmartSearchConfiguration(this.genericViewer.smartSearchDataView,  await this.genericViewerDataSource.getFields())
       return {
-          actions,
-          selectionType,
-          menuItems, 
-          dropDownOfViews, 
-          buttons,
+          actions: actions,
+          selectionType: selectionType,
+          menuItems: menuItems, 
+          dropDownOfViews: dropDownOfViews, 
+          buttons: buttons,
+          smartSearchDataView: smartSearchDataView
       }
     }
     ngOnInit(): void {
@@ -195,13 +198,13 @@ export class GenericViewerComponent implements OnInit {
     }
     async DisplayViewInList(viewKey){
       if(this.genericViewer.viewDataview){
-        this.loadList(this.genericViewer.viewDataview)
+        await this.loadList(this.genericViewer.viewDataview)
       }
       //if there is no dataview we will display an empty list
       else{
         this.dataSource = new DataSource([],[],[])
       }
-      this.listOptions = this.createListOptions()
+      this.listOptions = await this.createListOptions()
     }
     async onViewChanged($event){
       this.genericViewer = await this.genericResourceService.getGenericView($event)
@@ -218,15 +221,22 @@ export class GenericViewerComponent implements OnInit {
     async loadList(dataView: GridDataView){
       const fields = dataView.Fields || []
       const columns = dataView.Columns || []
-      const items = await this.getItemsCopy()
-      const resourceFields = await this.genericViewerDataSource.getFields()
-      //in order to support arrays and references we should check the "real" type of each field, and reformat the corresponding item
-      this.reformatItems(items, resourceFields)
+      
       if(this.genericViewer?.view?.isFirstFieldDrillDown && fields.length > 0){
         fields[0].Type = "Link"
       }
-      this.dataSource = new DataSource(items, fields,columns)
-    }
+      this.dataSource = new DataSource(new DynamicItemsDataSource(async (params) => {
+        const items = await this.genericViewerDataSource.getItems(params, fields)
+        const resourceFields = await this.genericViewerDataSource.getFields()
+        //in order to support arrays and references we should check the "real" type of each field, and reformat the corresponding item
+        this.reformatItems(items, resourceFields)
+        
+        return {
+          items: items,
+          totalCount: items.length
+        }
+      }), fields,columns)
+      }
 
     async onFieldDrillDown(event: any){
       const fields = this.genericViewer.viewDataview.Fields
@@ -246,7 +256,7 @@ export class GenericViewerComponent implements OnInit {
       this.menuItems = this.menuItems.filter(menuItem => menuItem.key != "RecycleBin")
       this.dataSource = new DataSource(deletedItems, this.dataSource.getFields(), this.dataSource.getColumns())
       this.actions.get = this.getRecycleBinActions()
-      this.listOptions = this.createListOptions()
+      this.listOptions = await this.createListOptions()
     }
     getRecycleBinActions(){
       return async(data: PepSelectionData) => {
