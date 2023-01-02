@@ -49,5 +49,6 @@
     "Value": "Value",
     "Events": "Events",
     "isDrillDown": "First field is drill down",
-    "SmartSearch": "Smart Search"
+    "SmartSearch": "Smart Search",
+    "View": "View"
 }

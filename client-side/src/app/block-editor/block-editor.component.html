@@ -1,17 +1,6 @@
-<h2>Resource</h2>
-<pep-select 
-    [value]="resource"
-    label="Resource"
-    type="select"
-    mandatory = "true"
-    [options] = "resourcesNames"
-    [showTitle]="true"
-    (valueChange)="onResourceChanged($event)"
-    [emptyOption]="false"
-></pep-select>
 <h3>Views</h3>
 <p>{{'BlockEditorFirstLine' | translate}}</p>
-<div cdkDropListGroup (cdkDropListDropped)="drop($event)"  cdkDropList>
+<div cdkDropListGroup (cdkDropListDropped)="drop($event)"  cdkDropList *ngIf="loadCompleted">
     <draggable-card-fields
         cdkDrag 
         *ngFor="let card of viewsList"
@@ -21,7 +10,9 @@
         [cdkDragDisabled]="false"
         style="cursor: grab;"
         (cdkDragStarted)="onDragStart($event)"
-        (cdkDragEnded)="onDragEnd($event)">
+        (cdkDragEnded)="onDragEnd($event)"
+        [resources]="resources"
+        [views]="views">
     </draggable-card-fields>
 </div>
 <pep-button
@@ -29,7 +20,7 @@
     value="Add"
     styleType="regular"  
     (buttonClick)="addNewCardClick()" 
-    [disabled]="!currentViews || currentViews.length == 0">
+    [disabled]="!loadCompleted || resources.length == 0">
 </pep-button>
 
 
