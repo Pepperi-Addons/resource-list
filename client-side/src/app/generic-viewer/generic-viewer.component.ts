@@ -226,8 +226,8 @@ export class GenericViewerComponent implements OnInit {
         fields[0].Type = "Link"
       }
       this.dataSource = new DataSource(new DynamicItemsDataSource(async (params) => {
-        const items = await this.genericViewerDataSource.getItems(params, fields)
         const resourceFields = await this.genericViewerDataSource.getFields()
+        const items = await this.genericViewerDataSource.getItems(params, fields, resourceFields)
         //in order to support arrays and references we should check the "real" type of each field, and reformat the corresponding item
         this.reformatItems(items, resourceFields)
         
