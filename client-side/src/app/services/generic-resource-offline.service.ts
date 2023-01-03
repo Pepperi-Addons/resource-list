@@ -5,10 +5,7 @@ import { config } from "../addon.config";
 import { GENERIC_RESOURCE_OFFLINE_URL, GENERIC_VIEWS_RESOURCE, IDataViewField } from "../metadata";
 import { UtilitiesService } from "./utilities-service";
 import { IPepGenericListParams } from "@pepperi-addons/ngx-composite-lib/generic-list";
-import { toApiQueryString } from '@pepperi-addons/pepperi-filters'
 import { SmartSearchParser } from "../smart-search-parser/smart-search-parser";
-import { filter, first } from "rxjs";
-
 
 
 @Injectable({ providedIn: 'root' })
