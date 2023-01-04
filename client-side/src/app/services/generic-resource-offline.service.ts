@@ -2,8 +2,7 @@ import { Injectable } from "@angular/core";
 import { PepAddonService } from "@pepperi-addons/ngx-lib";
 import { AddonDataScheme, GridDataViewField } from "@pepperi-addons/papi-sdk";
 import { config } from "../addon.config";
-import { GENERIC_RESOURCE_OFFLINE_URL, GENERIC_VIEWS_RESOURCE, IDataViewField } from "../metadata";
-import { UtilitiesService } from "./utilities-service";
+import { GENERIC_RESOURCE_OFFLINE_URL, GENERIC_VIEWS_RESOURCE } from "../metadata";
 import { IPepGenericListParams } from "@pepperi-addons/ngx-composite-lib/generic-list";
 import { SmartSearchParser } from "../smart-search-parser/smart-search-parser";
 
@@ -13,7 +12,6 @@ export class GenericResourceOfflineService{
     pluginUUID;
     constructor(
         private addonService: PepAddonService,
-        private utilitiesService: UtilitiesService
     ){
     }
     async getResources(): Promise<any[]>{
@@ -58,7 +56,7 @@ export class GenericResourceOfflineService{
         }
         return new SmartSearchParser(params.filters, dataViewFields).toString()
     }
-    
+
     private getSearchStringQuery(dataViewFields: GridDataViewField[] = [], params?: IPepGenericListParams, resourceFields?: AddonDataScheme['Fields']){
         if(!params?.searchString || !resourceFields){
             return ''
