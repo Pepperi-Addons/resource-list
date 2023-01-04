@@ -10,7 +10,7 @@ export interface IGenericViewerDataSource{
     type: "contained" | "regular"
     addItem(item: any):Promise<any>
     deleteItem(item:any):Promise<any>
-    getItems(params?: IPepGenericListParams, fields?: GridDataViewField[], resourceFields?: AddonDataScheme['Fields']):Promise<any[]>
+    getItems(params?: IPepGenericListParams, fields?: GridDataViewField[], resourceFields?: AddonDataScheme['Fields'], accountUUID?: string | undefined):Promise<any[]>
     getFields():Promise<AddonDataScheme['Fields']>
     getDeletedItems(): Promise<any[]>
     restore(item: any): Promise<any[]>
@@ -112,11 +112,11 @@ export class RegularGVDataSource implements IGenericViewerDataSource{
     private async postItem(item: any){
         return await this.genericResourceService.postItem(this.genericViewer.view.Resource.Name, item)
     }
-    async getItems(params?: IPepGenericListParams, fields?:GridDataViewField[], resourceFields?:AddonDataScheme['Fields']): Promise<any[]>{
-        return await this._getItems(false, params, fields, resourceFields)
+    async getItems(params?: IPepGenericListParams, fields?:GridDataViewField[], resourceFields?:AddonDataScheme['Fields'], accountUUID?:string | undefined): Promise<any[]>{
+        return await this._getItems(false, params, fields, resourceFields, accountUUID)
     }
-    private async _getItems(deleted:boolean, params?: IPepGenericListParams, fields? : GridDataViewField[], resourceFields?: AddonDataScheme['Fields']){
-        return await this.genericResourceService.getItems(this.genericViewer.view.Resource.Name, deleted,  this.fieldsIDs, this.genericViewer.filter, params, fields, resourceFields)
+    private async _getItems(deleted:boolean, params?: IPepGenericListParams, fields? : GridDataViewField[], resourceFields?: AddonDataScheme['Fields'], accountUUID?:string | undefined){
+        return await this.genericResourceService.getItems(this.genericViewer.view.Resource.Name, deleted,  this.fieldsIDs, this.genericViewer.filter, params, fields, resourceFields, accountUUID)
     }
     async getFields(){
         if(!this.fields){

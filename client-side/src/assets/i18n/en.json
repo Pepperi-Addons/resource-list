@@ -50,5 +50,6 @@
     "Events": "Events",
     "isDrillDown": "First field is drill down",
     "SmartSearch": "Smart Search",
-    "View": "View"
+    "View": "View",
+    "GeneralErrorMsg": "Error occurred, please try again later."
 }
