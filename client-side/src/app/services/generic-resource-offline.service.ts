@@ -58,31 +58,11 @@ export class GenericResourceOfflineService{
         }
         return new SmartSearchParser(params.filters, dataViewFields).toString()
     }
-
-    private getStringIndexedFieldsSet(resourceFields?: AddonDataScheme['Fields']): Set<string>{
-        const set: Set<string> = new Set<string>()
-        Object.keys(resourceFields || {}).forEach(fieldID => {
-            const field = resourceFields[fieldID]
-            if(field.Indexed && field.Type == "String"){
-                set.add(fieldID)
-            }
-            else if(field.Indexed && field.Type == "Resource"){
-                const indexedFieldsOfReference = field.IndexedFields || {}
-                Object.keys(indexedFieldsOfReference).forEach(indexedFieldID =>{
-                    const indexedFieldOfRef = indexedFieldsOfReference[indexedFieldID]
-                    if(indexedFieldOfRef.Type == "String" && indexedFieldOfRef.Indexed){
-                        set.add(`${field.Resource}.${indexedFieldID}`)
-                    }
-                })
-            }
-        })
-        return set
-    }
+    
     private getSearchStringQuery(dataViewFields: GridDataViewField[] = [], params?: IPepGenericListParams, resourceFields?: AddonDataScheme['Fields']){
         if(!params?.searchString || !resourceFields){
             return ''
         }
-        // const indexedFieldsSet = this.getStringIndexedFieldsSet(resourceFields)
         const queryArray = []
         let alreadyFoundCount = 0
         for(const dataViewField of dataViewFields){
@@ -108,10 +88,8 @@ export class GenericResourceOfflineService{
             }
         }
         return `${queryArray.join(' OR ')}`
-
-
-
     }
+
     async postItem(resourceName, item){
         return await this.addonService.postAddonCPICall(config.AddonUUID, `${GENERIC_RESOURCE_OFFLINE_URL}/post_item/${resourceName}`, item)
     }
