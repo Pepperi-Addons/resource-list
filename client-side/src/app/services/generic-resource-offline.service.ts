@@ -83,25 +83,29 @@ export class GenericResourceOfflineService{
             return ''
         }
         // const indexedFieldsSet = this.getStringIndexedFieldsSet(resourceFields)
-        const firstTwoIndexed = []
+        const queryArray = []
+        let alreadyFoundCount = 0
         for(const dataViewField of dataViewFields){
-            if(firstTwoIndexed.length == 2){
+            if(alreadyFoundCount == 2){
                 break
             }
             const splittedFieldID = dataViewField.FieldID.split('.')
-            //there are two cases we want to add the field 
-            //1. if it contains a dot then it is field of reference field and we know that the field is indexed 
-            //2. if its regular field then we need to make sure that the field is indexed
-            if(splittedFieldID.length == 2 || (resourceFields[dataViewField.FieldID] && resourceFields[dataViewField.FieldID].Indexed)){
-                firstTwoIndexed.push(dataViewField.FieldID)
+            const field = resourceFields[splittedFieldID[0]]
+            if(dataViewField.FieldID == "Key"){
+                queryArray.push(`Key LIKE '${params.searchString}%'`)
             }
-            // if(indexedFieldsSet.has(dataViewField.FieldID)){
-            //     firstTwoIndexed.push(dataViewField.FieldID)
-            // }
-        }
-        const queryArray = firstTwoIndexed.map(field => `${field} LIKE '%${params.searchString}%'`)
-        if(dataViewFields.find(dataViewField => dataViewField.FieldID == "Key")){
-            queryArray.push(`Key LIKE '${params.searchString}%'`)
+            //if the field is a nested field of reference so we want to add the field only if the ref is indexed and the nested field is of type string
+            if(splittedFieldID.length == 2 && field && field.Indexed){
+                const indexedFields = field.IndexedFields
+                if(indexedFields && indexedFields[splittedFieldID[1]]?.Type == "String"){
+                    queryArray.push(`${dataViewField.FieldID} LIKE '%${params.searchString}%'`)
+                    alreadyFoundCount++
+                }
+            }
+            else if(field?.Indexed && field?.Type == "String"){
+                queryArray.push(`${dataViewField.FieldID} LIKE '%${params.searchString}%'`)
+                alreadyFoundCount++
+            }
         }
         return `${queryArray.join(' OR ')}`
 
