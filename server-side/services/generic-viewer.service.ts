@@ -91,11 +91,12 @@ export class GenericViewerService  {
                 Object.keys(currentField.IndexedFields).forEach(nestedFieldID => {
                     const nestedField = currentField.IndexedFields![nestedFieldID]
                     if(nestedField.Indexed){
+                        const newFieldID = `${fieldID}.${nestedFieldID}`
                         currentDataViewFields.push({
-                            FieldID: `${fieldID}.${nestedFieldID}`,
+                            FieldID: newFieldID,
                             Mandatory: true,
                             ReadOnly: true,
-                            Title: fieldID,
+                            Title: newFieldID,
                             Type: typeMap.get(nestedField.Type)
                         })
                     }
