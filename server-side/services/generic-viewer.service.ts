@@ -81,13 +81,25 @@ export class GenericViewerService  {
 
     async getResourceFieldsWithRefFieldsAsDataViewFields(resourceName: string){
         const fields = await this.getResourceFields(resourceName) || {}
-        const resourcesSet: Set<string> = new Set()
         const typeMap = new TypeMap()
-        const currentDataViewFields: any[] = []
+        let currentDataViewFields: any[] = []
+        //map resource to the reference fields that has that resource
         Object.keys(fields).forEach(fieldID => {
             const currentField = fields[fieldID]
-            if(currentField.Type == "Resource" && currentField.Resource && !resourcesSet.has(currentField.Resource)){
-                resourcesSet.add(currentField.Resource)
+            if(currentField.Indexed && currentField.Type == "Resource" && currentField.Resource && currentField.IndexedFields){
+                //if its reference fields and indexed we want to add all the indexed fields of that reference field
+                Object.keys(currentField.IndexedFields).forEach(nestedFieldID => {
+                    const nestedField = currentField.IndexedFields![nestedFieldID]
+                    if(nestedField.Indexed){
+                        currentDataViewFields.push({
+                            FieldID: `${fieldID}.${nestedFieldID}`,
+                            Mandatory: true,
+                            ReadOnly: true,
+                            Title: fieldID,
+                            Type: typeMap.get(nestedField.Type)
+                        })
+                    }
+                })
             }
             currentDataViewFields.push({
                 FieldID: fieldID,
@@ -97,48 +109,15 @@ export class GenericViewerService  {
                 Type: typeMap.get(currentField.Type)
             })
         })
-        const resourcesNameAndFieldsArray = await this.getResourcesFieldsAndNamesFromSet(resourcesSet)
-       return [...currentDataViewFields ,...await this.flatResourcesFieldWithNamePrefix(resourcesNameAndFieldsArray)]
+        return currentDataViewFields
     }
-    private async getResourcesFieldsAndNamesFromSet(set: Set<string>){
-       return await Promise.all(Array.from(set, resource => this.getResourceNameAndFields(resource)))
-    }
+
     private async getResourceFields(resourceName: string){
         const resource = await this.papiClient.resources.resource('resources').key(resourceName).get() as AddonDataScheme
         return resource?.Fields || {}
     }
 
-    private flatResourcesFieldWithNamePrefix(fieldsAndResourcesNamesArray: {name: string, fields: AddonDataScheme['Fields']}[]): GridDataViewField[]{
-        /**
-         * 1. we first map over every resource and create array of its fields
-         *  where the fieldID will be resourceName.fileID and create an array of arrays 
-         * 2. then we use the reduce to flat the array
-         */
-        return fieldsAndResourcesNamesArray.map(resource => {
-            return this.getDataViewFieldsWithNamePrefix(resource.name, resource.fields!!)
-        }).reduce((acc, val) => acc.concat(val), [])
-    }
-    private getDataViewFieldsWithNamePrefix(prefix, fields): GridDataViewField[]{
-        const typeMap = new TypeMap()
-        return Object.keys(fields).map(fieldID => {
-            const field = fields[fieldID]
-            const newFieldID = prefix + '.' + fieldID
-            return {
-                FieldID: newFieldID,
-                Mandatory: true,
-                ReadOnly: true,
-                Title: newFieldID,
-                Type: typeMap.get(field.Type)
-            }
-        })
-    }
+
     
 
-    private async getResourceNameAndFields(resourceName: string){
-        const fields = await this.getResourceFields(resourceName)
-        return {
-            name: resourceName,
-            fields: fields
-        }
-    }
 } 
