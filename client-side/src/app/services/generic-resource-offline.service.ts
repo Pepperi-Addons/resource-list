@@ -82,15 +82,22 @@ export class GenericResourceOfflineService{
         if(!params?.searchString || !resourceFields){
             return ''
         }
-        const indexedFieldsSet = this.getStringIndexedFieldsSet(resourceFields)
+        // const indexedFieldsSet = this.getStringIndexedFieldsSet(resourceFields)
         const firstTwoIndexed = []
         for(const dataViewField of dataViewFields){
             if(firstTwoIndexed.length == 2){
                 break
             }
-            if(indexedFieldsSet.has(dataViewField.FieldID)){
+            const splittedFieldID = dataViewField.FieldID.split('.')
+            //there are two cases we want to add the field 
+            //1. if it contains a dot then it is field of reference field and we know that the field is indexed 
+            //2. if its regular field then we need to make sure that the field is indexed
+            if(splittedFieldID.length == 2 || (resourceFields[dataViewField.FieldID] && resourceFields[dataViewField.FieldID].Indexed)){
                 firstTwoIndexed.push(dataViewField.FieldID)
             }
+            // if(indexedFieldsSet.has(dataViewField.FieldID)){
+            //     firstTwoIndexed.push(dataViewField.FieldID)
+            // }
         }
         const queryArray = firstTwoIndexed.map(field => `${field} LIKE '%${params.searchString}%'`)
         if(dataViewFields.find(dataViewField => dataViewField.FieldID == "Key")){
