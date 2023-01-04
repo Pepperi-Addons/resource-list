@@ -10,7 +10,7 @@ export interface IGenericViewerDataSource{
     type: "contained" | "regular"
     addItem(item: any):Promise<any>
     deleteItem(item:any):Promise<any>
-    getItems(params?: IPepGenericListParams, fields?: GridDataViewField[]):Promise<any[]>
+    getItems(params?: IPepGenericListParams, fields?: GridDataViewField[], resourceFields?: AddonDataScheme['Fields']):Promise<any[]>
     getFields():Promise<AddonDataScheme['Fields']>
     getDeletedItems(): Promise<any[]>
     restore(item: any): Promise<any[]>
@@ -97,7 +97,7 @@ export class RegularGVDataSource implements IGenericViewerDataSource{
         this.fieldsIDs = (this.genericViewer.viewDataview.Fields || []).map(gridDataViewField => gridDataViewField.FieldID)
     }
     
-    async getEditorItemByKey( key: string){
+    async getEditorItemByKey(key: string){
         const fieldIDsArray = (this.genericViewer.editorDataView?.Fields || []).map(field => field.FieldID)
         const query = `Key='${key}'`
         const result = await this.genericResourceService.getItems(this.genericViewer.editor?.Resource?.Name, false, fieldIDsArray, query)
@@ -112,11 +112,11 @@ export class RegularGVDataSource implements IGenericViewerDataSource{
     private async postItem(item: any){
         return await this.genericResourceService.postItem(this.genericViewer.view.Resource.Name, item)
     }
-    async getItems(params?: IPepGenericListParams, fields?:GridDataViewField[]): Promise<any[]>{
-        return await this._getItems(false, params, fields)
+    async getItems(params?: IPepGenericListParams, fields?:GridDataViewField[], resourceFields?:AddonDataScheme['Fields']): Promise<any[]>{
+        return await this._getItems(false, params, fields, resourceFields)
     }
-    private async _getItems(deleted:boolean, params?: IPepGenericListParams, fields? : GridDataViewField[]){
-        return await this.genericResourceService.getItems(this.genericViewer.view.Resource.Name, deleted,  this.fieldsIDs, this.genericViewer.filter, params, fields)
+    private async _getItems(deleted:boolean, params?: IPepGenericListParams, fields? : GridDataViewField[], resourceFields?: AddonDataScheme['Fields']){
+        return await this.genericResourceService.getItems(this.genericViewer.view.Resource.Name, deleted,  this.fieldsIDs, this.genericViewer.filter, params, fields, resourceFields)
     }
     async getFields(){
         if(!this.fields){
