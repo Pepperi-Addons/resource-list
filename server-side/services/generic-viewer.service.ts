@@ -81,11 +81,9 @@ export class GenericViewerService  {
 
     async getResourceFieldsWithRefFieldsAsDataViewFields(resourceName: string){
         const fields = await this.getResourceFields(resourceName) || {}
-        const resourcesSet: Set<string> = new Set()
         const typeMap = new TypeMap()
         let currentDataViewFields: any[] = []
         //map resource to the reference fields that has that resource
-        const resourceToRefFieldsMap: Map<string, string[]> = new Map()
         Object.keys(fields).forEach(fieldID => {
             const currentField = fields[fieldID]
             if(currentField.Indexed && currentField.Type == "Resource" && currentField.Resource && currentField.IndexedFields){
@@ -102,9 +100,6 @@ export class GenericViewerService  {
                         })
                     }
                 })
-            }
-            if(currentField.Type == "Resource" && currentField.Resource && !resourcesSet.has(currentField.Resource)){
-                resourcesSet.add(currentField.Resource)
             }
             currentDataViewFields.push({
                 FieldID: fieldID,
