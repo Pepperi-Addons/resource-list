@@ -1,56 +1,49 @@
-<pep-page-layout>
-    <ng-container pep-top-area>
-        <div class="buttons-holder">
-            <pep-button class="pep-spacing-element"
-                class='pep-spacing-element'
-                value = "{{'Update' | translate}}"
-                styleType=strong
-                styleStateType=system
-                sizeType=md
-                classNames='update'
-                [disabled]='dialogData == undefined'
-                iconPosition='end'
-                [visible]='true'
-                (buttonClick)='onUpdateButtonClick()'
-            ></pep-button>
-            <pep-button
-                class='pep-spacing-element'
-                value = "{{'Cancel' | translate }}"
-                styleType=weak
-                styleStateType=system
-                sizeType=md
-                classNames='cancel'
-                [disabled]='false'
-                iconPosition='end'
-                [visible]='dialogRef != null'
-                (buttonClick)='onCancelButtonClicked()'
-            ></pep-button>
-        </div>
-    </ng-container>
-    <ng-container pep-main-area>
-        <pep-generic-form *ngIf="loadCompleted"
-            [dataSource]="dataSource"
-            [dataView]="dataView"
-            (fieldClick)="onReferenceClicked($event)"
-        ></pep-generic-form>
-        <div *ngIf="loadCompleted">
-            <array-fields
-                *ngFor="let dataViewOfArrayField of dataViewArrayFields"
-                    id="{{dataViewOfArrayField.FieldID}}"
-                    class="array-field"
-                    [dataViewOfArrayField] = "dataViewOfArrayField"
-                    [dataSource] = 'dataSource'
-                    [referenceFields] ='editor.ReferenceFields'
-                    [resourceName]="editor.Resource.Name"
-                    [originalValue]="originalValue[dataViewOfArrayField.FieldID]"
-                    [event]="dataViewOfArrayField.Event"
-                    >
-            </array-fields>
-        </div>
-    </ng-container>
-</pep-page-layout>
-<pep-size-detector></pep-size-detector>
 
+<div class="buttons-holder">
+    <pep-button class="pep-spacing-element"
+        class='pep-spacing-element'
+        value = "{{'Update' | translate}}"
+        styleType=strong
+        styleStateType=system
+        sizeType=md
+        classNames='update'
+        [disabled]='dialogData == undefined'
+        iconPosition='end'
+        [visible]='true'
+        (buttonClick)='onUpdateButtonClick()'
+    ></pep-button>
+    <pep-button
+        class='pep-spacing-element'
+        value = "{{'Cancel' | translate }}"
+        styleType=weak
+        styleStateType=system
+        sizeType=md
+        classNames='cancel'
+        [disabled]='false'
+        iconPosition='end'
+        [visible]='dialogRef != null'
+        (buttonClick)='onCancelButtonClicked()'
+    ></pep-button>
+</div>
+<pep-generic-form *ngIf="loadCompleted"
+    [dataSource]="dataSource"
+    [dataView]="dataView"
+    (fieldClick)="onReferenceClicked($event)"
+></pep-generic-form>
+<div *ngIf="loadCompleted">
+    <array-fields
+        *ngFor="let dataViewOfArrayField of dataViewArrayFields"
+            id="{{dataViewOfArrayField.FieldID}}"
+            class="array-field"
+            [dataViewOfArrayField] = "dataViewOfArrayField"
+            [dataSource] = 'dataSource'
+            [referenceFields] ='editor.ReferenceFields'
+            [resourceName]="editor.Resource.Name"
+            [originalValue]="originalValue[dataViewOfArrayField.FieldID]"
+            [event]="dataViewOfArrayField.Event"
+            >
+    </array-fields>
+</div>
 
 
 
