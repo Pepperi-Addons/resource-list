@@ -5,6 +5,7 @@ import { config } from "../addon.config";
 import { GENERIC_RESOURCE_OFFLINE_URL, GENERIC_VIEWS_RESOURCE } from "../metadata";
 import { IPepGenericListParams } from "@pepperi-addons/ngx-composite-lib/generic-list";
 import { SmartSearchParser } from "../smart-search-parser/smart-search-parser";
+import { UtilitiesService } from "./utilities-service";
 
 
 @Injectable({ providedIn: 'root' })
@@ -12,18 +13,40 @@ export class GenericResourceOfflineService{
     pluginUUID;
     constructor(
         private addonService: PepAddonService,
+        private utilitiesService: UtilitiesService
     ){
     }
     async getResources(): Promise<any[]>{
         return await this.addonService.getAddonCPICall(config.AddonUUID,`${GENERIC_RESOURCE_OFFLINE_URL}/resources`) || []
     }
-    async getItems(resourceName: string, getDeletedItems: boolean = false, fields: string[], filterQuery?: string, params?: IPepGenericListParams, dataViewFields?: GridDataViewField[], resourceFields?: AddonDataScheme['Fields']): Promise<any>{
+
+    private getAccountUUIDQuery(resourceFields: AddonDataScheme['Fields'] | undefined, accountUUID: string | undefined){
+        if(!accountUUID){
+            return ''
+        }
+        const accountRefFieldID = Object.keys(resourceFields || {}).find(fieldID => {
+            const field = resourceFields[fieldID]
+            return  (field && field.Type == "Resource" && field.Resource == "accounts") 
+        })
+        if(!accountRefFieldID){
+            return ''
+        }
+        return `${accountRefFieldID}=${accountUUID}`
+
+    }
+    async getItems(resourceName: string, getDeletedItems: boolean = false, fields: string[], filterQuery?: string, params?: IPepGenericListParams, dataViewFields?: GridDataViewField[], resourceFields?: AddonDataScheme['Fields'], accountUUID?:string | undefined): Promise<any>{
         try{
             const keyFiledIndex = fields.findIndex(field => field == "Key")
             if(keyFiledIndex < 0){
                 fields = [...fields, "Key"]
             }
             let stringQueryArray = []
+            const accountUUIDQuery = this.getAccountUUIDQuery(resourceFields, accountUUID)
+            
+            if(accountUUIDQuery){
+                stringQueryArray.push(accountUUIDQuery)
+            }
+
             const smartSearchQuery = this.getSmartSearchStringQuery(dataViewFields, params)
 
             if(smartSearchQuery){
@@ -47,6 +70,7 @@ export class GenericResourceOfflineService{
            return (await this.addonService.postAddonCPICall(config.AddonUUID, `${GENERIC_RESOURCE_OFFLINE_URL}/get_items/${resourceName}`, {query: query, fields: fields})).Objects || []
         }catch(e){
             console.log(`error: ${e}`)
+            this.utilitiesService.showDialog('error', 'GeneralErrorMsg', 'close')
             return []
         }
     }
