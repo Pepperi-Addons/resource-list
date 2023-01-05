@@ -89,7 +89,7 @@ export class TableComponent{
         Resource: field?.Resource?.Name,
         Key: field?.Key
       }
-    })
+    }).sort((a,b) => a.Name.localeCompare(b.Name))
   }
   getTableActions(){
     return {
