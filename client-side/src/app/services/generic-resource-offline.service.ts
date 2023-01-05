@@ -31,7 +31,7 @@ export class GenericResourceOfflineService{
         if(!accountRefFieldID){
             return ''
         }
-        return `${accountRefFieldID}.UUID=${accountUUID}`
+        return `${accountRefFieldID}=${accountUUID}`
 
     }
     async getItems(resourceName: string, getDeletedItems: boolean = false, fields: string[], filterQuery?: string, params?: IPepGenericListParams, dataViewFields?: GridDataViewField[], resourceFields?: AddonDataScheme['Fields'], accountUUID?:string | undefined): Promise<any>{
