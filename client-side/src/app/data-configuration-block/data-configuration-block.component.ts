@@ -23,6 +23,7 @@ export class DataConfigurationBlockComponent implements OnInit {
     dataView: any
     currentEditorKey: string
     editor: Editor
+    loadCompleted: Boolean = false
     @Output() hostEvents: EventEmitter<any> = new EventEmitter<any>();
 
     constructor(private translate: TranslateService,
@@ -31,9 +32,11 @@ export class DataConfigurationBlockComponent implements OnInit {
 
        }
     ngOnInit(): void {
+      this.loadCompleted = false
       this.loadBlock()
     }
     ngOnChanges($event){
+      this.loadCompleted = false
       this.loadBlock()
     }
     async loadBlock(){
@@ -46,5 +49,6 @@ export class DataConfigurationBlockComponent implements OnInit {
       }else{
         this.dataView = {}
       }
+      this.loadCompleted = true
     }
 }

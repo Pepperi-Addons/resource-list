@@ -44,12 +44,7 @@ export class FieldEditorComponent implements OnInit {
   ngOnInit(): void {
     this.init()
   }
-  
-  ngOnChanges($event){
-    if($event?.editor && $event?.editor.previousValue != $event?.editor.currentValue){
-      this.init()
-    }
-  }
+
   async loadEditorVariablesAsDialog(){
     //deep copy data source in order to not change it on the list.
     this.dataView = JSON.parse(JSON.stringify(this.dialogData.editorDataView || {}))
