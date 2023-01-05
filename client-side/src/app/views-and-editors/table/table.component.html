@@ -1,7 +1,9 @@
 <pep-page-layout>
     <!--Body-->
     <ng-container pep-main-area>
-        <pep-generic-list class="generic-list"
+        <pep-generic-list 
+            *ngIf="loadCompleted"
+            class="generic-list"
             [showTopBar]="true"
             [dataSource]="dataSource"
             [actions] = "actions"
@@ -37,5 +39,4 @@
         </pep-generic-list>
     </ng-container>
 </pep-page-layout>
-
 <pep-size-detector></pep-size-detector>
