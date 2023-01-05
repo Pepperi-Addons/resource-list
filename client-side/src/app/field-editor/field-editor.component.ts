@@ -30,6 +30,7 @@ export class FieldEditorComponent implements OnInit {
   dataViewArrayFields: any[] = []
   originalValue: any = {}
   gvDataSource: IGenericViewerDataSource
+  ngOnInitOrNgOnChangesHappen: boolean = false
 
   constructor(private injector: Injector,
      private genericResourceService: GenericResourceOfflineService,
@@ -42,7 +43,11 @@ export class FieldEditorComponent implements OnInit {
    }
 
   ngOnInit(): void {
-    this.init()
+    if(!this.ngOnInitOrNgOnChangesHappen){
+      this.loadCompleted = false
+      this.ngOnInitOrNgOnChangesHappen = true
+      this.init()
+    }
   }
 
   async loadEditorVariablesAsDialog(){
@@ -54,8 +59,16 @@ export class FieldEditorComponent implements OnInit {
     this.originalValue = JSON.parse(JSON.stringify(this.dataSource))
   }
 
+  ngOnChanges(){
+    if(!this.ngOnInitOrNgOnChangesHappen){
+      this.loadCompleted = false
+      this.ngOnInitOrNgOnChangesHappen = true
+      this.init()
+    }
+  }
+
   async init(){
-    this.loadCompleted = false
+    
     this.resourcesMap = new Map()
     if(this.dialogData){
       await this.loadEditorVariablesAsDialog()
