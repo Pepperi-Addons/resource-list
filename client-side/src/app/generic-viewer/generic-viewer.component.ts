@@ -244,7 +244,7 @@ export class GenericViewerComponent implements OnInit {
       const firstField = fields.length > 0 ? fields[0] : undefined
       
       if(firstField && firstField.FieldID  == event.key && this.genericViewer.view.isFirstFieldDrillDown){
-        await this.listViewService.emitDrillDownEvent(event, this.genericViewer.view.Key, this.genericViewer.view.Resource.Name)
+        await this.listViewService.emitDrillDownEvent(event.id, this.genericViewer.view.Key, this.genericViewer.view.Resource.Name)
       }
     }
 
