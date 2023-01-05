@@ -29,6 +29,7 @@ export class GenericViewerComponent implements OnInit {
     @Output() pressedCancelEvent: EventEmitter<void> = new EventEmitter<void>()
     @Input() genericViewer: IGenericViewer
     @Input() genericViewerDataSource: IGenericViewerDataSource
+    @Input() accountUUID: string | undefined
 
     listOptions: ListOptions
 
@@ -227,7 +228,7 @@ export class GenericViewerComponent implements OnInit {
       }
       this.dataSource = new DataSource(new DynamicItemsDataSource(async (params) => {
         const resourceFields = await this.genericViewerDataSource.getFields()
-        const items = await this.genericViewerDataSource.getItems(params, fields, resourceFields)
+        const items = await this.genericViewerDataSource.getItems(params, fields, resourceFields, this.accountUUID)
         //in order to support arrays and references we should check the "real" type of each field, and reformat the corresponding item
         this.reformatItems(items, resourceFields)
         
@@ -243,7 +244,7 @@ export class GenericViewerComponent implements OnInit {
       const firstField = fields.length > 0 ? fields[0] : undefined
       
       if(firstField && firstField.FieldID  == event.key && this.genericViewer.view.isFirstFieldDrillDown){
-        await this.listViewService.emitDrillDownEvent(event, this.genericViewer.view.Key, this.genericViewer.view.Resource.Name)
+        await this.listViewService.emitDrillDownEvent(event.id, this.genericViewer.view.Key, this.genericViewer.view.Resource.Name)
       }
     }
 

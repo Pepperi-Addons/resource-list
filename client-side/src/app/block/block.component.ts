@@ -16,12 +16,14 @@ export class BlockComponent implements OnInit {
     }
     hasViewToDisplay: boolean = false
     genericViewerDataSource: RegularGVDataSource
+    accountUUID: string | undefined
     @Output() hostEvents: EventEmitter<any> = new EventEmitter<any>();
 
     constructor(
       private genericResourceService: GenericResourceOfflineService
       ) {}
     ngOnInit(): void {
+      this.accountUUID = this.hostObject.pageParameters?.AccountUUID
       this.loadGenericView(this.hostObject)
     }
     async loadGenericView(hostObject){
@@ -50,6 +52,7 @@ export class BlockComponent implements OnInit {
       }
     } 
     ngOnChanges(e: any): void {
+      this.accountUUID = this.hostObject.pageParameters?.AccountUUID
       this.loadGenericView(e.hostObject.currentValue)
     }
     onDonePressed(numOfSelectedRows: number){
