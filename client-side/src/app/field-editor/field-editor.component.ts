@@ -251,7 +251,7 @@ export class FieldEditorComponent implements OnInit {
       genericViewer: genericViewer,
       gvDataSource: gvDataSource
     }
-    const config = this.dialogService.getDialogConfig({}, 'large')
+    const config = this.dialogService.getDialogConfig({}, 'full-screen')
     const dialogRef = this.dialogService.openDialog(SelectionListComponent, configuration, config)
     dialogRef.componentInstance.pressedCancelEvent.subscribe(() => dialogRef.close() )
     dialogRef.componentInstance.pressedDoneEvent.subscribe((data) => {
