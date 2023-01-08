@@ -6,6 +6,17 @@
             <div header-end-content>
                 <pep-button
                 class="pep-spacing-element"
+                value="Back to list"
+                styleType="weak"
+                styleStateType="system"
+                sizeType="md"
+                classNames=""
+                iconPosition="end"
+                [visible]="true"
+                (buttonClick)="onBackToList()"
+                ></pep-button>
+                <pep-button
+                class="pep-spacing-element"
                 value="Update"
                 [disabled]="!isJsonFilterFileValid"
                 styleType="strong"
@@ -15,17 +26,6 @@
                 iconPosition="end"
                 [visible]="true"
                 (buttonClick)="onUpdate()"
-                ></pep-button>
-                <pep-button
-                class="pep-spacing-element"
-                value="Back to list"
-                styleType="weak"
-                styleStateType="system"
-                sizeType="md"
-                classNames=""
-                iconPosition="end"
-                [visible]="true"
-                (buttonClick)="onBackToList()"
                 ></pep-button>
             </div>   
         </pep-top-bar>
