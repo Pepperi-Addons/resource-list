@@ -46,8 +46,9 @@ export class SelectionListComponent implements OnInit {
   }
 
   async loadList(){
-    this.listOptions = this.selectionListService.createListOptions(this.selectionListConfiguration, this.genericViewer.smartSearchDataView)
-    this.dataSource = await this.viewsListService.createListDataSource(this.genericViewerDataSource, this.genericViewer)
+    const resourceFields = await this.genericViewerDataSource.getFields()
+    this.listOptions = this.selectionListService.createListOptions(this.selectionListConfiguration, this.genericViewer.smartSearchDataView, resourceFields)
+    this.dataSource = await this.viewsListService.createListDataSource(this.genericViewerDataSource, this.genericViewer, resourceFields)
     this.loadCompleted = true
   }
 

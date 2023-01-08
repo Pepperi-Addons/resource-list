@@ -68,7 +68,6 @@ export class FieldEditorComponent implements OnInit {
   }
 
   async init(){
-    
     this.resourcesMap = new Map()
     if(this.dialogData){
       await this.loadEditorVariablesAsDialog()
@@ -86,6 +85,7 @@ export class FieldEditorComponent implements OnInit {
     const referenceFieldsWithoutContainedArray = this.editor.ReferenceFields?.filter(referenceField => 
       this.resourceFields[referenceField.FieldID]?.Type !=  'Array')
     if(referenceFieldsWithoutContainedArray?.length > 0){
+
       await this.reformatReferenceFields(referenceFieldsWithoutContainedArray)
     }
   }
@@ -159,7 +159,7 @@ export class FieldEditorComponent implements OnInit {
       return
     }
     if(field?.SelectionType == SELECTION_LIST){
-      dataViewField.Type == "Button"
+      dataViewField.Type = "Button"
     }
     else if(field?.SelectionType == DROP_DOWN){
       dataViewField.Type = "ComboBox"

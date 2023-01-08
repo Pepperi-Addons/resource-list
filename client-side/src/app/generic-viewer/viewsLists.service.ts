@@ -34,7 +34,7 @@ export class ViewsListsService{
         return value.join(',')
     }
 
-    async createListDataSource(genericViewerDataSource: IGenericViewerDataSource, genericViewer: IGenericViewer): Promise<DataSource>{
+    async createListDataSource(genericViewerDataSource: IGenericViewerDataSource, genericViewer: IGenericViewer, resourceFields: AddonDataScheme['Fields']): Promise<DataSource>{
         // let items = await genericViewerDataSource.getItems()
         const fields =  genericViewer.viewDataview.Fields || []
         if(genericViewer.view.isFirstFieldDrillDown && fields.length > 0){
@@ -43,11 +43,10 @@ export class ViewsListsService{
         const columns = genericViewer.viewDataview.Columns || []
         // items = this.reformatListItems(items, await genericViewerDataSource.getFields())
         return new DataSource(new DynamicItemsDataSource(async (params) => {
-            const resourceFields = await genericViewerDataSource.getFields()
             const items = await genericViewerDataSource.getItems(params, fields, resourceFields, undefined)
             const formattedItems = this.reformatListItems(items, resourceFields)
             return {
-                items: items,
+                items: formattedItems,
                 totalCount: items.length
             }
 

@@ -52,7 +52,7 @@ export class ViewsService{
             view: view,
             viewDataview: dataview,
             filter: toApiQueryString(view.Filter) || '',
-            smartSerachDataview: smartSearchDataView
+            smartSearchDataView: smartSearchDataView
         }
     }
     private async getDefaultView(resourceName: string){
