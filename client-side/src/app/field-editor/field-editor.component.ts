@@ -30,6 +30,7 @@ export class FieldEditorComponent implements OnInit {
   dataViewArrayFields: any[] = []
   originalValue: any = {}
   gvDataSource: IGenericViewerDataSource
+  ngOnInitOrNgOnChangesHappen: boolean = false
 
   constructor(private injector: Injector,
      private genericResourceService: GenericResourceOfflineService,
@@ -42,14 +43,13 @@ export class FieldEditorComponent implements OnInit {
    }
 
   ngOnInit(): void {
-    this.init()
-  }
-  
-  ngOnChanges($event){
-    if($event?.editor && $event?.editor.previousValue != $event?.editor.currentValue){
+    if(!this.ngOnInitOrNgOnChangesHappen){
+      this.loadCompleted = false
+      this.ngOnInitOrNgOnChangesHappen = true
       this.init()
     }
   }
+
   async loadEditorVariablesAsDialog(){
     //deep copy data source in order to not change it on the list.
     this.dataView = JSON.parse(JSON.stringify(this.dialogData.editorDataView || {}))
@@ -59,8 +59,15 @@ export class FieldEditorComponent implements OnInit {
     this.originalValue = JSON.parse(JSON.stringify(this.dataSource))
   }
 
+  ngOnChanges(){
+    if(!this.ngOnInitOrNgOnChangesHappen){
+      this.loadCompleted = false
+      this.ngOnInitOrNgOnChangesHappen = true
+      this.init()
+    }
+  }
+
   async init(){
-    this.loadCompleted = false
     this.resourcesMap = new Map()
     if(this.dialogData){
       await this.loadEditorVariablesAsDialog()
@@ -78,6 +85,7 @@ export class FieldEditorComponent implements OnInit {
     const referenceFieldsWithoutContainedArray = this.editor.ReferenceFields?.filter(referenceField => 
       this.resourceFields[referenceField.FieldID]?.Type !=  'Array')
     if(referenceFieldsWithoutContainedArray?.length > 0){
+
       await this.reformatReferenceFields(referenceFieldsWithoutContainedArray)
     }
   }
@@ -151,7 +159,7 @@ export class FieldEditorComponent implements OnInit {
       return
     }
     if(field?.SelectionType == SELECTION_LIST){
-      dataViewField.Type == "Button"
+      dataViewField.Type = "Button"
     }
     else if(field?.SelectionType == DROP_DOWN){
       dataViewField.Type = "ComboBox"

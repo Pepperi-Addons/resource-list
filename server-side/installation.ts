@@ -35,7 +35,7 @@ export async function upgrade(client: Client, request: Request): Promise<any> {
     await createAddonBlockRelation(client)
     await createPageBlockRelation(client);
     await createSettingsRelation(client);
-    createDIMXRelation(client)
+    await createDIMXRelation(client)
     return {success:true,resultObject:{}}
 }
 function getDIMXRelationObjects(){

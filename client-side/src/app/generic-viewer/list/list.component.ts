@@ -26,6 +26,7 @@ export class ListComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
+    this.listOptions
   }
 
   onFieldClicked(event){
