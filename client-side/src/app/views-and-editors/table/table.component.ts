@@ -72,7 +72,6 @@ export class TableComponent{
     this.fields = await this.service.getItems(undefined, recycleBin)
     this.items = this.fieldsToListItems(this.fields)
     this.dataSource = new DataSource(this.items, this.listFields, this.widthArray, this.searchCB)
-    debugger
     this.loadCompleted = true
   }
   initDimxService(){
