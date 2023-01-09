@@ -4,7 +4,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { GenericResourceService } from '../services/generic-resource-service';
 import { EditorForm } from '../editors/editor-form'
 import { IPepOption } from '@pepperi-addons/ngx-lib';
-import { Editor, OpenMode, IReferenceField } from 'shared'
+import { Editor, IReferenceField } from 'shared'
 import { EditorsService } from '../services/editors.service';
 import { PepDialogActionsType, PepDialogData, PepDialogService } from '@pepperi-addons/ngx-lib/dialog';
 import { ReferenceFieldsTableComponent } from '../reference-fields-table/reference-fields-table.component';
@@ -30,7 +30,6 @@ export class EditorsFormComponent implements OnInit {
   dataViewKey: string
   editorName: string = ""
   openModes: IPepOption[] = []
-  openMode: OpenMode = 'popup'
   editCard: boolean = false
   resourceName: string
   loadCompleted: boolean = false
@@ -47,16 +46,6 @@ export class EditorsFormComponent implements OnInit {
     }
 
   ngOnInit(): void {
-    this.openModes = [
-      {
-        key: "same-page",
-        value: this.translate.instant("Replace")
-      },
-      {
-        key: "popup",
-        value: this.translate.instant("Popup")
-      }
-    ]
     this.dataViewKey  = this.route.snapshot.paramMap.get('key')
     this.initGeneralTab()
   }
@@ -99,10 +88,6 @@ export class EditorsFormComponent implements OnInit {
     }
     await this.editorsService.upsertItem(editor)
     this.showDialog('Update', 'UpdateDialogMSG', 'close')
-  }
-  onOpenModeChange(event){
-    this.openMode = event
-    this.editorForm.setOpenMode(this.openMode)
   }
   showDialog(title: string, content: string, actionsType: PepDialogActionsType){
     const dataMsg = new PepDialogData({
