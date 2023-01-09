@@ -28,6 +28,7 @@ export class TableComponent{
   recycleBin: boolean = false
   fields: any[]
   listFields: any[]
+  loadCompleted: boolean = false
   searchCB = (str, items) => {
     return items.filter(item => item.Description.toLowerCase().includes(str.toLowerCase()) || item.Name.toLowerCase().includes(str.toLowerCase()))
   }
@@ -71,6 +72,7 @@ export class TableComponent{
     this.fields = await this.service.getItems(undefined, recycleBin)
     this.items = this.fieldsToListItems(this.fields)
     this.dataSource = new DataSource(this.items, this.listFields, this.widthArray, this.searchCB)
+    this.loadCompleted = true
   }
   initDimxService(){
     const dimxHostObject: DIMXHostObject = {
@@ -89,7 +91,7 @@ export class TableComponent{
         Resource: field?.Resource?.Name,
         Key: field?.Key
       }
-    })
+    }).sort((a,b) => a.Name.localeCompare(b.Name))
   }
   getTableActions(){
     return {

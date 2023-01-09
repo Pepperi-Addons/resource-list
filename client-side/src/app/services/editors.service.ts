@@ -9,6 +9,7 @@ import { GenericResourceService } from "./generic-resource-service";
 @Injectable({ providedIn: 'root' })
 export class EditorsService implements IDataService{
     pluginUUID;
+    name = "Editor"
     constructor(
         private utilitiesService: UtilitiesService,
         private pepHttp: PepHttpService,

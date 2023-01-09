@@ -38,25 +38,6 @@
                     [dataView]="dataView" 
                     ></pep-generic-form>
                 </div>
-                <!-- ---------design------------- -->
-                <div>
-                    <pep-separator
-                        [label]="'Design' | translate">
-                    </pep-separator>
-                    <pep-select
-                        class="open-mode-options" 
-                        value="same-page"
-                        label="open mode"
-                        type="select"
-                        [mandatory]="false"
-                        [disabled]="false"
-                        xAlignment="left"
-                        [options]="openModes"
-                        [showTitle]="true"
-                        (valueChange)="onOpenModeChange($event)"
-                        [emptyOption]="false"
-                    ></pep-select>
-                </div>
                 <!-- Resource Fields -->
                 <div>
                     <block-reference-fields-table *ngIf= "resourceName != undefined"

@@ -8,6 +8,7 @@ import { AddonData } from "@pepperi-addons/papi-sdk";
 import { GenericResourceService } from "./generic-resource-service";
 @Injectable({ providedIn: 'root' })
 export class ViewsService implements IDataService{
+    name = "View"
     pluginUUID;
     constructor(
         private utilitiesService: UtilitiesService,
