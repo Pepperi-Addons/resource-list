@@ -41,7 +41,6 @@ export class ContainedResourceArrayFieldComponent implements OnInit {
       }
       this.containedViewerDataSource = new ContainedArrayGVDataSource(this.originalValue)
       this.event.asObservable().subscribe((obj) => {
-        //probably need to cast here 
         obj['value'] = this.containedViewerDataSource.getUpdatedItems()
       })
       this.loadCompleted = true
