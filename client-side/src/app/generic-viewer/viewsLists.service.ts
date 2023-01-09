@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { PepAddonService } from "@pepperi-addons/ngx-lib";
 import { AddonDataScheme, MenuDataView, SchemeField } from "@pepperi-addons/papi-sdk";
 import { IGenericViewer } from "shared";
-import { DataSource } from "../data-source/data-source";
+import { DataSource, DynamicItemsDataSource } from "../data-source/data-source";
 import { IGenericViewerDataSource } from "../generic-viewer-data-source";
 import { DRILL_DOWN_EVENT_KEY } from "../metadata";
 
@@ -34,15 +34,24 @@ export class ViewsListsService{
         return value.join(',')
     }
 
-    async createListDataSource(genericViewerDataSource: IGenericViewerDataSource, genericViewer: IGenericViewer): Promise<DataSource>{
-        let items = await genericViewerDataSource.getItems()
+    async createListDataSource(genericViewerDataSource: IGenericViewerDataSource, genericViewer: IGenericViewer, resourceFields: AddonDataScheme['Fields']): Promise<DataSource>{
+        // let items = await genericViewerDataSource.getItems()
         const fields =  genericViewer.viewDataview.Fields || []
         if(genericViewer.view.isFirstFieldDrillDown && fields.length > 0){
             fields[0].Type = "Link"
         }
         const columns = genericViewer.viewDataview.Columns || []
-        items = this.reformatListItems(items, await genericViewerDataSource.getFields())
-        return new DataSource(items, fields, columns)
+        // items = this.reformatListItems(items, await genericViewerDataSource.getFields())
+        return new DataSource(new DynamicItemsDataSource(async (params) => {
+            const items = await genericViewerDataSource.getItems(params, fields, resourceFields, undefined)
+            const formattedItems = this.reformatListItems(items, resourceFields)
+            return {
+                items: formattedItems,
+                totalCount: items.length
+            }
+
+
+        }), fields, columns)
     }
 
     async emitDrillDownEvent(itemKey: string, viewKey: string, resourceName:string){

@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { TranslateService } from "@ngx-translate/core";
-import { GridDataViewColumn, GridDataViewField, MenuDataView } from "@pepperi-addons/papi-sdk";
+import { AddonDataScheme, GridDataViewColumn, GridDataViewField, MenuDataView } from "@pepperi-addons/papi-sdk";
 import { DataSource } from "src/app/data-source/data-source";
 import { IGenericViewerDataSource } from "src/app/generic-viewer-data-source";
 import { IGenericViewerConfigurationObject } from "src/app/metadata";
@@ -16,7 +16,8 @@ export class SelectionListService{
         private translate: TranslateService,
         private viewsService: ViewsListsService) {}
 
-    createListOptions(selectionListConfiguration: IGenericViewerConfigurationObject, smartSearchDataView: MenuDataView): ListOptions{
+    createListOptions(selectionListConfiguration: IGenericViewerConfigurationObject, smartSearchDataView: MenuDataView, resourceFields: AddonDataScheme['Fields']): ListOptions{
+        const smartSearchConfiguration = this.viewsService.getSmartSearchConfiguration(smartSearchDataView, resourceFields)
         return {
             actions: {get: () => []},
             selectionType: selectionListConfiguration.selectionList?.selection || "single",
@@ -36,9 +37,7 @@ export class SelectionListService{
                     classNames: "cancel"
                 }
             ],
-            smartSearchDataView: {
-                dataView: smartSearchDataView
-            }
+            smartSearchDataView: smartSearchConfiguration
         }
     }
 }
