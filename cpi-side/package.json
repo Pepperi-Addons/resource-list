@@ -16,6 +16,7 @@
   "dependencies": {
     "@pepperi-addons/cpi-node": "^1.1.7",
     "@pepperi-addons/papi-sdk": "^1.43.0",
+    "@pepperi-addons/pepperi-filters": "^1.0.19",
     "rollup-plugin-typescript2": "^0.30.0",
     "shared": "file:../shared"
   },
