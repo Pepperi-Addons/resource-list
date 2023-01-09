@@ -47,7 +47,7 @@ export class GenericResourceOfflineService{
                 stringQueryArray.push(accountUUIDQuery)
             }
 
-            const smartSearchQuery = this.getSmartSearchStringQuery(dataViewFields, params)
+            const smartSearchQuery = this.getSmartSearchStringQuery(resourceFields, params)
 
             if(smartSearchQuery){
                 stringQueryArray.push(`(${smartSearchQuery})`)
@@ -74,11 +74,11 @@ export class GenericResourceOfflineService{
             return []
         }
     }
-    private getSmartSearchStringQuery(dataViewFields: GridDataViewField[], params?: IPepGenericListParams ){
+    private getSmartSearchStringQuery(resourceFields: AddonDataScheme['Fields'], params?: IPepGenericListParams ){
         if(!params?.filters){
             return ''
         }
-        return new SmartSearchParser(params.filters, dataViewFields).toString()
+        return new SmartSearchParser(params.filters, resourceFields).toString()
     }
 
     private getSearchStringQuery(dataViewFields: GridDataViewField[] = [], params?: IPepGenericListParams, resourceFields?: AddonDataScheme['Fields']){
