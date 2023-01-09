@@ -31,9 +31,6 @@ export class ContainedResourceArrayFieldComponent implements OnInit {
     const referenceField = this.referenceFields.find(referenceField => this.configurationObject.FieldID == referenceField.FieldID)
     if(referenceField.SelectionList){
       this.genericViewer = await this.genericResourceService.getGenericView(referenceField.SelectionListKey)
-      if(this.genericViewer?.editor?.Resource?.Name){
-        this.genericViewer.editor.Resource.Name = this.resourceName
-      }
       this.genericViewerConfiguration = {
         viewsList: [
           {
@@ -44,6 +41,7 @@ export class ContainedResourceArrayFieldComponent implements OnInit {
       }
       this.containedViewerDataSource = new ContainedArrayGVDataSource(this.originalValue)
       this.event.asObservable().subscribe((obj) => {
+        //probably need to cast here 
         obj['value'] = this.containedViewerDataSource.getUpdatedItems()
       })
       this.loadCompleted = true
