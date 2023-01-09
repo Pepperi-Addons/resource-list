@@ -15,6 +15,7 @@ import { IGenericViewerDataSource, isRegularGVDataSource, RegularGVDataSource } 
 import { GVButton, ListOptions } from './generic-viewer.model';
 import { GenericResourceOfflineService } from '../services/generic-resource-offline.service';
 import { ViewsListsService } from './viewsLists.service';
+import { UtilitiesService } from '../services/utilities-service';
 
 @Component({
     selector: 'app-generic-viewer',
@@ -51,7 +52,8 @@ export class GenericViewerComponent implements OnInit {
          private injector: Injector,
          private viewContainerRef: ViewContainerRef,
          private dimxService: PepDIMXHelperService,
-         private listViewService: ViewsListsService ) 
+         private listViewService: ViewsListsService,
+         private utilitiesService: UtilitiesService ) 
     {
           this.actions.get = this.getActionsCallBack()
           this.dialogRef = this.injector.get(MatDialogRef, null)
@@ -351,12 +353,16 @@ export class GenericViewerComponent implements OnInit {
               actions.push({
                 title: this.lineMenuItemsMap.get("Delete").Title,
                 handler: async (selectedRows) => {
-                  const selectedItemKey = selectedRows.rows[0]
-                  const items = await this.genericViewerDataSource.getItems()
-                  const item = items.find(item => item.Key == selectedItemKey)
-                  if(item){
-                    await this.genericViewerDataSource.deleteItem(item)
-                    await this.loadList(this.genericViewer.viewDataview)
+                  try{
+                    const selectedItemKey = selectedRows.rows[0]
+                    const items = await this.genericViewerDataSource.getItems()
+                    const item = items.find(item => item.Key == selectedItemKey)
+                    if(item){
+                      await this.genericViewerDataSource.deleteItem(item)
+                      await this.loadList(this.genericViewer.viewDataview)
+                    }
+                  }catch(err){
+                      this.utilitiesService.showDialog('Error', 'DeleteError', 'close')
                   }
                 }
               })

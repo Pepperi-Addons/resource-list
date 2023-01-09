@@ -53,5 +53,6 @@
     "View": "View",
     "GeneralErrorMsg": "Error occurred, please try again later.",
     "AddView": "Add View",
-    "AddEditor": "Add Editor"
+    "AddEditor": "Add Editor",
+    "DeleteError": "could not delete the item, please make sure you have the right permissions in order to delete this item"
 }
