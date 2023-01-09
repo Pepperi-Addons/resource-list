@@ -80,6 +80,7 @@ export class GenericViewerService  {
     }
 
     async getResourceFieldsWithRefFieldsAsDataViewFields(resourceName: string){
+        debugger
         const fields = await this.getResourceFields(resourceName) || {}
         const typeMap = new TypeMap()
         let currentDataViewFields: any[] = []

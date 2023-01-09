@@ -28,6 +28,7 @@ export class AddFormComponent implements OnInit {
   isValid: boolean = false
   service: IDataService
   resources: any[]
+  title: string
 
 
 
@@ -41,6 +42,7 @@ export class AddFormComponent implements OnInit {
 
   ngOnInit(): void {
     this.service = this.incoming.service
+    this.title = this.translate.instant('Add' + this.incoming.service.name)
     this.service.getResources().then(resources => {
       this.resources = resources
       const resourcesNames = this.getResourcesNames(resources)
@@ -89,8 +91,8 @@ export class AddFormComponent implements OnInit {
       Mandatory: false,
       Layout: {
           Origin: {
-            X: 1,
-            Y: 0
+            X: 0,
+            Y: 1
           },
           Size: {
             Width: 1,
@@ -108,7 +110,7 @@ export class AddFormComponent implements OnInit {
       Layout: {
           Origin: {
             X: 0,
-            Y:1
+            Y: 2
           },
           Size: {
             Width: 1,
