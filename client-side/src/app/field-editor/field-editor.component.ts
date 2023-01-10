@@ -191,9 +191,14 @@ export class FieldEditorComponent implements OnInit {
     return arr.map(val => castingMap.cast(type, val))
   } 
   castPrimitiveArraysInDataSource(){
+    const castingMap = new CastingMap()
     Object.keys(this.dataSource).forEach(key => {
+      //here we casting all the primitives
+      if(this.resourceFields[key].Type != "Array"){
+        this.dataSource[key] = castingMap.cast(this.resourceFields[key].Type, this.dataSource[key])
+      }
       //cast only arrays that not contained resource
-      if(this.resourceFields[key]?.Type == 'Array' && this.resourceFields[key].Items.Type != 'ContainedResource'){
+      else if(this.resourceFields[key]?.Type == 'Array' && this.resourceFields[key].Items.Type != 'ContainedResource'){
         this.dataSource[key] = this.castStringArray(this.dataSource[key], this.resourceFields[key].Items.Type)
       }
     })
@@ -202,7 +207,7 @@ export class FieldEditorComponent implements OnInit {
   async onUpdateButtonClick(){
     try{
       this.dataViewArrayFields.map(field => {
-        if(field.Type == 'ContainedResource'){
+      if(field.Type == 'ContainedResource'){
           const result = {}
           field.Event.next(result)
           this.dataSource[field.FieldID] = result['value']

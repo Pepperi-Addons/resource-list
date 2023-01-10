@@ -31,9 +31,6 @@ export class ContainedResourceArrayFieldComponent implements OnInit {
     const referenceField = this.referenceFields.find(referenceField => this.configurationObject.FieldID == referenceField.FieldID)
     if(referenceField.SelectionList){
       this.genericViewer = await this.genericResourceService.getGenericView(referenceField.SelectionListKey)
-      if(this.genericViewer?.editor?.Resource?.Name){
-        this.genericViewer.editor.Resource.Name = this.resourceName
-      }
       this.genericViewerConfiguration = {
         viewsList: [
           {
