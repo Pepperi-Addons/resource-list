@@ -281,14 +281,7 @@ export class GenericViewerComponent implements OnInit {
       }
     }
     async backToList(){
-      const items = await this.getItemsCopy()
-      this.menuItems = this.menuItems.filter(menuItem => menuItem.key != "BackToList")
-      this.menuItems.push({
-        key: "RecycleBin",
-        text: "Recycle bin"
-      })
-      this.actions.get = this.getActionsCallBack()
-      this.dataSource = new DataSource(items, this.dataSource.getFields(), this.dataSource.getColumns())
+      await this.loadViewBlock()
     }
     menuItemClick($event){
       switch($event.source.key){
