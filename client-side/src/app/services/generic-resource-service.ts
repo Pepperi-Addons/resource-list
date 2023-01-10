@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { PepAddonService, PepHttpService } from "@pepperi-addons/ngx-lib";
 import { AddonDataScheme } from "@pepperi-addons/papi-sdk";
 import { config } from "../addon.config";
-import { defaultCollectionFields, GENERIC_RESOURCE_OFFLINE_URL, GENERIC_VIEWS_RESOURCE, IDataViewField } from "../metadata";
+import { defaultCollectionFields, IDataViewField } from "../metadata";
 import { TypeMap } from "shared";
 import { UtilitiesService } from './utilities-service'
 
@@ -48,7 +48,7 @@ export class GenericResourceService{
         const fields: IDataViewField[] = Object.keys(resource.Fields).map(fieldID => {
           return {
             FieldID: fieldID,
-            Mandatory: true,
+            Mandatory: (resource.Fields[fieldID] as any)?.Mandatory || false,
             ReadOnly: true,
             Title: fieldID,
             Type: typeMap.get(resource.Fields[fieldID].Type)
