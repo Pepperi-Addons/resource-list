@@ -1,11 +1,11 @@
-import { DataViewFieldType, GridDataViewField } from "@pepperi-addons/papi-sdk";
+import { AddonDataScheme, SchemeFieldType } from "@pepperi-addons/papi-sdk";
 import { DateOperation, JSONComplexFilter, JSONDateTimeFilter, JSONDoubleFilter, JSONIntegerFilter, JSONRegularFilter, JSONStringFilter, StringOperation, concat, toApiQueryString } from "@pepperi-addons/pepperi-filters";
 import { NumberFilter, RegularFilter, SmartFilter } from "./smart-search-filters.model";
 
 export class SmartSearchParser{
     private jsonFilters: (JSONRegularFilter | JSONComplexFilter)[]
-    constructor(filters: SmartFilter[], dataViewFields: GridDataViewField[]){
-        this.jsonFilters = this.convertSmartSearchFilterToJsonFilterArray(filters, dataViewFields)
+    constructor(filters: SmartFilter[], resourceFields: AddonDataScheme['Fields']){
+        this.jsonFilters = this.convertSmartSearchFilterToJsonFilterArray(filters, resourceFields)
         return this
     }
     toString(){
@@ -15,28 +15,28 @@ export class SmartSearchParser{
         const firstFilter = this.jsonFilters.pop()
         return toApiQueryString(concat(true, firstFilter, ...this.jsonFilters))
     }
-    private convertSmartSearchFilterToJsonFilterArray(filters: SmartFilter[], dataViewFields: GridDataViewField[]): (JSONRegularFilter | JSONComplexFilter)[]{
+    private convertSmartSearchFilterToJsonFilterArray(filters: SmartFilter[], resourceFields: AddonDataScheme['Fields']): (JSONRegularFilter | JSONComplexFilter)[]{
         return filters.map((filter, index) => {
-            const type = dataViewFields.find((dataViewField => dataViewField.FieldID == filter.fieldId))?.Type || "TextBox"
+            const type = resourceFields[filter.fieldId]?.Type || "String"
             return JSONRegularFilterBuilder.create(filter, type)
         })
     }
 }
 class JSONRegularFilterBuilder{
-    static create(filter: SmartFilter, type: DataViewFieldType): JSONRegularFilter | JSONComplexFilter{
+    static create(filter: SmartFilter, type: SchemeFieldType): JSONRegularFilter | JSONComplexFilter{
 
         switch (type){
-            case "NumberInteger":
+            case "Integer":
                 return new IntegerFilter(filter)
-            case "TextBox":
+            case "String":
                 return  new StringFilter(filter)
             //will be in the future
             // case "Boolean":
             //     return "Bool"
 
-            case "NumberReal":
+            case "Double":
                 return new DoubleFilter(filter)
-            case "DateAndTime":
+            case "DateTime":
                 return new DateFilter(filter)
 
             //maybe will be in the future:
