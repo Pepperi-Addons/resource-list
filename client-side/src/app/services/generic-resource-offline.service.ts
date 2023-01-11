@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { PepAddonService } from "@pepperi-addons/ngx-lib";
-import { AddonDataScheme, GridDataViewField } from "@pepperi-addons/papi-sdk";
+import { AddonDataScheme, GridDataViewField, MenuDataView, MenuDataViewField } from "@pepperi-addons/papi-sdk";
 import { config } from "../addon.config";
 import { GENERIC_RESOURCE_OFFLINE_URL, GENERIC_VIEWS_RESOURCE } from "../metadata";
 import { IPepGenericListParams } from "@pepperi-addons/ngx-composite-lib/generic-list";
@@ -34,7 +34,16 @@ export class GenericResourceOfflineService{
         return `${accountRefFieldID}=${accountUUID}`
 
     }
-    async getItems(resourceName: string, getDeletedItems: boolean = false, fields: string[], filterQuery?: string, params?: IPepGenericListParams, dataViewFields?: GridDataViewField[], resourceFields?: AddonDataScheme['Fields'], accountUUID?:string | undefined): Promise<any>{
+    async getItems(
+        resourceName: string,
+        getDeletedItems: boolean = false,
+        fields: string[],
+        filterQuery?: string,
+        params?: IPepGenericListParams,
+        dataViewFields?: GridDataViewField[],
+        resourceFields?: AddonDataScheme['Fields'],
+        accountUUID?:string | undefined,
+        searchDataView?: MenuDataView): Promise<any> {
         try{
             const keyFiledIndex = fields.findIndex(field => field == "Key")
             if(keyFiledIndex < 0){
@@ -53,7 +62,7 @@ export class GenericResourceOfflineService{
                 stringQueryArray.push(`(${smartSearchQuery})`)
             }
 
-            const searchQuery = this.getSearchStringQuery(dataViewFields, params, resourceFields)
+            const searchQuery = this.getSearchStringQuery(searchDataView?.Fields || [], params)
 
             if(searchQuery){
                 stringQueryArray.push(`(${searchQuery})`)
@@ -67,7 +76,7 @@ export class GenericResourceOfflineService{
             stringQueryArray.push(`(Hidden=${getDeletedItems})`)
             let query = {where: stringQueryArray.join(' AND '), include_deleted: getDeletedItems}
 
-           return (await this.addonService.postAddonCPICall(config.AddonUUID, `${GENERIC_RESOURCE_OFFLINE_URL}/get_items/${resourceName}`, {query: query, fields: fields})).Objects || []
+        return (await this.addonService.postAddonCPICall(config.AddonUUID, `${GENERIC_RESOURCE_OFFLINE_URL}/get_items/${resourceName}`, {query: query, fields: fields})).Objects || []
         }catch(e){
             console.log(`error: ${e}`)
             this.utilitiesService.showDialog('error', 'GeneralErrorMsg', 'close')
@@ -81,33 +90,16 @@ export class GenericResourceOfflineService{
         return new SmartSearchParser(params.filters, resourceFields).toString()
     }
 
-    private getSearchStringQuery(dataViewFields: GridDataViewField[] = [], params?: IPepGenericListParams, resourceFields?: AddonDataScheme['Fields']){
-        if(!params?.searchString || !resourceFields){
+    private getSearchStringQuery(dataViewFields: MenuDataViewField[] = [], params?: IPepGenericListParams){
+        if(!params?.searchString){
             return ''
         }
         const queryArray = []
-        let alreadyFoundCount = 0
-        for(const dataViewField of dataViewFields){
-            if(alreadyFoundCount == 2){
-                break
-            }
-            const splittedFieldID = dataViewField.FieldID.split('.')
-            const field = resourceFields[splittedFieldID[0]]
+        for(const dataViewField of dataViewFields) {
             if(dataViewField.FieldID == "Key"){
                 queryArray.push(`Key LIKE '${params.searchString}%'`)
             }
-            //if the field is a nested field of reference so we want to add the field only if the ref is indexed and the nested field is of type string
-            if(splittedFieldID.length == 2 && field && field.Indexed){
-                const indexedFields = field.IndexedFields
-                if(indexedFields && indexedFields[splittedFieldID[1]]?.Type == "String"){
-                    queryArray.push(`${dataViewField.FieldID} LIKE '%${params.searchString}%'`)
-                    alreadyFoundCount++
-                }
-            }
-            else if(field?.Indexed && field?.Type == "String"){
-                queryArray.push(`${dataViewField.FieldID} LIKE '%${params.searchString}%'`)
-                alreadyFoundCount++
-            }
+            queryArray.push(`${dataViewField.FieldID} LIKE '%${params.searchString}%'`)
         }
         return `${queryArray.join(' OR ')}`
     }

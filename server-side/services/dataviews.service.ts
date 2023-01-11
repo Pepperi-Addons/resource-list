@@ -27,6 +27,22 @@ export class DataViewsService {
         }
         return await this.addonService.papiClient.metaData.dataViews.upsert(smartSearchDataView)
     }
+
+    async postDefaultSearchDataView(key: string, profileID: number){
+        const searchDataView: MenuDataView = {
+            Type: "Menu",
+            Context: {
+                Name: `GV_${key}_Search`,
+                Profile: {
+                    InternalID : profileID,
+                    Name: "Rep"
+                },
+                ScreenSize: "Landscape",
+            },
+            Fields: []
+        }
+        return await this.addonService.papiClient.metaData.dataViews.upsert(searchDataView)
+    }
     async postDefaultLineMenuDataView(key: string, profileID: number){
         const menuDataView: MenuDataView = {
             Type: "Menu",

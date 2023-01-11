@@ -24,12 +24,13 @@ export class GenericViewerService  {
         const dataViewService = new DataViewsService(this.client)
         const editorService = new EditorsService(this.client)
         const dataViewKey = viewKey.replace(/-/g, '')
-        const [view,[viewDataview], [lineMenuItems], [menuItems], [smartSearch]] = await Promise.all([
+        const [view,[viewDataview], [lineMenuItems], [menuItems], [smartSearch], [search]] = await Promise.all([
             viewService.getItemByKey(viewKey) as Promise<View>,
             dataViewService.getDataView(`GV_${dataViewKey}_View`),
             dataViewService.getDataView(`RV_${dataViewKey}_LineMenu`),
             dataViewService.getDataView(`GV_${dataViewKey}_Menu`),
-            dataViewService.getDataView(`GV_${dataViewKey}_SmartSearch`)
+            dataViewService.getDataView(`GV_${dataViewKey}_SmartSearch`),
+            dataViewService.getDataView(`GV_${dataViewKey}_Search`)
         ])
         
         let result: any = {
@@ -41,7 +42,8 @@ export class GenericViewerService  {
             editorDataView: undefined,
             resourceName: view.Resource.Name,
             filter: toApiQueryString(view.Filter) || '',
-            smartSearchDataView: smartSearch
+            smartSearchDataView: smartSearch,
+            searchDataView: search
         }
         if(view.Editor){
             const editorDataViewKey = view.Editor.replace(/-/g, '')
@@ -67,15 +69,17 @@ export class GenericViewerService  {
             view = await viewsService.getItemByKey(key) as View
         }
         const dataViewKey = view.Key.replace(/-/g, '');
-        const [[viewDataView], [smartSearchDataView] ] = await Promise.all([
+        const [[viewDataView], [smartSearchDataView], [searchDataView] ] = await Promise.all([
             dataViewService.getDataView(`GV_${dataViewKey}_View`),
-            dataViewService.getDataView(`GV_${dataViewKey}_SmartSearch`)
+            dataViewService.getDataView(`GV_${dataViewKey}_SmartSearch`),
+            dataViewService.getDataView(`GV_${dataViewKey}_Search`),
         ])
         return {
             view: view,
             viewDataview: viewDataView as GridDataView,
             smartSearchDataView: smartSearchDataView as MenuDataView,
-            filter: toApiQueryString(view.Filter) || ''
+            filter: toApiQueryString(view.Filter) || '',
+            searchDataView: searchDataView as MenuDataView,
         }
     }
 

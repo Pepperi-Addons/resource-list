@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { IPepDraggableItem } from '@pepperi-addons/ngx-lib/draggable-items';
-import { GridDataViewField } from '@pepperi-addons/papi-sdk';
+import { BaseDataView, DataViewType, GridDataViewField } from '@pepperi-addons/papi-sdk';
 import { AbstractProfileCardsTabComponent } from '../abstract-profile-cards-tab/abstract-profile-cards-tab.component';
 import { IDataViewField, IMappedField, IViewMappedField } from '../metadata';
 import { DataViewService } from '../services/data-view-service';
@@ -70,4 +70,16 @@ export class ViewsFormTabComponent extends AbstractProfileCardsTabComponent impl
      width: 10
     };
  }
+
+ getDefaultDataView(): BaseDataView {
+  return {
+    Type: 'Grid',
+    Context: {
+      Name: this.dataViewContextName,
+      Profile: {
+      },
+      ScreenSize: 'Tablet'
+    }
+  };
+}
 }

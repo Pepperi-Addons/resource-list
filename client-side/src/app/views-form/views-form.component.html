@@ -84,6 +84,15 @@
                     [key] ="viewKey">
                 </views-smart-search-tab>
             </mat-tab>
+            <!-- Search Tab -->
+            <mat-tab label="{{'Search' | translate}}" *ngIf="loadCompleted">
+                <views-search-tab
+                    *ngIf="currentTab == 6"
+                    [resourceFields]="resourceFields"
+                    [offlineResource]="offlineResource"
+                    [key] ="viewKey">
+                </views-search-tab>
+            </mat-tab>
         </mat-tab-group>
     </ng-container>
 </pep-page-layout>

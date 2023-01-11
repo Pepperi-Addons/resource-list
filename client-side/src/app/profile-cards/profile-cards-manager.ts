@@ -1,6 +1,6 @@
 import { DataViewService } from '../services/data-view-service';
 import { ProfileService } from '../services/profile-service';
-import { DataView } from '@pepperi-addons/papi-sdk';
+import { BaseDataView, DataView, DataViewType } from '@pepperi-addons/papi-sdk';
 import { IPepProfile, IPepProfileDataViewsCard } from '@pepperi-addons/ngx-lib/profile-data-views-list';
 import { IFieldConvertor, IMappedField } from '../metadata'
 import { IPepDraggableItem } from '@pepperi-addons/ngx-lib/draggable-items';
@@ -112,10 +112,13 @@ export class ProfileCardsManager{
         })
 
     }
-    async createCard(profileID: string){
+    async createCard(profileID: string, defaultDataView: BaseDataView){
         const repDataView = this.getRepDataView()
         //every card inherit rep props, so we deep copy the props
-        const currentDataView = JSON.parse(JSON.stringify(repDataView))
+        let currentDataView = JSON.parse(JSON.stringify(defaultDataView))
+        if(repDataView) {
+            currentDataView = JSON.parse(JSON.stringify(repDataView))
+        }
         const currentProfile = this.availableProfiles.find(profile => profile.id == profileID)
         currentDataView.Context.Profile = {
             InternalID: Number(currentProfile?.id),
