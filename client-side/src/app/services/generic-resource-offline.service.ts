@@ -31,7 +31,7 @@ export class GenericResourceOfflineService{
         if(!accountRefFieldID){
             return ''
         }
-        return `${accountRefFieldID}=${accountUUID}`
+        return `${accountRefFieldID}='${accountUUID}'`
 
     }
     async getItems(
@@ -53,7 +53,7 @@ export class GenericResourceOfflineService{
             const accountUUIDQuery = this.getAccountUUIDQuery(resourceFields, accountUUID)
             
             if(accountUUIDQuery){
-                stringQueryArray.push(accountUUIDQuery)
+                stringQueryArray.push(`(${accountUUIDQuery})`)
             }
 
             const smartSearchQuery = this.getSmartSearchStringQuery(resourceFields, params)

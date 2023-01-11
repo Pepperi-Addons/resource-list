@@ -78,7 +78,7 @@ export class ViewsService{
     private async getDataView(dataviewKey: string){
         const ctx = {Name: dataviewKey, Profile: { Name: 'Rep'}} as DataViewContext
         const dvObject = await pepperi.UIObject.Create(ctx)
-        return dvObject!.dataView
+        return dvObject?.dataView
     }
     private async getEditor(editorKey: string){
         return await pepperi.addons.data.uuid(AddonUUID).table('editors').key(editorKey).get()
