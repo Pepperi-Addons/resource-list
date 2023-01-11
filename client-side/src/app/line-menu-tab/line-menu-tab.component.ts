@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { IPepDraggableItem } from '@pepperi-addons/ngx-lib/draggable-items';
-import {  MenuDataViewField } from '@pepperi-addons/papi-sdk';
+import {  BaseDataView, DataViewType, MenuDataViewField } from '@pepperi-addons/papi-sdk';
 import { IMappedField } from '../metadata';
 import { AbstractProfileCardsTabComponent } from '../abstract-profile-cards-tab/abstract-profile-cards-tab.component';
 
@@ -51,4 +51,17 @@ export class LineMenuTabComponent extends AbstractProfileCardsTabComponent  impl
      },
     };
  }
+
+ 
+ getDefaultDataView(): BaseDataView {
+  return {
+    Type: 'Menu',
+    Context: {
+      Name: this.dataViewContextName,
+      Profile: {
+      },
+      ScreenSize: 'Tablet'
+    }
+  };
+}
 }

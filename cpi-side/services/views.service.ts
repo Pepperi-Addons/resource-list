@@ -8,12 +8,13 @@ export class ViewsService{
 
     async getGenericView(viewKey: string){
         const dataViewKey = this.getDataViewKeyFromUUID(viewKey)
-        const [view,viewDataview, lineMenuItems, menuItems, smartSearchDataView] = await Promise.all([
+        const [view,viewDataview, lineMenuItems, menuItems, smartSearchDataView, searchDataView] = await Promise.all([
             this.getView(viewKey) as Promise<View>,
             this.getDataView(`GV_${dataViewKey}_View`),
             this.getDataView(`RV_${dataViewKey}_LineMenu`),
             this.getDataView(`GV_${dataViewKey}_Menu`),
-            this.getDataView(`GV_${dataViewKey}_SmartSearch`)
+            this.getDataView(`GV_${dataViewKey}_SmartSearch`),
+            this.getDataView(`GV_${dataViewKey}_Search`)
         ])
         let result: any = {
             view : view,
@@ -24,7 +25,8 @@ export class ViewsService{
             editorDataView: undefined,
             resourceName: view.Resource.Name,
             filter: toApiQueryString(view.Filter) || '',
-            smartSearchDataView: smartSearchDataView
+            smartSearchDataView: smartSearchDataView,
+            searchDataView: searchDataView
         }
         if(view.Editor){
             const editorDataViewKey = this.getDataViewKeyFromUUID(view.Editor!)
@@ -38,6 +40,7 @@ export class ViewsService{
         }
         return result
     }
+
     async getSelectionList(viewKey: string | undefined, resourceName: string | undefined){
         let view: View
         if(viewKey){
@@ -48,11 +51,13 @@ export class ViewsService{
         const dataViewKey = this.getDataViewKeyFromUUID(view.Key)
         const dataview = await this.getDataView(`GV_${dataViewKey}_View`) as GridDataView
         const smartSearchDataView = await this.getDataView(`GV_${dataViewKey}_SmartSearch`) as MenuDataView
+        const searchDataView = await this.getDataView(`GV_${dataViewKey}_Search`) as MenuDataView
         return {
             view: view,
             viewDataview: dataview,
             filter: toApiQueryString(view.Filter) || '',
-            smartSearchDataView: smartSearchDataView
+            smartSearchDataView: smartSearchDataView,
+            searchDataView: searchDataView
         }
     }
     private async getDefaultView(resourceName: string){

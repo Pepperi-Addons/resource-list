@@ -5,21 +5,22 @@ import { AbstractProfileCardsTabComponent } from '../abstract-profile-cards-tab/
 import { IDataViewField, IMappedField, ResourceField } from '../metadata';
 
 @Component({
-  selector: 'views-smart-search-tab',
-  templateUrl: './views-smart-search-tab.component.html',
-  styleUrls: ['./views-smart-search-tab.component.scss']
+  selector: 'views-search-tab',
+  templateUrl: './views-search-tab.component.html',
+  styleUrls: ['./views-search-tab.component.scss']
 })
-export class ViewsSmartSearchTabComponent extends AbstractProfileCardsTabComponent implements OnInit {
-  @Input() indexedFields: ResourceField[] = []
+export class ViewsSearchTabComponent extends AbstractProfileCardsTabComponent implements OnInit {
+  @Input() resourceFields: ResourceField[] = []
+  @Input() offlineResource: boolean = true;
 
   setDataViewContextName(): void {
-    this.dataViewContextName = `GV_${this.key}_SmartSearch`
+    this.dataViewContextName = `GV_${this.key}_Search`
   }
   getFields(): IDataViewField[] | Promise<IDataViewField[]> {
-    return this.indexedFields.map(indexedField => {
+    return Object.keys(this.resourceFields || {}).filter(field => this.offlineResource || this.resourceFields[field].Indexed).map(field => {
       return {
-        FieldID: indexedField.FieldID,
-        Title: indexedField.FieldID
+        FieldID: field,
+        Title: field
       }
     })
   }

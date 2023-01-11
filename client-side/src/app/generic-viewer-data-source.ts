@@ -116,7 +116,7 @@ export class RegularGVDataSource implements IGenericViewerDataSource{
         return await this._getItems(false, params, fields, resourceFields, accountUUID)
     }
     private async _getItems(deleted:boolean, params?: IPepGenericListParams, fields? : GridDataViewField[], resourceFields?: AddonDataScheme['Fields'], accountUUID?:string | undefined){
-        return await this.genericResourceService.getItems(this.genericViewer.view.Resource.Name, deleted,  this.fieldsIDs, this.genericViewer.filter, params, fields, resourceFields, accountUUID)
+        return await this.genericResourceService.getItems(this.genericViewer.view.Resource.Name, deleted,  this.fieldsIDs, this.genericViewer.filter, params, fields, resourceFields, accountUUID, this.genericViewer.searchDataView)
     }
     async getFields(){
         if(!this.fields){

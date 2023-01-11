@@ -80,13 +80,15 @@ export class GenericViewerComponent implements OnInit {
       const dropDownOfViews = this.dropDownOfViews || []
       const buttons: GVButton[] = this.createButtonArray()
       const smartSearchDataView = this.listViewService.getSmartSearchConfiguration(this.genericViewer.smartSearchDataView,  await this.genericViewerDataSource.getFields())
+      const searchDataView = this.genericViewer.searchDataView;
       return {
           actions: actions,
           selectionType: selectionType,
           menuItems: menuItems, 
           dropDownOfViews: dropDownOfViews, 
           buttons: buttons,
-          smartSearchDataView: smartSearchDataView
+          smartSearchDataView: smartSearchDataView,
+          searchDataView: searchDataView
       }
     }
     ngOnInit(): void {

@@ -10,7 +10,8 @@ export interface ListOptions {
     menuItems: PepMenuItem[]
     dropDownOfViews: SelectOption[]
     buttons: GVButton[]
-    smartSearchDataView: {dataView: MenuDataView}
+    smartSearchDataView: {dataView: MenuDataView},
+    searchDataView: MenuDataView
 }
 
 export interface GVButton extends PepButton {

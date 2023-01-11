@@ -16,6 +16,10 @@ export class DataViewService{
         return await this.utilitiesService.papiClient.metaData.dataViews.find(query)
     }
     async postDataView(dataView: DataView){
+        if (dataView.Context) { 
+            const name = dataView.Context.Name;
+            dataView.Context.Name = name.replace(/-/g, '');
+        }
         const result =  await this.utilitiesService.papiClient.metaData.dataViews.upsert(dataView)
         return result as GridDataView
     }

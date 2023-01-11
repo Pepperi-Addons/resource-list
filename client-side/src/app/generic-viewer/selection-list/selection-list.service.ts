@@ -16,7 +16,7 @@ export class SelectionListService{
         private translate: TranslateService,
         private viewsService: ViewsListsService) {}
 
-    createListOptions(selectionListConfiguration: IGenericViewerConfigurationObject, smartSearchDataView: MenuDataView, resourceFields: AddonDataScheme['Fields']): ListOptions{
+    createListOptions(selectionListConfiguration: IGenericViewerConfigurationObject, smartSearchDataView: MenuDataView, resourceFields: AddonDataScheme['Fields'], searchDataView: MenuDataView): ListOptions{
         const smartSearchConfiguration = this.viewsService.getSmartSearchConfiguration(smartSearchDataView, resourceFields)
         return {
             actions: {get: () => []},
@@ -37,7 +37,8 @@ export class SelectionListService{
                     classNames: "cancel"
                 }
             ],
-            smartSearchDataView: smartSearchConfiguration
+            smartSearchDataView: smartSearchConfiguration,
+            searchDataView: searchDataView
         }
     }
 }

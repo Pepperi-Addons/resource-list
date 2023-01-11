@@ -36,10 +36,12 @@ export class ViewsFormComponent implements OnInit {
   loadCompleted: boolean = false
   currentTab = 0
   resourceFields : AddonDataScheme['Fields']
+  resourceScheme : AddonDataScheme;
   indexedFields: ResourceField[]
   initialFilter: any
   currentFilter: any
   isJsonFilterFileValid: boolean = true
+  offlineResource: boolean = true
 
   constructor(
     private route: ActivatedRoute,
@@ -76,7 +78,9 @@ export class ViewsFormComponent implements OnInit {
     this.currentView = (await this.viewsService.getItems(key))[0]
     this.initialFilter = this.currentView.Filter 
     this.currentFilter = this.currentView.Filter 
-    this.resourceFields = await this.genericResourceService.getResourceFields(this.currentView.Resource.Name)
+    this.resourceScheme = await this.genericResourceService.getResource(this.currentView.Resource.Name);
+    this.resourceFields = this.resourceScheme.Fields || {};
+    this.offlineResource = this.resourceScheme.SyncData && this.resourceScheme.SyncData.Sync;
     this.indexedFields = this.getIndexedFieldsArray(this.resourceFields)    
     const editorOptionalValues = await this.getEditorOptionalValues()
     this.dataSource = this.convertViewToDataSource(this.currentView)
