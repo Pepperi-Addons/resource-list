@@ -100,3 +100,15 @@ export async function get_selection_list(client: Client, request: Request){
     return await service.getSelectionList(key, resource)
 }
 
+export async function get_search_fields_for_resource(client: Client, request: Request) {
+    validateRequest('GET', request);
+    const resourceName = request.query.resource_name;
+    if (!resourceName) {
+        throw new Error('resource_name cannot be empty');
+    }
+    else {
+        const service = new GenericViewerService(client);
+        return await service.GetResourceSearchFields(resourceName);
+    }
+}
+
