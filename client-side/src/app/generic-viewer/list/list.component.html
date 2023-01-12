@@ -9,6 +9,7 @@
     [selectionType]="listOptions.selectionType"
     (fieldClick)="onFieldClicked($event)"
     [smartFilter]="listOptions.smartSearchDataView"
+    [addPadding]="true"
     >
     <ng-container right-buttons>
         <pep-menu *ngIf="listOptions.menuItems.length > 0"
