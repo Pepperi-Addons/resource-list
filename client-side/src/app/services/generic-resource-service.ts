@@ -77,4 +77,8 @@ export class GenericResourceService{
             return undefined
         }
     }
+
+    async getResrourceSearchFields(resourceName: string): Promise<AddonDataScheme['Fields']> {
+        return await this.addonService.getAddonApiCall(config.AddonUUID, 'api', `get_search_fields_for_resource?resource_name=${resourceName}`).toPromise();
+    }
 }

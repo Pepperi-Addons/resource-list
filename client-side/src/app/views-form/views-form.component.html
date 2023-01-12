@@ -1,6 +1,6 @@
 <pep-page-layout [addPadding]="true" [addPadding]="true">
     <ng-container pep-top-area>
-        <pep-top-bar [title]="currentView.Name">
+        <pep-top-bar [title]="currentView?.Name">
             <div header-end-content>
                 <pep-button
                 class="pep-spacing-element"
@@ -88,8 +88,7 @@
             <mat-tab label="{{'Search' | translate}}" *ngIf="loadCompleted">
                 <views-search-tab
                     *ngIf="currentTab == 6"
-                    [resourceFields]="resourceFields"
-                    [offlineResource]="offlineResource"
+                    [resourceFields]="searchFields"
                     [key] ="viewKey">
                 </views-search-tab>
             </mat-tab>

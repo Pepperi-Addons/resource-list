@@ -1,5 +1,5 @@
 import { Client } from "@pepperi-addons/debug-server/dist";
-import { AddonDataScheme, GridDataView, GridDataViewField, MenuDataView, PapiClient } from "@pepperi-addons/papi-sdk";
+import { AddonDataScheme, GridDataView, GridDataViewField, MenuDataView, PapiClient, SchemeField } from "@pepperi-addons/papi-sdk";
 import { IGenericViewer, View } from "shared";
 import { DataViewsService } from "./dataviews.service";
 import { EditorsService } from "./editors.service";
@@ -121,8 +121,50 @@ export class GenericViewerService  {
         const resource = await this.papiClient.resources.resource('resources').key(resourceName).get() as AddonDataScheme
         return resource?.Fields || {}
     }
-
-
     
-
+    async GetResourceSearchFields(resourceName: string): Promise<AddonDataScheme['Fields']> {
+        const fields: AddonDataScheme['Fields'] = {
+            Key: {
+                Type: 'String',
+                Unique: true
+            }
+        }
+        const resource = await this.papiClient.resources.resource('resources').key(resourceName).get() as AddonDataScheme
+        for (const fieldName of Object.keys(resource.Fields || {})) {
+            const field = resource.Fields![fieldName];
+            const isSearchable = this.ShouldAddToSearch(resource.SyncData, field);
+            if(isSearchable) {
+                fields[fieldName] = field;
+            }
+            // if field is reference/object or array of reference/object get their fields
+            if (field.Type === 'Resource' || field.Type === 'ContainedResource' || 
+            (field.Type === 'Array' && (field.Items?.Type === 'Resource' || field.Items?.Type === 'ContainedResource' ))) {
+                const innerResourceName = field.Resource || field.Items?.Resource || '';
+                if (innerResourceName === '') {
+                    console.error(`Reference field ${fieldName} on resource ${resourceName} has no resource connected to it!`);
+                }
+                else {
+                    try {
+                        console.log(`about to get fields for inner scheme ${innerResourceName} referenced by ${fieldName}`);
+                        const innerResource = await this.papiClient.resources.resource('resources').key(innerResourceName).get() as AddonDataScheme
+                        Object.keys(innerResource.Fields || {}).forEach(innerFieldName => {
+                            const innerField = innerResource.Fields![innerFieldName];
+                            if(this.ShouldAddToSearch(resource.SyncData, innerField)) {
+                                fields[`${fieldName}.${innerFieldName}`] = innerField;
+                            }
+                        })
+                    }
+                    catch {
+                        console.log(`could not get fields for inner scheme ${innerResourceName} referenced by ${fieldName}`);
+                    }
+                }
+            }
+        } 
+        return fields;
+    }
+    
+    ShouldAddToSearch(syncData: AddonDataScheme['SyncData'], field: SchemeField) {
+        // for now we can only search on String fields. if the resource have 'sync:false' we only search on indexed fields
+        return (field.Type === 'String' || field.Type === 'Resource') && (syncData?.Sync || field.Indexed);
+    }
 } 

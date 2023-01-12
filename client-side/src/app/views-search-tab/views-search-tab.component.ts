@@ -3,6 +3,10 @@ import { IPepDraggableItem } from '@pepperi-addons/ngx-lib/draggable-items';
 import { BaseDataView, DataViewType, MenuDataViewField, SchemeField } from '@pepperi-addons/papi-sdk';
 import { AbstractProfileCardsTabComponent } from '../abstract-profile-cards-tab/abstract-profile-cards-tab.component';
 import { IDataViewField, IMappedField, ResourceField } from '../metadata';
+import { DataViewService } from '../services/data-view-service';
+import { GenericResourceService } from '../services/generic-resource-service';
+import { ProfileService } from '../services/profile-service';
+import { UtilitiesService } from '../services/utilities-service';
 
 @Component({
   selector: 'views-search-tab',
@@ -10,19 +14,19 @@ import { IDataViewField, IMappedField, ResourceField } from '../metadata';
   styleUrls: ['./views-search-tab.component.scss']
 })
 export class ViewsSearchTabComponent extends AbstractProfileCardsTabComponent implements OnInit {
-  @Input() resourceFields: ResourceField[] = []
-  @Input() offlineResource: boolean = true;
+  @Input() resourceFields: string = '';
+
 
   setDataViewContextName(): void {
     this.dataViewContextName = `GV_${this.key}_Search`
   }
   getFields(): IDataViewField[] | Promise<IDataViewField[]> {
-    return Object.keys(this.resourceFields || {}).filter(field => this.offlineResource || this.resourceFields[field].Indexed).map(field => {
-      return {
-        FieldID: field,
-        Title: field
-      }
-    })
+      return Object.keys(this.resourceFields || {}).map(field => {
+        return {
+          FieldID: field,
+          Title: field
+        }
+      })
   }
   mappedFieldToDataViewField(mappedField: IMappedField, index: number): IDataViewField {
     return {
