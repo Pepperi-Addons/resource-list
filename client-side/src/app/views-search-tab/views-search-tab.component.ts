@@ -3,10 +3,6 @@ import { IPepDraggableItem } from '@pepperi-addons/ngx-lib/draggable-items';
 import { BaseDataView, DataViewType, MenuDataViewField, SchemeField } from '@pepperi-addons/papi-sdk';
 import { AbstractProfileCardsTabComponent } from '../abstract-profile-cards-tab/abstract-profile-cards-tab.component';
 import { IDataViewField, IMappedField, ResourceField } from '../metadata';
-import { DataViewService } from '../services/data-view-service';
-import { GenericResourceService } from '../services/generic-resource-service';
-import { ProfileService } from '../services/profile-service';
-import { UtilitiesService } from '../services/utilities-service';
 
 @Component({
   selector: 'views-search-tab',

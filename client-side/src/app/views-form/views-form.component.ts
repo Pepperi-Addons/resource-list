@@ -41,6 +41,7 @@ export class ViewsFormComponent implements OnInit {
   initialFilter: any
   currentFilter: any
   isJsonFilterFileValid: boolean = true
+  offlineResource: boolean = true
 
   constructor(
     private route: ActivatedRoute,
