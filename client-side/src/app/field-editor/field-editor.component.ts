@@ -193,7 +193,7 @@ export class FieldEditorComponent implements OnInit {
   castPrimitiveArraysInDataSource(){
     const castingMap = new CastingMap()
     Object.keys(this.dataSource).forEach(key => {
-      if(this.resourceFields[key]?.Type && this.resourceFields[key]?.Type != "Array"){
+      if(this.resourceFields[key]?.Type && this.resourceFields[key].Type != "Array"){
         this.dataSource[key] = castingMap.cast(this.resourceFields[key].Type, this.dataSource[key])
       }
       //cast only arrays that not contained resource
