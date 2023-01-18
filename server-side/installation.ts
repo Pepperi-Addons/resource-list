@@ -15,6 +15,9 @@ import { ViewsService } from './services/views.service';
 import { EditorsService } from './services/editors.service';
 import * as AddonConfig from '../addon.config.json'
 import { editorSchema, viewsSchema } from './metadata';
+import semver from 'semver'
+
+
 
 export async function install(client: Client, request: Request): Promise<any> {
     await createAddonBlockRelation(client)
@@ -32,6 +35,12 @@ export async function uninstall(client: Client, request: Request): Promise<any> 
 }
 
 export async function upgrade(client: Client, request: Request): Promise<any> {
+    if (request.body.FromVersion && semver.compare(request.body.FromVersion, '0.7.0') < 0) {
+        const viewsService = new ViewsService(client)
+        const editorsService = new EditorsService(client)
+        await viewsService.createSchema()
+        await editorsService.createSchema()
+    }
     await createAddonBlockRelation(client)
     await createPageBlockRelation(client);
     await createSettingsRelation(client);
