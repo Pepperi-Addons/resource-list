@@ -30,7 +30,7 @@
     [dataView]="dataView"
     (fieldClick)="onReferenceClicked($event)"
 ></pep-generic-form>
-<div *ngIf="loadCompleted">
+<div>
     <array-fields
         *ngFor="let dataViewOfArrayField of dataViewArrayFields"
             id="{{dataViewOfArrayField.FieldID}}"

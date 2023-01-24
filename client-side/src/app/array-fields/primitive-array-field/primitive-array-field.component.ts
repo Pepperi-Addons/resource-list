@@ -23,7 +23,6 @@ export class PrimitiveArrayFieldComponent implements OnInit {
   title: string = ""
   dataSource: any = {}
   actions: IPepGenericListActions
-  loadCompleted: boolean = false
   
   constructor(
     private translate: TranslateService,
@@ -31,16 +30,16 @@ export class PrimitiveArrayFieldComponent implements OnInit {
 
   ngOnInit(): void {
     this.createList()
-    this.loadCompleted = true
   }
-
+  
   createList(){
     const fields = this.createFieldOfList()
     const items = this.crateListDataSource()
     this.title = this.configurationObject.Title
-    this.dataSource  = new DataSource(items, fields, [{Width: 10}])
+    this.dataSource = new DataSource(items, fields, [{Width: 10}])
     this.actions = this.getListActions()
   }
+
   crateListDataSource(){
     return this.configurationObject.Array.map((val, index) => {
       return {
