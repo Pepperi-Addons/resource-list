@@ -28,6 +28,8 @@ class JSONRegularFilterBuilder{
         switch (type){
             case "Integer":
                 return new IntegerFilter(filter)
+            case 'ContainedResource':
+            case 'Resource':
             case "String":
                 return  new StringFilter(filter)
             //will be in the future

@@ -16,12 +16,24 @@ export class ViewsSmartSearchTabComponent extends AbstractProfileCardsTabCompone
     this.dataViewContextName = `GV_${this.key}_SmartSearch`
   }
   getFields(): IDataViewField[] | Promise<IDataViewField[]> {
-    return this.indexedFields.map(indexedField => {
-      return {
+    const res: IDataViewField[] = [];
+    this.indexedFields.forEach(indexedField => {
+      res.push({
         FieldID: indexedField.FieldID,
         Title: indexedField.FieldID
+      })
+
+      if(indexedField.IndexedFields) {
+        Object.keys(indexedField.IndexedFields || {}).forEach(fieldName => {
+          res.push({
+            FieldID: `${indexedField.FieldID}.${fieldName}`,
+            Title: `${indexedField.FieldID}.${fieldName}`
+          })
+        })
       }
     })
+
+    return res;
   }
   mappedFieldToDataViewField(mappedField: IMappedField, index: number): IDataViewField {
     return {
