@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { PepAddonService } from "@pepperi-addons/ngx-lib";
-import { AddonDataScheme, MenuDataView, SchemeField } from "@pepperi-addons/papi-sdk";
+import { AddonDataScheme, MenuDataView, SchemeField, SchemeFieldType, SchemeFieldTypes } from "@pepperi-addons/papi-sdk";
 import { IGenericViewer } from "shared";
 import { DataSource, DynamicItemsDataSource } from "../data-source/data-source";
 import { IGenericViewerDataSource } from "../generic-viewer-data-source";
@@ -65,6 +65,32 @@ export class ViewsListsService{
         }
     }
     private addTypesToSmartSearchDataView(smartSearchDataView: MenuDataView,resourceFields: AddonDataScheme['Fields'] ){
-        (smartSearchDataView?.Fields || [] ).forEach(field => field['Type'] = resourceFields[field.FieldID]?.Type)
-    }   
+        (smartSearchDataView?.Fields || [] ).forEach(field => {
+            let type = resourceFields[field.FieldID]?.Type;
+            // if the field does not exist on the resource fields, check if he is part of resource's indexed fields and take the type from there
+            if(!type && field.FieldID.indexOf('.') > 0) {
+                const parts = field.FieldID.split('.');
+                if(resourceFields[parts[0]] && resourceFields[parts[0]].IndexedFields) {
+                    type = resourceFields[parts[0]].IndexedFields[parts[1]]?.Type;
+                }
+            }
+            field['Type'] = this.convertFieldTypeToSmartSearchType(type)
+        })
+    }  
+    
+    private convertFieldTypeToSmartSearchType(fieldType: SchemeFieldType): SchemeFieldType {
+        let res: SchemeFieldType = 'String';
+
+        switch (fieldType) {
+            case 'ContainedResource':
+            case 'Resource': {
+                res = 'String';
+                break;
+            }
+            default: {
+                res = fieldType;
+            }
+        }
+        return res;
+    }
 }
