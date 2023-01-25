@@ -1,4 +1,4 @@
-import { getItems, postItem, getResource } from "../controllers/generic-resource.controller"
+import { getItems, postItem, getResource, getByKey } from "../controllers/generic-resource.controller"
 
 
 
@@ -21,5 +21,7 @@ router.post('/post_item/:resource', postItem)
 //get the metadata of the specific resource
 router.get('/:resource', getResource)
 
+//get item by it's key
+router.get('/get_by_key/:resource/:key', getByKey)
 
 

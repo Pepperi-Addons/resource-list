@@ -17,13 +17,13 @@
             type="action" 
             styleType="weak" 
             sizeType="sm" 
-            classNames=""
+            class="pep-spacing-element"
             [items]="listOptions.menuItems" 
             [disabled]="false" 
             (menuItemClick)="menuItemClick($event)">
         </pep-menu>
         <pep-select *ngIf="listOptions.dropDownOfViews.length > 1"
-            class="buttons-holder"
+            class="buttons-holder pep-spacing-element"
             [value]="genericViewer.view.Key"
             label="select view"
             type="select"

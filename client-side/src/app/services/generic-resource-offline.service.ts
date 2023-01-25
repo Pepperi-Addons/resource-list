@@ -96,9 +96,6 @@ export class GenericResourceOfflineService{
         }
         const queryArray = []
         for(const dataViewField of dataViewFields) {
-            if(dataViewField.FieldID == "Key"){
-                queryArray.push(`Key LIKE '${params.searchString}%'`)
-            }
             queryArray.push(`${dataViewField.FieldID} LIKE '%${params.searchString}%'`)
         }
         return `${queryArray.join(' OR ')}`
@@ -129,5 +126,9 @@ export class GenericResourceOfflineService{
         else{
             return undefined
         }
+    }
+
+    async getItemByKey(resourceName: string, itemKey: string) {
+        return (await this.addonService.getAddonCPICall(config.AddonUUID, `${GENERIC_RESOURCE_OFFLINE_URL}/get_by_key/${resourceName}/${itemKey}`))
     }
 }
