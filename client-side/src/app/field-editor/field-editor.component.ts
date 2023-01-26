@@ -1,5 +1,6 @@
-import { Component, Injector, Input, OnInit } from '@angular/core';
+import { Component, Injector, Input, OnInit, ViewChild } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { GenericFormComponent } from '@pepperi-addons/ngx-composite-lib/generic-form';
 import { PepDialogService } from '@pepperi-addons/ngx-lib/dialog';
 import { AddonDataScheme, FormDataView } from '@pepperi-addons/papi-sdk';
 import { BehaviorSubject } from 'rxjs';
@@ -20,6 +21,8 @@ import { ViewsService } from '../services/views.service';
 export class FieldEditorComponent implements OnInit {
   @Input() dataView: any
   @Input() editor: Editor
+
+  @ViewChild(GenericFormComponent) itemForm: GenericFormComponent
   
   dataSource = {}
   dialogRef = null
@@ -31,6 +34,9 @@ export class FieldEditorComponent implements OnInit {
   originalValue: any = {}
   gvDataSource: IGenericViewerDataSource
   ngOnInitOrNgOnChangesHappen: boolean = false
+  selectionFieldsCache: {
+    [key: string]: string
+  } = {};
 
   constructor(private injector: Injector,
      private genericResourceService: GenericResourceOfflineService,
@@ -74,9 +80,11 @@ export class FieldEditorComponent implements OnInit {
     }
     if(this.dataView){
       await this.reformatFields()
-      this.dataView = JSON.parse(JSON.stringify(this.dataView))
+      this.dataView = JSON.parse(JSON.stringify(this.dataView));
     }
-    this.loadCompleted = true
+    setTimeout(() => {this.loadCompleted = true},0);
+    console.log('data view', this.dataView)
+    console.log('data source', this.dataSource)
   }
   async reformatFields(){
     const resource  = await this.genericResourceService.getResource(this.editor.Resource.Name)
@@ -160,6 +168,14 @@ export class FieldEditorComponent implements OnInit {
     }
     if(field?.SelectionType == SELECTION_LIST){
       dataViewField.Type = "Button"
+      if(field.DisplayField) {
+        if (this.dataSource[field.FieldID]) {
+          await this.handleSelectionListDisplayField(field);
+        }
+        else {
+          this.dataSource[field.FieldID] = 'Select Value'
+        }
+      }
     }
     else if(field?.SelectionType == DROP_DOWN){
       dataViewField.Type = "ComboBox"
@@ -183,8 +199,6 @@ export class FieldEditorComponent implements OnInit {
         Value: item[field.DisplayField]
       }
     })
-    console.log(`${dataViewField}`);
-    console.log(`${dataViewField}`);
   }
   castStringArray<T>(arr: string[], type: string): T[]{
     const castingMap = new CastingMap()
@@ -213,6 +227,7 @@ export class FieldEditorComponent implements OnInit {
         }
       })
       this.castPrimitiveArraysInDataSource()
+      this.replaceDisplayFieldWithKey();
       await this.gvDataSource.update(this.dataSource)
     }
     catch(err){
@@ -261,7 +276,15 @@ export class FieldEditorComponent implements OnInit {
     dialogRef.componentInstance.pressedDoneEvent.subscribe((data) => {
       if(data && data.length > 0){
         this.dataSource[currentFieldConfiguration.FieldID] = data[0]
-        dialogRef.close()
+        this.handleSelectionListDisplayField(currentFieldConfiguration).then(() => {
+          this.itemForm.updateFields([{
+            FieldId: currentFieldConfiguration.FieldID,
+            Params: {
+              Value: this.dataSource[currentFieldConfiguration.FieldID]
+            }
+          }])
+          dialogRef.close()
+        });
       }
     })
   }
@@ -301,5 +324,31 @@ export class FieldEditorComponent implements OnInit {
       return 
     }
     await this.openSelectionListOfRefField(currentRefFieldConfiguration)
+  }
+  async handleSelectionListDisplayField(field: IReferenceField){
+    const itemKey = this.dataSource[field.FieldID];
+    try {
+      const item = await this.genericResourceService.getItemByKey(field.Resource, itemKey);
+      if(item && item[field.DisplayField]) {
+        const value = item[field.DisplayField];
+        this.replaceKeyWithDisplayField(field.FieldID, value);
+      }
+    }
+    catch (err) {
+      console.log('could not handle diaply field. got exception', err);
+    }
+  }
+
+  // we are saving the selected key inside a cache object so we can replace back before sending to server
+  private replaceKeyWithDisplayField(fieldID: string, value: string) {
+    this.selectionFieldsCache[fieldID] = this.dataSource[fieldID];
+    this.dataSource[fieldID] = value;
+  }
+
+  // before saving the form, we need to replace the selection list values with the item key we saved in cache
+  private replaceDisplayFieldWithKey() {
+    Object.keys(this.selectionFieldsCache || {}).forEach(field => {
+      this.dataSource[field] = this.selectionFieldsCache[field];
+    });
   }
 }

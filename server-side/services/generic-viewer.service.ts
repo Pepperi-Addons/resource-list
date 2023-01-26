@@ -132,7 +132,7 @@ export class GenericViewerService  {
         const resource = await this.papiClient.resources.resource('resources').key(resourceName).get() as AddonDataScheme
         for (const fieldName of Object.keys(resource.Fields || {})) {
             const field = resource.Fields![fieldName];
-            const isSearchable = this.ShouldAddToSearch(resource.SyncData, field);
+            const isSearchable = fieldName != 'Key' && this.ShouldAddToSearch(resource.SyncData, field);
             if(isSearchable) {
                 fields[fieldName] = field;
             }

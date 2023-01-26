@@ -36,3 +36,15 @@ export async function getResource(req, res, next){
         next(err)
     }
 }
+
+export async function getByKey(req, res, next) {
+    try{
+        const resource = req.params.resource
+        const itemKey = req.params.key
+        const service = new GenericResourceService()
+        return res.json(await service.getItemByKey(resource, itemKey))
+    }
+    catch(err){
+        next(err)
+    }
+}

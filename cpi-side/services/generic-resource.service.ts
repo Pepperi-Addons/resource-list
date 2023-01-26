@@ -17,6 +17,10 @@ export class GenericResourceService{
         return await pepperi.resources.resource('resources').key(resourceName).get()
     }
 
+    async getItemByKey(resourceName: string, itemKey: string) {
+        return await pepperi.resources.resource(resourceName).key(itemKey).get();
+    }
+
     private async isSchemaOfPapiType(resourceName: string): Promise<boolean>{
         const schema = await this.getResource(resourceName) as AddonDataScheme
         return schema.Type == "papi"
