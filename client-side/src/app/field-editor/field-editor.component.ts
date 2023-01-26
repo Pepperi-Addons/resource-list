@@ -2,7 +2,7 @@ import { Component, Injector, Input, OnInit, ViewChild } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { GenericFormComponent } from '@pepperi-addons/ngx-composite-lib/generic-form';
 import { PepDialogService } from '@pepperi-addons/ngx-lib/dialog';
-import { AddonDataScheme, FormDataView } from '@pepperi-addons/papi-sdk';
+import { AddonDataScheme, BaseFormDataViewField, Collection, CollectionField, DataView, DataViewField, FormDataView } from '@pepperi-addons/papi-sdk';
 import { BehaviorSubject } from 'rxjs';
 import { DROP_DOWN, Editor, IGenericViewer, IReferenceField, SELECTION_LIST, SelectOption, View } from 'shared';
 import { CastingMap } from '../casting-map';
@@ -19,7 +19,7 @@ import { ViewsService } from '../services/views.service';
   styleUrls: ['./field-editor.component.scss']
 })
 export class FieldEditorComponent implements OnInit {
-  @Input() dataView: any
+  @Input() dataView: FormDataView
   @Input() editor: Editor
 
   @ViewChild(GenericFormComponent) itemForm: GenericFormComponent
@@ -89,6 +89,10 @@ export class FieldEditorComponent implements OnInit {
   async reformatFields(){
     const resource  = await this.genericResourceService.getResource(this.editor.Resource.Name)
     this.resourceFields = resource.Fields || {}
+    if (Object.keys(this.dataSource || {}).length > 0) {
+      this.handleDocumentKeyFields(resource as Collection);
+    }
+    this.handleOptionalValues(resource.Fields as Collection['Fields']);
     await this.reformatArrayFields()
     const referenceFieldsWithoutContainedArray = this.editor.ReferenceFields?.filter(referenceField => 
       this.resourceFields[referenceField.FieldID]?.Type !=  'Array')
@@ -350,5 +354,42 @@ export class FieldEditorComponent implements OnInit {
     Object.keys(this.selectionFieldsCache || {}).forEach(field => {
       this.dataSource[field] = this.selectionFieldsCache[field];
     });
+  }
+
+  private handleDocumentKeyFields(resource: Collection) {
+    if(resource.DocumentKey && resource.DocumentKey.Type === 'Composite') {
+      resource.DocumentKey.Fields?.forEach(fieldName => {
+        this.changeDVFieldValue(fieldName, (dvField => {
+          dvField.ReadOnly = true;
+          return dvField;
+        }))
+      });
+    }
+  }
+
+  private handleOptionalValues(resourceFields: Collection['Fields']) {
+    Object.keys(resourceFields || {}).forEach(fieldName => {
+      const optionalValues = resourceFields[fieldName].OptionalValues;
+      if(optionalValues && optionalValues.length > 0) {
+        this.changeDVFieldValue(fieldName, (dvField => {
+          dvField.Type = 'ComboBox';
+          dvField['OptionalValues'] = optionalValues.map(item => {
+            return {
+              Key: item,
+              Value: item
+            }
+          })
+          return dvField
+        }))
+      }
+    })
+  }
+
+  private changeDVFieldValue(fieldName: string, cb: (dvField: BaseFormDataViewField) => BaseFormDataViewField) {
+    const index = this.dataView.Fields?.findIndex(x=> x.FieldID === fieldName)
+    if (index > -1 && cb) {
+      const dvField = cb(this.dataView.Fields[index]);
+      this.dataView.Fields.splice(index, 1, dvField);
+    }
   }
 }
