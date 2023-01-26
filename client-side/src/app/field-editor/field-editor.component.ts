@@ -282,7 +282,7 @@ export class FieldEditorComponent implements OnInit {
         this.dataSource[currentFieldConfiguration.FieldID] = data[0]
         this.handleSelectionListDisplayField(currentFieldConfiguration).then(() => {
           this.itemForm.updateFields([{
-            FieldId: 'priceGroup',
+            FieldId: currentFieldConfiguration.FieldID,
             Params: {
               Value: this.dataSource[currentFieldConfiguration.FieldID]
             }
