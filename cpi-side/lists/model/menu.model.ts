@@ -1,5 +1,3 @@
-// import { PepStyleType } from "@pepperi-addons/ngx-lib"
-
 export interface Menu{
     Blocks: MenuBlock[];
 }
