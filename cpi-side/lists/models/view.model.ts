@@ -2,6 +2,7 @@ interface View {
     Key: string;
     Type: "Grid" | "Cards";
     Title: string;
+    ViewBlocks: ViewBlock[]
 }
 
 interface ViewBlock{
@@ -15,7 +16,7 @@ interface GridView extends View{
     Blocks: ViewBlock[];
 }
 
-interface Cardsview extends View{
+interface CardsView extends View{
     Type: "Cards";
     Blocks: ViewBlock[];
 }
