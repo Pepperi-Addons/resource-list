@@ -4,19 +4,18 @@ import { SearchConfiguration, SmartSearchConfiguration } from "./search.model"
 
 export interface List{
     Key: string,
-    Title: string,
+    Name: string,
     Description?: string,
     Resource: string,
-    Editor?: string,
     Profile: string,
-    Views: View[]
-    Menu: MenuConfiguration,
+    Views: View[],
+    Menu: MenuConfiguration, //TODO: listMenu ... 
     LineMenu: LineMenuConfiguration
     Search: SearchConfiguration,
     SmartSearch: SmartSearchConfiguration,
     Filter?: JSONFilter,
-    Sorting: Sorting
+    Sorting: Sorting,
     SelectionType: SelectionType
 }
 
-export type SelectionType = "single" | "multi" | "none"
+export type SelectionType = "single" | "multi" | "none" //TODO: uppper case

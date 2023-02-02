@@ -1,6 +1,7 @@
 export interface MenuConfiguration{
     Blocks: MenuBlock[];
 }
+
 export interface LineMenuConfiguration{
     Blocks: LineMenuBlock[]
 }
@@ -8,7 +9,8 @@ export interface LineMenuConfiguration{
 export interface MenuBlock{
     Key: string;
     Title: string;
-    Button?: Button
+    Disabled?: boolean;
+    ButtonStyleType?: StyleType
 }
 
 export interface LineMenuBlock{
@@ -16,14 +18,5 @@ export interface LineMenuBlock{
     Title: string
 }
 
-export interface Button {
-    Key: string;
-    Value?: string;
-    ClassNames?: string;
-    Disabled?: boolean;
-    IconName?: string;
-    IconPosition?: 'start' | 'end';
-    StyleType?: StyleType
-}
 
 type StyleType = 'weak' | 'weak-invert' | 'regular' | 'strong';
