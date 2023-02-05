@@ -335,7 +335,7 @@ export class GenericViewerComponent implements OnInit {
                     }
                     const config = this.dialogService.getDialogConfig({
   
-                    }, 'large') 
+                    }, 'full-screen') 
                     this.dialogService.openDialog(FieldEditorComponent, dialogData, config).afterClosed().subscribe((async isUpdatePreformed => {
                       if(isUpdatePreformed){
                         await this.loadList(this.genericViewer.viewDataview)
@@ -374,7 +374,7 @@ export class GenericViewerComponent implements OnInit {
         gvDataSource: this.genericViewerDataSource
       }
       const config = this.dialogService.getDialogConfig({
-      }, 'large')
+      }, 'full-screen')
       this.dialogService.openDialog(FieldEditorComponent, dialogData, config).afterClosed().subscribe((async isUpdatePreformed => {
         if(isUpdatePreformed){
           await this.loadList(this.genericViewer.viewDataview)
