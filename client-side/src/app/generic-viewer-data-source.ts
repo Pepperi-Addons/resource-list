@@ -20,11 +20,10 @@ export interface IGenericViewerDataSource{
 
 export class ContainedArrayGVDataSource implements IGenericViewerDataSource{
     type: "contained" | "regular" = "contained"
-    genericViewer: IGenericViewer
     items: any[] = []
     deletedItems: any[] = []
     fields: AddonDataScheme['Fields'] = {}
-    constructor(items?: any[]){
+    constructor(public genericViewer: IGenericViewer, private genericResourceService: GenericResourceOfflineService, items?: any[]){
         if(items){
             this.setItems(items)
         }
@@ -68,6 +67,9 @@ export class ContainedArrayGVDataSource implements IGenericViewerDataSource{
         return this.items || []
     }
     async getFields(): Promise<AddonDataScheme['Fields']> {
+        if(Object.keys(this.fields || {}).length === 0){
+            this.fields = (await this.genericResourceService.getResource(this.genericViewer.view.Resource.Name)).Fields || {}
+        }
         return this.fields
     }
     setItems(items: any[]){
