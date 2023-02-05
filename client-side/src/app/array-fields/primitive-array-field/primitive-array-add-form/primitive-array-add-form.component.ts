@@ -32,17 +32,26 @@ export class PrimitiveArrayAddFormComponent implements OnInit {
     this.dialogRef.close()
   }
   createGenericForm(){
-    
+    const dvField = {
+      ReadOnly: false,
+      Title: this.translate.instant('Value'),
+      Type: this.type,
+      FieldID: "Value",
+      Mandatory: true,
+    }
+    if(this.incoming.OptionalValues?.length > 0) {
+      dvField.Type = 'ComboBox';
+      dvField['OptionalValues'] = this.incoming.OptionalValues.map(item => {
+        return {
+          Key: item,
+          Value: item
+        }
+      });
+    }
     this.dataView ={
       Type: "Form",
       Fields:[
-        {
-          ReadOnly: false,
-          Title: this.translate.instant('Value'),
-          Type: this.type,
-          FieldID: "Value",
-          Mandatory: true,
-        }
+        dvField
       ],
       Context: {
         Name: "",
