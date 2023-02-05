@@ -1,9 +1,10 @@
 <div class="list">
     <pep-generic-list class="generic-list" 
+    [title]="genericViewer?.view?.Name"
     [showTopBar]="true"
     [dataSource]="dataSource"
     [showSearch]="true"
-    [inline] ="false"
+    [inline] ="true"
     [actions]="listOptions.actions"
     uuidMapping = 'Key'
     [selectionType]="listOptions.selectionType"
