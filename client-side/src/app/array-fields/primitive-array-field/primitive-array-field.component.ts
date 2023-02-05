@@ -53,14 +53,13 @@ export class PrimitiveArrayFieldComponent implements OnInit {
   }
   createFieldOfList(){
     const typeMap = new TypeMap()
-
     return [{
       FieldID: 'Value',
       Mandatory: true,
       ReadOnly: true,
       Title: this.configurationObject.Title,
       Type: typeMap.get(this.configurationObject.Type)
-    }]
+    }];
   }
 
   onAddClick(){
@@ -130,7 +129,8 @@ export class PrimitiveArrayFieldComponent implements OnInit {
     const formData = {
       FieldID: this.configurationObject.FieldID,
       Type: typeMap.get(this.configurationObject.Type),
-      Item: data || {}
+      Item: data || {},
+      OptionalValues: this.configurationObject.OptionalValues
     }
     const config = this.dialogService.getDialogConfig(
       {}, 'large');

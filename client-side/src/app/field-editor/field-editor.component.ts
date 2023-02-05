@@ -134,7 +134,8 @@ export class FieldEditorComponent implements OnInit {
           FieldID: curr.FieldID,
           Title: curr.Title,
           Array : this.dataSource[curr.FieldID],
-          Event: eventsSubject
+          Event: eventsSubject,
+          OptionalValues: field.OptionalValues || field.Items.OptionalValues
         })
       }
       return prev
