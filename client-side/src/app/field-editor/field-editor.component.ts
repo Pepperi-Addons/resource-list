@@ -157,7 +157,9 @@ export class FieldEditorComponent implements OnInit {
   createArrayFieldsMap(resourceFields: AddonDataScheme['Fields']){
     const map = new Map<string,any>()
     Object.keys(resourceFields).map(fieldID => {
-      if(resourceFields[fieldID].Type == 'Array'){
+      const field: CollectionField = resourceFields[fieldID] as CollectionField
+      const optionalValues = field.OptionalValues || field.Items?.OptionalValues || [];
+      if(field.Type == 'Array' && optionalValues.length === 0){
         map.set(fieldID, resourceFields[fieldID])
       }
     })
@@ -373,7 +375,7 @@ export class FieldEditorComponent implements OnInit {
       const optionalValues = resourceFields[fieldName].OptionalValues;
       if(optionalValues && optionalValues.length > 0) {
         this.changeDVFieldValue(fieldName, (dvField => {
-          dvField.Type = 'ComboBox';
+          dvField.Type = resourceFields[fieldName].Type != 'Array' ? 'ComboBox' : 'MultiTickBox';
           dvField['OptionalValues'] = optionalValues.map(item => {
             return {
               Key: item,
@@ -393,4 +395,5 @@ export class FieldEditorComponent implements OnInit {
       this.dataView.Fields.splice(index, 1, dvField);
     }
   }
+
 }

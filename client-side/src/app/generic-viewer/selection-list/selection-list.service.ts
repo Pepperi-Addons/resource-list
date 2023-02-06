@@ -38,7 +38,8 @@ export class SelectionListService{
                 }
             ],
             smartSearchDataView: smartSearchConfiguration,
-            searchDataView: searchDataView
+            searchDataView: searchDataView,
+            inlineList: false
         }
     }
 }

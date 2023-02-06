@@ -11,7 +11,8 @@ export interface ListOptions {
     dropDownOfViews: SelectOption[]
     buttons: GVButton[]
     smartSearchDataView: {dataView: MenuDataView},
-    searchDataView: MenuDataView
+    searchDataView: MenuDataView,
+    inlineList: boolean
 }
 
 export interface GVButton extends PepButton {

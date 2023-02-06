@@ -16,6 +16,7 @@ export interface IGenericViewerDataSource{
     restore(item: any): Promise<any[]>
     update(item: any): Promise<any>
     getEditorItemByKey(key: string)
+    isInlineList()
 }
 
 export class ContainedArrayGVDataSource implements IGenericViewerDataSource{
@@ -85,6 +86,9 @@ export class ContainedArrayGVDataSource implements IGenericViewerDataSource{
     async getDeletedItems(): Promise<any>{
         return this.deletedItems
     }
+    isInlineList() {
+        return true;
+    }
 }
 
 export class RegularGVDataSource implements IGenericViewerDataSource{
@@ -141,6 +145,10 @@ export class RegularGVDataSource implements IGenericViewerDataSource{
     }
     async update(item: any){
         return await this.postItem(item)
+    }
+
+    isInlineList() {
+        return false;
     }
 }
 

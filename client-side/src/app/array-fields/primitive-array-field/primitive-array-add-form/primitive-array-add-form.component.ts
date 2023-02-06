@@ -40,7 +40,7 @@ export class PrimitiveArrayAddFormComponent implements OnInit {
       Mandatory: true,
     }
     if(this.incoming.OptionalValues?.length > 0) {
-      dvField.Type = 'ComboBox';
+      dvField.Type = 'MultiTickBox';
       dvField['OptionalValues'] = this.incoming.OptionalValues.map(item => {
         return {
           Key: item,
