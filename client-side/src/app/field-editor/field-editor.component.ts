@@ -214,12 +214,18 @@ export class FieldEditorComponent implements OnInit {
   castPrimitiveArraysInDataSource(){
     const castingMap = new CastingMap()
     Object.keys(this.dataSource).forEach(key => {
-      if(this.resourceFields[key]?.Type && this.resourceFields[key].Type != "Array"){
+      const field: CollectionField = this.resourceFields[key] as CollectionField
+      if(field?.Type && field.Type != "Array"){
         this.dataSource[key] = castingMap.cast(this.resourceFields[key].Type, this.dataSource[key])
       }
       //cast only arrays that not contained resource
-      else if(this.resourceFields[key]?.Type == 'Array' && this.resourceFields[key].Items.Type != 'ContainedResource'){
-        this.dataSource[key] = this.castStringArray(this.dataSource[key], this.resourceFields[key].Items.Type)
+      else if(field?.Type == 'Array' && field.Items.Type != 'ContainedResource'){
+        const optionalValues = field.OptionalValues || field.Items?.OptionalValues || [];
+        let fieldValue = this.dataSource[key];
+        if (optionalValues.length > 0) {
+          fieldValue = fieldValue.split(';');
+        }
+        this.dataSource[key] = this.castStringArray(fieldValue, this.resourceFields[key].Items.Type)
       }
     })  
   }
