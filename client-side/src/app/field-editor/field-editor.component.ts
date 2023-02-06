@@ -380,6 +380,10 @@ export class FieldEditorComponent implements OnInit {
     Object.keys(resourceFields || {}).forEach(fieldName => {
       const optionalValues = resourceFields[fieldName].OptionalValues;
       if(optionalValues && optionalValues.length > 0) {
+        // if the field is Array, and have optional values, we need to convert to ';' delimited string
+        if(resourceFields[fieldName].Type === 'Array') {
+          this.dataSource[fieldName] = (this.dataSource[fieldName] || []).join(';');
+        }
         this.changeDVFieldValue(fieldName, (dvField => {
           dvField.Type = resourceFields[fieldName].Type != 'Array' ? 'ComboBox' : 'MultiTickBox';
           dvField['OptionalValues'] = optionalValues.map(item => {
