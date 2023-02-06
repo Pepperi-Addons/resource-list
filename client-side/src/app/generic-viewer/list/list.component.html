@@ -4,7 +4,7 @@
     [showTopBar]="true"
     [dataSource]="dataSource"
     [showSearch]="true"
-    [inline] ="true"
+    [inline] ="listOptions.inlineList"
     [actions]="listOptions.actions"
     uuidMapping = 'Key'
     [selectionType]="listOptions.selectionType"
@@ -17,7 +17,7 @@
             iconName="system_menu" 
             type="action" 
             styleType="weak" 
-            sizeType="sm" 
+            [sizeType]= "listOptions.inlineList ? 'sm' : 'md'"
             class="pep-spacing-element"
             [items]="listOptions.menuItems" 
             [disabled]="false" 
@@ -41,7 +41,7 @@
                 class= 'pep-spacing-element'
                 [value]="button.value"
                 [styleType]="button.styleType"
-                sizeType= 'md'
+                [sizeType]= "listOptions.inlineList ? 'sm' : 'md'"
                 [classNames]="button.className"
                 [disabled]= 'false'
                 [visible]= 'true'

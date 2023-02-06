@@ -72,7 +72,7 @@ export class GenericViewerComponent implements OnInit {
       return result
 
     }
-    async createListOptions(){
+    async createListOptions(): Promise<ListOptions>{
 
       const actions =  this.actions
       const selectionType = this.configurationObject.selectionList?.selection || "single"
@@ -88,7 +88,8 @@ export class GenericViewerComponent implements OnInit {
           dropDownOfViews: dropDownOfViews, 
           buttons: buttons,
           smartSearchDataView: smartSearchDataView,
-          searchDataView: searchDataView
+          searchDataView: searchDataView,
+          inlineList: this.genericViewerDataSource.isInlineList()
       }
     }
     ngOnInit(): void {
@@ -199,7 +200,7 @@ export class GenericViewerComponent implements OnInit {
       if(type == "Resource" || type == "ContainedResource"){
         return `${item[fieldID].length.toString()} items selected`
       }
-      return item[fieldID].join(',')
+      return item[fieldID];
     }
     async DisplayViewInList(viewKey){
       if(this.genericViewer.viewDataview){
