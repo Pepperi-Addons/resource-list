@@ -1,4 +1,4 @@
-import { AddonDataScheme } from "@pepperi-addons/papi-sdk"
+import { AddonDataScheme, SearchBody } from "@pepperi-addons/papi-sdk"
 
 export class GenericResourceService{
     
@@ -24,6 +24,10 @@ export class GenericResourceService{
     private async isSchemaOfPapiType(resourceName: string): Promise<boolean>{
         const schema = await this.getResource(resourceName) as AddonDataScheme
         return schema.Type == "papi"
+    }
+
+    async searchItems(resourceName: string, searchBody: SearchBody){
+        return await pepperi.resources.resource(resourceName).search(searchBody)
     }
 }
 

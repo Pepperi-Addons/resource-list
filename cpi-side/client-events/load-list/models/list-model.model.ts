@@ -1,22 +1,28 @@
 // import { MenuDataView } from "@pepperi-addons/papi-sdk";
 
 import {  MenuDataView, MenuDataViewField, SchemeFieldType } from "@pepperi-addons/papi-sdk";
-import { Button } from "../../../lists/models/menu.model";
+import { ListState } from "../../models/list-state.model";
+import { SelectionType } from "../../../lists/models/list.model";
 
 
 
-export interface ListModel{
+export interface ListLayout{
     Key: string,
     Title: string
     ViewsMenu: ViewsMenu,
-    Menu: ListMenu,
-    LineMenu: ListMenu,
-    Buttons: Buttons,
+    Menu: Menu,
+    LineMenu: Menu,
     Search: boolean, 
-    SelectionType: "multi" | "single" | "none", //by default none
+    SelectionType: SelectionType, //by default none
     SmartSearch: SmartSearch, // if empty array we will hide the smart search
     Sorting: Sorting,
-    SelectedView: ResourceView
+    View: ViewLayout
+}
+
+export interface ListContainer{
+    Layout?: ListLayout,
+    Data?: ListData,
+    State?: ListState
 
 }
 
@@ -28,10 +34,13 @@ export interface SmartSearch{
 export type SmartSearchField = MenuDataViewField & { Type: SchemeFieldType}
 
 
-export interface ResourceView{
+export interface ViewLayout{
     Type: "Grid" | "Cards"
-    Title: string,
     ViewBlocks : ViewBlocks
+
+}
+
+export interface ListData{
     Items: ItemCell[], 
 }
 
@@ -41,17 +50,15 @@ export interface ViewBlocks{
 
 
 export interface ViewsMenu{
-    Visible: boolean,
+    Visible: boolean;
     Items: {Key: string, Value: string}[]
 }
 
-export interface ListMenu{
+export interface Menu{
     Menu: MenuDataView
 }
 
-export interface Buttons{
-    buttons: Button[]
-}
+
 
  // represent one row (i.e. one item)
  // the matching between block and property is done by the "key" 

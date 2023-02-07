@@ -1,22 +1,24 @@
 import { JSONFilter } from "@pepperi-addons/pepperi-filters"
-import { LineMenuConfiguration, MenuConfiguration } from "./menu.model"
-import { SearchConfiguration, SmartSearchConfiguration } from "./search.model"
+import {  ListMenu } from "./menu.model"
+import { ListSearch, ListSmartSearch  } from "./search.model"
+
+
 
 export interface List{
     Key: string,
-    Title: string,
+    Name: string,
     Description?: string,
     Resource: string,
     Editor?: string,
     Profile: string,
     Views: View[]
-    Menu: MenuConfiguration,
-    LineMenu: LineMenuConfiguration
-    Search: SearchConfiguration,
-    SmartSearch: SmartSearchConfiguration,
+    Menu: ListMenu,
+    LineMenu: ListMenu
+    Search: ListSearch,
+    SmartSearch: ListSmartSearch,
     Filter?: JSONFilter,
     Sorting: Sorting
     SelectionType: SelectionType
 }
 
-export type SelectionType = "single" | "multi" | "none"
+export type SelectionType = "Single" | "Multi" | "None"

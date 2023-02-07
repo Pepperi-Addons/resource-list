@@ -1,16 +1,16 @@
 import { SchemeFieldType } from "@pepperi-addons/papi-sdk";
 
-export interface SearchConfiguration{
-    Fields: SearchConfigurationField[];
+export interface ListSearch{
+    Fields: ListSearchField[];
 }
-export interface SearchConfigurationField{
+export interface ListSearchField{
     FieldID: string;
 }
 
-export interface SmartSearchConfiguration{
-    Fields: SmartSearchConfigurationField[];
+export interface ListSmartSearch{
+    Fields: ListSmartSearchField[];
 }
-export interface SmartSearchConfigurationField{
+export interface ListSmartSearchField{
     FieldID: string;
     Title: string;
     Type: SchemeFieldType

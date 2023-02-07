@@ -1,29 +1,13 @@
-export interface MenuConfiguration{
-    Blocks: MenuBlock[];
-}
-export interface LineMenuConfiguration{
-    Blocks: LineMenuBlock[]
+export interface ListMenu{
+    Blocks: ListMenuBlock[];
 }
 
-export interface MenuBlock{
+
+export interface ListMenuBlock{
     Key: string;
     Title: string;
-    Button?: Button
+    ButtonStyleType?: StyleType //if exist then this is a button
 }
 
-export interface LineMenuBlock{
-    Key: string,
-    Title: string
-}
-
-export interface Button {
-    Key: string;
-    Value?: string;
-    ClassNames?: string;
-    Disabled?: boolean;
-    IconName?: string;
-    IconPosition?: 'start' | 'end';
-    StyleType?: StyleType
-}
 
 type StyleType = 'weak' | 'weak-invert' | 'regular' | 'strong';

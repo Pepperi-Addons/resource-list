@@ -2,7 +2,7 @@ import { List } from "./models/list.model";
 
 export const LIST1: List = {
     Key: "LIST_KEY",
-    Title: "FirstList",
+    Name: "FirstList",
     Resource: "Friends",
     Editor: undefined,
     Profile: "some UUID",
@@ -38,12 +38,7 @@ export const LIST1: List = {
             {
                 Key: "New",
                 Title: "Add",
-                Button: {
-                    Key: "add",
-                    Value: "add",
-                    StyleType: "strong"
-                }
-
+                ButtonStyleType: "strong"
             }
 
         ]
@@ -80,7 +75,7 @@ export const LIST1: List = {
             }
         ]
     },
-    SelectionType: "single",
+    SelectionType: "Single",
     Sorting: {Ascending: false, FieldID: "name"}
 }
 
