@@ -13,7 +13,7 @@ export interface List{
     Profile: string,
     Views: View[]
     Menu: ListMenu,
-    LineMenu: ListMenu
+    LineMenu: ListMenu,
     Search: ListSearch,
     SmartSearch: ListSmartSearch,
     Filter?: JSONFilter,
