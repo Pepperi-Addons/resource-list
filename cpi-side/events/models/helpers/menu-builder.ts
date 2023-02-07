@@ -8,13 +8,10 @@ export class MenuBuilder{
 
     async build(list: List, currState: ListState, prevState?: ListState): Promise<ListMenu | undefined>{
         const drawnBlocks = await this.drawBlocks(list.Menu.Blocks, currState, prevState)
-        debugger
         const isSomethingChanged = drawnBlocks.reduce((acc, curr) => acc || curr.isChanged ,false)
-        debugger
         if(!isSomethingChanged){
             return undefined
         }
-        debugger
         return  {
             Blocks: drawnBlocks.filter(block => block.Block).map(drawnBlock => drawnBlock.Block) as ListMenuBlock[]
         }
