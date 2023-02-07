@@ -7,7 +7,7 @@
   "scripts": {
     "prepare": "tsc",
     "build": "rollup -c rollup.config.js",
-    "test": "ts-mocha ./build/cpi-side/test/**/*.spec.js -R mochawesome",
+    "test": "ts-mocha ./test/**/*.spec.ts -R mochawesome",
     "prepublishOnly": "npm version patch",
     "build:debug": "tsc && rollup -c debug.rollup.config.js"
   },

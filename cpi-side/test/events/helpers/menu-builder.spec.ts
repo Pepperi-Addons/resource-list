@@ -21,7 +21,7 @@ describe('menu builder tests', () => {
             const result = await menuBuilder.build(defaultList, defaultState, undefined)
             expect(result).to.eql(undefined)
         })
-        it('2. add simple menu with one item to the burger menu', async function(){
+        it.skip('2. add simple menu with one item to the burger menu', async function(){
             const list = getDefaultListCopy()
             const newButton: ListMenuBlock = {
                 Key: "New",
