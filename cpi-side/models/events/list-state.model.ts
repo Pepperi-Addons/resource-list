@@ -7,7 +7,7 @@ export interface ListState {
     SmartSearchQuery?: JSONFilter
     Sorting?: Sorting, // default CreationDateTime, Ascending=false
     PageSize?: number //default is 50!
-    PageIndex?: number // default = 1 (first page) - does not make sense to have from to index with page index
+    PageIndex?: number // default = 1 (first page)
     ItemSelection?: ItemSelection // default empty 
 }
 

@@ -10,8 +10,6 @@ export interface List{
     Name: string,
     Description?: string,
     Resource: string,
-    Editor?: string,
-    Profile: string,
     Views: View[]
     Menu: ListMenu,
     LineMenu: ListMenu
