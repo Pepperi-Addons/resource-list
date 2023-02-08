@@ -6,11 +6,6 @@ import { ListMenuBlock } from '../../../configuration/models/menu.model'
 import * as sinon from "ts-sinon";
 
 
-// describe('test', () => {
-//     it('to be ', function() {
-//         expect(1).to.equal(1)
-//     })
-// })
 function getDefaultListCopy(): List{
     return JSON.parse(JSON.stringify(defaultList))
 }
