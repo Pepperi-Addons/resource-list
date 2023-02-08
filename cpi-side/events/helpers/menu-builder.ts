@@ -18,10 +18,10 @@ export class MenuBuilder{
     }
     private async drawBlocks(menuBlocks: ListMenuBlock[], currState: ListState, prevState?: ListState): Promise<DrawnMenuBlock[]>{
         return await Promise.all(menuBlocks.map(async block => {
-            return await this.getDrawnBlock(block, currState, prevState)
+            return await this.callDrawBlockFunction(block, currState, prevState)
         }))
     }
-    async getDrawnBlock(block: ListMenuBlock, currState: ListState, prevState?: ListState): Promise<DrawnMenuBlock>{
+    async callDrawBlockFunction(block: ListMenuBlock, currState: ListState, prevState?: ListState): Promise<DrawnMenuBlock>{
         return await pepperi.addons.api.uuid(block.AddonUUID).post({
             url: block.DrawURL,
             body: {prevState: prevState, currState: currState}
