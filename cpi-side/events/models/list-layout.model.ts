@@ -7,6 +7,7 @@ export interface ListLayout{
     Title: string
     ViewsMenu: ViewsMenu,
     Menu: ListMenu,
+    LineMenu: ListMenu,
     Search: boolean, 
     SelectionType: SelectionType, //by default none
     SmartSearch: ListSmartSearch, // if empty array we will hide the smart search
