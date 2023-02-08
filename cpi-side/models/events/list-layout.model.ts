@@ -1,6 +1,7 @@
-import { SelectionType } from "../../configuration/models/list.model"
-import { ListMenu, ListMenuBlock } from "../../configuration/models/menu.model"
-import { ListSmartSearch } from "../../configuration/models/search.model"
+import { SelectionType } from "../configuration/list.model"
+import { ListMenu, ListMenuBlock } from "../configuration/menu.model"
+import { ListSmartSearch } from "../configuration/search.model"
+import { ViewBlock } from "../configuration/view.model"
 
 export interface ListLayout{
     Key: string,

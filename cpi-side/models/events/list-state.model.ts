@@ -7,11 +7,15 @@ export interface ListState {
     SmartSearchQuery?: JSONFilter
     Sorting?: Sorting, // default CreationDateTime, Ascending=false
     PageSize?: number //default is 50!
-    PageIndex?: number // default = 1 (first page) - does not make sense to have from to index with page index
+    PageIndex?: number // default = 1 (first page)
     ItemSelection?: ItemSelection // default empty 
 }
 
+/*
+    Items is limited to 500 elements
+    when select all is true the items will be the non selected items, when selectAll false the items will be the selected items 
+*/
 interface ItemSelection{
     SelectAll: Boolean // default false 
-    Items: string[] // key list - limit to 500 keys
+    Items: string[] 
   }
