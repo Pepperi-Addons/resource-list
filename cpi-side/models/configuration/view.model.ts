@@ -14,13 +14,3 @@ export interface ViewBlock{
 }
 
 export type ViewType = "Grid" | "Cards";
-
-interface GridView extends View{
-    Type: "Grid";
-    Blocks: ViewBlock[];
-}
-
-interface CardsView extends View{
-    Type: "Cards";
-    Blocks: ViewBlock[];
-}
