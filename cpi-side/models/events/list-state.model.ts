@@ -1,5 +1,5 @@
 import { JSONFilter } from "@pepperi-addons/pepperi-filters";
-
+import { Sorting } from '../configuration/sorting.model'
 export interface ListState {
     ListKey: string,
     ViewKey?: string, // default use the first

@@ -1,5 +1,5 @@
-import { DrawnMenuBlock, ListMenu, ListMenuBlock } from "../../../configuration/models/menu.model";
-import { ListState } from "../list-state.model";
+ import { DrawnMenuBlock, ListMenu, ListMenuBlock } from '../../models/configuration/menu.model'
+import { ListState } from '../../models/events/list-state.model'
 
 export class MenuBuilder{
 

@@ -1,17 +1,15 @@
-import { List } from "./configuration/models/list.model";
+import { List } from './models/configuration/list.model'
 
 export const LIST1: List = {
     Key: "LIST_KEY",
     Name: "FirstList",
     Resource: "Friends",
-    Editor: undefined,
-    Profile: "some UUID",
     Views: [
         {
             Key: "7debbfa8-a085-11ed-a8fc-0242ac120002",
             Type: "Grid",
             Title: "FirstView",
-            ViewBlocks: [
+            Blocks: [
                 {
                     Title: "My name",
                     Group: "Fields",
@@ -42,7 +40,7 @@ export const LIST1: List = {
             {
                 Key: "New",
                 Title: "Add",
-                ButtonStyleType: "strong",
+                ButtonStyleType: "Strong",
                 DrawURL: 'addon-cpi/drawMenuBlock',
                 AddonUUID: '0e2ae61b-a26a-4c26-81fe-13bdd2e4aaa3'
             }

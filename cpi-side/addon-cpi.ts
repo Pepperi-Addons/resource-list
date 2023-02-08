@@ -2,8 +2,7 @@ import '@pepperi-addons/cpi-node'
 import { router as genericResourceRouter }  from './routes/generic-resource.routes'
 import { router as viewsRouter } from './routes/views.routes'
 import { getList } from './dummy-list';
-import { MenuBuilder } from './events/models/helpers/menu-builder';
-import { DrawnMenuBlock } from './configuration/models/menu.model';
+import { MenuBuilder } from './events/helpers/menu-builder';
 export async function load(configuration: any) {
     console.log('cpi side works!');
     // Put your cpi side code here
