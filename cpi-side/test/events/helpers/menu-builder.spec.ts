@@ -1,9 +1,10 @@
 import { expect } from 'chai'
-import { MenuBuilder } from '../../../events/models/helpers/menu-builder'
 import { defaultList, defaultState } from '../../../metadata'
-import { List } from '../../../configuration/models/list.model'
-import { ListMenuBlock } from '../../../configuration/models/menu.model'
 import * as sinon from "ts-sinon";
+import { List } from '../../../models/configuration/list.model';
+import { MenuBuilder } from '../../../events/helpers/menu-builder';
+import * as mocha  from 'mocha' 
+import { ListMenuBlock } from '../../../models/configuration/menu.model';
 
 
 function getDefaultListCopy(): List{
@@ -22,7 +23,7 @@ describe('menu builder tests', () => {
             const newButton: ListMenuBlock = {
                 Key: "New",
                 Title: "Add",
-                ButtonStyleType: "strong",
+                ButtonStyleType: "Strong",
                 DrawURL: "addon-cpi/drawMenuBlock",
                 AddonUUID: "0e2ae61b-a26a-4c26-81fe-13bdd2e4aaa3"
             }

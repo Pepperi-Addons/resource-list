@@ -83,8 +83,3 @@ export const LIST1: List = {
     SelectionType: "Single",
     Sorting: {Ascending: false, FieldID: "name"}
 }
-
-
-export async function getList(key: string){
-    return LIST1
-}

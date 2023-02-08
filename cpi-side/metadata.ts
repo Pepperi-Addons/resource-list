@@ -1,5 +1,5 @@
-import { List } from "./configuration/models/list.model";
-import { ListState } from "./events/models/list-state.model";
+import { List } from "./models/configuration/list.model";
+import { ListState } from "./models/events/list-state.model"
 
 export const defaultList: List = {
     Key: 'first',
@@ -10,7 +10,6 @@ export const defaultList: List = {
     LineMenu: {
         Blocks: []
     },
-    Profile: 'not important',
     Views: [],
     Name: '',
     Search: {Fields: []},
