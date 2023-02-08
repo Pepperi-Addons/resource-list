@@ -11,4 +11,4 @@ export interface ListMenuBlock{
 }
 
 
-type StyleType = 'weak' | 'weak-invert' | 'regular' | 'strong';
+type StyleType = 'Weak' | 'WeakInvert' | 'Regular' | 'Strong';

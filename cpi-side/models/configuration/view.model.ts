@@ -1,6 +1,6 @@
 export interface View {
     Key: string;
-    Type: "Grid" | "Cards";
+    Type: ViewType
     Title: string;
     Blocks: ViewBlock[]
 }
@@ -12,6 +12,8 @@ export interface ViewBlock{
     AddonUUID: string //the addon that exposing the draw function
     DrawDataURL: string //the relative url that define in this relation to draw that block
 }
+
+export type ViewType = "Grid" | "Cards";
 
 interface GridView extends View{
     Type: "Grid";
