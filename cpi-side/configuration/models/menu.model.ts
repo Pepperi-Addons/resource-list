@@ -12,7 +12,7 @@ export interface ListMenuBlock{
 }
 
 export interface DrawnMenuBlock{
-    isChanged: boolean,
+    IsChanged: boolean,
     Block: ListMenuBlock 
 }
 

@@ -1,4 +1,3 @@
-import { List } from "../../../configuration/models/list.model";
 import { DrawnMenuBlock, ListMenu, ListMenuBlock } from "../../../configuration/models/menu.model";
 import { ListState } from "../list-state.model";
 
@@ -6,9 +5,9 @@ export class MenuBuilder{
 
     constructor(){}
 
-    async build(list: List, currState: ListState, prevState?: ListState): Promise<ListMenu | undefined>{
-        const drawnBlocks = await this.drawBlocks(list.Menu.Blocks, currState, prevState)
-        const isSomethingChanged = drawnBlocks.reduce((acc, curr) => acc || curr.isChanged ,false)
+    async build(menuBlocks: ListMenuBlock[], currState: ListState, prevState?: ListState): Promise<ListMenu | undefined>{
+        const drawnBlocks = await this.drawBlocks(menuBlocks, currState, prevState)
+        const isSomethingChanged = drawnBlocks.reduce((acc, curr) => acc || curr.IsChanged ,false)
         if(!isSomethingChanged){
             return undefined
         }
@@ -18,12 +17,15 @@ export class MenuBuilder{
 
     }
     private async drawBlocks(menuBlocks: ListMenuBlock[], currState: ListState, prevState?: ListState): Promise<DrawnMenuBlock[]>{
-        return await Promise.all(menuBlocks.map(block => {
-            return pepperi.addons.api.uuid(block.AddonUUID).post({
-                url: block.DrawURL,
-                body: {prevState: prevState, currState: currState, block: block}
-            })
+        return await Promise.all(menuBlocks.map(async block => {
+            return await this.getDrawnBlock(block, currState, prevState)
         }))
+    }
+    async getDrawnBlock(block: ListMenuBlock, currState: ListState, prevState?: ListState): Promise<DrawnMenuBlock>{
+        return await pepperi.addons.api.uuid(block.AddonUUID).post({
+            url: block.DrawURL,
+            body: {prevState: prevState, currState: currState}
+        })
     }
 
 

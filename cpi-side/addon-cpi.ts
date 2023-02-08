@@ -22,23 +22,10 @@ router.post('/menu', async (req, res, next) => {
     const currState = req.body.currState
     const prevState = req.body.prevState
     if(!currState || !currState.ListKey){
-        throw new Error(`current state does not have a list key`)
+        throw new Error(`current state does not exist or does not have a list key`)
     }
     const list = await getList(currState.ListKey)
-    res.json(await new MenuBuilder().build(list, currState, prevState))
-})
-router.post('/drawMenuBlock', (req, res, next) => {
-    const block = req.body.block
-    const prevState = req.body.prevState
-    const currState = req.body.currState
-    const result: DrawnMenuBlock = {
-        Block: block,
-        isChanged: true
-    }
-    if(prevState){
-        result.isChanged = true
-    }
-    return res.json(result)
+    res.json(await new MenuBuilder().build(list.Menu.Blocks, currState, prevState))
 })
 
 
