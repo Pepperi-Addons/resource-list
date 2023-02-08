@@ -1,11 +1,11 @@
-interface View {
+export interface View {
     Key: string;
     Type: "Grid" | "Cards";
     Title: string;
-    ViewBlocks: ViewBlock[]
+    Blocks: ViewBlock[]
 }
 
-interface ViewBlock{
+export interface ViewBlock{
     Title: string;
     Group: string //used to group related blocks
     Configuration: any;

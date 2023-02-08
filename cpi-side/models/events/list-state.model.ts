@@ -11,7 +11,11 @@ export interface ListState {
     ItemSelection?: ItemSelection // default empty 
 }
 
+/*
+    Items is limited to 500 elements
+    when select all is true the items will be the non selected items, when selectAll false the items will be the selected items 
+*/
 interface ItemSelection{
     SelectAll: Boolean // default false 
-    Items: string[] // key list - limit to 500 keys
+    Items: string[] 
   }

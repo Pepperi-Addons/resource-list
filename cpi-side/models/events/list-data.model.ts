@@ -1,9 +1,9 @@
 export interface ListData{
-    Items: ItemCell[]
+    Items: RowData[]
 }
 
  // represent one row (i.e. one item)
  // the matching between block and property is done by the "key" 
- export interface ItemCell {
+ export interface RowData {
     [Key: string]: any
 }
