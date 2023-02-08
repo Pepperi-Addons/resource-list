@@ -5,8 +5,8 @@ export class MenuBuilder{
 
     constructor(){}
 
-    async build(menuBlocks: ListMenuBlock[], currState: ListState, prevState?: ListState): Promise<ListMenu | undefined>{
-        const drawnBlocks = await this.drawBlocks(menuBlocks, currState, prevState)
+    async build(menu: ListMenu, currState: ListState, prevState?: ListState): Promise<ListMenu | undefined>{
+        const drawnBlocks = await this.drawBlocks(menu.Blocks, currState, prevState)
         const isSomethingChanged = drawnBlocks.reduce((acc, curr) => acc || curr.IsChanged ,false)
         if(!isSomethingChanged){
             return undefined

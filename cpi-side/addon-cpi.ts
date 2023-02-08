@@ -25,7 +25,7 @@ router.post('/menu', async (req, res, next) => {
         throw new Error(`current state does not exist or does not have a list key`)
     }
     const list = await getList(currState.ListKey)
-    res.json(await new MenuBuilder().build(list.Menu.Blocks, currState, prevState))
+    res.json(await new MenuBuilder().build(list.Menu, currState, prevState))
 })
 
 
