@@ -3,6 +3,8 @@ import { router as genericResourceRouter }  from './routes/generic-resource.rout
 import { router as viewsRouter } from './routes/views.routes'
 import { MenuBuilder } from './events/helpers/menu-builder';
 import { ListService } from './services/list.service';
+import { LoadListEventService } from './events/services/load-list-event.service';
+import { ListMenuBlock } from './models/configuration/menu.model';
 export async function load(configuration: any) {
     console.log('cpi side works!');
     // Put your cpi side code here
@@ -26,6 +28,22 @@ router.post('/menu', async (req, res, next) => {
     const listService = new ListService()
     const list = await listService.getList(currState.ListKey)
     res.json(await new MenuBuilder().build(list.Menu, currState, prevState))
+})
+router.post('/drawMenuBlock', (req, res, next) => {
+   return res.json( {
+        Key: 'line',
+        Title: ';ine',
+        DrawURL: 'addon-cpi/drawMenuBlock',
+        AddonUUID: '0e2ae61b-a26a-4c26-81fe-13bdd2e4aaa3'
+    })
+})
+//route for testing event
+router.post('/OnClientLoadList', async (req, res, next) => {
+    const prevState = req.body.prevState
+    const currState = req.body.currState
+    return res.json(await new LoadListEventService().execute(currState, prevState))
+    // const result =  await buildListModel({ListKey: 'LIST1'})
+    // return res.json(result)
 })
 
 
