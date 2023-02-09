@@ -2,7 +2,7 @@ import { SelectionType } from "../configuration/list.model"
 import { ListMenu } from "../configuration/menu.model"
 import { ListSmartSearch } from "../configuration/search.model"
 import { Sorting } from "../configuration/sorting.model"
-import { ViewBlock } from "../configuration/view.model"
+import { ViewBlock, ViewType } from "../configuration/view.model"
 
 export interface ListLayout{
     Key: string,
@@ -22,7 +22,7 @@ export interface ViewBlocks{
 }
 
 export interface ViewLayout{
-    Type: "Grid" | "Cards"
+    Type: ViewType
     ViewBlocks : ViewBlocks
 
 }
