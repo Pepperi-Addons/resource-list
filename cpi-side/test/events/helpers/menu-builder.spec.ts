@@ -32,10 +32,7 @@ describe('menu builder tests', () => {
             /** create stub that returns the new button and changed */
             const stubbedMenuBuilder = sinon.stubObject<MenuBuilder>(menuBuilder, ["callDrawBlockFunction"]);
             stubbedMenuBuilder.callDrawBlockFunction.returns((async () => {
-                return {
-                    IsChanged: true,
-                    Block: newButton
-                }
+                return newButton
             })())
 
             const result = await stubbedMenuBuilder.build(list.Menu, defaultState, undefined)
