@@ -27,7 +27,7 @@ export class ListLayoutBuilder implements IListLayoutBuilder{
         .smartSearch(this.list.SmartSearch) 
         .selectionType(this.list.SelectionType) 
         .views(this.list.Views, this.currState.ViewKey)
-        .menu(this.list.LineMenu).then(self => {
+        .lineMenu(this.list.LineMenu).then(self => {
             return self.menu(this.list.Menu).then(self => self.listModel as Partial<ListLayout>)
         })
     }
@@ -44,10 +44,16 @@ export class ListLayoutBuilder implements IListLayoutBuilder{
     }
 
     async menu(menuConfiguration: ListMenu = {Blocks: []}): Promise<ListLayoutBuilder>{
+        this.listModel.Menu = await this.buildMenu(menuConfiguration)
+        return this
+    }
+    private async buildMenu(menuConfiguration: ListMenu){
         const menuBuilder = new MenuBuilder()
-        const menu = await menuBuilder.build(menuConfiguration, this.currState, this.prevState)
-        debugger
-        this.listModel.Menu = menu
+        return await menuBuilder.build(menuConfiguration, this.currState, this.prevState)
+    }
+
+    async lineMenu(menuConfiguration: ListMenu = {Blocks: []}):  Promise<ListLayoutBuilder>{
+        this.listModel.LineMenu = await this.buildMenu(menuConfiguration)
         return this
     }
 

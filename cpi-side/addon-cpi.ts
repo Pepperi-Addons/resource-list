@@ -30,12 +30,15 @@ router.post('/menu', async (req, res, next) => {
     res.json(await new MenuBuilder().build(list.Menu, currState, prevState))
 })
 router.post('/drawMenuBlock', (req, res, next) => {
-   return res.json( {
-        Key: 'line',
-        Title: ';ine',
-        DrawURL: 'addon-cpi/drawMenuBlock',
-        AddonUUID: '0e2ae61b-a26a-4c26-81fe-13bdd2e4aaa3'
-    })
+    if(Math.random() < 1){
+        return res.json( {
+             Key: 'line',
+             Title: ';ine',
+             DrawURL: 'addon-cpi/drawMenuBlock',
+             AddonUUID: '0e2ae61b-a26a-4c26-81fe-13bdd2e4aaa3'
+         })
+    }
+    return res.json(null)
 })
 //route for testing event
 router.post('/OnClientLoadList', async (req, res, next) => {
