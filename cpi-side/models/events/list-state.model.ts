@@ -6,7 +6,7 @@ export interface ListState {
     SearchString?: string, // default no search 
     SmartSearchQuery?: JSONFilter
     Sorting?: Sorting, // default CreationDateTime, Ascending=false
-    PageSize?: number //default is 50!
+    PageSize?: number //default is 100!
     PageIndex?: number // default = 1 (first page)
     ItemSelection?: ItemSelection // default empty 
 }
