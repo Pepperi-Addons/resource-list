@@ -1,12 +1,13 @@
  import { ListMenu, ListMenuBlock } from '../../models/configuration/menu.model'
+import { Menu, MenuBlock } from '../../models/events/list-layout.model'
 import { ListState } from '../../models/events/list-state.model'
 
 export class MenuBuilder{
 
     constructor(){}
 
-    async build(menu: ListMenu, state: ListState | undefined, changes: Partial<ListState>): Promise<ListMenu | null>{
-        const drawnBlocks = await (await this.drawBlocks(menu.Blocks, state, changes)).filter(block => block) as ListMenuBlock[]
+    async build(menu: ListMenu, state: ListState | undefined, changes: Partial<ListState>): Promise<Menu | null>{
+        const drawnBlocks = await (await this.drawBlocks(menu.Blocks, state, changes)).filter(block => block) as MenuBlock[]
         if(drawnBlocks.length == 0){
             return null
         }
@@ -15,12 +16,12 @@ export class MenuBuilder{
         }
 
     }
-    private async drawBlocks(menuBlocks: ListMenuBlock[], state: ListState | undefined, changes: Partial<ListState>): Promise<(ListMenuBlock | null)[]>{
+    private async drawBlocks(menuBlocks: ListMenuBlock[], state: ListState | undefined, changes: Partial<ListState>): Promise<(MenuBlock | null)[]>{
         return await Promise.all(menuBlocks.map(async block => {
             return await this.callDrawBlockFunction(block, state, changes)
         }))
     }
-    async callDrawBlockFunction(block: ListMenuBlock, state: ListState | undefined, changes: Partial<ListState>): Promise<ListMenuBlock | null>{
+    async callDrawBlockFunction(block: ListMenuBlock, state: ListState | undefined, changes: Partial<ListState>): Promise<MenuBlock | null>{
         const result =  await pepperi.addons.api.uuid(block.AddonUUID).post({
             url: block.DrawURL,
             body: { PrevState: changes, CurrState: state }
