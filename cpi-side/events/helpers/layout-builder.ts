@@ -44,7 +44,10 @@ export class ListLayoutBuilder implements IListLayoutBuilder{
     }
 
     async menu(menuConfiguration: ListMenu = {Blocks: []}): Promise<ListLayoutBuilder>{
-        this.listModel.Menu = await this.buildMenu(menuConfiguration)
+        const menu = await this.buildMenu(menuConfiguration)
+        if(menu){
+            this.listModel.Menu = menu
+        }
         return this
     }
     private async buildMenu(menuConfiguration: ListMenu){
@@ -52,8 +55,11 @@ export class ListLayoutBuilder implements IListLayoutBuilder{
         return await menuBuilder.build(menuConfiguration, this.state, this.changes)
     }
 
-    async lineMenu(menuConfiguration: ListMenu = {Blocks: []}):  Promise<ListLayoutBuilder>{
-        this.listModel.LineMenu = await this.buildMenu(menuConfiguration)
+    async lineMenu(lineMenuConfiguration: ListMenu = {Blocks: []}):  Promise<ListLayoutBuilder>{
+        const lineMenu = await this.buildMenu(lineMenuConfiguration)
+        if(lineMenu){
+            this.listModel.LineMenu = lineMenu
+        }
         return this
     }
 

@@ -21,14 +21,16 @@ router.use('/resources', genericResourceRouter)
 router.use('/views', viewsRouter)
 
 router.post('/menu', async (req, res, next) => {
-    const currState = req.body.currState
-    const prevState = req.body.prevState
-    if(!currState || !currState.ListKey){
-        throw new Error(`current state does not exist or does not have a list key`)
+    const state = req.body.State
+    const changes = req.body.Changes || {}
+    const listKey = state?.ListKey || changes?.ListKey //list key should be at least on one of them
+    if(!listKey){
+        throw new Error(`list key must be supplied either in the state or in the changes object`)
     }
     const listService = new ListService()
-    const list = await listService.getList(currState.ListKey)
-    res.json(await new MenuBuilder().build(list.Menu, currState, prevState))
+    const list = await listService.getList(listKey)
+    const menu = new MenuBuilder().build(list.Menu, state, changes)
+    res.json({Menu: menu})
 })
 router.post('/drawMenuBlock', (req, res, next) => {
     if(Math.random() < 1){
@@ -48,4 +50,20 @@ router.post('/OnClientLoadList', async (req, res, next) => {
     return res.json(await new LoadListEventService().execute(state, changes))
 })
 
+router.post('/drawMenuBlock', (req, res, next) => {
+    if(Math.random() < 0.5){
+        return res.json({
+            Result: {
+                Key: 'line',
+                Title: 'line',
+                DrawURL: 'addon-cpi/drawMenuBlock',
+                AddonUUID: '0e2ae61b-a26a-4c26-81fe-13bdd2e4aaa3',
+                Hidden: false
+            }
+         })
+    }
+    return res.json({
+        Result: null
+    })
+})
 
