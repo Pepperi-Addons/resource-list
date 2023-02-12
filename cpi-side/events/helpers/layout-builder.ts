@@ -17,8 +17,6 @@ export class ListLayoutBuilder implements IListLayoutBuilder{
     private listModel: Partial<ListLayout> = {}
 
     constructor(private list: List,private state: ListState | undefined,  private changes: Partial<ListState>){
-        this.listModel.Key = list.Key
-        this.listModel.Title = list.Name
     }
 
     
@@ -27,9 +25,21 @@ export class ListLayoutBuilder implements IListLayoutBuilder{
         .smartSearch(this.list.SmartSearch) 
         .selectionType(this.list.SelectionType) 
         .views(this.list.Views, this.changes.ViewKey)
+        .title(this.list.Name)
         .lineMenu(this.list.LineMenu).then(self => {
             return self.menu(this.list.Menu).then(self => self.listModel as Partial<ListLayout>)
         })
+    }
+    /**
+     * this function will set a title only if the state is undefined
+     * @param name string 
+     * @returns this
+     */
+    title(name: string){
+        if(!this.state){
+            this.listModel.Title = name
+        }
+        return this
     }
 
     private createViewsMenu(views:View[] = []){
@@ -42,7 +52,11 @@ export class ListLayoutBuilder implements IListLayoutBuilder{
         this.listModel.ViewsMenu = result
         return
     }
-
+    /**
+     * this function will set the menu on the list layout if the menu needs to be rendered.
+     * @param menuConfiguration 
+     * @returns this
+     */
     async menu(menuConfiguration: ListMenu = {Blocks: []}): Promise<ListLayoutBuilder>{
         const menu = await this.buildMenu(menuConfiguration)
         if(menu){
@@ -54,7 +68,11 @@ export class ListLayoutBuilder implements IListLayoutBuilder{
         const menuBuilder = new MenuBuilder()
         return await menuBuilder.build(menuConfiguration, this.state, this.changes)
     }
-
+    /**
+     * this function will set the line menu on the list layout if the line menu needs to be rendered.
+     * @param lineMenuConfiguration 
+     * @returns this
+     */
     async lineMenu(lineMenuConfiguration: ListMenu = {Blocks: []}):  Promise<ListLayoutBuilder>{
         const lineMenu = await this.buildMenu(lineMenuConfiguration)
         if(lineMenu){

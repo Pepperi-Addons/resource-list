@@ -7,7 +7,7 @@ export class MenuBuilder{
     constructor(){}
 
     async build(menu: ListMenu, state: ListState | undefined, changes: Partial<ListState>): Promise<Menu | null>{
-        const drawnBlocks = await (await this.drawBlocks(menu.Blocks, state, changes)).filter(block => block) as MenuBlock[]
+        const drawnBlocks = (await this.drawBlocks(menu.Blocks, state, changes)).filter(block => block) as MenuBlock[]
         if(drawnBlocks.length == 0){
             return null
         }

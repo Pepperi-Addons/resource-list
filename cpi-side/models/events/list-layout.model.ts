@@ -5,7 +5,6 @@ import { Sorting } from "../configuration/sorting.model"
 import { ViewBlock, ViewType } from "../configuration/view.model"
 
 export interface ListLayout{
-    Key: string,
     Title: string
     ViewsMenu: ViewsMenu,
     Menu: Menu,
