@@ -10,6 +10,7 @@ export async function load(configuration: any) {
     // Put your cpi side code here
 }
 
+
 export const router = Router()
 //routes:
 
@@ -42,11 +43,9 @@ router.post('/drawMenuBlock', (req, res, next) => {
 })
 //route for testing event
 router.post('/OnClientLoadList', async (req, res, next) => {
-    const prevState = req.body.prevState
-    const currState = req.body.currState
-    return res.json(await new LoadListEventService().execute(currState, prevState))
-    // const result =  await buildListModel({ListKey: 'LIST1'})
-    // return res.json(result)
+    const state = req.body.State
+    const changes = req.body.Changes
+    return res.json(await new LoadListEventService().execute(state, changes))
 })
 
 

@@ -16,7 +16,7 @@ export interface IListLayoutBuilder{
 export class ListLayoutBuilder implements IListLayoutBuilder{
     private listModel: Partial<ListLayout> = {}
 
-    constructor(private list: List,private prevState: ListState | undefined,  private currState: ListState){
+    constructor(private list: List,private state: ListState | undefined,  private changes: Partial<ListState>){
         this.listModel.Key = list.Key
         this.listModel.Title = list.Name
     }
@@ -26,7 +26,7 @@ export class ListLayoutBuilder implements IListLayoutBuilder{
         return this.search(this.list.Search) 
         .smartSearch(this.list.SmartSearch) 
         .selectionType(this.list.SelectionType) 
-        .views(this.list.Views, this.currState.ViewKey)
+        .views(this.list.Views, this.changes.ViewKey)
         .lineMenu(this.list.LineMenu).then(self => {
             return self.menu(this.list.Menu).then(self => self.listModel as Partial<ListLayout>)
         })
@@ -49,7 +49,7 @@ export class ListLayoutBuilder implements IListLayoutBuilder{
     }
     private async buildMenu(menuConfiguration: ListMenu){
         const menuBuilder = new MenuBuilder()
-        return await menuBuilder.build(menuConfiguration, this.currState, this.prevState)
+        return await menuBuilder.build(menuConfiguration, this.state, this.changes)
     }
 
     async lineMenu(menuConfiguration: ListMenu = {Blocks: []}):  Promise<ListLayoutBuilder>{
@@ -57,42 +57,50 @@ export class ListLayoutBuilder implements IListLayoutBuilder{
         return this
     }
 
-    // buttons(menuConfiguration: ListMenu = {Blocks: []}): ListModelBuilder{
-    //     const result: Buttons = {
-    //         buttons: []
-    //     }
-        
-    //     result.buttons = menuConfiguration.Blocks.filter(block => block.Button)
-    //     this.listModel.Buttons = result
-    //     return this
-    // }
-    
+    /**
+     * this function will return Search element
+     * the search will be visible only if some fields are configured to be search on
+     * and function will return undefined if no change on search state is required
+     * @param search - the search configuration 
+     * @param state - the current state
+     * @param changes - the changes on the state that emit this event
+     */
     search(search: ListSearch = {Fields: []}): ListLayoutBuilder{
-        this.listModel.Search = search.Fields.length > 0
-        return this
-    }
-
-    smartSearch(smartSearch: ListSmartSearch = {Fields: []}){
-       this.listModel.SmartSearch = {
-            Fields: smartSearch.Fields
+        //the only case when we return a search is on the load of the list, thats happen only if current state is undefined
+        if(!this.state){
+            this.listModel.Search =  { Visible: search.Fields.length > 0 }
         }
         return this
     }
-
-    // lineMenu(lineMenu: ListMenu){
-    //     const result: ListMenu = {
-    //     }
-    //     result.Menu.Fields = lineMenu.Blocks.map(lineMenuBlock => {
-    //         return {
-    //             FieldID: lineMenuBlock.Key,
-    //             Title: lineMenuBlock.Title
-    //         }
-    //     })
-    //     this.listModel.LineMenu = result
-    //     return this
-    // }
-
+    /**
+     * this function will add smart search to the layout only if the state is undefined
+     * @param smartSearch the configuration of the smart search
+     * @returns this 
+     * 
+     */
+    smartSearch(smartSearch: ListSmartSearch = {Fields: []}){
+        //if there is a state we don't want to re render the smart search component
+        if(this.state){
+            return this
+        }
+        if(!this.state){
+            this.listModel.SmartSearch = {
+                 Fields: smartSearch.Fields
+             }
+        }
+        return this
+    }
+    /**
+     * this function will add the views to the list layout only if the state is undefined or that the changes object contains view key
+     * @param views this list of views that configured on the list
+     * @param viewKey optional, the view key of the selected view
+     * @returns this
+     */
     views(views: View[] = [], viewKey?: string): ListLayoutBuilder{
+        //if there is a state and the selected view didn't change we don't want to re render the views menu
+        if(this.state && !viewKey){
+            return this
+        }
         const result: ViewLayout = {
             ViewBlocks: {
                 Fields: []
@@ -127,32 +135,16 @@ export class ListLayoutBuilder implements IListLayoutBuilder{
         const viewBlocks = selectedView.Blocks
         this.listModel.View = result
         return this
-        //get the fields in order to search the items
-        // const fields: string[] = viewBlocks.map(viewBlocks => viewBlocks.Configuration.FieldID) as string[]
-        // //add key if missing
-        // if(!fields.includes('Key')){
-        //     fields.push('Key')
-        // }
-        // //convert filter to query string
-        // const query = toApiQueryString(this.list.Filter) || ''
-        // //get the relation function, for now it is hard coded
-        // const resourceService = new GenericResourceService()
-        // const items = await resourceService.getItems(this.list.Resource, {where: query} ,fields)
-        // const gridCellOutput = getCellBlock({Items: items.Objects, ViewBlocks: viewBlocks})
-        // const rows: GridCell[] = []
-        // gridCellOutput.GridData.map(gridRow => {
-        //     //take the current row and convert it to an object
-        //    const row = gridRow.reduce((acc, curr) => acc = {...acc, ...curr},{})
-        //    rows.push(row)
-            
-        // })
-        // //add items 
-        // // result.Items = rows
-        // this.listModel.View = result
-        // return this
     }
-
+    /**
+     * this function will set the selection type only if state is undefined
+     * @param selectionType by default none
+     * @returns this
+     */
     selectionType(selectionType: SelectionType = "None"){
+        if(this.state){
+            return this
+        }
         this.listModel.SelectionType = selectionType
         return this
     }

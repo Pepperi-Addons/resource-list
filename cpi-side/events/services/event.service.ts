@@ -7,5 +7,5 @@ export abstract class EventService{
     constructor(){
         this.listBuilder = new ListBuilder()
     }
-    abstract execute(currState: ListState, prevState?: ListState): Promise<Partial<ListContainer>>
+    abstract execute(state: ListState, changes: Partial<ListState>): Promise<Partial<ListContainer>>
 }

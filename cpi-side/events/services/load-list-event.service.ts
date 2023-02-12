@@ -5,13 +5,16 @@ import { EventService } from "./event.service"
 
 export class LoadListEventService extends EventService{
 
-    async execute(currState: ListState, prevState?: ListState): Promise<ListContainer> {
-        const service = new ListService()
-        const list = await service.getList(currState.ListKey)
-        if(!list){
-            throw new Error(`list with key ${currState.ListKey} does not exist`)
+    async execute(state: ListState, changes: Partial<ListState>): Promise<ListContainer> {
+        if(!changes?.ListKey){
+            throw new Error(`list key must be supplied on load list event`)
         }
-        return await this.listBuilder.buildListContainer(list, currState, prevState)
+        const service = new ListService()
+        const list = await service.getList(changes.ListKey)
+        if(!list){
+            throw new Error(`list with key ${changes.ListKey} does not exist`)
+        }
+        return await this.listBuilder.buildListContainer(list, state, changes)
     }
 
 }

@@ -15,7 +15,7 @@ describe('menu builder tests', () => {
     const menuBuilder = new MenuBuilder()
     describe('1. prev state undefined current state with only list key', function() {
         it('1. list with empty menu', async () => {
-            const result = await menuBuilder.build(defaultList.Menu, defaultState, undefined)
+            const result = await menuBuilder.build(defaultList.Menu, defaultState, {})
             expect(result).to.eql(undefined)
         })
         it('2. add simple menu with one item to the burger menu', async function(){
@@ -35,7 +35,7 @@ describe('menu builder tests', () => {
                 return { ...newButton, Hidden: false }
             })())
 
-            const result = await stubbedMenuBuilder.build(list.Menu, defaultState, undefined)
+            const result = await stubbedMenuBuilder.build(list.Menu, defaultState, {})
             expect(result).to.eql({
                 Blocks: [
                     {...newButton, Hidden: false }

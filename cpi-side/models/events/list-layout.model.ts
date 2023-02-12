@@ -10,13 +10,15 @@ export interface ListLayout{
     ViewsMenu: ViewsMenu,
     Menu: Menu,
     LineMenu: Menu,
-    Search: boolean, 
+    Search: Search, 
     SelectionType: SelectionType, //by default none
     SmartSearch: ListSmartSearch, // if empty array we will hide the smart search
     Sorting: Sorting,
     View: ViewLayout
 }
-
+export interface Search{
+    Visible: boolean
+}
 export type MenuBlock = ListMenuBlock & {Hidden: boolean}
 export interface Menu{
     Blocks: MenuBlock[]

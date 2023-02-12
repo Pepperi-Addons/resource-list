@@ -6,8 +6,8 @@ export class MenuBuilder{
 
     constructor(){}
 
-    async build(menu: ListMenu, currState: ListState, prevState?: ListState): Promise<Menu | undefined>{
-        const drawnBlocks = await (await this.drawBlocks(menu.Blocks, currState, prevState)).filter(block => block) as MenuBlock[]
+    async build(menu: ListMenu, state: ListState | undefined, changes: Partial<ListState>): Promise<Menu | undefined>{
+        const drawnBlocks = await (await this.drawBlocks(menu.Blocks, state, changes)).filter(block => block) as MenuBlock[]
         if(drawnBlocks.length == 0){
             return undefined
         }
@@ -16,15 +16,15 @@ export class MenuBuilder{
         }
 
     }
-    private async drawBlocks(menuBlocks: ListMenuBlock[], currState: ListState, prevState?: ListState): Promise<(MenuBlock | undefined)[]>{
+    private async drawBlocks(menuBlocks: ListMenuBlock[], currState: ListState | undefined, changes: Partial<ListState>): Promise<(MenuBlock | undefined)[]>{
         return await Promise.all(menuBlocks.map(async block => {
-            return await this.callDrawBlockFunction(block, currState, prevState)
+            return await this.callDrawBlockFunction(block, currState, changes)
         }))
     }
-    async callDrawBlockFunction(block: ListMenuBlock, currState: ListState, prevState?: ListState): Promise<MenuBlock | undefined>{
+    async callDrawBlockFunction(block: ListMenuBlock, currState: ListState | undefined, changes: Partial<ListState>): Promise<MenuBlock | undefined>{
         return await pepperi.addons.api.uuid(block.AddonUUID).post({
             url: block.DrawURL,
-            body: { PrevState: prevState, CurrState: currState }
+            body: { PrevState: changes, CurrState: currState }
         })
     }
 
