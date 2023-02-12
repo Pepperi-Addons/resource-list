@@ -16,7 +16,7 @@ describe('menu builder tests', () => {
     describe('1. changes is undefined current state with only list key', function() {
         it('1. list with empty menu', async () => {
             const result = await menuBuilder.build(defaultList.Menu, defaultState, {})
-            expect(result).to.eql(undefined)
+            expect(result).to.eql(null)
         })
         it('2. add simple menu with one item to the burger menu', async function(){
             const list = getDefaultListCopy()
@@ -52,7 +52,7 @@ describe('menu builder tests', () => {
             })())
 
             const result = await stubbedMenuBuilder.build(list.Menu, defaultState, {})
-            expect(result).to.eql(undefined)
+            expect(result).to.eql(null)
         })
     })
 
