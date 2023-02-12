@@ -2,6 +2,7 @@ import { JSONFilter } from "@pepperi-addons/pepperi-filters"
 import {  ListMenu } from "./menu.model"
 import { ListSearch, ListSmartSearch  } from "./search.model"
 import { View } from "./view.model"
+import { Sorting } from "./sorting.model"
 
 
 
