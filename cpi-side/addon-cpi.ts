@@ -5,6 +5,7 @@ import { MenuBuilder } from './events/helpers/menu-builder';
 import { ListService } from './services/list.service';
 import { MenuBlock } from './models/events/list-layout.model';
 import { stat } from 'fs';
+import { LoadListEventService } from './events/services/load-list-event.service';
 export async function load(configuration: any) {
     console.log('cpi side works!');
     // Put your cpi side code here
