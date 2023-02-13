@@ -14,6 +14,7 @@ export class LoadListEventService extends EventService{
         if(!list){
             throw new Error(`list with key ${changes.ListKey} does not exist`)
         }
+        const layout = await this.listBuilder.buildLayout(list, state, changes)
         return await this.listBuilder.buildListContainer(list, state, changes)
     }
 
