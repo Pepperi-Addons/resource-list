@@ -5,7 +5,7 @@ import { EventService } from "./event.service"
 
 export class LoadListEventService extends EventService{
 
-    async execute(state: ListState, changes: Partial<ListState>): Promise<ListContainer> {
+    async execute(state: ListState | undefined, changes: Partial<ListState>): Promise<ListContainer> {
         if(!changes?.ListKey){
             throw new Error(`list key must be supplied on load list event`)
         }
@@ -15,6 +15,12 @@ export class LoadListEventService extends EventService{
             throw new Error(`list with key ${changes.ListKey} does not exist`)
         }
         const layout = await this.listBuilder.buildLayout(list, state, changes)
+        const viewsMenu = layout.ViewsMenu?.Items
+        let viewKey: string | undefined = undefined 
+        if(viewsMenu && viewsMenu.length > 0){
+            viewKey = viewsMenu[0].Key
+        }
+        const newState: ListState = {...changes, ViewKey: viewKey, ListKey: list.Key}
         return await this.listBuilder.buildListContainer(list, state, changes)
     }
 
