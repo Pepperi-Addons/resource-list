@@ -2,6 +2,7 @@
 import { Menu, MenuBlock } from '../../models/events/list-layout.model'
 import { ListState } from '../../models/events/list-state.model'
 
+type drawFunctionObject = {AddonUUID: string, DrawURL: string}
 export class MenuBuilder{
 
     constructor(){}
@@ -23,8 +24,8 @@ export class MenuBuilder{
      * @param menuBlocks 
      * @returns array of object that will tell where to call in order to draw the blocks
      */
-    private getDrawFunctionsArray(menuBlocks: ListMenuBlock[]): {AddonUUID: string, DrawURL: string}[]{
-        const drawFunctionsArray: {AddonUUID: string, DrawURL: string}[] = []
+    private getDrawFunctionsArray(menuBlocks: ListMenuBlock[]): drawFunctionObject[]{
+        const drawFunctionsArray: drawFunctionObject[] = []
         const visitedDrawURLs = new Set<string>()
         menuBlocks.forEach(block => {
             const key = `${block.AddonUUID}_${block.DrawURL}`
@@ -39,12 +40,12 @@ export class MenuBuilder{
         return drawFunctionsArray
     }
 
-    private async drawBlocks(drawURLs: {AddonUUID: string, DrawURL: string}[], state: ListState | undefined, changes: Partial<ListState>): Promise<(MenuBlock[] | undefined)[]>{
+    private async drawBlocks(drawURLs: drawFunctionObject[], state: ListState | undefined, changes: Partial<ListState>): Promise<(MenuBlock[] | undefined)[]>{
         return await Promise.all(drawURLs.map(async drawURL => {
             return await this.callDrawBlockFunction(drawURL, state, changes)
         }))
     }
-    async callDrawBlockFunction(drawURL: {AddonUUID: string, DrawURL: string}, state: ListState | undefined, changes: Partial<ListState>): Promise<MenuBlock[] | undefined>{
+    async callDrawBlockFunction(drawURL: drawFunctionObject, state: ListState | undefined, changes: Partial<ListState>): Promise<MenuBlock[] | undefined>{
         const result =  await pepperi.addons.api.uuid(drawURL.AddonUUID).post({
             url: drawURL.DrawURL,
             body: { Changes: changes, State: state }
