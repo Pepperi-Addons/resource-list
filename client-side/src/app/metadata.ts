@@ -1,6 +1,6 @@
 import { IPepDraggableItem } from "@pepperi-addons/ngx-lib/draggable-items"
-import { BaseFormDataViewField, DataViewField, DataViewFieldType, GridDataViewField, MenuDataViewField } from "@pepperi-addons/papi-sdk"
-import { SelectOption } from "../../../shared/entities"
+import { AddonData, BaseFormDataViewField, DataViewField, DataViewFieldType, GridDataViewField, MenuDataViewField, SchemeField } from "@pepperi-addons/papi-sdk"
+import { SelectOption } from "shared"
 import { AddFormComponent } from "./add-form/add-form.component"
 import { ViewsCard } from "./draggable-card-fields/cards.model"
 
@@ -31,8 +31,10 @@ export type MenuField = MenuDataViewField & {OriginalName: string}
 
 
 export interface IDataService{
+  name: string
   getItems(key?: string , includeDeleted?: boolean)
   upsertItem(item: any),
+  getResources():Promise<AddonData[]>
 }
 
 export interface IFieldConvertor {
@@ -66,7 +68,6 @@ export const defaultCollectionFields = [
   }
 ]
 export interface IGenericViewerConfigurationObject{
-  resource: string,
   viewsList: SelectOption[],
   selectionList?: {
     none: boolean,
@@ -74,9 +75,19 @@ export interface IGenericViewerConfigurationObject{
   }
 }
 
+
+
 export const SELECTION_TYPE = "SelectionType"
 export const EXPORT = "Export"
 export const IMPORT = "Import"
 
 export const SELECTION_LIST = "SelectionList"
 export const DROP_DOWN = "DropDown"
+
+const CPI_BASE_URL = '/addon-cpi'
+export const GENERIC_RESOURCE_OFFLINE_URL = CPI_BASE_URL + '/resources'
+export const GENERIC_VIEWS_RESOURCE = CPI_BASE_URL +'/views'
+
+export const DRILL_DOWN_EVENT_KEY = "FirstFieldDrillDown"
+
+export type ResourceField = SchemeField & {FieldID: string}

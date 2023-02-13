@@ -4,7 +4,7 @@ import { DataSource } from '../data-source/data-source';
 import { PepMenuItem } from '@pepperi-addons/ngx-lib/menu';
 import { DataViewService } from '../services/data-view-service';
 import { EditorsService } from '../services/editors.service';
-import { Editor } from '../../../../shared/entities';
+import { Editor } from 'shared';
 @Component({
     selector: 'data-configuration-block',
     templateUrl: './data-configuration-block.component.html',
@@ -13,7 +13,6 @@ import { Editor } from '../../../../shared/entities';
 export class DataConfigurationBlockComponent implements OnInit {
     @Input() hostObject: any;
     datasource: DataSource
-    editorDataSource = {}
     menuItems: PepMenuItem[] = [];
     typeMap: any;
     currentResourceName: string = ""
@@ -24,6 +23,7 @@ export class DataConfigurationBlockComponent implements OnInit {
     dataView: any
     currentEditorKey: string
     editor: Editor
+    loadCompleted: Boolean = false
     @Output() hostEvents: EventEmitter<any> = new EventEmitter<any>();
 
     constructor(private translate: TranslateService,
@@ -32,9 +32,11 @@ export class DataConfigurationBlockComponent implements OnInit {
 
        }
     ngOnInit(): void {
+      this.loadCompleted = false
       this.loadBlock()
     }
     ngOnChanges($event){
+      this.loadCompleted = false
       this.loadBlock()
     }
     async loadBlock(){
@@ -47,5 +49,6 @@ export class DataConfigurationBlockComponent implements OnInit {
       }else{
         this.dataView = {}
       }
+      this.loadCompleted = true
     }
 }

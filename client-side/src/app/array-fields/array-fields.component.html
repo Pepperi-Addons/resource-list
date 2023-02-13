@@ -1,0 +1,22 @@
+<ng-container
+    *ngIf="dataViewOfArrayField.Type == 'ContainedResource'; then complexArrayFields; else primitiveArrayFields"
+></ng-container>
+
+
+<ng-template #complexArrayFields>
+    <contained-resource-array-field
+        [referenceFields] ='referenceFields'
+        [configurationObject]="dataViewOfArrayField"
+        [editorDataSource]="dataSource"
+        [resourceName] = "resourceName"
+        [originalValue]="originalValue" 
+        [event]="event">
+    </contained-resource-array-field>
+</ng-template>
+
+<ng-template #primitiveArrayFields>
+    <primitive-array-field 
+        [configurationObject]="dataViewOfArrayField" 
+        [editorDataSource]="dataSource">
+</primitive-array-field>
+</ng-template>

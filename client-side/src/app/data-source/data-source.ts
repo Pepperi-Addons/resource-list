@@ -1,14 +1,55 @@
-import { IPepGenericListDataSource, IPepGenericListInitData, IPepGenericListListInputs } from "@pepperi-addons/ngx-composite-lib/generic-list";
+import { IPepGenericListDataSource, IPepGenericListInitData, IPepGenericListListInputs, IPepGenericListParams } from "@pepperi-addons/ngx-composite-lib/generic-list";
 import { GridDataViewColumn } from "@pepperi-addons/papi-sdk";
 import { IPepListSortingChangeEvent } from "@pepperi-addons/ngx-lib/list";
 
-export class DataSource implements IPepGenericListDataSource{
+export interface ItemsDataSource {
+  getItems(params: IPepGenericListParams): Promise<{
+    items: any[];
+    totalCount: number
+  }>
+}
 
-    constructor(private items: any[], private fields: any[], private widthArray: GridDataViewColumn[] = [], private searchCB = (str, items) => items){
+export class StaticItemsDataSource implements ItemsDataSource {
+
+  constructor (private items: any[], private searchCB: (str: string, items: any[]) => any[]) {
+
+  }
+
+  async getItems(params: IPepGenericListParams): Promise<{ items: any[]; totalCount: number; }> {
+      let items = this.items;
+
+      if (params.searchString) {
+        items = this.searchCB(params.searchString, items);
+      }
+
+      return {
+        items: items,
+        totalCount: items.length
+      };
+  }
+}
+
+export class DynamicItemsDataSource implements ItemsDataSource {
+
+  constructor (private func: (params: IPepGenericListParams) => Promise<{ items: any[]; totalCount: number; }>) {}
+
+  async getItems(params: IPepGenericListParams): Promise<{ items: any[]; totalCount: number; }> {
+      return this.func(params)
+  }
+}
+
+export class DataSource implements IPepGenericListDataSource{
+  private items: any[] = []
+  itemsDataSource: ItemsDataSource;
+
+    constructor(itemsDataSource: ItemsDataSource | any[], private fields: any[], private widthArray: GridDataViewColumn[] = [], private searchCB = (str, items) => items){
+      this.itemsDataSource = Array.isArray(itemsDataSource) ? new StaticItemsDataSource(itemsDataSource, searchCB) : itemsDataSource;
     }
-    async init(params: { searchString?: string; filter?: any; sorting?: IPepListSortingChangeEvent; fromIndex: number; toIndex: number; }): Promise<IPepGenericListInitData> {
-      const searchString = params?.searchString || ""
-      const items = this.searchCB(searchString,this.items)
+    
+    async init(params: IPepGenericListParams): Promise<IPepGenericListInitData> {
+      
+      const result = await this.itemsDataSource.getItems(params)
+      this.items = result.items
       return {
           dataView: {
             Context: {
@@ -24,8 +65,8 @@ export class DataSource implements IPepGenericListDataSource{
             FrozenColumnsCount: 0,
             MinimumColumnWidth: 0
           },
-          totalCount: items.length,
-          items: items
+          totalCount: result.items.length,
+          items: result.items
         }; 
     }
     getItems(){

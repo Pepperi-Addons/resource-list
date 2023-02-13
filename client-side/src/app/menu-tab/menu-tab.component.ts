@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { IPepDraggableItem } from '@pepperi-addons/ngx-lib/draggable-items';
-import { MenuDataViewField } from '@pepperi-addons/papi-sdk';
+import { BaseDataView, DataViewType, MenuDataViewField } from '@pepperi-addons/papi-sdk';
 import { IMappedField } from '../metadata';
 import { AbstractProfileCardsTabComponent } from '../abstract-profile-cards-tab/abstract-profile-cards-tab.component'
 
@@ -40,7 +40,7 @@ export class MenuTabComponent extends AbstractProfileCardsTabComponent implement
   mappedFieldToDataViewField(mappedField: IMappedField, index: number){
     return {
       FieldID: mappedField.field.FieldID,
-      Title: mappedField.field.Title
+      Title: mappedField.field.Title,
     }
   }
   fieldToMappedField(field: MenuDataViewField): IMappedField{
@@ -59,4 +59,16 @@ export class MenuTabComponent extends AbstractProfileCardsTabComponent implement
      },
     };
  }
+
+ getDefaultDataView(): BaseDataView {
+  return {
+    Type: 'Menu',
+    Context: {
+      Name: this.dataViewContextName,
+      Profile: {
+      },
+      ScreenSize: 'Tablet'
+    }
+  };
+}
 }

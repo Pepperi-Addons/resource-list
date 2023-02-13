@@ -1,19 +1,7 @@
 <pep-page-layout [addPadding]="true" [addPadding]="true">
-    <ng-container pep-top-area>   
-        <div class="header">
-            <h4>Edit - {{currentView?.Name}}</h4>
-            <div class="buttons-holder">
-                <pep-button
-                class="pep-spacing-element"
-                value="Update"
-                styleType="strong"
-                styleStateType="system"
-                sizeType="md"
-                classNames=""
-                iconPosition="end"
-                [visible]="true"
-                (buttonClick)="onUpdate()"
-                ></pep-button>
+    <ng-container pep-top-area>
+        <pep-top-bar [title]="currentView?.Name">
+            <div header-end-content>
                 <pep-button
                 class="pep-spacing-element"
                 value="Back to list"
@@ -25,9 +13,20 @@
                 [visible]="true"
                 (buttonClick)="onBackToList()"
                 ></pep-button>
-            </div>
-        </div>
-        <hr>
+                <pep-button
+                class="pep-spacing-element"
+                value="Update"
+                [disabled]="!isJsonFilterFileValid"
+                styleType="strong"
+                styleStateType="system"
+                sizeType="md"
+                classNames=""
+                iconPosition="end"
+                [visible]="true"
+                (buttonClick)="onUpdate()"
+                ></pep-button>
+            </div>   
+        </pep-top-bar>
     </ng-container>
     <ng-container pep-main-area>  
         <mat-tab-group #tabgroup class="views-tabs" (selectedTabChange)="onTabChanged($event)">
@@ -38,8 +37,16 @@
                     [dataSource]="dataSource"
                     [dataView]="dataView" 
                     ></pep-generic-form>
+                    <views-filter
+                        *ngIf="resourceFields != undefined && currentView != undefined"
+                        [filter]="initialFilter"
+                        (jsonFilterFileEvent)="onJsonFilterFileChanged($event)"
+                        (jsonValidationEvent)="onJsonFileValidationChanged($event)"
+                        [resourceFields]="resourceFields">
+                    </views-filter>
                 </div>
             </mat-tab>
+            <!-- Form Tab  -->
             <mat-tab label = "{{'Tabs.Form' | translate}}"  *ngIf="loadCompleted">
                 <app-views-form-tab *ngIf="currentTab == 1"
                     [key] ="viewKey"
@@ -59,6 +66,31 @@
                 *ngIf="currentTab == 3"
                 [key] = "viewKey">
                 </app-line-menu-tab>
+            </mat-tab>
+            <!-- Events-Tab -->
+            <mat-tab label="{{'Events' | translate}}" *ngIf="loadCompleted">
+                <views-events-tab
+                    *ngIf="currentTab == 4"
+                    [viewKey]="viewKey"
+                    [isDrillDown]="currentView.isFirstFieldDrillDown"
+                    (drillDownChangedEvent)="onIsDrillDownChanged($event)"
+                ></views-events-tab>
+            </mat-tab>
+            <!-- Smart Search Tab -->
+            <mat-tab label="{{'SmartSearch' | translate}}" *ngIf="loadCompleted">
+                <views-smart-search-tab
+                    *ngIf="currentTab == 5"
+                    [indexedFields]="indexedFields"
+                    [key] ="viewKey">
+                </views-smart-search-tab>
+            </mat-tab>
+            <!-- Search Tab -->
+            <mat-tab label="{{'Search' | translate}}" *ngIf="loadCompleted">
+                <views-search-tab
+                    *ngIf="currentTab == 6"
+                    [resourceFields]="searchFields"
+                    [key] ="viewKey">
+                </views-search-tab>
             </mat-tab>
         </mat-tab-group>
     </ng-container>

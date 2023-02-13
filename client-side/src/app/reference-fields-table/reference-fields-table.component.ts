@@ -4,7 +4,7 @@ import { IPepGenericListActions } from '@pepperi-addons/ngx-composite-lib/generi
 import { PepDialogData, PepDialogService } from '@pepperi-addons/ngx-lib/dialog';
 import { PepSelectionData } from '@pepperi-addons/ngx-lib/list';
 import { GridDataViewField } from '@pepperi-addons/papi-sdk';
-import { IReferenceField, REFERENCE_TYPE } from '../../../../shared/entities';
+import { ARRAY_TYPE, CONTAINED_RESOURCE_TYPE, IReferenceField, REFERENCE_TYPE } from 'shared';
 import { DataSource } from '../data-source/data-source';
 import { GenericResourceService } from '../services/generic-resource-service';
 import { ReferenceFieldEditDialogComponent } from './reference-field-edit-dialog/reference-field-edit-dialog.component';
@@ -91,10 +91,14 @@ export class ReferenceFieldsTableComponent implements OnInit {
       }
     })
   }
+  hasReferenceType(field: any){
+    return field.Type === REFERENCE_TYPE ||
+      (field.Type === ARRAY_TYPE && field.Items.Type === CONTAINED_RESOURCE_TYPE)
+  }
   private getReferenceFieldsArray(resourceFields): IReferenceField[]{
     const referenceFieldsArray: IReferenceField[] = []
     Object.keys(resourceFields).forEach(fieldID => {
-      if(resourceFields[fieldID].Type == REFERENCE_TYPE){
+      if(this.hasReferenceType(resourceFields[fieldID])){
         referenceFieldsArray.push({
           FieldID: fieldID,
           DisplayField: undefined, //temporary

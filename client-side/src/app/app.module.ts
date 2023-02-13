@@ -43,8 +43,12 @@ import { BlockComponent } from './block';
 import { BlockEditorComponent } from './block-editor';
 import { ReferenceFieldsTableModule } from './reference-fields-table/reference-fields-table.module';
 import { ResourceSelectionComponent } from './resource-selection/resource-selection.component';
-
-
+import { ViewsFilterComponent } from './views-form/views-filter/views-filter.component';
+import { PepSmartFiltersModule } from '@pepperi-addons/ngx-lib/smart-filters';
+import { PepQueryBuilderModule } from '@pepperi-addons/ngx-lib/query-builder';
+import { ViewsEventsTabComponent } from './views-events-tab/views-events-tab.component';
+import { ViewsSmartSearchTabComponent } from './views-smart-search-tab/views-smart-search-tab.component';
+import { ViewsSearchTabComponent } from './views-search-tab/views-search-tab.component';
 @NgModule({
     imports: [
         BrowserModule,
@@ -77,6 +81,7 @@ import { ResourceSelectionComponent } from './resource-selection/resource-select
         PepIconModule,
         PepIconModule,
         ReferenceFieldsTableModule,
+        PepQueryBuilderModule,
         TranslateModule.forRoot({
             loader: {
                 provide: TranslateLoader,
@@ -98,6 +103,10 @@ import { ResourceSelectionComponent } from './resource-selection/resource-select
         LineMenuTabComponent,
         EditorsFormTabComponent,
         ViewsFormTabComponent,
+        ViewsFilterComponent,
+        ViewsEventsTabComponent,
+        ViewsSearchTabComponent,
+        ViewsSmartSearchTabComponent,
     ],
     providers: [
         TranslateStore

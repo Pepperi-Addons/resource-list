@@ -1,7 +1,8 @@
-@use '@pepperi-addons/ngx-lib/src/core/style/abstracts/variables';
 
-.generic-viewer{
-    padding-inline: variables.$content-padding;
-    display: block;
-    height: inherit;
+::ng-deep .view-block .generic-viewer .list{
+    min-height: 30rem;
+    height: 100%;
+    width: 100%;
+    min-width: fit-content;
+
 }

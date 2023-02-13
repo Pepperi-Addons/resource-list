@@ -3,7 +3,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { ViewsService } from '../services/views.service';
 import { GenericResourceService } from '../services/generic-resource-service';
 import { config } from '../addon.config';
-import { View, Editor } from '../../../../shared/entities';
+import { View, Editor } from 'shared';
 import { IDataService } from '../metadata';
 
 export abstract class AbstractForm{
@@ -88,12 +88,12 @@ export abstract class AbstractForm{
             }
             },
             {
-            ReadOnly: false,
+            ReadOnly: true,
             Title: this.translate.instant('Resource'),
-            Type: 'ComboBox',
+            Type: 'TextBox',
             FieldID: "Resource",
-            Mandatory: true,
-            OptionalValues: await this.getResourcesNames(),
+            Mandatory: false,
+            // OptionalValues: await this.getResourcesNames(),
             Layout: {
                 Origin: {
                 X: 0,

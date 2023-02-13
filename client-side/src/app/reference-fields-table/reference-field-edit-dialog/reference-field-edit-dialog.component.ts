@@ -5,7 +5,7 @@ import { GenericFormComponent } from '@pepperi-addons/ngx-composite-lib/generic-
 import { SELECTION_TYPE } from 'src/app/metadata';
 import { GenericResourceService } from 'src/app/services/generic-resource-service';
 import { ViewsService } from 'src/app/services/views.service';
-import {  DROP_DOWN, SELECTION_LIST, View } from '../../../../../shared/entities';
+import {  DROP_DOWN, SELECTION_LIST, View } from 'shared';
 
 @Component({
   selector: 'block-reference-field-edit-dialog',

@@ -7,13 +7,15 @@ import { PepAddonService } from '@pepperi-addons/ngx-lib';
 import { MatTabsModule } from '@angular/material/tabs';
 import { PepGenericListModule } from '@pepperi-addons/ngx-composite-lib/generic-list';
 import { PepButtonModule } from '@pepperi-addons/ngx-lib/button';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+// import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { PepTopBarModule } from '@pepperi-addons/ngx-lib/top-bar';
 import { PepPageLayoutModule } from '@pepperi-addons/ngx-lib/page-layout';
 import { TableComponent } from './table/table.component';
 import { PepMenuModule } from '@pepperi-addons/ngx-lib/menu';
 import { PepSizeDetectorModule } from '@pepperi-addons/ngx-lib/size-detector';
 import { config } from '../addon.config';
+import { PepDialogModule } from '@pepperi-addons/ngx-lib/dialog';
+import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 
 
@@ -34,11 +36,13 @@ export const routes: Routes = [
     MatTabsModule,
     PepGenericListModule,
     PepButtonModule,
-    BrowserAnimationsModule,
+    // BrowserAnimationsModule,
     PepTopBarModule,
     PepPageLayoutModule,
     PepMenuModule,
     PepSizeDetectorModule,
+    PepDialogModule,
+    MatDialogModule,
     TranslateModule.forChild({
       loader: {
           provide: TranslateLoader,

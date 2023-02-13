@@ -1,19 +1,21 @@
 import { DataViewsService } from "./dataviews.service"
-import { ItemSchema, viewsSchema } from "../metadata"
+import { ItemScheme, viewsSchema } from "../metadata"
 import { ItemsService } from "./items.service"
-import { View } from '../../shared/entities'
+import { View } from 'shared'
 
 export class ViewsService extends ItemsService {
     getType(): "view" | "editor" {
         return "view"
     }
-    getSchema(): ItemSchema {
+    getSchema(): ItemScheme {
         return viewsSchema
     }
     async postDataViews(key: string, repProfileID: number, service: DataViewsService){
         await service.postDefaultDataView(key, repProfileID, this.getType())
         await service.postDefaultMenuDataView(key, repProfileID)
         await service.postDefaultLineMenuDataView(key, repProfileID)
+        await service.postDefaultSmartSearchDataView(key, repProfileID)
+        await service.postDefaultSearchDataView(key, repProfileID)
     }
     async getDefaultView(resource: string){
         const views = await this.addonService.papiClient.addons.data.uuid(this.client.AddonUUID).table('views').find()  as View[]

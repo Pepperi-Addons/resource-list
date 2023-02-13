@@ -3,7 +3,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { IPepDraggableItem } from '@pepperi-addons/ngx-lib/draggable-items';
 import { IPepProfile, IPepProfileDataViewsCard } from '@pepperi-addons/ngx-lib/profile-data-views-list';
-import { DataViewField, MenuDataView, MenuDataViewField } from '@pepperi-addons/papi-sdk';
+import { DataViewField, MenuDataView, MenuDataViewField, DataViewType, BaseDataView } from '@pepperi-addons/papi-sdk';
 import { IDataViewField, IMappedField } from '../metadata';
 import { ProfileCardsManager } from '../profile-cards/profile-cards-manager';
 import { DataViewService } from '../services/data-view-service';
@@ -37,7 +37,23 @@ export abstract class AbstractProfileCardsTabComponent {
     this.setDataViewContextName()
     const convertor = this.createConvertor()
     const fields = await this.getFields()
-    fields.sort((a,b) => a.FieldID.localeCompare(b.FieldID))
+    fields.sort((a,b) => {
+      if (a.FieldID.indexOf('.') >= 0 && b.FieldID.indexOf('.') < 0) {
+        return 1;
+      } else if (a.FieldID.indexOf('.') < 0 && b.FieldID.indexOf('.') >= 0) {
+        return -1;
+      }
+    
+      // If neither has a period or both have a period, sort alphabetically
+      if (a.FieldID.toLocaleLowerCase() < b.FieldID.toLocaleLowerCase()) {
+        return -1;
+      } else if (a.FieldID.toLocaleLowerCase() > b.FieldID.toLocaleLowerCase()) {
+        return 1;
+      } else {
+        return 0;
+      }
+    })
+    // fields.sort((a,b) => a.FieldID.localeCompare(b.FieldID))
     this.profileCardsManager = new ProfileCardsManager(
       this.dataViewContextName,
       this.dataViewService,
@@ -71,6 +87,8 @@ export abstract class AbstractProfileCardsTabComponent {
   abstract fieldToMappedField(field: MenuDataViewField): IMappedField
   //should be abstract
   abstract draggableFieldToMappedField(draggableItem: IPepDraggableItem): IMappedField
+
+  abstract getDefaultDataView(): BaseDataView
    //-----------------------------------------------------------------------
   //                        Profiles Cards Function
   //-----------------------------------------------------------------------
@@ -81,7 +99,8 @@ export abstract class AbstractProfileCardsTabComponent {
     this.editCard = true
   }
   async onSaveNewProfileClicked(event){
-    await this.profileCardsManager.createCard(event)
+    const dvType = this.getDefaultDataView();
+    await this.profileCardsManager.createCard(event, dvType)
     this.loadProfileCardVariables()
   }
   async onDataViewDeleteClicked($event){

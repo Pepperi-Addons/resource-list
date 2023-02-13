@@ -1,5 +1,5 @@
 <app-field-editor
-    [dataSource] ="editorDataSource" 
+    *ngIf="loadCompleted"
     [dataView] = "dataView" 
-[editor]="editor">
+    [editor]="editor">
 </app-field-editor>

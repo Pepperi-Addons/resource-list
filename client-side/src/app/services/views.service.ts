@@ -1,15 +1,19 @@
 import { Injectable } from "@angular/core";
 import { config } from "../addon.config";
 import { UtilitiesService } from './utilities-service'
-import { View } from "../../../../shared/entities"
+import { View } from "shared"
 import { IDataService } from "../metadata";
 import { PepHttpService } from "@pepperi-addons/ngx-lib";
+import { AddonData } from "@pepperi-addons/papi-sdk";
+import { GenericResourceService } from "./generic-resource-service";
 @Injectable({ providedIn: 'root' })
 export class ViewsService implements IDataService{
+    name = "View"
     pluginUUID;
     constructor(
         private utilitiesService: UtilitiesService,
-        private pepHttp: PepHttpService
+        private pepHttp: PepHttpService,
+        private genericResourceService: GenericResourceService
     ){
     }
     async getItems(key: string = undefined, includeDeleted = false): Promise<View[]>{
@@ -26,5 +30,8 @@ export class ViewsService implements IDataService{
     }
     async getDefaultView(resourceName: string): Promise<View | undefined>{
         return await this.utilitiesService.papiClient.addons.api.uuid(config.AddonUUID).file('api').func('get_default_view').get({resource: resourceName})
+    }
+    async getResources(): Promise<AddonData[]> {
+        return  await this.genericResourceService.getResources()
     }
 }

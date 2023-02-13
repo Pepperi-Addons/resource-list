@@ -1,9 +1,7 @@
 <pep-page-layout [addPadding]="true">
     <!--Header-->
     <ng-container pep-top-area>
-        <h2> {{'ViewsAndEditorsTitle' | translate}} </h2>
-        <hr>
-        <br>
+        <pep-top-bar [title]="('ViewsAndEditorsTitle' | translate)"></pep-top-bar>
     </ng-container>
     <!--Body-->
     <ng-container pep-main-area>

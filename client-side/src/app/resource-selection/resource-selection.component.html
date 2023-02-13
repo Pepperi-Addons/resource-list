@@ -1,7 +1,9 @@
-<app-generic-viewer
-    *ngIf="loadCompleted" 
-    [configurationObject]="configurationObj"
-    (pressedDoneEvent) = "onDonePressed($event)"
-    (pressedCancelEvent)="onCancelPressed()"
+<selection-list
+    class="resource-picker"
+    *ngIf="loadCompleted"
+    [selectionListConfiguration]="configurationObj"
     [genericViewer]="genericViewer"
-></app-generic-viewer>
+    [genericViewerDataSource]="genericViewerDataSource"
+    (pressedCancelEvent)="onCancelPressed()"
+    (pressedDoneEvent)="onDonePressed($event)">
+</selection-list>

@@ -1,20 +1,21 @@
 import { TranslateService } from '@ngx-translate/core';
 import { Component, EventEmitter, Injector, Input, OnInit, Output, SimpleChanges, ViewChild, ViewContainerRef } from '@angular/core';
-import { GenericResourceService } from '../services/generic-resource-service';
 import { PepMenuItem } from "@pepperi-addons/ngx-lib/menu";
-import { DataView, GridDataView, MenuDataViewField } from '@pepperi-addons/papi-sdk';
-import { DataSource } from '../data-source/data-source'
+import { GridDataView, MenuDataViewField } from '@pepperi-addons/papi-sdk';
+import { DataSource, DynamicItemsDataSource } from '../data-source/data-source'
 import { PepSelectionData } from '@pepperi-addons/ngx-lib/list';
-import { Editor, IGenericViewer, SelectOption, View } from '../../../../shared/entities';
-import { DataViewService } from '../services/data-view-service';
+import { Editor, IGenericViewer, SelectOption, View } from 'shared';
 import { PepDialogService } from '@pepperi-addons/ngx-lib/dialog';
-import { ViewsService } from '../services/views.service';
 import { FieldEditorComponent } from '../field-editor/field-editor.component';
 import { EXPORT, IGenericViewerConfigurationObject, IMPORT } from '../metadata';
 import { GenericListComponent } from '@pepperi-addons/ngx-composite-lib/generic-list';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { EditorsService } from '../services/editors.service';
 import { DIMXHostObject, PepDIMXHelperService } from '@pepperi-addons/ngx-composite-lib';
+import { IGenericViewerDataSource, isRegularGVDataSource, RegularGVDataSource } from '../generic-viewer-data-source';
+import { GVButton, ListOptions } from './generic-viewer.model';
+import { GenericResourceOfflineService } from '../services/generic-resource-offline.service';
+import { ViewsListsService } from './viewsLists.service';
+import { UtilitiesService } from '../services/utilities-service';
 
 @Component({
     selector: 'app-generic-viewer',
@@ -23,10 +24,16 @@ import { DIMXHostObject, PepDIMXHelperService } from '@pepperi-addons/ngx-compos
 })
 export class GenericViewerComponent implements OnInit {
     @ViewChild(GenericListComponent) genericList;
+
     @Input() configurationObject: IGenericViewerConfigurationObject
     @Output() pressedDoneEvent: EventEmitter<number> = new EventEmitter<number>()
     @Output() pressedCancelEvent: EventEmitter<void> = new EventEmitter<void>()
     @Input() genericViewer: IGenericViewer
+    @Input() genericViewerDataSource: IGenericViewerDataSource
+    @Input() accountUUID: string | undefined
+
+    listOptions: ListOptions
+
     dataSource: DataSource
     menuItems: PepMenuItem[] = []
     items: any[] = []
@@ -40,20 +47,51 @@ export class GenericViewerComponent implements OnInit {
     dialogData = null
 
     constructor(private translate: TranslateService,
-         private genericResourceService: GenericResourceService,
-         private dataViewService: DataViewService,
+         private genericResourceService: GenericResourceOfflineService,
          private dialogService : PepDialogService,
-         private viewService: ViewsService,
          private injector: Injector,
-         private editorsService: EditorsService,
          private viewContainerRef: ViewContainerRef,
-         private dimxService: PepDIMXHelperService ) 
+         private dimxService: PepDIMXHelperService,
+         private listViewService: ViewsListsService,
+         private utilitiesService: UtilitiesService ) 
     {
           this.actions.get = this.getActionsCallBack()
           this.dialogRef = this.injector.get(MatDialogRef, null)
           this.dialogData = this.injector.get(MAT_DIALOG_DATA, null)
     }
+    createButtonArray(): GVButton[]{
+      const result: GVButton[] = []
+      if(this.isButtonConfigured){
+        result.push({
+          key: "new", 
+          value: this.buttonTitle, 
+          styleType: "strong", 
+          classNames: "save"
+        })
+      }
+      return result
 
+    }
+    async createListOptions(): Promise<ListOptions>{
+
+      const actions =  this.actions
+      const selectionType = this.configurationObject.selectionList?.selection || "single"
+      const menuItems = this.menuItems || []
+      const dropDownOfViews = this.dropDownOfViews || []
+      const buttons: GVButton[] = this.createButtonArray()
+      const smartSearchDataView = this.listViewService.getSmartSearchConfiguration(this.genericViewer.smartSearchDataView,  await this.genericViewerDataSource.getFields())
+      const searchDataView = this.genericViewer.searchDataView;
+      return {
+          actions: actions,
+          selectionType: selectionType,
+          menuItems: menuItems, 
+          dropDownOfViews: dropDownOfViews, 
+          buttons: buttons,
+          smartSearchDataView: smartSearchDataView,
+          searchDataView: searchDataView,
+          inlineList: this.genericViewerDataSource.isInlineList()
+      }
+    }
     ngOnInit(): void {
       this.loadConfigurationObject()
       this.init()
@@ -62,11 +100,11 @@ export class GenericViewerComponent implements OnInit {
     loadConfigurationObject(){
       if(!this.configurationObject){
         this.configurationObject = {
-          resource: this.dialogData?.configurationObj.resource ,
           viewsList: this.dialogData?.configurationObj.viewsList,
           selectionList: this.dialogData?.configurationObj.selectionList
         }
-        this.genericViewer = this.dialogData?.genericViewer
+        this.genericViewer = this.dialogData?.genericViewer,
+        this.genericViewerDataSource = this.dialogData?.gvDataSource
       }
     }
     
@@ -94,39 +132,31 @@ export class GenericViewerComponent implements OnInit {
     async loadViewBlock(){
       this.initDimxService()
       if(this.configurationObject.selectionList){
-        await this.configureSelectionList()
+        this.configureSelectionList()
       }else{
-        await this.configureGenericViewerList()
+        this.configureGenericViewerList()
       }
       this.DisplayViewInList(this.genericViewer.view.Key)
     }
 
-    async configureSelectionList(){
+    configureSelectionList(){
       if(!this.configurationObject.selectionList.none){
         this.isButtonConfigured = true
         this.buttonTitle = this.translate.instant("Done")
       }
     }
 
-    async getEditor(editorKey: string): Promise<Editor | undefined>{
-      const editors = await this.editorsService.getItems(editorKey)
-      if(editors.length > 0){
-        return editors[0]
-      }
-      return undefined
-    }
-
-    async configureGenericViewerList(){
-      await this.initMenuItems()
-      await this.initLineMenuItems()
+    configureGenericViewerList(){
+      this.initMenuItems()
+      this.initLineMenuItems()
     }
 
     setConfigurationObjectVariable():void{
       this.dropDownOfViews =  this.configurationObject?.viewsList || []
-      this.resource = this.configurationObject?.resource || undefined
+      this.resource = this.genericViewer?.view?.Resource?.Name
     }
 
-    async initLineMenuItems(){
+    initLineMenuItems(){
       const lineMenuDataView = this.genericViewer.lineMenuItems
       this.lineMenuItemsMap = new Map()
       lineMenuDataView?.Fields?.forEach(dataViewField => {
@@ -134,7 +164,7 @@ export class GenericViewerComponent implements OnInit {
       })
     }
 
-    async initMenuItems(){
+    initMenuItems(){
       const menuDataView = this.genericViewer.menuItems
       this.menuItems = []
       menuDataView?.Fields?.forEach(field => {
@@ -145,23 +175,10 @@ export class GenericViewerComponent implements OnInit {
           })
         }
         else{
-          this.isButtonConfigured = true
+          this.isButtonConfigured = this.genericViewer.editor != undefined
           this.buttonTitle = field.Title
         }
       })
-    }
-    async getEditorDataView(editorKey: string | undefined): Promise<DataView | undefined>{
-      const editorDataviews = await this.dataViewService.getDataViews(`GV_${editorKey}_Editor`)
-      if(editorDataviews.length > 0){
-        return editorDataviews[0]
-      }
-      return undefined
-    }
-    async getMenuDataview(viewKey: string | undefined){
-      if(viewKey == undefined){
-        return
-      }
-      return (await this.dataViewService.getDataViews(`GV_${viewKey}_Menu`))[0]
     }
     reformatItems(items, resourceFields){
       return items.map(item => {
@@ -180,43 +197,69 @@ export class GenericViewerComponent implements OnInit {
       return item[fieldID]
     }
     getFixedArrayField(item, fieldID, type){
-      if(type == "Resource"){
-        return `${item[fieldID].length.toString()}  selected`
+      if(type == "Resource" || type == "ContainedResource"){
+        return `${item[fieldID].length.toString()} items selected`
       }
-      return item[fieldID].join(',')
+      return item[fieldID];
     }
     async DisplayViewInList(viewKey){
       if(this.genericViewer.viewDataview){
-        this.loadList(this.genericViewer.viewDataview)
+        await this.loadList(this.genericViewer.viewDataview)
       }
       //if there is no dataview we will display an empty list
       else{
         this.dataSource = new DataSource([],[],[])
       }
+      this.listOptions = await this.createListOptions()
     }
-    async onViewChange($event){
+    async onViewChanged($event){
       this.genericViewer = await this.genericResourceService.getGenericView($event)
+      this.genericViewerDataSource = new RegularGVDataSource(this.genericViewer, this.genericResourceService)
       this.loadViewBlock()
     }
-  
+    async getItemsCopy(){
+      this.items = await this.genericViewerDataSource.getItems()
+      return JSON.parse(JSON.stringify(this.items))
+    }
     async loadList(dataView: GridDataView){
       const fields = dataView.Fields || []
       const columns = dataView.Columns || []
-      const items = await this.genericResourceService.getItems(this.resource)
-      const resourceFields = (await this.genericResourceService.getResource(this.resource))?.Fields || {}
-      //in order to support arrays and references we should check the "real" type of each field, and reformat the corresponding item
-      this.reformatItems(items, resourceFields)
-      this.dataSource = new DataSource(items, fields,columns)
+      
+      if(this.genericViewer?.view?.isFirstFieldDrillDown && fields.length > 0){
+        fields[0].Type = "Link"
+      }
+      this.dataSource = new DataSource(new DynamicItemsDataSource(async (params) => {
+        const resourceFields = await this.genericViewerDataSource.getFields()
+        const items = await this.genericViewerDataSource.getItems(params, fields, resourceFields, this.accountUUID)
+        //in order to support arrays and references we should check the "real" type of each field, and reformat the corresponding item
+        this.reformatItems(items, resourceFields)
+        
+        return {
+          items: items,
+          totalCount: items.length
+        }
+      }), fields,columns)
+      }
+
+    async onFieldDrillDown(event: any){
+      const fields = this.genericViewer.viewDataview.Fields
+      const firstField = fields.length > 0 ? fields[0] : undefined
+      
+      if(firstField && firstField.FieldID  == event.key && this.genericViewer.view.isFirstFieldDrillDown){
+        await this.listViewService.emitDrillDownEvent(event.id, this.genericViewer.view.Key, this.genericViewer.view.Resource.Name)
+      }
     }
+
     async initRecycleBin(){
-      const deletedItems = await this.genericResourceService.getItems(this.resource, true)
-      this.menuItems.push({
+      const deletedItems = await (this.genericViewerDataSource as RegularGVDataSource).getDeletedItems()
+      this.menuItems = [({
         key: "BackToList",
         text: "Back to list"
-      })
+      })]
       this.menuItems = this.menuItems.filter(menuItem => menuItem.key != "RecycleBin")
       this.dataSource = new DataSource(deletedItems, this.dataSource.getFields(), this.dataSource.getColumns())
       this.actions.get = this.getRecycleBinActions()
+      this.listOptions = await this.createListOptions()
     }
     getRecycleBinActions(){
       return async(data: PepSelectionData) => {
@@ -225,11 +268,10 @@ export class GenericViewerComponent implements OnInit {
           actions.push({
             title: this.translate.instant('Restore'),
             handler: async (selectedRows) => {
-              const item = this.dataSource.getItems().find(item => item.Key == selectedRows.rows[0])
-              item.Hidden = false
-              await this.genericResourceService.postItem(this.resource,item)
-              const items = await this.genericResourceService.getItems(this.resource, true)
+              const item = (await this.genericViewerDataSource.getDeletedItems()).find(item => item.Key == selectedRows.rows[0])
+              const items = await this.genericViewerDataSource.restore(item)
               this.dataSource = new DataSource(items, this.dataSource.getFields(), this.dataSource.getColumns())
+              
             }
           })
         }
@@ -242,14 +284,7 @@ export class GenericViewerComponent implements OnInit {
       }
     }
     async backToList(){
-      const items = await this.genericResourceService.getItems(this.resource)
-      this.menuItems = this.menuItems.filter(menuItem => menuItem.key != "BackToList")
-      this.menuItems.push({
-        key: "RecycleBin",
-        text: "Recycle bin"
-      })
-      this.actions.get = this.getActionsCallBack()
-      this.dataSource = new DataSource(items, this.dataSource.getFields(), this.dataSource.getColumns())
+      await this.loadViewBlock()
     }
     menuItemClick($event){
       switch($event.source.key){
@@ -276,9 +311,11 @@ export class GenericViewerComponent implements OnInit {
     }
     export(){
       this.dimxService?.export({
-        DIMXExportFormat: 'json',
+        DIMXExportFormat: 'csv',
         DIMXExportIncludeDeleted: false,
         DIMXExportFileName: this.genericViewer.view.Name,
+        DIMXExportDelimiter: ',',
+        DIMXExportFields: (this.genericViewer.viewDataview.Fields?.map(field => field.FieldID) || []).join()
       })
     }
      getActionsCallBack(){
@@ -290,21 +327,19 @@ export class GenericViewerComponent implements OnInit {
                   title: this.lineMenuItemsMap.get("Edit").Title,
                   handler : async (selectedRows) => {
                     const selectedItemKey = selectedRows.rows[0]
-                    const items = this.dataSource.getItems()
-                    const item = items.find(item => item.Key == selectedItemKey)
-                    //needs to send editor
                     const dialogData = {
-                      item : item,
+                      item : await this.genericViewerDataSource.getEditorItemByKey(selectedItemKey) || {},
                       editorDataView: this.genericViewer.editorDataView,
-                      editor: this.genericViewer.editor
+                      editor: this.genericViewer.editor,
+                      originalValue: this.items.find(item => item.Key == selectedItemKey),
+                      gvDataSource: this.genericViewerDataSource
                     }
                     const config = this.dialogService.getDialogConfig({
   
-                    }, 'large')
+                    }, 'full-screen') 
                     this.dialogService.openDialog(FieldEditorComponent, dialogData, config).afterClosed().subscribe((async isUpdatePreformed => {
                       if(isUpdatePreformed){
-                        this.items = await this.genericResourceService.getItems(this.resource)
-                        this.dataSource = new DataSource(this.items, this.dataSource.getFields(), this.dataSource.getColumns())
+                        await this.loadList(this.genericViewer.viewDataview)
                       }
                      }))
                   }
@@ -314,14 +349,16 @@ export class GenericViewerComponent implements OnInit {
               actions.push({
                 title: this.lineMenuItemsMap.get("Delete").Title,
                 handler: async (selectedRows) => {
-                  const selectedItemKey = selectedRows.rows[0]
-                  const items = this.dataSource.getItems()
-                  const item = items.find(item => item.Key == selectedItemKey)
-                  if(item){
-                    item.Hidden = true
-                    await this.genericResourceService.postItem(this.resource,item)
-                    this.items = await this.genericResourceService.getItems(this.resource)
-                    this.dataSource = new DataSource(this.items, this.dataSource.getFields(),this.dataSource.getColumns())
+                  try{
+                    const selectedItemKey = selectedRows.rows[0]
+                    const items = await this.genericViewerDataSource.getItems()
+                    const item = items.find(item => item.Key == selectedItemKey)
+                    if(item){
+                      await this.genericViewerDataSource.deleteItem(item)
+                      await this.loadList(this.genericViewer.viewDataview)
+                    }
+                  }catch(err){
+                      this.utilitiesService.showDialog('Error', 'DeleteError', 'close')
                   }
                 }
               })
@@ -334,26 +371,27 @@ export class GenericViewerComponent implements OnInit {
       const dialogData = {
         item : {},
         editorDataView: this.genericViewer.editorDataView,
-        editor: this.genericViewer.editor
+        editor: this.genericViewer.editor,
+        gvDataSource: this.genericViewerDataSource
       }
       const config = this.dialogService.getDialogConfig({
-      }, 'large')
+      }, 'full-screen')
       this.dialogService.openDialog(FieldEditorComponent, dialogData, config).afterClosed().subscribe((async isUpdatePreformed => {
         if(isUpdatePreformed){
-          this.items = await this.genericResourceService.getItems(this.resource)
-          this.dataSource = new DataSource(this.items, this.dataSource.getFields(), this.dataSource.getColumns())
+          await this.loadList(this.genericViewer.viewDataview)
         }}))
     }
 
-    onButtonClicked(){
+    onButtonClicked(event){
+      console.log(event)
       if(this.configurationObject.selectionList){
-        this.onDoneButtonClicked()
+        this.onDoneButtonClicked(event)
       }
       else{
         this.onNewButtonClicked()
       }
     }
-    onDoneButtonClicked(){
+    onDoneButtonClicked(event){
       this.pressedDoneEvent.emit(this.genericList?.getSelectedItems()?.rows || [])
       this.dialogRef?.close(this.genericList?.getSelectedItems()?.rows || [])
     }

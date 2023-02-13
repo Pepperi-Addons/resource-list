@@ -1,12 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { ViewsService } from '../services/views.service';
 import { GenericResourceService } from '../services/generic-resource-service';
-import { config } from '../addon.config';
-import { View } from '../../../../shared/entities';
+import { View } from 'shared';
 import { EditorsService } from '../services/editors.service';
 import { UtilitiesService } from '../services/utilities-service';
+import { AddonData, AddonDataScheme, SchemeField } from '@pepperi-addons/papi-sdk';
+import { ResourceField } from '../metadata';
 
 @Component({
   selector: 'app-views-form',
@@ -25,6 +26,7 @@ export class ViewsFormComponent implements OnInit {
       ScreenSize: 'Tablet'
     }
   };
+  @ViewChild('views-filter') viewsFilter
   resourceName: string
   dataViewContextName: string
   editCard: boolean = false;
@@ -33,6 +35,13 @@ export class ViewsFormComponent implements OnInit {
   currentView: View
   loadCompleted: boolean = false
   currentTab = 0
+  resourceFields : AddonDataScheme['Fields']
+  searchFields : AddonDataScheme['Fields']
+  indexedFields: ResourceField[]
+  initialFilter: any
+  currentFilter: any
+  isJsonFilterFileValid: boolean = true
+  offlineResource: boolean = true
 
   constructor(
     private route: ActivatedRoute,
@@ -48,17 +57,49 @@ export class ViewsFormComponent implements OnInit {
   ngOnInit(): void {
     this.initComponent()
   }
+
+  onJsonFilterFileChanged(file: any){
+    this.currentFilter = file
+  }
+  onJsonFileValidationChanged(isValid: boolean){
+    this.isJsonFilterFileValid = isValid
+  }
+  onIsDrillDownChanged(event){
+    this.currentView.isFirstFieldDrillDown = event
+  }
+
+  
   async initComponent(){
     this.viewKey = this.route.snapshot.paramMap.get('key')
     await this.initGeneralTab(this.viewKey)
     this.loadCompleted = true
   }
   async initGeneralTab(key){
-    this.currentView = (await this.viewsService.getItems(key))[0]    
+    this.currentView = (await this.viewsService.getItems(key))[0]
+    this.initialFilter = this.currentView.Filter 
+    this.currentFilter = this.currentView.Filter 
+    this.resourceFields = await this.genericResourceService.getResourceFields(this.currentView.Resource.Name);
+    this.searchFields = await this.genericResourceService.getResrourceSearchFields(this.currentView.Resource.Name);
+    this.indexedFields = this.getIndexedFieldsArray(this.resourceFields)    
     const editorOptionalValues = await this.getEditorOptionalValues()
     this.dataSource = this.convertViewToDataSource(this.currentView)
     this.dataView = this.getDataview(editorOptionalValues)
   }
+
+  getIndexedFieldsArray(fields: AddonDataScheme['Fields']): ResourceField[]{
+    const result: ResourceField[] = []
+    Object.keys(fields || {}).forEach((fieldID) => {
+      const field = fields[fieldID]
+      if(field?.Indexed){
+        result.push({
+          FieldID: fieldID,
+          ...field
+        })
+      }
+    })
+    return result
+  }
+
   async getEditorOptionalValues(){
     const editors = await this.editorsService.getItems()
     const editorsOfCurrentView = editors.filter((editor) => editor.Resource.Name == this.currentView.Resource.Name)
@@ -170,6 +211,8 @@ export class ViewsFormComponent implements OnInit {
     })
   }
   onUpdate(){
+    //filters is or undefined or and object with some properties, if the object is empty so we want to save the filter as null
+    this.currentView.Filter = this.currentFilter && Object.keys(this.currentFilter).length == 0 ? undefined: this.currentFilter
     this.currentView.Description = this.dataSource.Description
     this.currentView.Editor = this.dataSource.Editor
     this.viewsService.upsertItem(this.currentView)

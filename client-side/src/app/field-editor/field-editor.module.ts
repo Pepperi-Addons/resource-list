@@ -9,6 +9,12 @@ import { PepButtonModule } from '@pepperi-addons/ngx-lib/button';
 import { PepPageLayoutModule } from '@pepperi-addons/ngx-lib/page-layout';
 import { PepSizeDetectorModule } from '@pepperi-addons/ngx-lib/size-detector';
 import { config } from '../addon.config';
+import { ArrayFieldsComponent } from '../array-fields/array-fields.component';
+import { PrimitiveArrayFieldComponent } from '../array-fields/primitive-array-field/primitive-array-field.component';
+import { PepGenericListModule } from '@pepperi-addons/ngx-composite-lib/generic-list';
+import { PrimitiveArrayAddFormComponent } from '../array-fields/primitive-array-field/primitive-array-add-form/primitive-array-add-form.component';
+import { ContainedResourceArrayFieldComponent } from '../array-fields/contained-resource-array-field/contained-resource-array-field.component';
+import { GenericViewerModule } from '../generic-viewer/generic-viewer.module';
 
 
 export const routes: Routes = [
@@ -20,7 +26,11 @@ export const routes: Routes = [
 
 @NgModule({
   declarations: [
-    FieldEditorComponent
+    FieldEditorComponent,
+    ArrayFieldsComponent,
+    PrimitiveArrayFieldComponent,
+    PrimitiveArrayAddFormComponent,
+    ContainedResourceArrayFieldComponent,
   ],
   imports: [
     CommonModule,
@@ -28,6 +38,8 @@ export const routes: Routes = [
     PepButtonModule,
     PepPageLayoutModule,
     PepSizeDetectorModule,
+    PepGenericListModule,
+    GenericViewerModule,
     TranslateModule.forChild({
       loader: {
           provide: TranslateLoader,

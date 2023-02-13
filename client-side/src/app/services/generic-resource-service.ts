@@ -1,10 +1,9 @@
 import { Injectable } from "@angular/core";
-import { PepHttpService } from "@pepperi-addons/ngx-lib";
+import { PepAddonService, PepHttpService } from "@pepperi-addons/ngx-lib";
 import { AddonDataScheme } from "@pepperi-addons/papi-sdk";
-import { IGenericViewer } from "../../../../shared/entities";
 import { config } from "../addon.config";
 import { defaultCollectionFields, IDataViewField } from "../metadata";
-import { TypeMap } from "../type-map";
+import { TypeMap } from "shared";
 import { UtilitiesService } from './utilities-service'
 
 
@@ -13,6 +12,7 @@ import { UtilitiesService } from './utilities-service'
 export class GenericResourceService{
     pluginUUID;
     constructor(
+        private addonService: PepAddonService,
         private utilitiesService: UtilitiesService,
         private pepHttp: PepHttpService
     ){
@@ -20,16 +20,16 @@ export class GenericResourceService{
     async getResources(): Promise<any[]>{
         return await this.utilitiesService.papiClient.resources.resource('resources').get()
     }
-    async getItems(resourceName: string, getDeletedItems: boolean = false): Promise<any>{
-        let query = undefined
-        if(getDeletedItems){
-            query = {where: 'Hidden=true'}
-            query.include_deleted = true
-        }
-        if(resourceName){
+    async getItems(resourceName: string, getDeletedItems: boolean = false, filterQuery?: string): Promise<any>{
+        try{
+            let query = {where: `Hidden=${getDeletedItems}`, include_deleted: getDeletedItems}
+            if(filterQuery){
+                query.where += ` AND ${filterQuery}`
+            }
             return await this.utilitiesService.papiClient.resources.resource(resourceName).get(query)
+        }catch(e){
+            return []
         }
-        return [];
     }
     async postItem(resourceName, item){
         return await this.utilitiesService.papiClient.resources.resource(resourceName).post(item)
@@ -37,13 +37,18 @@ export class GenericResourceService{
     async getResource(name: string){
         return await this.utilitiesService.papiClient.resources.resource('resources').key(name).get() as AddonDataScheme
     }
+
+    async getResourceFields(resourceName: string): Promise<AddonDataScheme['Fields']>{
+        const resource = await this.getResource(resourceName)
+        return resource?.Fields || {}
+    }
     async getResourceFieldsAsDataViewFields(resourceName: string){
         const resource = await this.getResource(resourceName)
         const typeMap = new TypeMap()
         const fields: IDataViewField[] = Object.keys(resource.Fields).map(fieldID => {
           return {
             FieldID: fieldID,
-            Mandatory: true,
+            Mandatory: (resource.Fields[fieldID] as any)?.Mandatory || false,
             ReadOnly: true,
             Title: fieldID,
             Type: typeMap.get(resource.Fields[fieldID].Type)
@@ -51,6 +56,11 @@ export class GenericResourceService{
         })
         return  [...fields, ...defaultCollectionFields ]
     }
+
+    async getResourceFieldsIncludeReferenceFields(resourceName: string){
+        return [...await this.addonService.getAddonApiCall(config.AddonUUID, 'api', `get_resource_fields_and_references_fields?ResourceName=${resourceName}`).toPromise(), ...defaultCollectionFields]
+    }
+
     async getGenericView(viewKey: string){
         let url = `/addons/api/${config.AddonUUID}/api/get_generic_view?Key=${viewKey}`
         return await this.pepHttp.getPapiApiCall(url).toPromise()
@@ -66,5 +76,9 @@ export class GenericResourceService{
         else{
             return undefined
         }
+    }
+
+    async getResrourceSearchFields(resourceName: string): Promise<AddonDataScheme['Fields']> {
+        return await this.addonService.getAddonApiCall(config.AddonUUID, 'api', `get_search_fields_for_resource?resource_name=${resourceName}`).toPromise();
     }
 }
