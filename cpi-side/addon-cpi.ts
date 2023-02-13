@@ -3,6 +3,8 @@ import { router as genericResourceRouter }  from './routes/generic-resource.rout
 import { router as viewsRouter } from './routes/views.routes'
 import { MenuBuilder } from './events/helpers/menu-builder';
 import { ListService } from './services/list.service';
+import { MenuBlock } from './models/events/list-layout.model';
+import { stat } from 'fs';
 export async function load(configuration: any) {
     console.log('cpi side works!');
     // Put your cpi side code here
@@ -26,24 +28,50 @@ router.post('/menu', async (req, res, next) => {
     }
     const listService = new ListService()
     const list = await listService.getList(listKey)
-    const menu = new MenuBuilder().build(list.Menu, state, changes)
+    const menu = await new MenuBuilder().build(list.Menu, state, changes)
     res.json({Menu: menu})
 })
 
 router.post('/drawMenuBlock', (req, res, next) => {
-    if(Math.random() < 0.5){
+    const state = req.body.State
+    if(state){
         return res.json({
-            Result: {
-                Key: 'line',
-                Title: 'line',
-                DrawURL: 'addon-cpi/drawMenuBlock',
-                AddonUUID: '0e2ae61b-a26a-4c26-81fe-13bdd2e4aaa3',
-                Hidden: false
-            }
-         })
+            Result: null
+        })
     }
+    const blocks: MenuBlock[] = [
+        {
+            Key: 'recycleBin',
+            Title: 'Recycle Bin',
+            DrawURL: 'addon-cpi/drawMenuBlock',
+            AddonUUID: '0e2ae61b-a26a-4c26-81fe-13bdd2e4aaa3',
+            Hidden: false
+        },
+        {
+            Key: 'import',
+            Title: 'Import',
+            DrawURL: 'addon-cpi/drawMenuBlock',
+            AddonUUID: '0e2ae61b-a26a-4c26-81fe-13bdd2e4aaa3',
+            Hidden: false
+        },
+        {
+            Key: 'export',
+            Title: 'Export',
+            DrawURL: 'addon-cpi/drawMenuBlock',
+            AddonUUID: '0e2ae61b-a26a-4c26-81fe-13bdd2e4aaa3',
+            Hidden: false
+        },
+        {
+            Key: 'new',
+            Title: 'New',
+            DrawURL: 'addon-cpi/drawMenuBlock',
+            AddonUUID: '0e2ae61b-a26a-4c26-81fe-13bdd2e4aaa3',
+            Hidden: false,
+            ButtonStyleType: "Strong"
+        }
+    ]
     return res.json({
-        Result: null
+        Result: blocks
     })
 })
 

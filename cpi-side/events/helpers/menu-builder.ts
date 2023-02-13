@@ -7,7 +7,8 @@ export class MenuBuilder{
     constructor(){}
 
     async build(menu: ListMenu, state: ListState | undefined, changes: Partial<ListState>): Promise<Menu | null>{
-        const drawnBlocks = await (await this.drawBlocks(menu.Blocks, state, changes)).filter(block => block) as MenuBlock[]
+        const drawFunctionsArray = this.getDrawFunctionsArray(menu.Blocks)
+        const drawnBlocks = (await this.drawBlocks(drawFunctionsArray, state, changes)).filter(block => block).flat() as MenuBlock[]
         if(drawnBlocks.length == 0){
             return null
         }
@@ -16,20 +17,42 @@ export class MenuBuilder{
         }
 
     }
-    private async drawBlocks(menuBlocks: ListMenuBlock[], state: ListState | undefined, changes: Partial<ListState>): Promise<(MenuBlock | null)[]>{
-        return await Promise.all(menuBlocks.map(async block => {
-            return await this.callDrawBlockFunction(block, state, changes)
+    /**
+     * this function optimize the number of calls to draw blocks, by grouping all the blocks that has the same relation
+     * the relation is one to one map with combining the addonUUID and the drawURL
+     * @param menuBlocks 
+     * @returns array of object that will tell where to call in order to draw the blocks
+     */
+    private getDrawFunctionsArray(menuBlocks: ListMenuBlock[]): {AddonUUID: string, DrawURL: string}[]{
+        const drawFunctionsArray: {AddonUUID: string, DrawURL: string}[] = []
+        const visitedDrawURLs = new Set<string>()
+        menuBlocks.forEach(block => {
+            const key = `${block.AddonUUID}_${block.DrawURL}`
+            if(!visitedDrawURLs.has(key)){
+                visitedDrawURLs.add(key)
+                drawFunctionsArray.push({
+                    AddonUUID: block.AddonUUID,
+                    DrawURL: block.DrawURL
+                })
+            }
+        })
+        return drawFunctionsArray
+    }
+
+    private async drawBlocks(drawURLs: {AddonUUID: string, DrawURL: string}[], state: ListState | undefined, changes: Partial<ListState>): Promise<(MenuBlock[] | undefined)[]>{
+        return await Promise.all(drawURLs.map(async drawURL => {
+            return await this.callDrawBlockFunction(drawURL, state, changes)
         }))
     }
-    async callDrawBlockFunction(block: ListMenuBlock, state: ListState | undefined, changes: Partial<ListState>): Promise<MenuBlock | null>{
-        const result =  await pepperi.addons.api.uuid(block.AddonUUID).post({
-            url: block.DrawURL,
-            body: { PrevState: changes, CurrState: state }
+    async callDrawBlockFunction(drawURL: {AddonUUID: string, DrawURL: string}, state: ListState | undefined, changes: Partial<ListState>): Promise<MenuBlock[] | undefined>{
+        const result =  await pepperi.addons.api.uuid(drawURL.AddonUUID).post({
+            url: drawURL.DrawURL,
+            body: { Changes: changes, State: state }
         })
         if(!result){
-            throw Error(`inside callDrawBlockFunction error occurred when trying to call draw block function of addon ${block.AddonUUID} with function url ${block.DrawURL}`)
+            throw Error(`inside callDrawBlockFunction error occurred when trying to call draw block function of addon ${drawURL.AddonUUID} with function url ${drawURL.DrawURL}`)
         }
-        return result.Result
+        return result.Result as (MenuBlock[] | undefined)
     }
 
 
