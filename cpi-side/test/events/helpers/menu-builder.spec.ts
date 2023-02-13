@@ -33,7 +33,7 @@ describe('menu builder tests', () => {
             /** create stub that returns the new button and changed */
             const stubbedMenuBuilder = sinon.stubObject<MenuBuilder>(menuBuilder, ["callDrawBlockFunction"]);
             stubbedMenuBuilder.callDrawBlockFunction.returns((async () => {
-                return { ...newButton, Hidden: false }
+                return [newButton]
             })())
 
             const result = await stubbedMenuBuilder.build(list.Menu, defaultState, {})
@@ -43,12 +43,21 @@ describe('menu builder tests', () => {
                 ]
             })
         })
-        it('2. menu blocks function return undefined', async function(){
+        it('2.list with menu block but draw functions returns undefined should returns null', async function(){
             const list = getDefaultListCopy()
+            const newButton: MenuBlock = {
+                Key: "New",
+                Title: "Add",
+                ButtonStyleType: "Strong",
+                DrawURL: "addon-cpi/drawMenuBlock",
+                AddonUUID: "0e2ae61b-a26a-4c26-81fe-13bdd2e4aaa3",
+                Hidden: false
+            }
+            list.Menu.Blocks.push(newButton)
             /** create stub that returns undefined */
             const stubbedMenuBuilder = sinon.stubObject<MenuBuilder>(menuBuilder, ["callDrawBlockFunction"]);
             stubbedMenuBuilder.callDrawBlockFunction.returns((async () => {
-                return null
+                return undefined
             })())
 
             const result = await stubbedMenuBuilder.build(list.Menu, defaultState, {})
