@@ -6,8 +6,8 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "prepare": "tsc",
-    "build": "rm -r build && rollup -c rollup.config.js",
-    "test": "npm run build && mocha ./build/cpi-side/test/**/*.spec.js -R mochawesome",
+    "build": "rollup -c rollup.config.js",
+    "test": "npm run build:debug && mocha ./build/cpi-side/test/**/*.spec.js -R mochawesome",
     "prepublishOnly": "npm version patch",
     "build:debug": "tsc && rollup -c debug.rollup.config.js"
   },
