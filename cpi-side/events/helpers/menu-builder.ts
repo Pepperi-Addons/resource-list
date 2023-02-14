@@ -1,6 +1,7 @@
  import { ListMenu, ListMenuBlock } from '../../models/configuration/menu.model'
 import { Menu, MenuBlock } from '../../models/events/list-layout.model'
 import { ListState } from '../../models/events/list-state.model'
+import { groupRelationBlocks } from './utils'
 
 type drawFunctionObject = {AddonUUID: string, DrawURL: string}
 export class MenuBuilder{
@@ -8,7 +9,7 @@ export class MenuBuilder{
     constructor(){}
 
     async build(menu: ListMenu, state: ListState | undefined, changes: Partial<ListState>): Promise<Menu | null>{
-        const drawFunctionsArray = this.getDrawFunctionsArray(menu.Blocks)
+        const drawFunctionsArray = groupRelationBlocks(menu.Blocks)
         const drawnBlocks = (await this.drawBlocks(drawFunctionsArray, state, changes)).filter(block => block).flat() as MenuBlock[]
         if(drawnBlocks.length == 0){
             return null
