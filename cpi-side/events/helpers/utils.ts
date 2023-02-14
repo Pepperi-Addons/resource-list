@@ -1,4 +1,6 @@
+import { ViewBlock } from "../../models/configuration/view.model"
 import { DropDownElement } from "../../models/events/list-layout.model"
+import { GridRow, GridViewInputData, RelationBlock } from "../metadata"
 
 export function createDropDown(arr: Array<Object>, keyField: string, valueField: string): DropDownElement<string>[]{
     return arr.map(val => {
@@ -8,3 +10,20 @@ export function createDropDown(arr: Array<Object>, keyField: string, valueField:
         }
     })
 }
+
+export function groupRelationBlocks<T extends RelationBlock>(arr: T[]){
+    const drawFunctionsArray: RelationBlock[] = []
+    const visitedDrawURLs = new Set<string>()
+    arr.forEach(relationBlock => {
+        const key = `${relationBlock.AddonUUID}_${relationBlock.DrawURL}`
+        if(!visitedDrawURLs.has(key)){
+            visitedDrawURLs.add(key)
+            drawFunctionsArray.push({
+                AddonUUID: relationBlock.AddonUUID,
+                DrawURL: relationBlock.DrawURL
+            })
+        }
+    })
+    return drawFunctionsArray
+}
+

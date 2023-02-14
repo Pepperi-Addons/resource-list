@@ -18,7 +18,7 @@ export const LIST1: List = {
                         FieldID: "name",
                         Width: 10
                     },
-                    DrawDataURL: '',
+                    DrawURL: 'addon-cpi/drawGrid',
                     AddonUUID: '0e2ae61b-a26a-4c26-81fe-13bdd2e4aaa3'
                 },
                 {
@@ -29,7 +29,7 @@ export const LIST1: List = {
                         FieldID: "age",
                         Width: 10
                     },
-                    DrawDataURL: '',
+                    DrawURL: 'addon-cpi/drawGrid',
                     AddonUUID: '0e2ae61b-a26a-4c26-81fe-13bdd2e4aaa3'
                 },
             ],

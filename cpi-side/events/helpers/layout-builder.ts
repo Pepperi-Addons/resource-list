@@ -9,7 +9,7 @@ import { MenuBuilder } from "./menu-builder";
 import { createDropDown } from "./utils";
 
 export interface IListLayoutBuilder{
-    build(): Promise<Partial<ListLayout>>
+    build(): Promise<Partial<ListLayout | undefined>>
 }
 
 
@@ -20,7 +20,11 @@ export class ListLayoutBuilder implements IListLayoutBuilder{
     }
 
     
-    async build(): Promise<Partial<ListLayout>>{
+    async build(): Promise<Partial<ListLayout> | undefined>{
+        // layout will be render only if list key changed or view key changed
+        if(!this.changes.ListKey && !this.changes.ViewKey){
+            return undefined
+        }
         return this.search(this.list.Search) 
         .smartSearch(this.list.SmartSearch) 
         .selectionType(this.list.SelectionType) 

@@ -4,8 +4,8 @@ import { router as viewsRouter } from './routes/views.routes'
 import { MenuBuilder } from './events/helpers/menu-builder';
 import { ListService } from './services/list.service';
 import { MenuBlock } from './models/events/list-layout.model';
-import { stat } from 'fs';
 import { LoadListEventService } from './events/services/load-list-event.service';
+import { GridRow } from './events/metadata';
 export async function load(configuration: any) {
     console.log('cpi side works!');
     // Put your cpi side code here
@@ -38,6 +38,24 @@ router.post('/OnClientLoadList', async (req, res, next) => {
     const state = req.body.State
     const changes = req.body.Changes
     return res.json(await new LoadListEventService().execute(state, changes))
+})
+
+router.post('/drawGrid' ,async (req,res,next) => {
+    const data = req.body.Data 
+    const viewBlocks = req.body.ViewBlocks
+    const grid: GridRow[] = []
+    data.forEach(item => {
+        const row: GridRow = {}
+        viewBlocks.forEach(block => {
+               let value = item[block.Configuration.FieldID]
+               if(block.Configuration.FieldID == "friends"){
+                   value = value.join(" , ")
+               }
+               row[block.Configuration.FieldID] = value    
+       })
+       grid.push(row)
+    })      
+    return res.json({ GridData: grid })
 })
 
 router.post('/drawMenuBlock', (req, res, next) => {
