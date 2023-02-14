@@ -8,8 +8,24 @@ import { LoadListEventService } from './events/services/load-list-event.service'
 import { GridRow } from './events/metadata';
 export async function load(configuration: any) {
     console.log('cpi side works!');
-    // Put your cpi side code here
+
+    //interceptors:
+
+    pepperi.events.intercept('OnClientLoadList' as any, {}, async (data, next, main) => {
+        try{
+            const state = data.State
+            const changes = data.Changes
+            if(!changes || !changes.ListKey){
+                throw Error(`changes is required and needs to contain ListKey`)
+            }
+            return await new LoadListEventService().execute(state, changes)
+        }catch(err){
+            throw Error(`error inside OnClientLoadList event: ${err}`)
+        }
+    })
 }
+//interceptors:
+
 
 
 export const router = Router()
