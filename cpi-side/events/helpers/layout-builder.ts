@@ -107,7 +107,7 @@ export class ListLayoutBuilder implements IListLayoutBuilder{
         return this
     }
     /**
-     * this function will add smart search to the layout only if the state is undefined
+     * this function will add smart search to the layout only if that list was changed
      * @param smartSearch the configuration of the smart search
      * @returns this 
      * 
