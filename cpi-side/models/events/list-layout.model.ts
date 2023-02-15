@@ -1,13 +1,16 @@
+import { type } from "os"
 import { SelectionType } from "../configuration/list.model"
 import { ListMenu, ListMenuBlock } from "../configuration/menu.model"
 import { ListSmartSearch } from "../configuration/search.model"
-import { ViewBlock } from "../configuration/view.model"
+import { Sorting } from "../configuration/sorting.model"
+import { ViewBlock, ViewType } from "../configuration/view.model"
 
 export interface ListLayout{
     Key: string,
     Title: string
     ViewsMenu: ViewsMenu,
-    Menu: ListMenu,
+    Menu: Menu,
+    LineMenu: Menu,
     Search: boolean, 
     SelectionType: SelectionType, //by default none
     SmartSearch: ListSmartSearch, // if empty array we will hide the smart search
@@ -15,12 +18,17 @@ export interface ListLayout{
     View: ViewLayout
 }
 
+export type MenuBlock = ListMenuBlock & { Hidden: boolean}
+export interface Menu{
+    Blocks: MenuBlock[]
+}
+
 export interface ViewBlocks{
     Fields: ViewBlock[]
 }
 
 export interface ViewLayout{
-    Type: "Grid" | "Cards"
+    Type: ViewType
     ViewBlocks : ViewBlocks
 
 }
