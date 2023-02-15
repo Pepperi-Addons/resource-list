@@ -134,9 +134,27 @@ async function createPageBlockRelation(client: Client): Promise<any> {
             EditorElementName: `viewer-block-editor-element-${client.AddonUUID}`
 
         };
+        const resourceListRelation: Relation = {
+            RelationName: "PageBlock",
+            Name: 'DataViewerBlock',
+            Description: `data viewer`,
+            Type: "NgComponent",
+            SubType: "NG14",
+            AddonUUID: client.AddonUUID,
+            AddonRelativeURL: fileName,
+            ComponentName: `ResourceListComponent`, // This is should be the block component name (from the client-side)
+            ModuleName: `ResourceListModule`, // This is should be the block module name (from the client-side)
+            EditorComponentName: `BlockEditorComponent`, // This is should be the block editor component name (from the client-side)
+            EditorModuleName: `BlockEditorModule`, // This is should be the block editor module name (from the client-side)
+            ElementsModule: 'WebComponents',
+            ElementName: `viewer-block-element-${client.AddonUUID}`,
+            EditorElementName: `viewer-block-editor-element-${client.AddonUUID}`
+
+        };
         const service = new AddonService(client);
-        const dataViewerResult = await service.upsertRelation(dataViewerRelation);
-        
+        const dataViewerResult = await service.upsertRelation(dataViewerRelation)
+        const resourceListResult = await service.upsertRelation(resourceListRelation)
+
         const dataConfigurationBlockRelation: Relation = {
             RelationName: "PageBlock",
             Name: 'DataConfigurationBlock',
@@ -154,7 +172,9 @@ async function createPageBlockRelation(client: Client): Promise<any> {
             EditorElementName: `data-config-block-editor-element-${client.AddonUUID}`
         };
         const dataConfigurationResult = await service.upsertRelation(dataConfigurationBlockRelation);
-        return { success:true, resultObject: {dataViewerResult, dataConfigurationResult}};
+        return { success:true, resultObject: {dataViewerResult, dataConfigurationResult, resourceListResult}};
+
+
     } catch(err) {
         return { success: false, resultObject: err , errorMessage: `Error in upsert relation. error - ${err}`};
     }
