@@ -2,6 +2,7 @@ import { ListContainer } from "../../models/events/list-container.mode"
 import { ListState } from "../../models/events/list-state.model"
 import { ListService } from "../../services/list.service"
 import { ListDataBuilder } from "../helpers/data-builder"
+import { defaultStateValues } from "../metadata"
 import { EventService } from "./event.service"
 
 export class LoadListEventService extends EventService{
@@ -25,8 +26,8 @@ export class LoadListEventService extends EventService{
             viewKey = viewsMenu[0].Key
         }
 
-        const newState: ListState = {...changes,  ViewKey: viewKey, ListKey: list.Key}
-        const data = await new ListDataBuilder(list, newState, changes).build()
+        const newState: ListState = {...defaultStateValues, ...changes,  ViewKey: viewKey, ListKey: list.Key}
+        const data = await this.listBuilder.buildData(list, newState, changes)
         return {
             Layout: layout,
             Data: data,

@@ -5,6 +5,7 @@ import { View, ViewBlock } from "../../models/configuration/view.model";
 import { ListData } from "../../models/events/list-data.model";
 import { ListState } from "../../models/events/list-state.model";
 import { SearchBody } from "@pepperi-addons/papi-sdk";
+
 import { ResourceService } from "../services/resource.service";
 import { GridViewRelationService } from "../services/grid-view-relation.service";
 
@@ -32,12 +33,10 @@ export class ListDataBuilder{
             PageSize: this.state?.PageSize || 100,
             IncludeCount: true
         }
-
         const genericResourceService = new ResourceService()
         const items = await genericResourceService.searchFields(this.list.Resource, searchBody)
         const gridRelationService = new GridViewRelationService()
         const grid = await gridRelationService.getGridRows(items, selectedView.Blocks, this.list.Resource)
-
         this.listData = {Items: grid, Count: items.Count}
         return this.listData
     }
@@ -60,7 +59,7 @@ export class ListDataBuilder{
         if(this.state.SearchString && this.list.Search.Fields.length > 0){
             queryArray.push(`(${this.buildSearchQuery(this.list.Search.Fields)})`)
         }
-        if(this.state.SmartSearchQuery){
+        if(this.state.SmartSearchQuery && this.state.SmartSearchQuery.length > 0){
             queryArray.push(`(${this.buildSmartSearchQuery(this.state.SmartSearchQuery)})`)
         }
         if(filter){

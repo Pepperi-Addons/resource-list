@@ -1,7 +1,9 @@
 import { List } from "../../models/configuration/list.model"
 import { ListContainer } from "../../models/events/list-container.mode"
+import { ListData } from "../../models/events/list-data.model"
 import { ListLayout } from "../../models/events/list-layout.model"
 import { ListState } from "../../models/events/list-state.model"
+import { ListDataBuilder } from "./data-builder"
 import { ListLayoutBuilder } from "./layout-builder"
 
 export class ListBuilder{
@@ -9,18 +11,13 @@ export class ListBuilder{
     constructor(){}
 
     async buildLayout(list: List, state: ListState | undefined , changes: Partial<ListState>): Promise<Partial<ListLayout> | undefined>{
-        if(list.Key != changes.ListKey){
-            throw new Error(`list and state does not match. key of the list: ${list.Key}, listKey in state - ${changes.ListKey}`)
+        if(!changes.ListKey){
+            return undefined
         }
        return  await new ListLayoutBuilder(list, state ,changes).build()
     }
-    
-    async buildListContainer(list: List, state: ListState | undefined, changes: Partial<ListState>): Promise<Partial<ListContainer>>{
-        const layout = await this.buildLayout(list ,state,  changes)
-        return {
-            Layout: layout,
-            Data: undefined,
-            State: state
-        }
-    }
+
+    async buildData(list: List, state: Partial<ListState>, changes: Partial<ListState>): Promise<ListData | undefined>{
+        return await new ListDataBuilder(list,state,changes).build()
+    }   
 }

@@ -1,4 +1,5 @@
 import { ViewBlock } from "../models/configuration/view.model"
+import { ListState } from "../models/events/list-state.model"
 
 export interface RelationBlock{
     AddonUUID: string,
@@ -17,4 +18,12 @@ export interface GridViewInputData{
 
 export interface GridViewOutputData{
    GridData: GridRow[]
+}
+
+export const defaultStateValues: Omit<ListState, "ListKey" | "ViewKey"> = {
+    SearchString: "",
+    SmartSearchQuery: [],
+    PageSize: 100,
+    PageIndex: 1,
+    ItemSelection: {Items: [], SelectAll: false},
 }
