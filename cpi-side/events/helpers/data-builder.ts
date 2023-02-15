@@ -18,11 +18,13 @@ export class ListDataBuilder{
         if(!this.isDataNeedsToChange()){
             return undefined
         }
+
         const selectedView = this.getSelectedView()
         if(!selectedView){
             return { Items: [], Count: 0 }
         }
-
+        
+        //prepare the search body
         const viewFields: string[] = selectedView.Blocks.map(block => block.Configuration.FieldID)
         const query = this.createQuery(this.list.Filter)
 
@@ -33,8 +35,10 @@ export class ListDataBuilder{
             PageSize: this.state?.PageSize || 100,
             IncludeCount: true
         }
+        //get the resource items
         const genericResourceService = new ResourceService()
         const items = await genericResourceService.searchFields(this.list.Resource, searchBody)
+        //draw the blocks
         const gridRelationService = new GridViewRelationService()
         const grid = await gridRelationService.getGridRows(items, selectedView.Blocks, this.list.Resource)
         this.listData = {Items: grid, Count: items.Count}
