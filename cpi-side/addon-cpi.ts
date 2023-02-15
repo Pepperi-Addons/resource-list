@@ -6,6 +6,7 @@ import { ListService } from './services/list.service';
 import { MenuBlock } from './models/events/list-layout.model';
 import { LoadListEventService } from './events/services/load-list-event.service';
 import { GridRow } from './events/metadata';
+import { ListState } from './models/events/list-state.model';
 export async function load(configuration: any) {
     console.log('cpi side works!');
 
@@ -74,7 +75,8 @@ router.post('/drawGrid' ,async (req,res,next) => {
 
 router.post('/drawMenuBlock', (req, res, next) => {
     const state = req.body.State
-    if(state){
+    const changes = req.body.Changes
+    if(!changes?.ListKey){
         return res.json({
             Result: null
         })
@@ -115,3 +117,36 @@ router.post('/drawMenuBlock', (req, res, next) => {
     })
 })
 
+
+
+router.post('/drawLineMenuBlock', (req, res, next) => {
+    const state = req.body.State
+    const changes = req.body.Changes
+
+    //we will draw line menu block only when exactly one line is selected
+    const numOfSelectedItems = changes?.ItemSelection?.Items?.length || 0
+    if(numOfSelectedItems != 1){
+        return res.json({
+            Result: null
+        })
+    }
+    const blocks: MenuBlock[] = [
+        {
+            Key: 'edit',
+            Title: 'Edit',
+            DrawURL: 'addon-cpi/drawLineMenuBlock',
+            AddonUUID: '0e2ae61b-a26a-4c26-81fe-13bdd2e4aaa3',
+            Hidden: false
+        },
+        {
+            Key: 'delete',
+            Title: 'Delete',
+            DrawURL: 'addon-cpi/drawLineMenuBlock',
+            AddonUUID: '0e2ae61b-a26a-4c26-81fe-13bdd2e4aaa3',
+            Hidden: false
+        }
+    ]
+    return res.json({
+        Result: blocks
+    })
+})

@@ -50,8 +50,14 @@ export const LIST1: List = {
         Blocks: [
             {
                 Key: "delete",
-                Title: "delete",
-                DrawURL: 'addon-cpi/drawMenuBlock',
+                Title: "Delete",
+                DrawURL: 'addon-cpi/drawLineMenuBlock',
+                AddonUUID: '0e2ae61b-a26a-4c26-81fe-13bdd2e4aaa3'
+            },
+            {
+                Key: "edit",
+                Title: "Edit",
+                DrawURL: 'addon-cpi/drawLineMenuBlock',
                 AddonUUID: '0e2ae61b-a26a-4c26-81fe-13bdd2e4aaa3'
             }
         ]

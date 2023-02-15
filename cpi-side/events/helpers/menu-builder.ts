@@ -19,27 +19,6 @@ export class MenuBuilder{
         }
 
     }
-    /**
-     * this function optimize the number of calls to draw blocks, by grouping all the blocks that has the same relation
-     * the relation is one to one map with combining the addonUUID and the drawURL
-     * @param menuBlocks 
-     * @returns array of object that will tell where to call in order to draw the blocks
-     */
-    private getDrawFunctionsArray(menuBlocks: ListMenuBlock[]): drawFunctionObject[]{
-        const drawFunctionsArray: drawFunctionObject[] = []
-        const visitedDrawURLs = new Set<string>()
-        menuBlocks.forEach(block => {
-            const key = `${block.AddonUUID}_${block.DrawURL}`
-            if(!visitedDrawURLs.has(key)){
-                visitedDrawURLs.add(key)
-                drawFunctionsArray.push({
-                    AddonUUID: block.AddonUUID,
-                    DrawURL: block.DrawURL
-                })
-            }
-        })
-        return drawFunctionsArray
-    }
 
     private async drawBlocks(drawURLs: drawFunctionObject[], state: ListState | undefined, changes: Partial<ListState>): Promise<(MenuBlock[] | undefined)[]>{
         return await Promise.all(drawURLs.map(async drawURL => {
