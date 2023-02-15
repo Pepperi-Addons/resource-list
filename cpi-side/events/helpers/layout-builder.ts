@@ -39,6 +39,7 @@ export class ListLayoutBuilder implements IListLayoutBuilder{
             .selectionType(this.list.SelectionType) 
             .views(this.list.Views, this.changes.ViewKey)
             .title(this.list.Name)
+            .sorting(this.list.Sorting)
         }
 
         //in case there was no changes we will return undefined
