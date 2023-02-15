@@ -19,13 +19,14 @@ export class ListLayoutBuilder implements IListLayoutBuilder{
     constructor(private list: List,private state: ListState | undefined,  private changes: Partial<ListState>){
     }
 
-    
+    /**
+     * this function will build the part that were changed on the list layout.
+     * if there is no change on the list layout this function will return undefined
+     * @returns the changes on the list layout
+     */
     async build(): Promise<Partial<ListLayout> | undefined>{
-        // layout will be render only if list key changed or view key changed
-        if(!this.changes.ListKey && !this.changes.ViewKey){
-            return undefined
-        }
-        return this.search(this.list.Search) 
+
+        await  this.search(this.list.Search) 
         .smartSearch(this.list.SmartSearch) 
         .selectionType(this.list.SelectionType) 
         .views(this.list.Views, this.changes.ViewKey)
@@ -33,14 +34,16 @@ export class ListLayoutBuilder implements IListLayoutBuilder{
         .lineMenu(this.list.LineMenu).then(self => {
             return self.menu(this.list.Menu).then(self => self.listModel as Partial<ListLayout>)
         })
+        //in case there was no changes we will return undefined
+        return Object.keys(this.listModel).length == 0? undefined: this.listModel
     }
     /**
-     * this function will set a title only if the state is undefined
+     * this function will set a title only when to list is changed
      * @param name string 
      * @returns this
      */
     title(name: string){
-        if(!this.state){
+        if(this.changes.ListKey){
             this.listModel.Title = name
         }
         return this
@@ -63,6 +66,7 @@ export class ListLayoutBuilder implements IListLayoutBuilder{
      */
     async menu(menuConfiguration: ListMenu = {Blocks: []}): Promise<ListLayoutBuilder>{
         const menu = await this.buildMenu(menuConfiguration)
+        //if the menu is undefined, we don't need to render the menu
         if(menu){
             this.listModel.Menu = menu
         }
@@ -79,6 +83,7 @@ export class ListLayoutBuilder implements IListLayoutBuilder{
      */
     async lineMenu(lineMenuConfiguration: ListMenu = {Blocks: []}):  Promise<ListLayoutBuilder>{
         const lineMenu = await this.buildMenu(lineMenuConfiguration)
+        //if the line menu is undefined, we don't need to re render it
         if(lineMenu){
             this.listModel.LineMenu = lineMenu
         }
@@ -94,10 +99,11 @@ export class ListLayoutBuilder implements IListLayoutBuilder{
      * @param changes - the changes on the state that emit this event
      */
     search(search: ListSearch = {Fields: []}): ListLayoutBuilder{
-        //the only case when we return a search is on the load of the list, thats happen only if current state is undefined
-        if(!this.state){
-            this.listModel.Search =  { Visible: search.Fields.length > 0 }
+        //the only case when we return a search is when we changed the list
+        if(!this.changes.ListKey){
+            return this
         }
+        this.listModel.Search =  { Visible: search.Fields.length > 0 }
         return this
     }
     /**
@@ -108,14 +114,14 @@ export class ListLayoutBuilder implements IListLayoutBuilder{
      */
     smartSearch(smartSearch: ListSmartSearch = {Fields: []}){
         //if there is a state we don't want to re render the smart search component
-        if(this.state){
+        if(!this.changes.ListKey){
             return this
         }
-        if(!this.state){
-            this.listModel.SmartSearch = {
-                 Fields: smartSearch.Fields
-             }
+
+        this.listModel.SmartSearch = {
+            Fields: smartSearch.Fields
         }
+
         return this
     }
     /**
@@ -125,8 +131,8 @@ export class ListLayoutBuilder implements IListLayoutBuilder{
      * @returns this
      */
     views(views: View[] = [], viewKey?: string): ListLayoutBuilder{
-        //if there is a state and the selected view didn't change we don't want to re render the views menu
-        if(this.state && !viewKey){
+        //if we didn't change the list and we didn't change the view then we don't need to rerender the views menu or the selected view 
+        if(!this.changes.ListKey && !this.changes.ViewKey){
             return this
         }
         const result: ViewLayout = {
@@ -165,19 +171,26 @@ export class ListLayoutBuilder implements IListLayoutBuilder{
         return this
     }
     /**
-     * this function will set the selection type only if state is undefined
+     * this function will set the selection type only if the list is changed
      * @param selectionType by default none
      * @returns this
      */
     selectionType(selectionType: SelectionType = "None"){
-        if(this.state){
+        if(!this.changes.ListKey){
             return this
         }
         this.listModel.SelectionType = selectionType
         return this
     }
-
+    /**
+     * the sorting will changed only when the list is changed
+     * @param sorting - the sorting field and order
+     * @returns this
+     */
     sorting(sorting: Sorting = {Ascending: false, FieldID: 'CreationDateTime'}){
+        if(!this.changes.ListKey){
+            return this
+        }
         this.listModel.Sorting = sorting
         return this
     }

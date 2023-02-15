@@ -27,3 +27,6 @@ export const defaultStateValues: Omit<ListState, "ListKey" | "ViewKey"> = {
     PageIndex: 1,
     ItemSelection: {Items: [], SelectAll: false},
 }
+
+//type utils
+export type RequireField<T, K extends keyof T> = T & Required<Pick<T, K>>
