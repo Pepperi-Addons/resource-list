@@ -24,8 +24,6 @@ export async function load(configuration: any) {
         }
     })
 }
-//interceptors:
-
 
 
 export const router = Router()
