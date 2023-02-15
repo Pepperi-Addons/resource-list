@@ -69,7 +69,7 @@ export class ListDataBuilder{
     }
 
     private buildSearchQuery(searchFields: ListSearchField[]){
-        return searchFields.map(searchField => `${searchField} LIKE '%${this.state.SearchString}%'`).join(' OR ')
+        return searchFields.map(searchField => `${searchField.FieldID} LIKE '%${this.state.SearchString}%'`).join(' OR ')
     }
 
     private buildSmartSearchQuery(smartSearch: JSONRegularFilter[]): string{

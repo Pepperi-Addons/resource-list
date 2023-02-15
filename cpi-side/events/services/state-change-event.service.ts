@@ -4,7 +4,7 @@ import { ListService } from "../../services/list.service"
 import { RequireField, defaultStateValues } from "../metadata"
 import { EventService } from "./event.service"
 
-export class ChangeStateEvent extends EventService{
+export class ChangeStateEventService extends EventService{
     /**
      * 
      * @param state must contains at least list key and view key
@@ -20,13 +20,8 @@ export class ChangeStateEvent extends EventService{
         }
 
         const layout = await this.listBuilder.buildLayout(list, state, changes)
-        const viewsMenu = layout?.ViewsMenu?.Items
-        let viewKey: string | undefined = undefined 
-        if(viewsMenu && viewsMenu.length > 0){
-            viewKey = viewsMenu[0].Key
-        }
 
-        const newState: ListState = {...defaultStateValues, ...changes,  ViewKey: viewKey, ListKey: list.Key}
+        const newState: ListState = {...defaultStateValues, ...state, ...changes,}
         const data = await this.listBuilder.buildData(list, newState, changes)
         return {
             Layout: layout,
