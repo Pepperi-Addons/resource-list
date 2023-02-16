@@ -10,6 +10,7 @@ export class ResourceListComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
+    debugger
   }
 
 }

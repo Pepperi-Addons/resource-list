@@ -136,8 +136,8 @@ async function createPageBlockRelation(client: Client): Promise<any> {
         };
         const resourceListRelation: Relation = {
             RelationName: "PageBlock",
-            Name: 'DataViewerBlock',
-            Description: `data viewer`,
+            Name: 'ResourceList',
+            Description: `resource viewer`,
             Type: "NgComponent",
             SubType: "NG14",
             AddonUUID: client.AddonUUID,
@@ -147,7 +147,7 @@ async function createPageBlockRelation(client: Client): Promise<any> {
             EditorComponentName: `BlockEditorComponent`, // This is should be the block editor component name (from the client-side)
             EditorModuleName: `BlockEditorModule`, // This is should be the block editor module name (from the client-side)
             ElementsModule: 'WebComponents',
-            ElementName: `viewer-block-element-${client.AddonUUID}`,
+            ElementName: `resource-list-element-${client.AddonUUID}`,
             EditorElementName: `viewer-block-editor-element-${client.AddonUUID}`
 
         };

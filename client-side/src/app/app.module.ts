@@ -132,5 +132,6 @@ export class AppModule implements DoBootstrap {
         this.pepAddonService.defineCustomElement(`data-config-block-element-${config.AddonUUID}`, DataConfigurationBlockComponent, this.injector);
         this.pepAddonService.defineCustomElement(`data-config-block-editor-element-${config.AddonUUID}`, DataConfigurationBlockEditorComponent, this.injector);
         this.pepAddonService.defineCustomElement(`resource-selection-element-${config.AddonUUID}`, ResourceSelectionComponent, this.injector)
+        this.pepAddonService.defineCustomElement(`resource-list-element-${config.AddonUUID}`, ResourceSelectionComponent, this.injector)
     }
 }
