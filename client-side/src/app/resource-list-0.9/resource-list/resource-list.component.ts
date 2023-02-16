@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ClientEventsService } from './services/client-events.service';
 
 @Component({
   selector: 'resource-list',
@@ -7,10 +8,13 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ResourceListComponent implements OnInit {
 
-  constructor() { }
+  constructor(private clientEventService: ClientEventsService) { }
 
   ngOnInit(): void {
-    debugger
+    this.init()
+  }
+  async init(){
+    const result  =  await this.clientEventService.emitLoadListEvent("LIST_KEY")
   }
 
 }

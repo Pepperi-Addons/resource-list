@@ -49,7 +49,7 @@ import { PepQueryBuilderModule } from '@pepperi-addons/ngx-lib/query-builder';
 import { ViewsEventsTabComponent } from './views-events-tab/views-events-tab.component';
 import { ViewsSmartSearchTabComponent } from './views-smart-search-tab/views-smart-search-tab.component';
 import { ViewsSearchTabComponent } from './views-search-tab/views-search-tab.component';
-import { ResourceListComponent } from './resource-list/resource-list.component';
+import { ResourceListComponent } from './resource-list-0.9/resource-list/resource-list.component';
 @NgModule({
     imports: [
         BrowserModule,
