@@ -49,6 +49,7 @@ import { PepQueryBuilderModule } from '@pepperi-addons/ngx-lib/query-builder';
 import { ViewsEventsTabComponent } from './views-events-tab/views-events-tab.component';
 import { ViewsSmartSearchTabComponent } from './views-smart-search-tab/views-smart-search-tab.component';
 import { ViewsSearchTabComponent } from './views-search-tab/views-search-tab.component';
+import { ResourceListComponent } from './resource-list/resource-list.component';
 @NgModule({
     imports: [
         BrowserModule,
@@ -132,6 +133,6 @@ export class AppModule implements DoBootstrap {
         this.pepAddonService.defineCustomElement(`data-config-block-element-${config.AddonUUID}`, DataConfigurationBlockComponent, this.injector);
         this.pepAddonService.defineCustomElement(`data-config-block-editor-element-${config.AddonUUID}`, DataConfigurationBlockEditorComponent, this.injector);
         this.pepAddonService.defineCustomElement(`resource-selection-element-${config.AddonUUID}`, ResourceSelectionComponent, this.injector)
-        this.pepAddonService.defineCustomElement(`resource-list-element-${config.AddonUUID}`, ResourceSelectionComponent, this.injector)
+        this.pepAddonService.defineCustomElement(`resource-list-element-${config.AddonUUID}`, ResourceListComponent, this.injector)
     }
 }
