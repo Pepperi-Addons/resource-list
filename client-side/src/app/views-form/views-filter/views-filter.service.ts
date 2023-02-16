@@ -16,13 +16,15 @@ export class ViewsFilterService{
             const optionalValuesLength = resourceField['OptionalValues']?.length || 0 
             const optionalValues = resourceField['OptionalValues']?.map(val => {return {Key: val, Value: val} }) || []
             if(resourceField.Indexed){
-                result.push({
+                const item = {
                     FieldID: fieldID, 
                     Title: fieldID,
-                    FieldType: optionalValuesLength > 0 ? 'ComboBox' : resourceField.Type,
-                    OptionalValues: optionalValues
-                })
-
+                    FieldType: optionalValuesLength > 0 ? 'ComboBox' : resourceField.Type === 'Resource' ? 'String': resourceField.Type,
+                }
+                if(optionalValuesLength > 0) {
+                    item['OptionalValues'] = optionalValues;
+                }
+                result.push(item);
             }
         })
         return result
