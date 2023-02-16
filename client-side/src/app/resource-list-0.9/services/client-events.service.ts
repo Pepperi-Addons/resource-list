@@ -1,5 +1,5 @@
 import { PepAddonService } from "@pepperi-addons/ngx-lib";
-import { loadListEventKey } from "../../metadata";
+import { loadListEventKey } from "../metadata";
 import { Injectable } from "@angular/core";
 
 @Injectable({ providedIn: 'root' })
