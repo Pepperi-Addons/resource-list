@@ -1,14 +1,14 @@
 import { AddonsDataSearchResult } from "@pepperi-addons/cpi-node/build/cpi-side/client-api";
 import { ViewBlock } from "../../models/configuration/view.model";
 import { groupRelationBlocks } from "../helpers/utils";
-import { GridRow, RelationBlock } from "../metadata";
+import { Row, RelationBlock } from "../metadata";
 
-export class GridViewRelationService{
+export class ViewRelationService{
     
-    async getGridRows(searchResult: AddonsDataSearchResult, blocks: ViewBlock[], resource: string): Promise<GridRow[]>{
+    async getRows(searchResult: AddonsDataSearchResult, blocks: ViewBlock[]): Promise<Row[]>{
         const relationGroups = groupRelationBlocks(blocks)
-        const gridArray = await this.drawGrids(relationGroups, resource, blocks, searchResult)
-        const result: GridRow[] = []
+        const gridArray = await this.drawRows(relationGroups, blocks, searchResult)
+        const result: Row[] = []
         //iterate over all the grids we get, and merge the rows by the same order
         gridArray.forEach(grid => {
             const row = grid.reduce((acc, curr) => {
@@ -19,13 +19,13 @@ export class GridViewRelationService{
         return result
     }
 
-    private async drawGrids(relationBlocks: RelationBlock[], resource: string, viewBlocks: ViewBlock[], searchResult: AddonsDataSearchResult){
+    private async drawRows(relationBlocks: RelationBlock[], viewBlocks: ViewBlock[], searchResult: AddonsDataSearchResult){
         return Promise.all(relationBlocks.map(async relationBlock => {
-            return await this.drawGrid(relationBlock, resource, viewBlocks, searchResult)
+            return await this.drawRow(relationBlock, viewBlocks, searchResult)
         }))
     }
 
-    private async drawGrid(block: RelationBlock, resource: string, viewBlocks: ViewBlock[], searchResult: AddonsDataSearchResult): Promise<GridRow[]>{
+    private async drawRow(block: RelationBlock, viewBlocks: ViewBlock[], searchResult: AddonsDataSearchResult): Promise<Row[]>{
         const result =  await pepperi.addons.api.uuid(block.AddonUUID).post({
             url: block.DrawURL,
             body: { Data: searchResult.Objects , ViewBlocks: viewBlocks }

@@ -6,7 +6,7 @@ export interface RelationBlock{
     DrawURL: string
 }
 
-export interface GridRow{
+export interface Row{
     [key: string]: string | boolean | number | Date,
 }
 
@@ -17,7 +17,7 @@ export interface GridViewInputData{
 
 
 export interface GridViewOutputData{
-   GridData: GridRow[]
+   GridData: Row[]
 }
 
 export const defaultStateValues: Omit<ListState, "ListKey" | "ViewKey"> = {
