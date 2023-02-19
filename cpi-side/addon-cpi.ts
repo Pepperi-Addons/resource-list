@@ -5,10 +5,10 @@ import { MenuBuilder } from './events/helpers/menu-builder';
 import { ListService } from './services/list.service';
 import { MenuBlock } from './models/events/list-layout.model';
 import { LoadListEventService } from './events/services/load-list-event.service';
-import { GridRow } from './events/metadata';
+import { Row } from './events/metadata';
 import { ListState } from './models/events/list-state.model';
 export async function load(configuration: any) {
-    console.log('cpi side works!');
+
 
     //interceptors:
 
@@ -58,9 +58,9 @@ router.post('/OnClientLoadList', async (req, res, next) => {
 router.post('/drawGrid' ,async (req,res,next) => {
     const data = req.body.Data 
     const viewBlocks = req.body.ViewBlocks
-    const grid: GridRow[] = []
+    const grid: Row[] = []
     data?.forEach(item => {
-        const row: GridRow = {}
+        const row: Row = {}
         viewBlocks.forEach(block => {
                let value = item[block.Configuration.FieldID]
                if(block.Configuration.FieldID == "friends"){
