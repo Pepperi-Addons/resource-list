@@ -98,7 +98,8 @@ export class RegularGVDataSource implements IGenericViewerDataSource{
     constructor(
         public genericViewer: IGenericViewer,
         private genericResourceService: GenericResourceOfflineService,
-        private items?: any[]
+        private items?: any[],
+        private accountUUID: string = ''
     ){
         this.fieldsIDs = (this.genericViewer.viewDataview.Fields || []).map(gridDataViewField => gridDataViewField.FieldID)
     }
@@ -116,7 +117,7 @@ export class RegularGVDataSource implements IGenericViewerDataSource{
         return await  this.getDeletedItems()
     }
     private async postItem(item: any){
-        return await this.genericResourceService.postItem(this.genericViewer.view.Resource.Name, item)
+        return await this.genericResourceService.postItem(this.genericViewer.view.Resource.Name, item, this.accountUUID)
     }
     async getItems(params?: IPepGenericListParams, fields?:GridDataViewField[], resourceFields?:AddonDataScheme['Fields'], accountUUID?:string | undefined): Promise<any[]>{
         return await this._getItems(false, params, fields, resourceFields, accountUUID)
