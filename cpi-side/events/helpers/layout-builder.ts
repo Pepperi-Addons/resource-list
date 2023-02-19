@@ -129,7 +129,7 @@ export class ListLayoutBuilder implements IListLayoutBuilder{
     private views(views: View[] = [], viewKey?: string): ListLayoutBuilder{
         const result: ViewLayout = {
             ViewBlocks: {
-                Fields: []
+                Blocks: []
             },
             Type: "Grid"
         }
@@ -156,7 +156,7 @@ export class ListLayoutBuilder implements IListLayoutBuilder{
         //add title  type  and view blocks to the view
         result.Type = selectedView.Type
         // result.Title = selectedView.Title
-        result.ViewBlocks.Fields = selectedView.Blocks
+        result.ViewBlocks.Blocks = selectedView.Blocks
 
         const viewBlocks = selectedView.Blocks
         this.listModel.View = result

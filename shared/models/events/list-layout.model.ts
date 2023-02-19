@@ -24,7 +24,7 @@ export interface Menu{
 }
 
 export interface ViewBlocks{
-    Fields: ViewBlock[]
+    Blocks: ViewBlock[]
 }
 
 export interface ViewLayout{
