@@ -214,7 +214,7 @@ export class GenericViewerComponent implements OnInit {
     }
     async onViewChanged($event){
       this.genericViewer = await this.genericResourceService.getGenericView($event)
-      this.genericViewerDataSource = new RegularGVDataSource(this.genericViewer, this.genericResourceService)
+      this.genericViewerDataSource = new RegularGVDataSource(this.genericViewer, this.genericResourceService, [], this.accountUUID)
       this.loadViewBlock()
     }
     async getItemsCopy(){
