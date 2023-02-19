@@ -7,7 +7,7 @@ import { ListState } from "../../models/events/list-state.model";
 import { SearchBody } from "@pepperi-addons/papi-sdk";
 
 import { ResourceService } from "../services/resource.service";
-import { GridViewRelationService } from "../services/grid-view-relation.service";
+import { ViewRelationService } from "../services/view-relation.service";
 
 export class ListDataBuilder{
     private listData: ListData = { Items: [], Count: 0}
@@ -38,9 +38,8 @@ export class ListDataBuilder{
         //get the resource items
         const genericResourceService = new ResourceService()
         const items = await genericResourceService.searchFields(this.list.Resource, searchBody)
-        //draw the blocks
-        const gridRelationService = new GridViewRelationService()
-        const grid = await gridRelationService.getGridRows(items, selectedView.Blocks, this.list.Resource)
+        const gridRelationService = new ViewRelationService()
+        const grid = await gridRelationService.getRows(items, selectedView.Blocks)
         this.listData = {Items: grid, Count: items.Count}
         return this.listData
     }

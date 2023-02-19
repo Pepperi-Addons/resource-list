@@ -1,6 +1,6 @@
-import { GridRow } from "../../events/metadata"
+import { Row } from "../../events/metadata"
 
 export interface ListData{
-    Items: GridRow[]
+    Items: Row[]
     Count?: number
 }
