@@ -1,9 +1,9 @@
 import { JSONFilter, JSONRegularFilter, concat, toApiQueryString } from "@pepperi-addons/pepperi-filters";
-import { List } from "../../models/configuration/list.model";
-import { ListSearchField, ListSmartSearch } from "../../models/configuration/search.model";
-import { View, ViewBlock } from "../../models/configuration/view.model";
-import { ListData } from "../../models/events/list-data.model";
-import { ListState } from "../../models/events/list-state.model";
+import { List } from "shared"
+import { ListSearchField } from "shared"
+import { ListView as View } from "shared"
+import { ListData } from "shared"
+import { ListState } from "shared"
 import { SearchBody } from "@pepperi-addons/papi-sdk";
 
 import { ResourceService } from "../services/resource.service";

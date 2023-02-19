@@ -1,7 +1,7 @@
 import { AddonsDataSearchResult } from "@pepperi-addons/cpi-node/build/cpi-side/client-api";
-import { ViewBlock } from "../../models/configuration/view.model";
+import { GridRow, ViewBlock } from "shared"
 import { groupRelationBlocks } from "../helpers/utils";
-import { GridRow, RelationBlock } from "../metadata";
+import { RelationBlock } from "../metadata";
 
 export class GridViewRelationService{
     

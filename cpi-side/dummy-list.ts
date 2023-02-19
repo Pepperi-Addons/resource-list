@@ -1,4 +1,4 @@
-import { List } from './models/configuration/list.model'
+import { List } from "shared"
 
 export const LIST1: List = {
     Key: "LIST_KEY",
@@ -12,7 +12,6 @@ export const LIST1: List = {
             Blocks: [
                 {
                     Title: "My name",
-                    Group: "Fields",
                     Configuration: {
                         Type: "TextBox",
                         FieldID: "name",
@@ -23,7 +22,6 @@ export const LIST1: List = {
                 },
                 {
                     Title: "My age",
-                    Group: "Fields",
                     Configuration: {
                         Type: "NumberInteger",
                         FieldID: "age",

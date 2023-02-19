@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ClientEventsService } from '../services/client-events.service';
+import { ViewBlocksAdapter } from '../helpers/view-blocks-adapter';
 
 @Component({
   selector: 'resource-list',
@@ -16,6 +17,8 @@ export class ResourceListComponent implements OnInit {
   
   async init(){
     const result  =  await this.clientEventService.emitLoadListEvent("LIST_KEY")
+    debugger
+
   }
 
 }

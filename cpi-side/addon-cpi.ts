@@ -3,11 +3,11 @@ import { router as genericResourceRouter }  from './routes/generic-resource.rout
 import { router as viewsRouter } from './routes/views.routes'
 import { MenuBuilder } from './events/helpers/menu-builder';
 import { ListService } from './services/list.service';
-import { MenuBlock } from './models/events/list-layout.model';
+import { MenuBlock } from "shared"
 import { LoadListEventService } from './events/services/load-list-event.service';
-import { GridRow } from './events/metadata';
-import { ListState } from './models/events/list-state.model';
+import { GridRow } from 'shared';
 import { ChangeStateEventService } from './events/services/state-change-event.service';
+
 export async function load(configuration: any) {
     console.log('cpi side works!');
 

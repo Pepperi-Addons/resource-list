@@ -1,1 +1,2 @@
-export * from './view.model'
+export * from './configuration/index'
+export * from './events/index'

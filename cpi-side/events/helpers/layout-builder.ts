@@ -1,10 +1,10 @@
-import { List, SelectionType } from "../../models/configuration/list.model";
-import { ListMenu } from "../../models/configuration/menu.model";
-import { ListSearch, ListSmartSearch } from "../../models/configuration/search.model";
-import { Sorting } from "../../models/configuration/sorting.model";
-import { View } from "../../models/configuration/view.model";
-import { ListLayout, ViewLayout, ViewsMenu } from "../../models/events/list-layout.model";
-import { ListState } from "../../models/events/list-state.model";
+import { List, SelectionType } from "shared"
+import { ListMenu } from "shared"
+import { ListSearch, ListSmartSearch } from "shared"
+import { Sorting } from "shared"
+import { ListView as View } from "shared"
+import { ListLayout, ViewLayout, ViewsMenu } from "shared"
+import { ListState } from "shared"
 import { MenuBuilder } from "./menu-builder";
 import { createDropDown } from "./utils";
 

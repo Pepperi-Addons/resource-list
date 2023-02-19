@@ -1,14 +1,12 @@
-import { ViewBlock } from "../models/configuration/view.model"
-import { ListState } from "../models/events/list-state.model"
+import { GridRow, ViewBlock } from "shared"
+import { ListState } from "shared"
 
 export interface RelationBlock{
     AddonUUID: string,
     DrawURL: string
 }
 
-export interface GridRow{
-    [key: string]: string | boolean | number | Date,
-}
+
 
 export interface GridViewInputData{
     Items: {[key: string]: any}[],

@@ -1,4 +1,4 @@
-import { AddonDataScheme, GridDataView, GridDataViewField } from "@pepperi-addons/papi-sdk";
+import { AddonDataScheme, DataViewFieldType, GridDataView, GridDataViewField, SchemeFieldType } from "@pepperi-addons/papi-sdk";
 import { ViewBlock } from "shared";
 export interface IViewBlocksAdapter{
     adapt(): GridDataView
@@ -10,7 +10,7 @@ export class ViewBlocksAdapter implements IViewBlocksAdapter{
         Fields: [],
         Columns: []
     }
-    constructor(private blocks: ViewBlock[] = [], private resourceFields: AddonDataScheme){
+    constructor(private blocks: ViewBlock[] = []){
 
     }
 
@@ -18,16 +18,22 @@ export class ViewBlocksAdapter implements IViewBlocksAdapter{
         try{
             this.convertBlocksToDataView()   
             return this.dataView
-        }catch(err){}
+        }catch(err){
+            throw new Error(`error inside viewBlocksAdapter  while converting view blocks to data view: ${err} `)
+        }
     }
 
     private convertBlocksToDataView(){
         this.blocks.forEach(block => {
             const field: GridDataViewField = {
                 FieldID: block.Configuration.FieldID,
-                Type: this.resourceFields.Fields[block.Configuration.FieldID] || "TextBox
-                "
+                Type: block.Configuration.Type as DataViewFieldType,
+                ReadOnly: true,
+                Mandatory: true,
+                Title: block.Title
             }
+            this.dataView.Fields.push(field)
+            this.dataView.Columns.push(block.Configuration.Width || 10)
         })
     }
     

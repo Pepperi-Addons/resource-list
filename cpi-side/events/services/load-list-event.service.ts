@@ -1,7 +1,6 @@
-import { ListContainer } from "../../models/events/list-container.mode"
-import { ListState } from "../../models/events/list-state.model"
+import { ListContainer } from "shared"
+import { ListState } from "shared"
 import { ListService } from "../../services/list.service"
-import { ListDataBuilder } from "../helpers/data-builder"
 import { defaultStateValues } from "../metadata"
 import { EventService } from "./event.service"
 

@@ -1,8 +1,7 @@
-import { List } from "../../models/configuration/list.model"
-import { ListContainer } from "../../models/events/list-container.mode"
-import { ListData } from "../../models/events/list-data.model"
-import { ListLayout } from "../../models/events/list-layout.model"
-import { ListState } from "../../models/events/list-state.model"
+import { List } from "shared"
+import { ListData } from "shared"
+import { ListLayout } from "shared"
+import { ListState } from "shared"
 import { ListDataBuilder } from "./data-builder"
 import { ListLayoutBuilder } from "./layout-builder"
 
