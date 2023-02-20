@@ -5,11 +5,11 @@ import { MenuBuilder } from './events/helpers/menu-builder';
 import { ListService } from './services/list.service';
 import { MenuBlock } from "shared"
 import { LoadListEventService } from './events/services/load-list-event.service';
-import { GridRow } from 'shared';
+import { Row } from 'shared';
 import { ChangeStateEventService } from './events/services/state-change-event.service';
 
 export async function load(configuration: any) {
-    console.log('cpi side works!');
+
 
     //interceptors:
 
@@ -69,9 +69,9 @@ router.post('/onClientStateChange', async (req, res, next) => {
 router.post('/drawGrid' ,async (req,res,next) => {
     const data = req.body.Data 
     const viewBlocks = req.body.ViewBlocks
-    const grid: GridRow[] = []
+    const grid: Row[] = []
     data?.forEach(item => {
-        const row: GridRow = {}
+        const row: Row = {}
         viewBlocks.forEach(block => {
                let value = item[block.Configuration.FieldID]
                if(block.Configuration.FieldID == "friends"){
@@ -81,7 +81,7 @@ router.post('/drawGrid' ,async (req,res,next) => {
        })
        grid.push(row)
     })      
-    return res.json({ GridData: grid })
+    return res.json({ Data: grid })
 })
 
 router.post('/drawMenuBlock', (req, res, next) => {

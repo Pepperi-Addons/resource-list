@@ -1,4 +1,4 @@
-import { GridRow, ViewBlock } from "shared"
+import { Row, ViewBlock } from "shared"
 import { ListState } from "shared"
 
 export interface RelationBlock{
@@ -8,14 +8,14 @@ export interface RelationBlock{
 
 
 
-export interface GridViewInputData{
+export interface DrawViewInputData{
     Items: {[key: string]: any}[],
     ViewBlocks: ViewBlock[]
 }
 
 
-export interface GridViewOutputData{
-   GridData: GridRow[]
+export interface DrawViewOutputData{
+   Data: Row[]
 }
 
 export const defaultStateValues: Omit<ListState, "ListKey" | "ViewKey"> = {

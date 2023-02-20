@@ -1,9 +1,9 @@
 
 export interface ListData{
-    Items: GridRow[]
+    Items: Row[]
     Count?: number
 }
 
-export interface GridRow{
+export interface Row{
     [key: string]: string | boolean | number | Date,
 }

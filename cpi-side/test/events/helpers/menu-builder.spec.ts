@@ -1,10 +1,10 @@
 import { expect } from 'chai'
 import { defaultList, defaultState } from '../../../metadata'
 import * as sinon from "ts-sinon";
-import { List } from '../../../models/configuration/list.model';
+import { List } from 'shared'
 import { MenuBuilder } from '../../../events/helpers/menu-builder';
 import * as mocha  from 'mocha' 
-import { MenuBlock } from '../../../models/events/list-layout.model';
+import { MenuBlock } from 'shared'
 
 
 function getDefaultListCopy(): List{
