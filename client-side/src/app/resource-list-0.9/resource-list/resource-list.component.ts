@@ -6,6 +6,7 @@ import { IPepGenericListDataSource, IPepGenericListInitData, IPepGenericListPara
 import { GridDataView } from '@pepperi-addons/papi-sdk';
 import { GenericListAdapter } from '../helpers/generic-list-adapter';
 import { GenericListAdapterResult, SmartSearchInput } from '../metadata';
+import { PepMenuItem } from '@pepperi-addons/ngx-lib/menu';
 
 @Component({
   selector: 'resource-list',
@@ -33,6 +34,7 @@ export class ResourceListComponent implements OnInit {
     }
   }
   smartSearch: SmartSearchInput
+  menu: PepMenuItem[]
   constructor(private clientEventService: ClientEventsService) { }
 
   ngOnInit(): void {
@@ -55,6 +57,7 @@ export class ResourceListComponent implements OnInit {
   setGenericListVariables(data: GenericListAdapterResult){
     this.dataSource = data.dataSource || this.dataSource
     this.smartSearch = data.smartSearch || this.smartSearch
+    this.menu = data.menu || this.menu
   }
 
 }

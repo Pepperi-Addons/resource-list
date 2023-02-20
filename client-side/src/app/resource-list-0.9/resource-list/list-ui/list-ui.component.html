@@ -5,4 +5,12 @@
     [inline] ="false"
     [addPadding]="true"
     [smartFilter]="smartSearch">
+    <ng-container right-buttons>
+        <pep-menu *ngIf="menu"
+            iconName="system_menu" 
+            type="action" 
+            class="pep-spacing-element"
+            [items]="menu">
+        </pep-menu>
+    </ng-container>
 </pep-generic-list>

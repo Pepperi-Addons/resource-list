@@ -3,6 +3,10 @@ import { ViewBlocksAdapter } from "./view-blocks-adapter";
 import { DataSource } from "./data-source";
 import { MenuDataView, SchemeFieldType } from "@pepperi-addons/papi-sdk";
 import { GenericListAdapterResult, SmartSearchField, SmartSearchInput } from "../metadata";
+import { PepMenuItem } from "@pepperi-addons/ngx-lib/menu";
+import { PepButton } from "@pepperi-addons/ngx-lib/button";
+import { GVButton } from "src/app/generic-viewer/generic-viewer.model";
+import { PepStyleStateType, PepStyleType } from "@pepperi-addons/ngx-lib";
 
 export class GenericListAdapter {
     constructor(private listContainer: Partial<ListContainer>){
@@ -11,9 +15,12 @@ export class GenericListAdapter {
     adapt(): GenericListAdapterResult{
         const dataSource = this.getDataSource()
         const smartSearch = this.getSmartSearch()
+        const menu = this.getMenu()
+        const buttons = this.getButtons()
         return {
             dataSource: dataSource,
-            smartSearch: smartSearch
+            smartSearch: smartSearch,
+            menu: menu
         }
     }
     /**
@@ -37,6 +44,31 @@ export class GenericListAdapter {
                     Fields: this.listContainer.Layout.SmartSearch.Fields
                 }
             }
+        }
+        return undefined
+    }
+    //returns only the menu
+    getMenu(): PepMenuItem[] | undefined{
+        if(this.listContainer.Layout?.Menu){
+            return this.listContainer.Layout.Menu.Blocks.filter(block => !block.ButtonStyleType).map(menuBlock => {
+                return {
+                    key: menuBlock.Key,
+                    text: menuBlock.Title,
+                }
+            })
+        }
+        return undefined
+    }
+
+    getButtons(): GVButton[]{
+        if(this.listContainer.Layout?.Menu){
+            return this.listContainer.Layout.Menu.Blocks.filter(block => block.ButtonStyleType).map(menuBlock => {
+                return {
+                    key: menuBlock.Key,
+                    value: menuBlock.Title,
+                    styleType: menuBlock.ButtonStyleType.toLowerCase() as PepStyleType
+                }
+            })
         }
         return undefined
     }

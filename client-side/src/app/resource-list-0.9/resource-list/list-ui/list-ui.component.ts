@@ -2,6 +2,7 @@ import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/cor
 import { IPepGenericListDataSource } from '@pepperi-addons/ngx-composite-lib/generic-list';
 import { GridDataView } from '@pepperi-addons/papi-sdk';
 import { SmartSearchInput } from '../../metadata';
+import { PepMenuItem } from '@pepperi-addons/ngx-lib/menu';
 
 @Component({
   selector: 'list-ui',
@@ -11,10 +12,10 @@ import { SmartSearchInput } from '../../metadata';
 export class ListUIComponent implements OnInit {
   @Input() dataSource: IPepGenericListDataSource
   @Input() smartSearch: SmartSearchInput
+  @Input() menu: PepMenuItem[]
   constructor() { }
 
   ngOnChanges(changes: SimpleChanges): void {
-
   }
 
   ngOnInit(): void {
