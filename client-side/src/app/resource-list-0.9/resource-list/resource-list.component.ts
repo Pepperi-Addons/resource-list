@@ -4,6 +4,8 @@ import { ViewBlocksAdapter } from '../helpers/view-blocks-adapter';
 import { ListContainer } from 'shared';
 import { IPepGenericListDataSource, IPepGenericListInitData, IPepGenericListParams } from '@pepperi-addons/ngx-composite-lib/generic-list';
 import { GridDataView } from '@pepperi-addons/papi-sdk';
+import { GenericListAdapter } from '../helpers/generic-list-adapter';
+import { GenericListAdapterResult, SmartSearchInput } from '../metadata';
 
 @Component({
   selector: 'resource-list',
@@ -30,6 +32,7 @@ export class ResourceListComponent implements OnInit {
         }
     }
   }
+  smartSearch: SmartSearchInput
   constructor(private clientEventService: ClientEventsService) { }
 
   ngOnInit(): void {
@@ -38,25 +41,20 @@ export class ResourceListComponent implements OnInit {
   }
   
   async init(){
-    const result  =  await this.clientEventService.emitLoadListEvent("LIST_KEY") as ListContainer
-    if(result && result.Layout?.View){
-      const viewBlocksAdapter = new ViewBlocksAdapter(result.Layout.View.ViewBlocks.Blocks)
-      const dataview = viewBlocksAdapter.adapt()
-      this.setDataSource(dataview)
+    const listContainer  =  await this.clientEventService.emitLoadListEvent("LIST_KEY") as ListContainer
+    if(listContainer){
+      const genericListAdapter = new GenericListAdapter(listContainer)
+      const genericListData = genericListAdapter.adapt()
+      this.setGenericListVariables(genericListData)
     }
-    
   }
-
-  setDataSource(dataView: GridDataView = {Type: 'Grid'}){
-    this.dataSource = {
-      init: async function (params: IPepGenericListParams): Promise<IPepGenericListInitData> {
-          return {
-            dataView: dataView,
-            totalCount: 0,
-            items: []
-          }
-      }
-    }
+  /**
+   * this function will update everything that changed in the list
+   * @param data the output from the generic list adapter
+   */
+  setGenericListVariables(data: GenericListAdapterResult){
+    this.dataSource = data.dataSource || this.dataSource
+    this.smartSearch = data.smartSearch || this.smartSearch
   }
 
 }
