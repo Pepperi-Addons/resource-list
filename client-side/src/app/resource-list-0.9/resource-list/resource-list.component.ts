@@ -7,6 +7,7 @@ import { GridDataView } from '@pepperi-addons/papi-sdk';
 import { GenericListAdapter } from '../helpers/generic-list-adapter';
 import { GenericListAdapterResult, SmartSearchInput } from '../metadata';
 import { PepMenuItem } from '@pepperi-addons/ngx-lib/menu';
+import { GVButton } from 'src/app/generic-viewer/generic-viewer.model';
 
 @Component({
   selector: 'resource-list',
@@ -35,6 +36,7 @@ export class ResourceListComponent implements OnInit {
   }
   smartSearch: SmartSearchInput
   menu: PepMenuItem[]
+  buttons: GVButton[]
   constructor(private clientEventService: ClientEventsService) { }
 
   ngOnInit(): void {
@@ -58,6 +60,7 @@ export class ResourceListComponent implements OnInit {
     this.dataSource = data.dataSource || this.dataSource
     this.smartSearch = data.smartSearch || this.smartSearch
     this.menu = data.menu || this.menu
+    this.buttons = data.buttons || this.buttons
   }
 
 }

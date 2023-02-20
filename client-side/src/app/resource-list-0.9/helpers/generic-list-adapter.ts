@@ -20,7 +20,8 @@ export class GenericListAdapter {
         return {
             dataSource: dataSource,
             smartSearch: smartSearch,
-            menu: menu
+            menu: menu,
+            buttons: buttons
         }
     }
     /**

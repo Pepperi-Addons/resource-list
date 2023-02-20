@@ -12,5 +12,14 @@
             class="pep-spacing-element"
             [items]="menu">
         </pep-menu>
+        <ng-container *ngIf="buttons">
+            <pep-button
+            *ngFor="let button of buttons"
+                [key]="button.key"
+                class= 'pep-spacing-element'
+                [value]="button.value"
+                [styleType]="button.styleType"
+        ></pep-button>
+        </ng-container>
     </ng-container>
 </pep-generic-list>

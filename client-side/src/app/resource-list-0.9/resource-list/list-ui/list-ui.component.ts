@@ -3,6 +3,7 @@ import { IPepGenericListDataSource } from '@pepperi-addons/ngx-composite-lib/gen
 import { GridDataView } from '@pepperi-addons/papi-sdk';
 import { SmartSearchInput } from '../../metadata';
 import { PepMenuItem } from '@pepperi-addons/ngx-lib/menu';
+import { GVButton } from 'src/app/generic-viewer/generic-viewer.model';
 
 @Component({
   selector: 'list-ui',
@@ -13,6 +14,8 @@ export class ListUIComponent implements OnInit {
   @Input() dataSource: IPepGenericListDataSource
   @Input() smartSearch: SmartSearchInput
   @Input() menu: PepMenuItem[]
+  @Input() buttons: GVButton[]
+  
   constructor() { }
 
   ngOnChanges(changes: SimpleChanges): void {
