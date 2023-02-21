@@ -15,7 +15,8 @@ export class ListUIComponent implements OnInit {
   @Input() smartSearch: SmartSearchInput
   @Input() menu: PepMenuItem[]
   @Input() buttons: GVButton[]
-  
+  @Input() lineMenu: any
+
   constructor() { }
 
   ngOnChanges(changes: SimpleChanges): void {

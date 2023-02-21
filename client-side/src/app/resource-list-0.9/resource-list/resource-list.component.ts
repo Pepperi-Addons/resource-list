@@ -1,13 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { ClientEventsService } from '../services/client-events.service';
-import { ViewBlocksAdapter } from '../helpers/view-blocks-adapter';
 import { ListContainer } from 'shared';
 import { IPepGenericListDataSource, IPepGenericListInitData, IPepGenericListParams } from '@pepperi-addons/ngx-composite-lib/generic-list';
-import { GridDataView } from '@pepperi-addons/papi-sdk';
 import { GenericListAdapter } from '../helpers/generic-list-adapter';
 import { GenericListAdapterResult, SmartSearchInput } from '../metadata';
 import { PepMenuItem } from '@pepperi-addons/ngx-lib/menu';
 import { GVButton } from 'src/app/generic-viewer/generic-viewer.model';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'resource-list',
@@ -37,6 +36,7 @@ export class ResourceListComponent implements OnInit {
   smartSearch: SmartSearchInput
   menu: PepMenuItem[]
   buttons: GVButton[]
+  lineMenu: any = {get: () => {}}
   constructor(private clientEventService: ClientEventsService) { }
 
   ngOnInit(): void {
@@ -47,7 +47,9 @@ export class ResourceListComponent implements OnInit {
   async init(){
     const listContainer  =  await this.clientEventService.emitLoadListEvent("LIST_KEY") as ListContainer
     if(listContainer){
-      const genericListAdapter = new GenericListAdapter(listContainer)
+      const lineMenuSubject = new Subject<{key: string, data?: any}>()
+      lineMenuSubject.subscribe((event) => this.onClientMenuClick(event.key, event.data))
+      const genericListAdapter = new GenericListAdapter(listContainer, this.clientEventService, lineMenuSubject)
       const genericListData = genericListAdapter.adapt()
       this.setGenericListVariables(genericListData)
     }
@@ -61,6 +63,11 @@ export class ResourceListComponent implements OnInit {
     this.smartSearch = data.smartSearch || this.smartSearch
     this.menu = data.menu || this.menu
     this.buttons = data.buttons || this.buttons
+    this.lineMenu = data.lineMenu || this.lineMenu
+  }
+
+  onClientMenuClick(key: string, data?: any){
+    console.log('menu clicked!!')
   }
 
 }

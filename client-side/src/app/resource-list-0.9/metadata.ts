@@ -12,7 +12,8 @@ export type GenericListAdapterResult = {
     dataSource?: DataSource,
     smartSearch?: SmartSearchInput,
     menu?: PepMenuItem[]
-    buttons?: GVButton[]
+    buttons?: GVButton[],
+    lineMenu?: any
 }
 
 export type SmartSearchInput = {

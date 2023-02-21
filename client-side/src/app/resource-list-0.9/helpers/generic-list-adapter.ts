@@ -6,10 +6,14 @@ import { GenericListAdapterResult, SmartSearchField, SmartSearchInput } from "..
 import { PepMenuItem } from "@pepperi-addons/ngx-lib/menu";
 import { PepButton } from "@pepperi-addons/ngx-lib/button";
 import { GVButton } from "src/app/generic-viewer/generic-viewer.model";
-import { PepStyleStateType, PepStyleType } from "@pepperi-addons/ngx-lib";
+import { PepAddonService, PepStyleStateType, PepStyleType } from "@pepperi-addons/ngx-lib";
+import { title } from "process";
+import { ClientEventsService } from "../services/client-events.service";
+import { Subject, async } from "rxjs";
+import { PepSelectionData } from "@pepperi-addons/ngx-lib/list";
 
 export class GenericListAdapter {
-    constructor(private listContainer: Partial<ListContainer>){
+    constructor(private listContainer: Partial<ListContainer>, private clientEventService: ClientEventsService, private lineMenuSubject: Subject<{key: string, data?: any}>){
 
     }
     adapt(): GenericListAdapterResult{
@@ -17,11 +21,13 @@ export class GenericListAdapter {
         const smartSearch = this.getSmartSearch()
         const menu = this.getMenu()
         const buttons = this.getButtons()
+        const lineMenu = this.getLineMenu()
         return {
             dataSource: dataSource,
             smartSearch: smartSearch,
             menu: menu,
-            buttons: buttons
+            buttons: buttons,
+            lineMenu: lineMenu
         }
     }
     /**
@@ -33,7 +39,7 @@ export class GenericListAdapter {
         if(this.listContainer.Layout?.View){
             const viewBlocksAdapter = new ViewBlocksAdapter(this.listContainer.Layout.View.ViewBlocks.Blocks)
             const dataview = viewBlocksAdapter.adapt()
-            return new DataSource(dataview)
+            return new DataSource(dataview, [{name: 'a', age: 1}])
         }
         return undefined
     }
@@ -51,7 +57,7 @@ export class GenericListAdapter {
     //returns only the menu
     getMenu(): PepMenuItem[] | undefined{
         if(this.listContainer.Layout?.Menu){
-            return this.listContainer.Layout.Menu.Blocks.filter(block => !block.ButtonStyleType).map(menuBlock => {
+            return this.listContainer.Layout.Menu.Blocks.filter(block => !block.ButtonStyleType && !block.Hidden).map(menuBlock => {
                 return {
                     key: menuBlock.Key,
                     text: menuBlock.Title,
@@ -63,11 +69,33 @@ export class GenericListAdapter {
 
     getButtons(): GVButton[]{
         if(this.listContainer.Layout?.Menu){
-            return this.listContainer.Layout.Menu.Blocks.filter(block => block.ButtonStyleType).map(menuBlock => {
+            return this.listContainer.Layout.Menu.Blocks.filter(block => block.ButtonStyleType && !block.Hidden).map(menuBlock => {
                 return {
                     key: menuBlock.Key,
                     value: menuBlock.Title,
                     styleType: menuBlock.ButtonStyleType.toLowerCase() as PepStyleType
+                }
+            })
+        }
+        return undefined
+    }
+    getLineMenu(){
+        if(this.listContainer.Layout?.LineMenu){
+            return {
+                get: async (data: PepSelectionData) => {
+                    return this.listContainer.Layout.LineMenu.Blocks.filter(block => !block.Hidden)
+                    .map(block => {
+                        return {
+                            title: block.Title,
+                            handler: async (selctedRows) => this.lineMenuSubject.next({key: block.Key, data: selctedRows})
+                        }
+                    })
+                }
+            }
+            this.listContainer.Layout.LineMenu.Blocks.filter(block => !block.Hidden).map(block =>{
+                return {
+                    key: block.Key,
+                    title: block.Title
                 }
             })
         }
