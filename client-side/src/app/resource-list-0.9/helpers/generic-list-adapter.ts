@@ -87,7 +87,7 @@ export class GenericListAdapter {
                     .map(block => {
                         return {
                             title: block.Title,
-                            handler: async (selctedRows) => this.lineMenuSubject.next({key: block.Key, data: selctedRows})
+                            handler: async (selectedRows) => this.lineMenuSubject.next({key: block.Key, data: selectedRows})
                         }
                     })
                 }
