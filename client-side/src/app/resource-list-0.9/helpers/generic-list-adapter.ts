@@ -92,12 +92,6 @@ export class GenericListAdapter {
                     })
                 }
             }
-            this.listContainer.Layout.LineMenu.Blocks.filter(block => !block.Hidden).map(block =>{
-                return {
-                    key: block.Key,
-                    title: block.Title
-                }
-            })
         }
         return undefined
     }
