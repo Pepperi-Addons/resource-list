@@ -7,6 +7,7 @@ import { GenericListAdapterResult, SmartSearchInput } from '../metadata';
 import { PepMenuItem } from '@pepperi-addons/ngx-lib/menu';
 import { GVButton } from 'src/app/generic-viewer/generic-viewer.model';
 import { Subject } from 'rxjs';
+import { ResourceListDataSource } from '../helpers/resource-list-manager';
 
 @Component({
   selector: 'resource-list',
@@ -17,6 +18,7 @@ export class ResourceListComponent implements OnInit {
   //default dataSource
   dataSource: IPepGenericListDataSource = {
     init: async function (params: IPepGenericListParams): Promise<IPepGenericListInitData> {
+      debugger
         return {
           dataView: {
             Type: "Grid",
@@ -31,6 +33,10 @@ export class ResourceListComponent implements OnInit {
           totalCount: 0,
           items: []
         }
+    },
+    async update(params: IPepGenericListParams): Promise<any[]>{
+      debugger
+        return []
     }
   }
   smartSearch: SmartSearchInput
@@ -40,12 +46,17 @@ export class ResourceListComponent implements OnInit {
   constructor(private clientEventService: ClientEventsService) { }
 
   ngOnInit(): void {
-    this.init()
+    this.load()
+    // this.init()
     
+  }
+
+  async load(){
+   this.dataSource = new ResourceListDataSource(this.clientEventService, undefined, {ListKey: "LIST_KEY"})
   }
   
   async init(){
-    const listContainer  =  await this.clientEventService.emitLoadListEvent("LIST_KEY") as ListContainer
+    const listContainer  =  await this.clientEventService.emitLoadListEvent(undefined, {ListKey: "LIST_KEY"}) as ListContainer
     if(listContainer){
       const lineMenuSubject = new Subject<{key: string, data?: any}>()
       lineMenuSubject.subscribe((event) => this.onClientMenuClick(event.key, event.data))
@@ -59,7 +70,7 @@ export class ResourceListComponent implements OnInit {
    * @param data the output from the generic list adapter
    */
   setGenericListVariables(data: GenericListAdapterResult){
-    this.dataSource = data.dataSource || this.dataSource
+    // this.dataSource = data.dataView || this.dataView
     this.smartSearch = data.smartSearch || this.smartSearch
     this.menu = data.menu || this.menu
     this.buttons = data.buttons || this.buttons
