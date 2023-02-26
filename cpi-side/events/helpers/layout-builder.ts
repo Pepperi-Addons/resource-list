@@ -29,7 +29,7 @@ export class ListLayoutBuilder implements IListLayoutBuilder{
         await Promise.all([this.menu(this.list.Menu), this.lineMenu(this.list.LineMenu)])
 
         //views are changed only when we change the list or the view
-        if(this.changes.ListKey || this.changes.ViewKey){
+        if(this.changes.ViewKey){
             this.views(this.list.Views, this.changes.ViewKey)
         }
         //all the others will rerender only when we change the list
@@ -97,12 +97,9 @@ export class ListLayoutBuilder implements IListLayoutBuilder{
     }
 
     /**
-     * this function will return Search element
      * the search will be visible only if some fields are configured to be search on
-     * and function will return undefined if no change on search state is required
      * @param search - the search configuration 
-     * @param state - the current state
-     * @param changes - the changes on the state that emit this event
+     * @returns this
      */
     private search(search: ListSearch = {Fields: []}): ListLayoutBuilder{
         this.listModel.Search =  { Visible: search.Fields.length > 0 }
@@ -153,9 +150,8 @@ export class ListLayoutBuilder implements IListLayoutBuilder{
         //build the views drop down
         this.createViewsMenu(views)
 
-        //add title  type  and view blocks to the view
+        //add type and view blocks to the view
         result.Type = selectedView.Type
-        // result.Title = selectedView.Title
         result.ViewBlocks.Blocks = selectedView.Blocks
 
         const viewBlocks = selectedView.Blocks
@@ -167,7 +163,7 @@ export class ListLayoutBuilder implements IListLayoutBuilder{
      * @param selectionType by default none
      * @returns this
      */
-    private selectionType(selectionType: SelectionType = "None"){
+    private selectionType(selectionType: SelectionType = "Single"){
         this.listModel.SelectionType = selectionType
         return this
     }
