@@ -3,7 +3,7 @@ import { router as genericResourceRouter }  from './routes/generic-resource.rout
 import { router as viewsRouter } from './routes/views.routes'
 import { MenuBuilder } from './events/helpers/menu-builder';
 import { ListService } from './services/list.service';
-import { MenuBlock } from "shared"
+import { MenuBlock, loadListEventKey, stateChangeEventKey } from "shared"
 import { LoadListEventService } from './events/services/load-list-event.service';
 import { Row } from 'shared';
 import { ChangeStateEventService } from './events/services/state-change-event.service';
@@ -12,8 +12,7 @@ export async function load(configuration: any) {
 
 
     //interceptors:
-
-    pepperi.events.intercept('OnClientLoadList' as any, {}, async (data, next, main) => {
+    pepperi.events.intercept(loadListEventKey as any, {}, async (data, next, main) => {
         try{
             const state = data.State
             const changes = data.Changes
@@ -23,6 +22,19 @@ export async function load(configuration: any) {
             return await new LoadListEventService().execute(state, changes)
         }catch(err){
             throw Error(`error inside OnClientLoadList event: ${err}`)
+        }
+    })
+    
+    pepperi.events.intercept(stateChangeEventKey  as any, {}, async (data, next, main) => {
+        try{
+            const state = data.State
+            const changes = data.Changes
+            if(!state?.ViewKey || !state?.ListKey){
+                throw Error(`in client state change event -list key and view key must be exist in the state object`)
+            }
+            return await new ChangeStateEventService().execute(state, changes)
+        }catch(err){
+            throw Error(`error inside OnClientStateChanged event: ${err}`)
         }
     })
 }

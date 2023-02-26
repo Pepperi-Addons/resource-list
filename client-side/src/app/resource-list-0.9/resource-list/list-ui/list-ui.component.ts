@@ -4,7 +4,7 @@ import { GridDataView } from '@pepperi-addons/papi-sdk';
 import { SmartSearchInput } from '../../metadata';
 import { PepMenuItem } from '@pepperi-addons/ngx-lib/menu';
 import { GVButton } from 'src/app/generic-viewer/generic-viewer.model';
-import { ResourceListDataSource } from '../../helpers/resource-list-manager';
+import { RLManager } from '../../helpers/resource-list-manager';
 
 @Component({
   selector: 'list-ui',
@@ -12,7 +12,7 @@ import { ResourceListDataSource } from '../../helpers/resource-list-manager';
   styleUrls: ['./list-ui.component.scss']
 })
 export class ListUIComponent implements OnInit {
-   @Input() dataSource: ResourceListDataSource
+   @Input() dataSource: RLManager
    smartSearch: SmartSearchInput = {dataView: {Type: "Menu", Fields: []}}
    menu: PepMenuItem[] = []
    buttons: GVButton[] = [] 
@@ -33,7 +33,6 @@ export class ListUIComponent implements OnInit {
 
   }
   ngOnInit(): void {
-    // this.dataSource
     this.init()
   }
 

@@ -9,8 +9,9 @@ import { ListContainer, ListData, ListState, Row } from "shared";
 import { GenericListAdapter } from "./generic-list-adapter";
 import { IPepGenericListDataSource, IPepGenericListInitData, IPepGenericListListInputs, IPepGenericListParams } from "@pepperi-addons/ngx-composite-lib/generic-list";
 import { GridDataView } from "@pepperi-addons/papi-sdk";
+import { StateManager } from "./state-manager";
 
-export class ResourceListDataSource implements IPepGenericListDataSource{ 
+export class RLManager implements IPepGenericListDataSource{ 
     private $smartSearch: Subject<SmartSearchInput> = new Subject()
     private $menu: Subject<PepMenuItem[]> = new Subject()
     private $buttons: Subject<GVButton[]> = new Subject()
@@ -21,12 +22,30 @@ export class ResourceListDataSource implements IPepGenericListDataSource{
     private count: number
     inputs?: IPepGenericListListInputs;
     
-    constructor(private clientEventsService: ClientEventsService, private state: Partial<ListState> | undefined, private changes: Partial<ListState>){
+    constructor(private clientEventsService: ClientEventsService, private stateManager: StateManager){
     
     }
 
-    private updateChanges(params: IPepGenericListParams){
-        
+    private buildChanges(params: IPepGenericListParams){
+        debugger
+        const state = this.stateManager.getState()
+        const changes: Partial<ListState> = {}
+        //if search string changed
+        if(params.searchString != state.SearchString){
+            changes.SearchString = params.searchString 
+        }
+        //if page index changed
+        if(params.pageIndex != state.PageIndex){
+            changes.PageIndex = params.pageIndex
+        }
+        //if sorting changed
+        if(params.sorting?.isAsc !=  state.Sorting?.Ascending || params.sorting?.sortBy != state.Sorting?.FieldID){
+            changes.Sorting = {
+                Ascending: params.sorting.isAsc,
+                FieldID: params.sorting?.sortBy
+            }
+        }
+        return changes
     }
     private updateVariables(listContainer: ListContainer){
         if(listContainer.Data){
@@ -37,46 +56,63 @@ export class ResourceListDataSource implements IPepGenericListDataSource{
             const viewBlocksAdapter = new ViewBlocksAdapter(listContainer.Layout.View.ViewBlocks.Blocks)
             this.dataView = viewBlocksAdapter.adapt()
         }
-        this.state = listContainer.State
-        this.changes = {}
     }
-    async init(params: IPepGenericListParams): Promise<IPepGenericListInitData> {
-        this.updateChanges(params)
-        const listContainer = await this.getListContainer()
-        this.updateVariables(listContainer)
-        this.changes = {}
-        this.state = listContainer.State
+
+    getGenericListData(listContainer: ListContainer){
         const lineMenuSubject = new Subject<{key: string, data?: any}>()
         lineMenuSubject.subscribe((event) => this.onClientMenuClick(event.key, event.data))
         const genericListAdapter = new GenericListAdapter(listContainer, this.clientEventsService, lineMenuSubject)
-        const genericListData = genericListAdapter.adapt()
+        return genericListAdapter.adapt()
+    }
+
+    async init(params: IPepGenericListParams): Promise<IPepGenericListInitData> {
+        //build changes 
+        const changes = this.stateManager.buildChangesFromPageParams(params)
+
+        //get the list container 
+        const listContainer = await this.getListContainer(changes)
+
+        //get generic list data
+        const genericListData = this.getGenericListData(listContainer)
+
+        //update the state
+        if(listContainer.State){
+            this.stateManager.setState(listContainer.State)
+        }
+
+        //update data view data and count
+        this.updateVariables(listContainer)
+
+        //notify observers 
         this.notifyObservers(genericListData, listContainer)
-        // throw new Error('no implemented ')
+
+        //reset changes
+        this.stateManager.resetChanges()
+        //return updated data data view and count
         return {
             dataView: this.dataView,
             items: this.items,
             totalCount: this.count
         }
     }
+    // private async updateList(changes: Partial<ListState>){
+    //     const listContainer = await this.getListContainer(changes)
+    //     this.changes = {}
+    //     this.state = listContainer.State
+    //     const lineMenuSubject = new Subject<{key: string, data?: any}>()
+    //     lineMenuSubject.subscribe((event) => this.onClientMenuClick(event.key, event.data))
+    //     const genericListAdapter = new GenericListAdapter(listContainer, this.clientEventsService, lineMenuSubject)
+    //     const genericListData = genericListAdapter.adapt()
+    //     this.notifyObservers(genericListData, listContainer)
+    // }
 
-    
-
-    private async updateList(changes: Partial<ListState>){
-        const listContainer = await this.getListContainer()
-        this.changes = {}
-        this.state = listContainer.State
-        const lineMenuSubject = new Subject<{key: string, data?: any}>()
-        lineMenuSubject.subscribe((event) => this.onClientMenuClick(event.key, event.data))
-        const genericListAdapter = new GenericListAdapter(listContainer, this.clientEventsService, lineMenuSubject)
-        const genericListData = genericListAdapter.adapt()
-        this.notifyObservers(genericListData, listContainer)
-    }
-
-    private async getListContainer(){
-        if(!this.state){
-            return await this.clientEventsService.emitLoadListEvent(this.state, this.changes)
+    private async getListContainer(changes: Partial<ListState>){
+        debugger
+        const state = this.stateManager.getState()
+        if(Object.keys(state).length == 0){
+            return await this.clientEventsService.emitLoadListEvent(state, changes)
         }
-        return await this.clientEventsService.emitStateChangedEvent(this.state, this.changes)
+        return await this.clientEventsService.emitStateChangedEvent(state, changes)
     }
 
     private notifyObservers(data: GenericListAdapterResult, listContainer: ListContainer){

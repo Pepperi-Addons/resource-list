@@ -1,7 +1,6 @@
 import { PepAddonService } from "@pepperi-addons/ngx-lib";
-import { loadListEventKey, stateChangeEventKey } from "../metadata";
 import { Injectable } from "@angular/core";
-import { ListContainer, ListState } from "shared";
+import { ListContainer, ListState, loadListEventKey, stateChangeEventKey } from "shared";
 
 @Injectable({ providedIn: 'root' })
 export class ClientEventsService{
