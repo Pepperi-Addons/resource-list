@@ -37,7 +37,7 @@ export class ListDataBuilder{
         }
         //get the resource items
         const genericResourceService = new ResourceService()
-        const items = await genericResourceService.searchFields(this.list.Resource, searchBody)
+        const items = await genericResourceService.search(this.list.Resource, searchBody)
         const viewRelationService = new ViewRelationService()
         const viewRows = await viewRelationService.getRows(items, selectedView.Blocks)
         this.listData = {Items: viewRows, Count: items.Count}
