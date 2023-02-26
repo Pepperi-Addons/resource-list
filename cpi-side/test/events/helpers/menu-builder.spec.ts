@@ -39,7 +39,7 @@ describe('menu builder tests', () => {
             const result = await stubbedMenuBuilder.build(list.Menu, defaultState, {})
             expect(result).to.eql({
                 Blocks: [
-                    newButton
+                    {...newButton, Hidden: false }
                 ]
             })
         })

@@ -1,10 +1,10 @@
-import { JSONFilter } from "@pepperi-addons/pepperi-filters";
+import { JSONRegularFilter } from "@pepperi-addons/pepperi-filters";
 import { Sorting } from '../configuration/sorting.model'
 export interface ListState {
     ListKey: string,
     ViewKey?: string, // default use the first
     SearchString?: string, // default no search 
-    SmartSearchQuery?: JSONFilter
+    SmartSearchQuery?: JSONRegularFilter[]
     Sorting?: Sorting, // default CreationDateTime, Ascending=false
     PageSize?: number //default is 100!
     PageIndex?: number // default = 1 (first page)

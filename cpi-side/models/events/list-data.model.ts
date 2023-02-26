@@ -1,9 +1,6 @@
-export interface ListData{
-    Items: RowData[]
-}
+import { Row } from "../../events/metadata"
 
- // represent one row (i.e. one item)
- // the matching between block and property is done by the "key" 
- export interface RowData {
-    [Key: string]: any
+export interface ListData{
+    Items: Row[]
+    Count?: number
 }
