@@ -28,6 +28,7 @@ export async function load(configuration: any) {
 }
 
 
+
 export const router = Router()
 //routes:
 
@@ -129,6 +130,38 @@ router.post('/drawMenuBlock', (req, res, next) => {
 })
 
 
+
+router.post('/drawLineMenuBlock', (req, res, next) => {
+    const state = req.body.State
+    const changes = req.body.Changes
+
+    //we will draw line menu block only when exactly one line is selected
+    const numOfSelectedItems = changes?.ItemSelection?.Items?.length || 0
+    if(numOfSelectedItems != 1){
+        return res.json({
+            Result: null
+        })
+    }
+    const blocks: MenuBlock[] = [
+        {
+            Key: 'edit',
+            Title: 'Edit',
+            DrawURL: 'addon-cpi/drawLineMenuBlock',
+            AddonUUID: '0e2ae61b-a26a-4c26-81fe-13bdd2e4aaa3',
+            Hidden: false
+        },
+        {
+            Key: 'delete',
+            Title: 'Delete',
+            DrawURL: 'addon-cpi/drawLineMenuBlock',
+            AddonUUID: '0e2ae61b-a26a-4c26-81fe-13bdd2e4aaa3',
+            Hidden: false
+        }
+    ]
+    return res.json({
+        Result: blocks
+    })
+})
 
 router.post('/drawLineMenuBlock', (req, res, next) => {
     const state = req.body.State
