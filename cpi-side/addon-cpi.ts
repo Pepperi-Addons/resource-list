@@ -28,6 +28,7 @@ export async function load(configuration: any) {
 }
 
 
+
 export const router = Router()
 //routes:
 
@@ -127,8 +128,6 @@ router.post('/drawMenuBlock', (req, res, next) => {
         Result: blocks
     })
 })
-
-
 
 router.post('/drawLineMenuBlock', (req, res, next) => {
     const state = req.body.State
