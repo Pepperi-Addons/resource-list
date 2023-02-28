@@ -5,6 +5,7 @@ import { SmartSearchInput } from '../../metadata';
 import { PepMenuItem } from '@pepperi-addons/ngx-lib/menu';
 import { GVButton } from 'src/app/generic-viewer/generic-viewer.model';
 import { RLManager } from '../../helpers/resource-list-manager';
+import { RLDataSource } from '../../helpers/RL-data-source';
 
 @Component({
   selector: 'list-ui',
@@ -12,7 +13,7 @@ import { RLManager } from '../../helpers/resource-list-manager';
   styleUrls: ['./list-ui.component.scss']
 })
 export class ListUIComponent implements OnInit {
-   @Input() dataSource: RLManager
+   @Input() dataSource: RLDataSource
    smartSearch: SmartSearchInput = {dataView: {Type: "Menu", Fields: []}}
    menu: PepMenuItem[] = []
    buttons: GVButton[] = [] 
@@ -21,10 +22,8 @@ export class ListUIComponent implements OnInit {
 
   constructor() { }
 
-  ngOnChanges(changes: SimpleChanges): void {
-  }
   init(){
-    this.dataSource
+    this.dataSource.subscribe()
     .onButtonsChanged((data) => this.buttons = data)
     .onLineMenuChanged((data) => this.lineMenu = data)
     .onMenuChanged((data) => this.menu = data)

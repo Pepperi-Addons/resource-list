@@ -9,6 +9,7 @@ import { GVButton } from 'src/app/generic-viewer/generic-viewer.model';
 import { Subject } from 'rxjs';
 import { RLManager } from '../helpers/resource-list-manager';
 import { StateManager } from '../helpers/state-manager';
+import { RLDataSource } from '../helpers/RL-data-source';
 
 @Component({
   selector: 'resource-list',
@@ -48,7 +49,9 @@ export class ResourceListComponent implements OnInit {
   }
 
   async load(){
-   this.dataSource = new RLManager(this.clientEventService, new StateManager({}, {ListKey: "LIST_KEY"}))
+    const state = new StateManager(undefined, {ListKey: "LIST_KEY"})
+    this.dataSource = new RLDataSource(this.clientEventService, state)
+  //  this.dataSource = new RLManager(this.clientEventService, new StateManager({}, {ListKey: "LIST_KEY"}))
   }
   
   async init(){

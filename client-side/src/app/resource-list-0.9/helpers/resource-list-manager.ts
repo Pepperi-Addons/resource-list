@@ -27,7 +27,6 @@ export class RLManager implements IPepGenericListDataSource{
     }
 
     private buildChanges(params: IPepGenericListParams){
-        debugger
         const state = this.stateManager.getState()
         const changes: Partial<ListState> = {}
         //if search string changed
@@ -107,7 +106,6 @@ export class RLManager implements IPepGenericListDataSource{
     // }
 
     private async getListContainer(changes: Partial<ListState>){
-        debugger
         const state = this.stateManager.getState()
         if(Object.keys(state).length == 0){
             return await this.clientEventsService.emitLoadListEvent(state, changes)

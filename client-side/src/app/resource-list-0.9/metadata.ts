@@ -1,6 +1,5 @@
 
 import { GridDataView, MenuDataViewField, SchemeFieldType } from "@pepperi-addons/papi-sdk"
-import { DataSource } from "./helpers/data-source"
 import { PepMenuItem } from "@pepperi-addons/ngx-lib/menu"
 import { GVButton } from "../generic-viewer/generic-viewer.model"
 

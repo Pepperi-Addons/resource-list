@@ -1,0 +1,60 @@
+import { Subject } from "rxjs"
+import { GenericListAdapterResult, SmartSearchInput } from "../metadata"
+import { PepMenuItem } from "@pepperi-addons/ngx-lib/menu"
+import { GVButton } from "src/app/generic-viewer/generic-viewer.model"
+import { PepSelectionData } from "@pepperi-addons/ngx-lib/list"
+
+export class LayoutObserver{
+    //subjects 
+    private $smartSearch: Subject<SmartSearchInput> = new Subject()
+    private $menu: Subject<PepMenuItem[]> = new Subject()
+    private $buttons: Subject<GVButton[]> = new Subject()
+    private $lineMenu: Subject<LineMenuActionsObject> = new Subject()
+
+    /**
+     * 
+     * @param data - the generic list data 
+     * this function will update the observers of the layout if anything changed
+     * for example if the menu changed, this function will emit menu changed event and invoke the onMenuChange call
+     */
+    notifyObservers(data: GenericListAdapterResult){
+        if(data.lineMenu){
+            this.$lineMenu.next(data.lineMenu)
+        }
+        if(data.buttons){
+            this.$buttons.next(data.buttons)
+        }
+        if(data.menu){
+            this.$menu.next(data.menu)
+        }
+        if(data.smartSearch){
+            this.$smartSearch.next(data.smartSearch)
+        }
+    }
+    // update variables
+
+    onSmartSearchChanged(cb: (data: SmartSearchInput) => void){
+        this.$smartSearch.subscribe(cb)
+        return this
+    }
+
+    onMenuChanged(cb: (data: PepMenuItem[]) => void){
+        this.$menu.subscribe(cb)
+        return this
+    }
+
+    onLineMenuChanged(cb: (data: LineMenuActionsObject) => void){
+        this.$lineMenu.subscribe(cb)
+        return this
+    }
+
+    onButtonsChanged(cb: (data: GVButton[]) => void){
+        this.$buttons.subscribe(cb)
+        return this
+    }
+}
+
+
+interface LineMenuActionsObject {
+    get: (data: PepSelectionData) => Promise<{title: string, handler: (selectedRows: any) => Promise<any>}[]>
+}
