@@ -7,6 +7,7 @@ import { MenuBlock } from './models/events/list-layout.model';
 import { LoadListEventService } from './events/services/load-list-event.service';
 import { Row } from './events/metadata';
 import { ListState } from './models/events/list-state.model';
+import { ChangeStateEventService } from './events/services/state-change-event.service';
 export async function load(configuration: any) {
 
 
@@ -25,6 +26,7 @@ export async function load(configuration: any) {
         }
     })
 }
+
 
 
 export const router = Router()
@@ -52,7 +54,17 @@ router.post('/menu', async (req, res, next) => {
 router.post('/OnClientLoadList', async (req, res, next) => {
     const state = req.body.State
     const changes = req.body.Changes
+
     return res.json(await new LoadListEventService().execute(state, changes))
+})
+
+router.post('/onClientStateChange', async (req, res, next) => {
+    const state = req.body.State
+    const changes = req.body.Changes
+    if(!state?.ViewKey || !state?.ListKey){
+        throw Error(`in client state change event -list key and view key must be exist in the state object`)
+    }
+    return res.json(await new ChangeStateEventService().execute(state, changes))
 })
 
 router.post('/drawGrid' ,async (req,res,next) => {
@@ -116,8 +128,6 @@ router.post('/drawMenuBlock', (req, res, next) => {
         Result: blocks
     })
 })
-
-
 
 router.post('/drawLineMenuBlock', (req, res, next) => {
     const state = req.body.State

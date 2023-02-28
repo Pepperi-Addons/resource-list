@@ -18,4 +18,6 @@ export interface ListState {
 interface ItemSelection{
     SelectAll: Boolean // default false 
     Items: string[] 
-  }
+}
+
+

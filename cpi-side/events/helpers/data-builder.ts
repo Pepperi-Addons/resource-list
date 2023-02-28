@@ -18,11 +18,13 @@ export class ListDataBuilder{
         if(!this.isDataNeedsToChange()){
             return undefined
         }
+
         const selectedView = this.getSelectedView()
         if(!selectedView){
             return { Items: [], Count: 0 }
         }
-
+        
+        //prepare the search body
         const viewFields: string[] = selectedView.Blocks.map(block => block.Configuration.FieldID)
         const query = this.createQuery(this.list.Filter)
 
@@ -33,6 +35,7 @@ export class ListDataBuilder{
             PageSize: this.state?.PageSize || 100,
             IncludeCount: true
         }
+        //get the resource items
         const genericResourceService = new ResourceService()
         const items = await genericResourceService.search(this.list.Resource, searchBody)
         const viewRelationService = new ViewRelationService()
@@ -69,7 +72,7 @@ export class ListDataBuilder{
     }
 
     private buildSearchQuery(searchFields: ListSearchField[]){
-        return searchFields.map(searchField => `${searchField} LIKE '%${this.state.SearchString}%'`).join(' OR ')
+        return searchFields.map(searchField => `${searchField.FieldID} LIKE '%${this.state.SearchString}%'`).join(' OR ')
     }
 
     private buildSmartSearchQuery(smartSearch: JSONRegularFilter[]): string{
