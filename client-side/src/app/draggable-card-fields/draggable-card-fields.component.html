@@ -12,6 +12,12 @@
         <pep-button *ngIf="card.showContent" sizeType="xs" iconName="arrow_up" (buttonClick)="onEditClick();"></pep-button>
     </div>
     <div class="editorCont" *ngIf = "card.showContent">
+        <pep-textbox
+            [value]="card.title"
+            [label]="'Title' | translate"
+            type="text"
+            (valueChange)="onTitleChanged($event)"
+        ></pep-textbox>
         <pep-select
             [value] = 'card.selectedResource'
             [label] = "'Resource' | translate"

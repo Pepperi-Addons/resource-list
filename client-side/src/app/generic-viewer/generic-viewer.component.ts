@@ -214,6 +214,8 @@ export class GenericViewerComponent implements OnInit {
     }
     async onViewChanged($event){
       this.genericViewer = await this.genericResourceService.getGenericView($event)
+      const seletedView = this.dropDownOfViews.find(item => item.key === $event)
+      this.genericViewer.title = seletedView ? seletedView.value : '';
       this.genericViewerDataSource = new RegularGVDataSource(this.genericViewer, this.genericResourceService, [], this.accountUUID)
       this.loadViewBlock()
     }

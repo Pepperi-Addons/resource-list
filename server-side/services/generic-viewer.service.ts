@@ -75,6 +75,7 @@ export class GenericViewerService  {
             dataViewService.getDataView(`GV_${dataViewKey}_Search`),
         ])
         return {
+            title: view.Name,
             view: view,
             viewDataview: viewDataView as GridDataView,
             smartSearchDataView: smartSearchDataView as MenuDataView,
