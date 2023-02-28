@@ -1,10 +1,7 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
-import { IPepGenericListDataSource } from '@pepperi-addons/ngx-composite-lib/generic-list';
-import { GridDataView } from '@pepperi-addons/papi-sdk';
 import { SmartSearchInput } from '../../metadata';
 import { PepMenuItem } from '@pepperi-addons/ngx-lib/menu';
 import { GVButton } from 'src/app/generic-viewer/generic-viewer.model';
-import { RLManager } from '../../helpers/resource-list-manager';
 import { RLDataSource } from '../../helpers/RL-data-source';
 
 @Component({

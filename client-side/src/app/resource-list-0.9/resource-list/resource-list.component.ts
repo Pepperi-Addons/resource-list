@@ -7,7 +7,6 @@ import { GenericListAdapterResult, SmartSearchInput } from '../metadata';
 import { PepMenuItem } from '@pepperi-addons/ngx-lib/menu';
 import { GVButton } from 'src/app/generic-viewer/generic-viewer.model';
 import { Subject } from 'rxjs';
-import { RLManager } from '../helpers/resource-list-manager';
 import { StateManager } from '../helpers/state-manager';
 import { RLDataSource } from '../helpers/RL-data-source';
 
