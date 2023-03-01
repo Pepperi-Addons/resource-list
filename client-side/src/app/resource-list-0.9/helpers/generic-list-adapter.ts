@@ -20,13 +20,15 @@ export class GenericListAdapter {
         const buttons = this.getButtons()
         const lineMenu = this.getLineMenu()
         const search = this.getSearch()
+        const title = this.getTitle()
         return {
             dataView: dataView,
             smartSearch: smartSearch,
             menu: menu,
             buttons: buttons,
             lineMenu: lineMenu,
-            search: search
+            search: search,
+            title: title
         }
     }
     /**
@@ -97,5 +99,9 @@ export class GenericListAdapter {
 
     getSearch(): boolean | undefined{
         return this.listContainer?.Layout?.Search?.Visible
+    }
+
+    getTitle(): string | undefined {
+        return this.listContainer?.Layout?.Title
     }
 }

@@ -11,6 +11,7 @@ export class LayoutObserver{
     private $buttons: Subject<GVButton[]> = new Subject()
     private $lineMenu: Subject<LineMenuActionsObject> = new Subject()
     private $search: Subject<boolean> = new Subject()
+    private $title: Subject<string> = new Subject()
 
     /**
      * 
@@ -33,6 +34,9 @@ export class LayoutObserver{
         }
         if(data.search != undefined){
             this.$search.next(data.search)
+        }
+        if(data.title){
+            this.$title.next(data.title)
         }
     }
     // update variables
@@ -59,6 +63,11 @@ export class LayoutObserver{
 
     onButtonsChanged(cb: (data: GVButton[]) => void){
         this.$buttons.subscribe(cb)
+        return this
+    }
+    
+    onTitleChanged(cb: (title: string) => void){
+        this.$title.subscribe(cb)
         return this
     }
 }

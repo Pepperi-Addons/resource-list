@@ -17,6 +17,7 @@ export class ListUIComponent implements OnInit {
    lineMenu: any = {get: () => {}}
    loadCompleted: boolean = false
    search: boolean = false
+   title: string
 
   constructor() { }
 
@@ -27,6 +28,7 @@ export class ListUIComponent implements OnInit {
     .onMenuChanged((data) => this.menu = data)
     .onSmartSearchChanged((data) => this.smartSearch = data)
     .onSearchChanged((visible) => this.search = visible)
+    .onTitleChanged((title) => this.title = title)
     this.loadCompleted = true
 
   }
