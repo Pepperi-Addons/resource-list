@@ -10,6 +10,7 @@ export class LayoutObserver{
     private $menu: Subject<PepMenuItem[]> = new Subject()
     private $buttons: Subject<GVButton[]> = new Subject()
     private $lineMenu: Subject<LineMenuActionsObject> = new Subject()
+    private $search: Subject<boolean> = new Subject()
 
     /**
      * 
@@ -30,11 +31,19 @@ export class LayoutObserver{
         if(data.smartSearch){
             this.$smartSearch.next(data.smartSearch)
         }
+        if(data.search != undefined){
+            this.$search.next(data.search)
+        }
     }
     // update variables
 
     onSmartSearchChanged(cb: (data: SmartSearchInput) => void){
         this.$smartSearch.subscribe(cb)
+        return this
+    }
+
+    onSearchChanged(cb: (visible: boolean) => void){
+        this.$search.subscribe(cb)
         return this
     }
 

@@ -16,6 +16,7 @@ export class ListUIComponent implements OnInit {
    buttons: GVButton[] = [] 
    lineMenu: any = {get: () => {}}
    loadCompleted: boolean = false
+   search: boolean = false
 
   constructor() { }
 
@@ -25,6 +26,7 @@ export class ListUIComponent implements OnInit {
     .onLineMenuChanged((data) => this.lineMenu = data)
     .onMenuChanged((data) => this.menu = data)
     .onSmartSearchChanged((data) => this.smartSearch = data)
+    .onSearchChanged((visible) => this.search = visible)
     this.loadCompleted = true
 
   }

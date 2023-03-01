@@ -80,7 +80,7 @@ export class RLDataSource implements IRLDataSource{
         const changes = paramsAdapter.adapt()
         //emit event to get the list container
         const listContainer = await this.getListContainer(changes)
-
+        
         //adapt the data to be compatible to the generic list 
         const genericListData = this.getGenericListData(listContainer)
 
