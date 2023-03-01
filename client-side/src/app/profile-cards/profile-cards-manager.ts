@@ -175,7 +175,10 @@ export class ProfileCardsManager{
     removeMappedField(mappedFieldID: string){
         const index = this.currentMappedFields.findIndex(ms => ms.field.FieldID === mappedFieldID);
         const field = this.fields.find(field => field.FieldID == this.currentMappedFields[index].field.FieldID)
-        this.addFieldToSideCardsList(field!, this.currentSideCardsList)
+        // it's possible that the field got deleted from the collection, but still on the DV, in that case, don't add it the side cards.
+        if(field) {
+            this.addFieldToSideCardsList(field!, this.currentSideCardsList)
+        }
         this.currentMappedFields.splice(index, 1);
     }
     async saveCurrentDataView(){
