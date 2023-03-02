@@ -1,7 +1,7 @@
-import { AddonDataScheme, DataViewFieldType, GridDataView, GridDataViewField, SchemeFieldType } from "@pepperi-addons/papi-sdk";
+import { AddonDataScheme, BaseDataView, DataViewFieldType, GridDataView, GridDataViewField, SchemeFieldType } from "@pepperi-addons/papi-sdk";
 import { ViewBlock } from "shared";
 export interface IViewBlocksAdapter{
-    adapt(): GridDataView
+    adapt(): BaseDataView
 }
 
 export class ViewBlocksAdapter implements IViewBlocksAdapter{

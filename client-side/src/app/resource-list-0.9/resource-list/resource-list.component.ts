@@ -18,7 +18,7 @@ export class ResourceListComponent implements OnInit {
   
   async init(){
     const result  =  await this.clientEventService.emitLoadListEvent("LIST_KEY") as ListContainer
-    const viewBlocksAdapter = new ViewBlocksAdapter(result.Layout.View.ViewBlocks.Blocks)
+    const viewBlocksAdapter = new ViewBlocksAdapter(result?.Layout?.View?.ViewBlocks?.Blocks)
     const grid = viewBlocksAdapter.adapt()
   }
 
