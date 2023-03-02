@@ -3,6 +3,7 @@ import { SmartSearchInput } from '../../metadata';
 import { PepMenuItem } from '@pepperi-addons/ngx-lib/menu';
 import { GVButton } from 'src/app/generic-viewer/generic-viewer.model';
 import { RLDataSource } from '../../helpers/RL-data-source';
+import { PepListSelectionType } from '@pepperi-addons/ngx-lib/list';
 
 @Component({
   selector: 'list-ui',
@@ -18,17 +19,19 @@ export class ListUIComponent implements OnInit {
    loadCompleted: boolean = false
    search: boolean = false
    title: string
+   selectionType: PepListSelectionType
 
   constructor() { }
 
   init(){
     this.dataSource.subscribe()
-    .onButtonsChanged((data) => this.buttons = data)
-    .onLineMenuChanged((data) => this.lineMenu = data)
-    .onMenuChanged((data) => this.menu = data)
-    .onSmartSearchChanged((data) => this.smartSearch = data)
-    .onSearchChanged((visible) => this.search = visible)
-    .onTitleChanged((title) => this.title = title)
+    .onButtonsChanged(data => this.buttons = data)
+    .onLineMenuChanged(data => this.lineMenu = data)
+    .onMenuChanged(data => this.menu = data)
+    .onSmartSearchChanged(data => this.smartSearch = data)
+    .onSearchChanged(visible => this.search = visible)
+    .onTitleChanged(title => this.title = title)
+    .onSelectionTypeChanged(selectionType => this.selectionType = selectionType)
     this.loadCompleted = true
 
   }

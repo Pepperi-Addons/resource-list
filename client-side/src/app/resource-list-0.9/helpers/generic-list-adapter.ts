@@ -7,7 +7,7 @@ import { GVButton } from "src/app/generic-viewer/generic-viewer.model";
 import { PepStyleType } from "@pepperi-addons/ngx-lib";
 import { ClientEventsService } from "../services/client-events.service";
 import { Subject } from "rxjs";
-import { PepSelectionData } from "@pepperi-addons/ngx-lib/list";
+import { PepListSelectionType, PepSelectionData } from "@pepperi-addons/ngx-lib/list";
 
 export class GenericListAdapter {
     constructor(private listContainer: Partial<ListContainer>, private clientEventService: ClientEventsService, private lineMenuSubject: Subject<{key: string, data?: any}>){
@@ -21,6 +21,7 @@ export class GenericListAdapter {
         const lineMenu = this.getLineMenu()
         const search = this.getSearch()
         const title = this.getTitle()
+        const selectionType = this.getSelectionType()
         return {
             dataView: dataView,
             smartSearch: smartSearch,
@@ -28,7 +29,8 @@ export class GenericListAdapter {
             buttons: buttons,
             lineMenu: lineMenu,
             search: search,
-            title: title
+            title: title,
+            selectionType: selectionType
         }
     }
     /**
@@ -44,6 +46,15 @@ export class GenericListAdapter {
         }
         return undefined
     }
+
+    getSelectionType(): PepListSelectionType | undefined{
+        const selectionType = this.listContainer?.Layout?.SelectionType
+        if(selectionType){
+            return selectionType.toLowerCase() as PepListSelectionType
+        }
+        return undefined
+    }
+
     getSmartSearch(): SmartSearchInput | undefined{
         if(this.listContainer.Layout?.SmartSearch){
             return {

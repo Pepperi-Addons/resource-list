@@ -2,7 +2,7 @@ import { Subject } from "rxjs"
 import { GenericListAdapterResult, SmartSearchInput } from "../metadata"
 import { PepMenuItem } from "@pepperi-addons/ngx-lib/menu"
 import { GVButton } from "src/app/generic-viewer/generic-viewer.model"
-import { PepSelectionData } from "@pepperi-addons/ngx-lib/list"
+import { PepListSelectionType, PepSelectionData } from "@pepperi-addons/ngx-lib/list"
 
 export class LayoutObserver{
     //subjects 
@@ -12,6 +12,7 @@ export class LayoutObserver{
     private $lineMenu: Subject<LineMenuActionsObject> = new Subject()
     private $search: Subject<boolean> = new Subject()
     private $title: Subject<string> = new Subject()
+    private $selectionType: Subject<PepListSelectionType> = new Subject()
 
     /**
      * 
@@ -38,11 +39,19 @@ export class LayoutObserver{
         if(data.title){
             this.$title.next(data.title)
         }
+        if(data.selectionType){
+            this.$selectionType.next(data.selectionType)
+        }
     }
     // update variables
 
     onSmartSearchChanged(cb: (data: SmartSearchInput) => void){
         this.$smartSearch.subscribe(cb)
+        return this
+    }
+
+    onSelectionTypeChanged(cb: (selectionType: PepListSelectionType) => void){
+        this.$selectionType.subscribe(cb)
         return this
     }
 

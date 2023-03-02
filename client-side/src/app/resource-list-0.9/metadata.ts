@@ -2,6 +2,7 @@
 import { GridDataView, MenuDataViewField, SchemeFieldType } from "@pepperi-addons/papi-sdk"
 import { PepMenuItem } from "@pepperi-addons/ngx-lib/menu"
 import { GVButton } from "../generic-viewer/generic-viewer.model"
+import { PepListSelectionType } from "@pepperi-addons/ngx-lib/list"
 
 export const loadListEventKey = "OnClientLoadList"
 export const stateChangeEventKey = "OnClientStateChange"
@@ -14,7 +15,8 @@ export type GenericListAdapterResult = {
     buttons?: GVButton[],
     lineMenu?: any,
     search?: boolean, 
-    title?: string
+    title?: string,
+    selectionType?: PepListSelectionType
 }
 
 export type SmartSearchInput = {
