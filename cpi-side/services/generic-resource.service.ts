@@ -35,8 +35,8 @@ export class GenericResourceService {
 
     private async shouldWorkOnline(): Promise<boolean> {
         const isWebApp = await global['app']['wApp']['isWebApp']();
-		const isAdmin = await global['app']['wApp']['isAdmin']();
-        return isAdmin && isWebApp && !this.inAccountContext;
+		const isBuyer = await global['app']['wApp']['isBuyer']();
+        return !isBuyer && isWebApp && !this.inAccountContext;
     }
 
     private async getBaseObject() {
