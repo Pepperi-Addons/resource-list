@@ -1,10 +1,4 @@
-import { List, SelectionType } from "shared"
-import { ListMenu } from "shared"
-import { ListSearch, ListSmartSearch } from "shared"
-import { Sorting } from "shared"
-import { ListView as View } from "shared"
-import { ListLayout, ViewLayout, ViewsMenu } from "shared"
-import { ListState } from "shared"
+import { List, SelectionType, ListMenu, ListSearch, ListSmartSearch, Sorting, ListView as View, ListLayout, ViewLayout, ViewsMenu, ListState } from "shared"
 import { MenuBuilder } from "./menu-builder";
 import { createDropDown } from "./utils";
 

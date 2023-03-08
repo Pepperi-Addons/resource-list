@@ -1,7 +1,4 @@
-import { List } from "shared"
-import { ListData } from "shared"
-import { ListLayout } from "shared"
-import { ListState } from "shared"
+import { List, ListData, ListLayout, ListState} from "shared"
 import { ListDataBuilder } from "./data-builder"
 import { ListLayoutBuilder } from "./layout-builder"
 

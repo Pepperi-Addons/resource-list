@@ -1,14 +1,14 @@
 import { AddonsDataSearchResult } from "@pepperi-addons/cpi-node/build/cpi-side/client-api";
-import { Row, ViewBlock } from "shared"
+import { DataRow, ViewBlock } from "shared"
 import { groupRelationBlocks } from "../helpers/utils";
 import { RelationBlock } from "../metadata";
 
 export class ViewRelationService{
     
-    async getRows(searchResult: AddonsDataSearchResult, blocks: ViewBlock[]): Promise<Row[]>{
+    async getRows(searchResult: AddonsDataSearchResult, blocks: ViewBlock[]): Promise<DataRow[]>{
         const relationGroups = groupRelationBlocks(blocks)
         const gridArray = await this.drawRows(relationGroups, blocks, searchResult)
-        const result: Row[] = []
+        const result: DataRow[] = []
         //iterate over all the grids we get, and merge the rows by the same order
         gridArray.forEach(grid => {
             const row = grid.reduce((acc, curr) => {
@@ -25,13 +25,13 @@ export class ViewRelationService{
         }))
     }
 
-    private async drawRow(block: RelationBlock, viewBlocks: ViewBlock[], searchResult: AddonsDataSearchResult): Promise<Row[]>{
+    private async drawRow(block: RelationBlock, viewBlocks: ViewBlock[], searchResult: AddonsDataSearchResult): Promise<DataRow[]>{
         const result =  await pepperi.addons.api.uuid(block.AddonUUID).post({
             url: block.DrawURL,
             body: { Data: searchResult.Objects , ViewBlocks: viewBlocks }
         })
         if(!result.Data){
-            throw new Error(`in draw blocks - addon with uuid ${block.AddonUUID} inside draw url ${block.DrawURL} doesn't return object of type GridViewOutputData`)
+            throw new Error(`in draw blocks - addon with uuid ${block.AddonUUID} inside draw url ${block.DrawURL} doesn't return object of type RowData[]`)
         }
         return result.Data
     }

@@ -1,11 +1,6 @@
 import { JSONFilter, JSONRegularFilter, concat, toApiQueryString } from "@pepperi-addons/pepperi-filters";
-import { List } from "shared"
-import { ListSearchField } from "shared"
-import { ListView as View } from "shared"
-import { ListData } from "shared"
-import { ListState } from "shared"
+import { List, ListSearchField, ListView as View, ListData, ListState } from "shared"
 import { SearchBody } from "@pepperi-addons/papi-sdk";
-
 import { ResourceService } from "../services/resource.service";
 import { ViewRelationService } from "../services/view-relation.service";
 
