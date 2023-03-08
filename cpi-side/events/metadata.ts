@@ -1,23 +1,21 @@
-import { ViewBlock } from "../models/configuration/view.model"
-import { ListState } from "../models/events/list-state.model"
+import { DataRow, ViewBlock } from "shared"
+import { ListState } from "shared"
 
 export interface RelationBlock{
     AddonUUID: string,
     DrawURL: string
 }
 
-export interface Row{
-    [key: string]: string | boolean | number | Date,
-}
 
-export interface GridViewInputData{
+
+export interface DrawViewInputData{
     Items: {[key: string]: any}[],
     ViewBlocks: ViewBlock[]
 }
 
 
-export interface GridViewOutputData{
-   GridData: Row[]
+export interface DrawViewOutputData{
+   Data: DataRow[]
 }
 
 export const defaultStateValues: Omit<ListState, "ListKey" | "ViewKey"> = {

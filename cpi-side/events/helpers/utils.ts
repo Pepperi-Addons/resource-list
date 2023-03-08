@@ -1,6 +1,5 @@
-import { ViewBlock } from "../../models/configuration/view.model"
-import { DropDownElement } from "../../models/events/list-layout.model"
-import { Row, GridViewInputData, RelationBlock } from "../metadata"
+import { DropDownElement } from "shared"
+import { RelationBlock } from "../metadata"
 
 export function createDropDown(arr: Array<Object>, keyField: string, valueField: string): DropDownElement<string>[]{
     return arr.map(val => {

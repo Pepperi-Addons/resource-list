@@ -1,5 +1,5 @@
-import { List } from "./models/configuration/list.model";
-import { ListState } from "./models/events/list-state.model"
+import { List } from "shared"
+import { ListState } from "shared"
 
 export const defaultList: List = {
     Key: 'first',

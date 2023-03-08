@@ -1,10 +1,4 @@
-import { List, SelectionType } from "../../models/configuration/list.model";
-import { ListMenu } from "../../models/configuration/menu.model";
-import { ListSearch, ListSmartSearch } from "../../models/configuration/search.model";
-import { Sorting } from "../../models/configuration/sorting.model";
-import { View } from "../../models/configuration/view.model";
-import { ListLayout, ViewLayout, ViewsMenu } from "../../models/events/list-layout.model";
-import { ListState } from "../../models/events/list-state.model";
+import { List, SelectionType, ListMenu, ListSearch, ListSmartSearch, Sorting, ListView as View, ListLayout, ViewLayout, ViewsMenu, ListState } from "shared"
 import { MenuBuilder } from "./menu-builder";
 import { createDropDown } from "./utils";
 
@@ -126,7 +120,7 @@ export class ListLayoutBuilder implements IListLayoutBuilder{
     private views(views: View[] = [], viewKey?: string): ListLayoutBuilder{
         const result: ViewLayout = {
             ViewBlocks: {
-                Fields: []
+                Blocks: []
             },
             Type: "Grid"
         }
@@ -152,7 +146,7 @@ export class ListLayoutBuilder implements IListLayoutBuilder{
 
         //add type and view blocks to the view
         result.Type = selectedView.Type
-        result.ViewBlocks.Fields = selectedView.Blocks
+        result.ViewBlocks.Blocks = selectedView.Blocks
 
         const viewBlocks = selectedView.Blocks
         this.listModel.View = result

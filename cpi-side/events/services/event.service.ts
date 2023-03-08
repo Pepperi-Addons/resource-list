@@ -1,5 +1,5 @@
-import { ListContainer } from "../../models/events/list-container.mode"
-import { ListState } from "../../models/events/list-state.model"
+import { ListContainer } from "shared"
+import { ListState } from "shared"
 import { ListBuilder } from "../helpers/list-builder"
 
 export abstract class EventService{

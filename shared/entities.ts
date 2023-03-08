@@ -1,4 +1,5 @@
 import { AddonDataScheme, BaseFormDataView, GridDataView, MenuDataView } from "@pepperi-addons/papi-sdk"
+import { Sorting } from "./models/configuration/sorting.model"
 export interface SelectOption{
     key: string,
     value: string
@@ -38,11 +39,6 @@ export type OpenMode = "popup" | "same-page"
 export interface Resource{
     AddonUUID: string,
     Name: string
-}
-
-export interface Sorting{
-    FieldKey: string,
-    Ascending: boolean
 }
 
 export interface IReferenceField {

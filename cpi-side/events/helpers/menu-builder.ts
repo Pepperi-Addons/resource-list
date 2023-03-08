@@ -1,6 +1,4 @@
- import { ListMenu, ListMenuBlock } from '../../models/configuration/menu.model'
-import { Menu, MenuBlock } from '../../models/events/list-layout.model'
-import { ListState } from '../../models/events/list-state.model'
+ import { ListMenu, Menu, MenuBlock, ListState } from "shared"
 import { groupRelationBlocks } from './utils'
 
 type drawFunctionObject = {AddonUUID: string, DrawURL: string}

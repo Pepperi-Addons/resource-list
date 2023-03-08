@@ -16,7 +16,7 @@ export interface ListState {
     when select all is true the items will be the non selected items, when selectAll false the items will be the selected items 
 */
 interface ItemSelection{
-    SelectAll: Boolean // default false 
+    SelectAll: boolean // default false 
     Items: string[] 
 }
 
