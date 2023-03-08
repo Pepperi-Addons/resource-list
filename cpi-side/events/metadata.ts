@@ -1,4 +1,4 @@
-import { Row, ViewBlock } from "shared"
+import { DataRow, ViewBlock } from "shared"
 import { ListState } from "shared"
 
 export interface RelationBlock{
@@ -15,7 +15,7 @@ export interface DrawViewInputData{
 
 
 export interface DrawViewOutputData{
-   Data: Row[]
+   Data: DataRow[]
 }
 
 export const defaultStateValues: Omit<ListState, "ListKey" | "ViewKey"> = {
