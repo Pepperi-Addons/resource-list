@@ -75,6 +75,7 @@ export class GenericViewerService  {
             dataViewService.getDataView(`GV_${dataViewKey}_Search`),
         ])
         return {
+            title: view.Name,
             view: view,
             viewDataview: viewDataView as GridDataView,
             smartSearchDataView: smartSearchDataView as MenuDataView,
@@ -131,7 +132,10 @@ export class GenericViewerService  {
         }
         const resource = await this.papiClient.resources.resource('resources').key(resourceName).get() as AddonDataScheme
         for (const fieldName of Object.keys(resource.Fields || {})) {
-            const field = resource.Fields![fieldName];
+            const field = {
+                ...resource.Fields![fieldName],
+                FieldName: fieldName
+            }
             const isSearchable = fieldName != 'Key' && this.ShouldAddToSearch(resource.SyncData, field);
             if(isSearchable) {
                 fields[fieldName] = field;
@@ -148,8 +152,11 @@ export class GenericViewerService  {
                         console.log(`about to get fields for inner scheme ${innerResourceName} referenced by ${fieldName}`);
                         const innerResource = await this.papiClient.resources.resource('resources').key(innerResourceName).get() as AddonDataScheme
                         Object.keys(innerResource.Fields || {}).forEach(innerFieldName => {
-                            const innerField = innerResource.Fields![innerFieldName];
-                            if(this.ShouldAddToSearch(resource.SyncData, innerField)) {
+                            const innerField =  {
+                                ...innerResource.Fields![innerFieldName],
+                                FieldName: innerFieldName
+                            }
+                            if(this.ShouldAddToSearch(resource.SyncData, innerField, field)) {
                                 fields[`${fieldName}.${innerFieldName}`] = innerField;
                             }
                         })
@@ -163,8 +170,9 @@ export class GenericViewerService  {
         return fields;
     }
     
-    ShouldAddToSearch(syncData: AddonDataScheme['SyncData'], field: SchemeField) {
+    ShouldAddToSearch(syncData: AddonDataScheme['SyncData'], field: SchemeField & {FieldName: string}, parentField?: SchemeField & {FieldName: string}) {
+        const indexedOnParent = parentField?.IndexedFields ? parentField?.IndexedFields[field.FieldName] != undefined : false;
         // for now we can only search on String fields. if the resource have 'sync:false' we only search on indexed fields
-        return (field.Type === 'String' || field.Type === 'Resource') && (syncData?.Sync || field.Indexed);
+        return (field.Type === 'String' || field.Type === 'Resource') && (syncData?.Sync || field.Indexed || indexedOnParent);
     }
 } 
