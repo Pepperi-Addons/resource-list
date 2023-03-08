@@ -89,7 +89,8 @@ export class GenericViewerComponent implements OnInit {
           buttons: buttons,
           smartSearchDataView: smartSearchDataView,
           searchDataView: searchDataView,
-          inlineList: this.genericViewerDataSource.isInlineList()
+          inlineList: this.genericViewerDataSource.isInlineList(),
+          showSearch: searchDataView.Fields.length > 0
       }
     }
     ngOnInit(): void {
