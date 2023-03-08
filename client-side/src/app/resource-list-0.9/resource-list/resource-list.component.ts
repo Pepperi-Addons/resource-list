@@ -43,38 +43,14 @@ export class ResourceListComponent implements OnInit {
 
   ngOnInit(): void {
     this.load()
-    // this.init()
     
   }
 
   async load(){
     const state = new StateManager(undefined, {ListKey: "LIST_KEY"})
     this.dataSource = new RLDataSource(this.clientEventService, state)
-  //  this.dataSource = new RLManager(this.clientEventService, new StateManager({}, {ListKey: "LIST_KEY"}))
   }
   
-  async init(){
-    const listContainer  =  await this.clientEventService.emitLoadListEvent(undefined, {ListKey: "LIST_KEY"}) as ListContainer
-    if(listContainer){
-      const lineMenuSubject = new Subject<{key: string, data?: any}>()
-      lineMenuSubject.subscribe((event) => this.onClientMenuClick(event.key, event.data))
-      const genericListAdapter = new GenericListAdapter(listContainer, this.clientEventService, lineMenuSubject)
-      const genericListData = genericListAdapter.adapt()
-      this.setGenericListVariables(genericListData)
-    }
-  }
-  /**
-   * this function will update everything that changed in the list
-   * @param data the output from the generic list adapter
-   */
-  setGenericListVariables(data: GenericListAdapterResult){
-    // this.dataSource = data.dataView || this.dataView
-    this.smartSearch = data.smartSearch || this.smartSearch
-    this.menu = data.menu || this.menu
-    this.buttons = data.buttons || this.buttons
-    this.lineMenu = data.lineMenu || this.lineMenu
-  }
-
   onClientMenuClick(key: string, data?: any){
     console.log('menu clicked!!')
   }

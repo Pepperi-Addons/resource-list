@@ -1,7 +1,7 @@
 import { Subject } from "rxjs";
 import { ClientEventsService } from "../services/client-events.service";
 import { StateManager } from "./state-manager";
-import { ListContainer, ListState, Row } from "shared";
+import { ListContainer, ListState, DataRow } from "shared";
 import { GenericListAdapter } from "./generic-list-adapter";
 import { GridDataView } from "@pepperi-addons/papi-sdk";
 import { ViewBlocksAdapter } from "./view-blocks-adapter";
@@ -21,7 +21,7 @@ export interface IRLDataSource extends IPepGenericListDataSource{
  */
 export class RLDataSource implements IRLDataSource{
     private layoutObserver: LayoutObserver = new LayoutObserver()
-    private items: Row[]
+    private items: DataRow[]
     private dataView: GridDataView
     private count: number
 
