@@ -1,6 +1,4 @@
- import { ListMenu } from "shared"
-import { Menu, MenuBlock } from "shared"
-import { ListState } from "shared"
+ import { ListMenu, Menu, MenuBlock, ListState } from "shared"
 import { groupRelationBlocks } from './utils'
 
 type drawFunctionObject = {AddonUUID: string, DrawURL: string}

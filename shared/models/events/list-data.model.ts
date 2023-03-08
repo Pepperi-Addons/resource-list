@@ -1,9 +1,9 @@
 
 export interface ListData{
-    Items: Row[]
+    Items: DataRow[]
     Count?: number
 }
 
-export interface Row{
+export interface DataRow{
     [key: string]: string | boolean | number | Date,
 }

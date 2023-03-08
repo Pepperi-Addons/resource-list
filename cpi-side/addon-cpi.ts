@@ -3,9 +3,8 @@ import { router as genericResourceRouter }  from './routes/generic-resource.rout
 import { router as viewsRouter } from './routes/views.routes'
 import { MenuBuilder } from './events/helpers/menu-builder';
 import { ListService } from './services/list.service';
-import { MenuBlock } from "shared"
 import { LoadListEventService } from './events/services/load-list-event.service';
-import { Row } from 'shared';
+import { DataRow, MenuBlock } from 'shared';
 import { ChangeStateEventService } from './events/services/state-change-event.service';
 
 export async function load(configuration: any) {
@@ -26,6 +25,7 @@ export async function load(configuration: any) {
         }
     })
 }
+
 
 
 export const router = Router()
@@ -69,9 +69,9 @@ router.post('/onClientStateChange', async (req, res, next) => {
 router.post('/drawGrid' ,async (req,res,next) => {
     const data = req.body.Data 
     const viewBlocks = req.body.ViewBlocks
-    const grid: Row[] = []
+    const grid: DataRow[] = []
     data?.forEach(item => {
-        const row: Row = {}
+        const row: DataRow = {}
         viewBlocks.forEach(block => {
                let value = item[block.Configuration.FieldID]
                if(block.Configuration.FieldID == "friends"){
@@ -127,8 +127,6 @@ router.post('/drawMenuBlock', (req, res, next) => {
         Result: blocks
     })
 })
-
-
 
 router.post('/drawLineMenuBlock', (req, res, next) => {
     const state = req.body.State
