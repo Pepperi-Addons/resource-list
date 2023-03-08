@@ -1,12 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ClientEventsService } from '../services/client-events.service';
-import { ListContainer } from 'shared';
 import { IPepGenericListDataSource, IPepGenericListInitData, IPepGenericListParams } from '@pepperi-addons/ngx-composite-lib/generic-list';
-import { GenericListAdapter } from '../helpers/generic-list-adapter';
-import { GenericListAdapterResult, SmartSearchInput } from '../metadata';
+import { SmartSearchInput } from '../metadata';
 import { PepMenuItem } from '@pepperi-addons/ngx-lib/menu';
 import { GVButton } from 'src/app/generic-viewer/generic-viewer.model';
-import { Subject } from 'rxjs';
 import { StateManager } from '../helpers/state-manager';
 import { RLDataSource } from '../helpers/RL-data-source';
 
@@ -50,7 +47,7 @@ export class ResourceListComponent implements OnInit {
     const state = new StateManager(undefined, {ListKey: "LIST_KEY"})
     this.dataSource = new RLDataSource(this.clientEventService, state)
   }
-  
+
   onClientMenuClick(key: string, data?: any){
     console.log('menu clicked!!')
   }
