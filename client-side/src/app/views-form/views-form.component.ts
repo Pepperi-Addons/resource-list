@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { ViewsService } from '../services/views.service';
 import { GenericResourceService } from '../services/generic-resource-service';
-import { View } from 'shared';
+import { SelectOption, View } from 'shared';
 import { EditorsService } from '../services/editors.service';
 import { UtilitiesService } from '../services/utilities-service';
 import { AddonData, AddonDataScheme, SchemeField } from '@pepperi-addons/papi-sdk';
@@ -42,6 +42,7 @@ export class ViewsFormComponent implements OnInit {
   currentFilter: any
   isJsonFilterFileValid: boolean = true
   offlineResource: boolean = true
+  sortingOptions = [];
 
   constructor(
     private route: ActivatedRoute,
@@ -81,6 +82,12 @@ export class ViewsFormComponent implements OnInit {
     this.resourceFields = await this.genericResourceService.getResourceFields(this.currentView.Resource.Name);
     this.searchFields = await this.genericResourceService.getResrourceSearchFields(this.currentView.Resource.Name);
     this.indexedFields = this.getIndexedFieldsArray(this.resourceFields)    
+    this.sortingOptions = Object.keys(this.searchFields).map(fieldName => {
+      return {
+        Key: fieldName,
+        Value: fieldName
+      }
+    })
     const editorOptionalValues = await this.getEditorOptionalValues()
     this.dataSource = this.convertViewToDataSource(this.currentView)
     this.dataView = this.getDataview(editorOptionalValues)
@@ -118,7 +125,9 @@ export class ViewsFormComponent implements OnInit {
       Name: view.Name,
       Description: view.Description,
       Resource: view.Resource.Name,
-      Editor: view.Editor
+      Editor: view.Editor,
+      SortingField: view.Sorting?.FieldKey || 'CreationDateTime',
+      Ascending: view.Sorting?.Ascending || false
     }
   }
   getDataview(editorOptionalValues){
@@ -202,6 +211,41 @@ export class ViewsFormComponent implements OnInit {
             Height: 0
             }
         }
+      },
+      {
+        ReadOnly: this.sortingOptions.length == 0,
+        Title: this.translate.instant('Default Sorting'),
+        Type: 'ComboBox',
+        FieldID: "SortingField",
+        Mandatory: false,
+        OptionalValues: this.sortingOptions,
+        Layout: {
+            Origin: {
+            X: 0,
+            Y:2
+            },
+            Size: {
+            Width: 1,
+            Height: 0
+            }
+        }
+      },
+      {
+        ReadOnly: this.sortingOptions.length == 0,
+        Title: this.translate.instant('Ascending'),
+        Type: 'Boolean',
+        FieldID: "Ascending",
+        Mandatory: false,
+        Layout: {
+            Origin: {
+            X: 1,
+            Y:2
+            },
+            Size: {
+            Width: 1,
+            Height: 0
+            }
+        }
         }
     ]
   }
@@ -214,7 +258,11 @@ export class ViewsFormComponent implements OnInit {
     //filters is or undefined or and object with some properties, if the object is empty so we want to save the filter as null
     this.currentView.Filter = this.currentFilter && Object.keys(this.currentFilter).length == 0 ? undefined: this.currentFilter
     this.currentView.Description = this.dataSource.Description
-    this.currentView.Editor = this.dataSource.Editor
+    this.currentView.Editor = this.dataSource.Editor;
+    this.currentView.Sorting = {
+      FieldKey: this.dataSource.SortingField,
+      Ascending: this.dataSource.Ascending
+    }
     this.viewsService.upsertItem(this.currentView)
     this.utilitiesService.showDialog("Update", "UpdateDialogMSG", 'close')
   }

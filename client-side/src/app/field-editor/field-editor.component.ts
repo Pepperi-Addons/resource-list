@@ -1,8 +1,9 @@
 import { Component, Injector, Input, OnInit, ViewChild } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { GenericFormComponent } from '@pepperi-addons/ngx-composite-lib/generic-form';
+import { KeyValuePair } from '@pepperi-addons/ngx-lib';
 import { PepDialogService } from '@pepperi-addons/ngx-lib/dialog';
-import { AddonDataScheme, BaseFormDataViewField, Collection, CollectionField, DataView, DataViewField, FormDataView } from '@pepperi-addons/papi-sdk';
+import { AddonData, AddonDataScheme, BaseFormDataViewField, Collection, CollectionField, DataView, DataViewField, FormDataView } from '@pepperi-addons/papi-sdk';
 import { BehaviorSubject } from 'rxjs';
 import { DROP_DOWN, Editor, IGenericViewer, IReferenceField, SELECTION_LIST, SelectOption, View } from 'shared';
 import { CastingMap } from '../casting-map';
@@ -195,16 +196,18 @@ export class FieldEditorComponent implements OnInit {
     }
   }
   async addOptionalValuesToDataViewField(field: IReferenceField, dataViewField: any){
-    let resourceItems = this.resourcesMap.get(field.Resource)
+    let resourceItems: AddonData[] = this.resourcesMap.get(field.Resource)
     if(!resourceItems){
       resourceItems = await this.genericResourceService.getItems(field.Resource, false, ['Key', field.DisplayField])
       this.resourcesMap.set(field.Resource, resourceItems )
     }
-    dataViewField['OptionalValues'] = resourceItems.map(item => {
+    dataViewField['OptionalValues'] = resourceItems.map((item):KeyValuePair<string> => {
       return {
         Key: item['Key'],
         Value: item[field.DisplayField]
       }
+    }).sort((first,second) => {
+      return first.Value.localeCompare(second.Value);
     })
   }
   castStringArray<T>(arr: string[], type: string): T[]{
