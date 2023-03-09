@@ -13,7 +13,8 @@ export interface ListOptions {
     buttons: GVButton[]
     smartSearchDataView: {dataView: MenuDataView},
     searchDataView: MenuDataView,
-    inlineList: boolean
+    inlineList: boolean,
+    showSearch: boolean
 }
 
 export interface GVButton extends PepButton {
