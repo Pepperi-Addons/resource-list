@@ -75,7 +75,7 @@ export class GenericViewerComponent implements OnInit {
     async createListOptions(): Promise<ListOptions>{
 
       const actions =  this.actions
-      const selectionType = this.configurationObject.selectionList?.selection || "single"
+      const selectionType = this.genericViewer.lineMenuItems.Fields.length > 0 ? this.configurationObject.selectionList?.selection || "single" : 'none'
       const menuItems = this.menuItems || []
       const dropDownOfViews = this.dropDownOfViews || []
       const buttons: GVButton[] = this.createButtonArray()
@@ -203,6 +203,7 @@ export class GenericViewerComponent implements OnInit {
       return item[fieldID];
     }
     async DisplayViewInList(viewKey){
+      this.listOptions = await this.createListOptions()
       if(this.genericViewer.viewDataview){
         await this.loadList(this.genericViewer.viewDataview)
       }
@@ -210,7 +211,6 @@ export class GenericViewerComponent implements OnInit {
       else{
         this.dataSource = new DataSource([],[],[])
       }
-      this.listOptions = await this.createListOptions()
     }
     async onViewChanged($event){
       this.genericViewer = await this.genericResourceService.getGenericView($event)
@@ -240,7 +240,7 @@ export class GenericViewerComponent implements OnInit {
           items: items,
           totalCount: items.length
         }
-      }), fields,columns)
+      }), fields,columns, undefined, this.listOptions)
       }
 
     async onFieldDrillDown(event: any){
@@ -259,9 +259,9 @@ export class GenericViewerComponent implements OnInit {
         text: "Back to list"
       })]
       this.menuItems = this.menuItems.filter(menuItem => menuItem.key != "RecycleBin")
-      this.dataSource = new DataSource(deletedItems, this.dataSource.getFields(), this.dataSource.getColumns())
-      this.actions.get = this.getRecycleBinActions()
       this.listOptions = await this.createListOptions()
+      this.dataSource = new DataSource(deletedItems, this.dataSource.getFields(), this.dataSource.getColumns(), undefined, this.listOptions)
+      this.actions.get = this.getRecycleBinActions()
     }
     getRecycleBinActions(){
       return async(data: PepSelectionData) => {
