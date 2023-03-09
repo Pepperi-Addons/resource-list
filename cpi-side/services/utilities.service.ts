@@ -6,7 +6,7 @@ export class UtilitiesService {
     getSortingString(sorting?: Sorting): string {
         let res = '';
         if (sorting) {
-            const direction = sorting.Ascending ? 'ASC' : 'DESC'
+            const direction = sorting.Ascending ? 'asc' : 'desc'
             res = `${sorting.FieldKey} ${direction}`;
         }
         return res;
