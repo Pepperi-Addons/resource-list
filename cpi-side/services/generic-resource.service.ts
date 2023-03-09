@@ -1,13 +1,24 @@
-import { AddonDataScheme } from "@pepperi-addons/papi-sdk"
+import { AddonDataScheme, SearchBody } from "@pepperi-addons/papi-sdk"
 import { GenericResourceEndpoint } from "@pepperi-addons/papi-sdk/dist/endpoints";
+import { Sorting } from "shared";
+import { UtilitiesService } from "./utilities.service";
 
 export class GenericResourceService {
+    utilities: UtilitiesService = new UtilitiesService();
 
     constructor(private inAccountContext) { }
     
-    async getItems(resourceName: string, query: {where: string}, fields: string[]){
+    async getItems(resourceName: string, query: {where: string}, fields: string[], sorting?: Sorting){
         const apiBaseObj = await this.getBaseObject();
-        return await apiBaseObj.resource(resourceName).search({Fields: fields, Where: query.where})
+        const sortingStr = this.utilities.getSortingString(sorting);
+        const body: SearchBody = {
+            Fields: fields,
+            Where: query.where
+        }
+        if (sortingStr != '') {
+            body.OrderBy = sortingStr;
+        }
+        return await apiBaseObj.resource(resourceName).search(body)
     }
     async postItem(resourceName: string, item: any){
         if(item && item.Hidden && await this.isSchemaOfPapiType(resourceName)){
@@ -35,8 +46,8 @@ export class GenericResourceService {
 
     private async shouldWorkOnline(): Promise<boolean> {
         const isWebApp = await global['app']['wApp']['isWebApp']();
-		const isAdmin = await global['app']['wApp']['isAdmin']();
-        return isAdmin && isWebApp && !this.inAccountContext;
+		const isBuyer = await global['app']['wApp']['isBuyer']();
+        return !isBuyer && isWebApp && !this.inAccountContext;
     }
 
     private async getBaseObject() {
