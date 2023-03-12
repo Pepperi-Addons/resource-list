@@ -113,8 +113,7 @@ export class RLDataSource implements IRLDataSource{
                 if(listContainer.State){
                     this.stateManager.updateState(listContainer.State)
                 }
-                //update generic list params if needed
-                // this.updateGenericListParams(params, this.stateManager.getState())
+                //TODO update generic list state if needed
         
                 //update data view data and count
                 this.updateVariables(listContainer)
