@@ -99,9 +99,7 @@ export class RLDataSource implements IRLDataSource{
 
         //reset changes
         this.stateManager.resetChanges()
-        debugger
-        params.searchString = "hi"
-        params.pageIndex = 8
+        
         return {
             dataView: this.dataView,
             items: this.items,
