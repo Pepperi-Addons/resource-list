@@ -12,6 +12,7 @@ import { GLParamsAdapter } from "./GL-params-adapter";
 
 export interface IRLDataSource extends IPepGenericListDataSource{
     subscribe(): LayoutObserver
+    onMenuClick(key: string): Promise<RLDataSource>
 }
 
 /**
@@ -25,9 +26,10 @@ export class RLDataSource implements IRLDataSource{
     private dataView: GridDataView
     private count: number
 
-    constructor(private clientEventsService: ClientEventsService, private stateManager: StateManager){
+    constructor(private clientEventsService: ClientEventsService, private stateManager: StateManager, private isCloned :boolean = false){
     
     }
+
 
     private async getListContainer(changes: Partial<ListState>){
         const state = this.stateManager.getState()
@@ -59,16 +61,31 @@ export class RLDataSource implements IRLDataSource{
         return this.layoutObserver
     }
 
-    private updateGenericListParams(params: IPepGenericListParams, state: Partial<ListState>){
-        params.filters = state.SmartSearchQuery
-        params.pageIndex = state.PageIndex
-        params.searchString = state.SearchString
-        if(state.Sorting){
-            params.sorting = {
-                sortBy: state.Sorting.FieldID,
-                isAsc: state.Sorting.Ascending
-            }
-        }
+    // private updateGenericListParams(params: IPepGenericListParams, state: Partial<ListState>){
+    //     params.filters = state.SmartSearchQuery
+    //     params.pageIndex = state.PageIndex
+    //     params.searchString = state.SearchString
+    //     if(state.Sorting){
+    //         params.sorting = {
+    //             sortBy: state.Sorting.FieldID,
+    //             isAsc: state.Sorting.Ascending
+    //         }
+    //     }
+    // }
+
+    async onMenuClick(key: string): Promise<RLDataSource>{
+        const listContainer = await this.clientEventsService.emitMenuClickEvent(this.stateManager.getState(), key)
+        this.updateList(listContainer)
+        return this.clone()
+    }
+    private clone(): RLDataSource{
+        const newDataSource = new RLDataSource(this.clientEventsService, this.stateManager, true)
+        newDataSource.layoutObserver = this.layoutObserver
+        newDataSource.dataView = this.dataView
+        newDataSource.items = this.items
+        newDataSource.count = this.count
+        return newDataSource
+
     }
 
     private onClientLineMenuClick(key: string, data?: any){
@@ -76,34 +93,42 @@ export class RLDataSource implements IRLDataSource{
     }
     
     async init(params: IPepGenericListParams): Promise<IPepGenericListInitData>{
-        const paramsAdapter = new GLParamsAdapter(params)
-        const changes = paramsAdapter.adapt()
-        //emit event to get the list container
-        const listContainer = await this.getListContainer(changes)
-        
-        //adapt the data to be compatible to the generic list 
-        const genericListData = this.getGenericListData(listContainer)
-
-        //update the state 
-        if(listContainer.State){
-            this.stateManager.updateState(listContainer.State)
+        //if the list is just cloned there is no need to emit an event because the first init happen because the data source was cloned! and not because an event
+        if(!this.isCloned){
+            const paramsAdapter = new GLParamsAdapter(params)
+            const changes = paramsAdapter.adapt()
+            //emit event to get the list container
+            const listContainer = await this.getListContainer(changes)
+            //update the list and variables 
+            this.updateList(listContainer)
         }
-        //update generic list params if needed
-        this.updateGenericListParams(params, this.stateManager.getState())
+        this.isCloned = false
 
-        //update data view data and count
-        this.updateVariables(listContainer)
-
-        //notify observers 
-        this.layoutObserver.notifyObservers(genericListData)
-
-        //reset changes
-        this.stateManager.resetChanges()
-        
         return {
             dataView: this.dataView,
             items: this.items,
             totalCount: this.count
         }
+    }
+
+    updateList(listContainer: ListContainer){
+                //adapt the data to be compatible to the generic list 
+                const genericListData = this.getGenericListData(listContainer)
+
+                //update the state 
+                if(listContainer.State){
+                    this.stateManager.updateState(listContainer.State)
+                }
+                //update generic list params if needed
+                // this.updateGenericListParams(params, this.stateManager.getState())
+        
+                //update data view data and count
+                this.updateVariables(listContainer)
+        
+                //notify observers 
+                this.layoutObserver.notifyObservers(genericListData)
+        
+                //reset changes
+                this.stateManager.resetChanges()
     }
 }

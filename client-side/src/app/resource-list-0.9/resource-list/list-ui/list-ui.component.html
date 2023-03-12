@@ -16,6 +16,7 @@
             iconName="system_menu" 
             type="action" 
             class="pep-spacing-element"
+            (menuItemClick)="onMenuClicked($event)"
             [items]="menu">
         </pep-menu>
         <ng-container *ngIf="buttons">
@@ -25,6 +26,7 @@
                 class= 'pep-spacing-element'
                 [value]="button.value"
                 [styleType]="button.styleType"
+                (buttonClick)="onMenuClicked($event)"
         ></pep-button>
         </ng-container>
     </ng-container>

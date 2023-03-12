@@ -4,11 +4,11 @@ import { router as viewsRouter } from './routes/views.routes'
 import { MenuBuilder } from './events/helpers/menu-builder';
 import { ListService } from './services/list.service';
 import { LoadListEventService } from './events/services/load-list-event.service';
-import { DataRow, MenuBlock, loadListEventKey } from 'shared';
+import { DataRow, MenuBlock, loadListEventKey, menuClickEventKey, stateChangeEventKey } from 'shared';
 import { ChangeStateEventService } from './events/services/state-change-event.service';
+import { MenuClickService } from './events/services/menu-click.service';
+
 export async function load(configuration: any) {
-
-
     //interceptors:
     pepperi.events.intercept(loadListEventKey as any, {}, async (data, next, main) => {
         try{
@@ -20,6 +20,33 @@ export async function load(configuration: any) {
             return await new LoadListEventService().execute(state, changes)
         }catch(err){
             throw Error(`error inside OnClientLoadList event: ${err}`)
+        }
+    })
+    pepperi.events.intercept(stateChangeEventKey as any, {}, async (data, next, main) => {
+        try{
+            const state = data.State
+            const changes = data.Changes
+            if(!state?.ViewKey || !state?.ListKey){
+                throw Error(`in client state change event -list key and view key must be exist in the state object`)
+            }
+            return await new ChangeStateEventService().execute(state, changes)
+        }catch(err){
+            throw Error(`error inside onClientStateChanged event: ${err}`)
+        }
+    })
+    pepperi.events.intercept(menuClickEventKey as any, {}, async (data, next, main) => {
+        try{
+            const state = data.State
+            const key = data.Key
+            if(!state?.ListKey){
+                throw Error(`in menu click event - state must includes list key`)
+            }
+            if(!key){
+                throw Error(`in menu click event - no key found for the menu item`)
+            }
+            return await new MenuClickService().execute(state, key)        
+        }catch(err){
+            throw Error(`error inside onClientMenuClick event: ${err}`)
         }
     })
 }

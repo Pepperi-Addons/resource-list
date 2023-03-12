@@ -1,6 +1,6 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { SmartSearchInput } from '../../metadata';
-import { PepMenuItem } from '@pepperi-addons/ngx-lib/menu';
+import { IPepMenuItemClickEvent, PepMenuItem } from '@pepperi-addons/ngx-lib/menu';
 import { GVButton } from 'src/app/generic-viewer/generic-viewer.model';
 import { RLDataSource } from '../../helpers/RL-data-source';
 import { PepListSelectionType } from '@pepperi-addons/ngx-lib/list';
@@ -37,6 +37,11 @@ export class ListUIComponent implements OnInit {
   }
   ngOnInit(): void {
     this.init()
+  }
+
+  async onMenuClicked(event: IPepMenuItemClickEvent){
+    const newDataSource = await this.dataSource.onMenuClick(event.source.key)
+    this.dataSource = newDataSource
   }
 
 }
