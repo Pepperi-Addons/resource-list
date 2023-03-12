@@ -4,7 +4,7 @@ import { router as viewsRouter } from './routes/views.routes'
 import { MenuBuilder } from './events/helpers/menu-builder';
 import { ListService } from './services/list.service';
 import { LoadListEventService } from './events/services/load-list-event.service';
-import { DataRow, MenuBlock, loadListEventKey, menuClickEventKey, stateChangeEventKey } from 'shared';
+import { DataRow, ListContainer, MenuBlock, loadListEventKey, menuClickEventKey, stateChangeEventKey } from 'shared';
 import { ChangeStateEventService } from './events/services/state-change-event.service';
 import { MenuClickService } from './events/services/menu-click.service';
 
@@ -123,21 +123,24 @@ router.post('/drawMenuBlock', (req, res, next) => {
             Title: 'Recycle Bin',
             DrawURL: 'addon-cpi/drawMenuBlock',
             AddonUUID: '0e2ae61b-a26a-4c26-81fe-13bdd2e4aaa3',
-            Hidden: false
+            Hidden: false,
+            ExecuteURL: 'addon-cpi/menuExecution'
         },
         {
             Key: 'import',
             Title: 'Import',
             DrawURL: 'addon-cpi/drawMenuBlock',
             AddonUUID: '0e2ae61b-a26a-4c26-81fe-13bdd2e4aaa3',
-            Hidden: false
+            Hidden: false,
+            ExecuteURL: 'addon-cpi/menuExecution'
         },
         {
             Key: 'export',
             Title: 'Export',
             DrawURL: 'addon-cpi/drawMenuBlock',
             AddonUUID: '0e2ae61b-a26a-4c26-81fe-13bdd2e4aaa3',
-            Hidden: false
+            Hidden: false,
+            ExecuteURL: 'addon-cpi/menuExecution'
         },
         {
             Key: 'new',
@@ -145,7 +148,8 @@ router.post('/drawMenuBlock', (req, res, next) => {
             DrawURL: 'addon-cpi/drawMenuBlock',
             AddonUUID: '0e2ae61b-a26a-4c26-81fe-13bdd2e4aaa3',
             Hidden: false,
-            ButtonStyleType: "Strong"
+            ButtonStyleType: "Strong",
+            ExecuteURL: 'addon-cpi/menuExecution'
         }
     ]
     return res.json({
@@ -153,6 +157,13 @@ router.post('/drawMenuBlock', (req, res, next) => {
     })
 })
 
+
+router.post('/menuExecution', (req, res, next) => {
+    const state = req.body.State
+    const key = req.body.Key
+    const container: ListContainer = {State: {...state, SearchString: key}}
+    return res.json(container)
+})
 router.post('/drawLineMenuBlock', (req, res, next) => {
     const state = req.body.State
     const changes = req.body.Changes
@@ -170,14 +181,16 @@ router.post('/drawLineMenuBlock', (req, res, next) => {
             Title: 'Edit',
             DrawURL: 'addon-cpi/drawLineMenuBlock',
             AddonUUID: '0e2ae61b-a26a-4c26-81fe-13bdd2e4aaa3',
-            Hidden: false
+            Hidden: false,
+            ExecuteURL: 'addon-cpi/menuExecution'
         },
         {
             Key: 'delete',
             Title: 'Delete',
             DrawURL: 'addon-cpi/drawLineMenuBlock',
             AddonUUID: '0e2ae61b-a26a-4c26-81fe-13bdd2e4aaa3',
-            Hidden: false
+            Hidden: false,
+            ExecuteURL: 'addon-cpi/menuExecution'
         }
     ]
     return res.json({
