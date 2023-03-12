@@ -8,10 +8,12 @@ import { ViewBlocksAdapter } from "./view-blocks-adapter";
 import { IPepGenericListDataSource, IPepGenericListInitData, IPepGenericListParams } from "@pepperi-addons/ngx-composite-lib/generic-list";
 import { LayoutObserver } from "./layout-observer";
 import { GLParamsAdapter } from "./GL-params-adapter";
+import { StateObserver } from "./state-observer";
 
 
 export interface IRLDataSource extends IPepGenericListDataSource{
-    subscribe(): LayoutObserver
+    subscribeToLayoutChanges(): LayoutObserver
+    subscribeToStateChanges(): StateObserver
     onMenuClick(key: string): Promise<RLDataSource>
 }
 
@@ -28,6 +30,10 @@ export class RLDataSource implements IRLDataSource{
 
     constructor(private clientEventsService: ClientEventsService, private stateManager: StateManager, private isCloned :boolean = false){
     
+    }
+
+    subscribeToStateChanges(): StateObserver {
+        return this.stateManager.getStateObserver()
     }
 
 
@@ -57,7 +63,7 @@ export class RLDataSource implements IRLDataSource{
         }
     }
     //will expose the option to observe the changes on the layout by returning the observer as result
-    subscribe(): LayoutObserver{
+    subscribeToLayoutChanges(): LayoutObserver{
         return this.layoutObserver
     }
 
@@ -103,7 +109,7 @@ export class RLDataSource implements IRLDataSource{
             this.updateList(listContainer)
         }
         this.isCloned = false
-
+        this.stateManager.updateVariables()
         return {
             dataView: this.dataView,
             items: this.items,

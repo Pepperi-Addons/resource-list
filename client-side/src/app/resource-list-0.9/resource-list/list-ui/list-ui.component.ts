@@ -1,9 +1,10 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { SmartSearchInput } from '../../metadata';
 import { IPepMenuItemClickEvent, PepMenuItem } from '@pepperi-addons/ngx-lib/menu';
 import { GVButton } from 'src/app/generic-viewer/generic-viewer.model';
 import { RLDataSource } from '../../helpers/RL-data-source';
 import { PepListSelectionType } from '@pepperi-addons/ngx-lib/list';
+import { GenericListComponent } from '@pepperi-addons/ngx-composite-lib/generic-list';
 
 @Component({
   selector: 'list-ui',
@@ -21,10 +22,13 @@ export class ListUIComponent implements OnInit {
    title: string
    selectionType: PepListSelectionType
 
+   //generic list instance
+   @ViewChild(GenericListComponent) list: GenericListComponent
+
   constructor() { }
 
   init(){
-    this.dataSource.subscribe()
+    this.dataSource.subscribeToLayoutChanges()
     .onButtonsChanged(data => this.buttons = data)
     .onLineMenuChanged(data => this.lineMenu = data)
     .onMenuChanged(data => this.menu = data)
@@ -32,6 +36,13 @@ export class ListUIComponent implements OnInit {
     .onSearchChanged(visible => this.search = visible)
     .onTitleChanged(title => this.title = title)
     .onSelectionTypeChanged(selectionType => this.selectionType = selectionType)
+
+    this.dataSource.subscribeToStateChanges()
+    .onSearchStringChanged((data) => this.list.searchString = data)
+    .onPageIndexChanged((data) => {
+      const index = !isNaN(this.list.pager?.index) ? this.list.pager.index : 1
+      this.list.pager.index = index
+    })
     this.loadCompleted = true
 
   }
