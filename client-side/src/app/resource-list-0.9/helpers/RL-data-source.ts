@@ -67,18 +67,6 @@ export class RLDataSource implements IRLDataSource{
         return this.layoutObserver
     }
 
-    // private updateGenericListParams(params: IPepGenericListParams, state: Partial<ListState>){
-    //     params.filters = state.SmartSearchQuery
-    //     params.pageIndex = state.PageIndex
-    //     params.searchString = state.SearchString
-    //     if(state.Sorting){
-    //         params.sorting = {
-    //             sortBy: state.Sorting.FieldID,
-    //             isAsc: state.Sorting.Ascending
-    //         }
-    //     }
-    // }
-
     async onMenuClick(key: string): Promise<RLDataSource>{
         const listContainer = await this.clientEventsService.emitMenuClickEvent(this.stateManager.getState(), key)
         this.updateList(listContainer)
