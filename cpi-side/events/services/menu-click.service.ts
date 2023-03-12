@@ -1,5 +1,4 @@
 import { ListState, ListContainer } from "shared";
-import { EventService } from "./event.service";
 import { ListService } from "../../services/list.service";
 
 export class MenuClickService{
