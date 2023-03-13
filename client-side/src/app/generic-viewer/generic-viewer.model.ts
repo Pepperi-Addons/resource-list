@@ -16,5 +16,4 @@ export interface ListOptions {
 
 export interface GVButton extends PepButton {
     styleType: PepStyleType
-
 }

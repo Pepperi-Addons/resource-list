@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ClientEventsService } from '../services/client-events.service';
+import { GridViewBlockAdapter } from '../helpers/view-blocks-adapter';
+import { ListContainer } from 'shared';
 import { IPepGenericListDataSource, IPepGenericListInitData, IPepGenericListParams } from '@pepperi-addons/ngx-composite-lib/generic-list';
 import { SmartSearchInput } from '../metadata';
 import { PepMenuItem } from '@pepperi-addons/ngx-lib/menu';
@@ -13,25 +15,7 @@ import { RLDataSource } from '../helpers/RL-data-source';
   styleUrls: ['./resource-list.component.scss']
 })
 export class ResourceListComponent implements OnInit {
-  //default dataSource
-  dataSource: IPepGenericListDataSource = {
-    init: async function (params: IPepGenericListParams): Promise<IPepGenericListInitData> {
-        return {
-          dataView: {
-            Type: "Grid",
-            Fields: [],
-            Columns: [],
-            Context: {
-              Name: '',
-              Profile: { InternalID: 0 },
-              ScreenSize: 'Landscape'
-            }
-          },
-          totalCount: 0,
-          items: []
-        }
-    }
-  }
+  dataSource: IPepGenericListDataSource
   smartSearch: SmartSearchInput
   menu: PepMenuItem[]
   buttons: GVButton[]
