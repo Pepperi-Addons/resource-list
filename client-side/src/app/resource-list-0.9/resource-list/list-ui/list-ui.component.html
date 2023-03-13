@@ -4,5 +4,23 @@
     [showSearch]="true"
     [inline] ="false"
     [addPadding]="true"
-    [smartFilter]="smartSearch">
+    [smartFilter]="smartSearch"
+    [actions]="lineMenu">
+    <ng-container right-buttons>
+        <pep-menu *ngIf="menu"
+            iconName="system_menu" 
+            type="action" 
+            class="pep-spacing-element"
+            [items]="menu">
+        </pep-menu>
+        <ng-container *ngIf="buttons">
+            <pep-button
+            *ngFor="let button of buttons"
+                [key]="button.key"
+                class= 'pep-spacing-element'
+                [value]="button.value"
+                [styleType]="button.styleType"
+        ></pep-button>
+        </ng-container>
+    </ng-container>
 </pep-generic-list>

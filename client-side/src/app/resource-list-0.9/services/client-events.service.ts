@@ -10,4 +10,8 @@ export class ClientEventsService{
     async emitLoadListEvent(key: string){
         return await this.addonService.emitEvent(loadListEventKey, {State: undefined, Changes: {ListKey: key}})
     }
+    //TODO implement in the future
+    async emitOnMenuClickEvent(key: string, data: any){
+        console.log('fire menu click event!!')
+    }
 }
