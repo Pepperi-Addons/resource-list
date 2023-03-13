@@ -7,9 +7,8 @@ import { GridDataView } from "@pepperi-addons/papi-sdk";
 import { GridViewBlockAdapter } from "./view-blocks-adapter";
 import { IPepGenericListDataSource, IPepGenericListInitData, IPepGenericListListInputs, IPepGenericListParams } from "@pepperi-addons/ngx-composite-lib/generic-list";
 import { LayoutObserver } from "./layout-observer";
-import { ChangesBuilder } from "./changes-bulder";
+import { ChangesBuilder } from "./changes-builder";
 import { StateObserver } from "./state-observer";
-import { type } from "os";
 
 
 export interface IListDataSource extends IPepGenericListDataSource{
@@ -72,18 +71,6 @@ export class ListDataSource implements IListDataSource{
     subscribeToLayoutChanges(): LayoutObserver{
         return this.layoutObserver
     }
-
-    // private updateGenericListParams(params: IPepGenericListParams, state: Partial<ListState>){
-    //     params.filters = state.SmartSearchQuery
-    //     params.pageIndex = state.PageIndex
-    //     params.searchString = state.SearchString
-    //     if(state.Sorting){
-    //         params.sorting = {
-    //             sortBy: state.Sorting.FieldID,
-    //             isAsc: state.Sorting.Ascending
-    //         }
-    //     }
-    // }
 
     async onMenuClick(key: string): Promise<ListDataSource>{
         const listContainer = await this.clientEventsService.emitMenuClickEvent(this.stateManager.getState(), key)
