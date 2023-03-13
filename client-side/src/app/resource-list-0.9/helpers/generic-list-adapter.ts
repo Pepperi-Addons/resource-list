@@ -1,11 +1,11 @@
 import { ListContainer, ListMenuBlock } from "shared";
 import { GridViewBlockAdapter } from "./view-blocks-adapter";
-import { DataSource } from "./data-source";
+import { GridDataView } from "@pepperi-addons/papi-sdk";
 import { GenericListAdapterResult, SmartSearchInput } from "../metadata";
 import { PepMenuItem } from "@pepperi-addons/ngx-lib/menu";
 import { GVButton } from "../metadata"
 import { PepStyleType } from "@pepperi-addons/ngx-lib";
-import { Subject, async } from "rxjs";
+import { Subject } from "rxjs";
 import { PepSelectionData } from "@pepperi-addons/ngx-lib/list";
 
 export class GenericListAdapter {
@@ -13,13 +13,13 @@ export class GenericListAdapter {
 
     }
     adapt(): GenericListAdapterResult{
-        const dataSource = this.getDataSource()
+        const dataView = this.getDataView()
         const smartSearch = this.getSmartSearch()
         const menu = this.getMenu()
         const buttons = this.getButtons()
         const lineMenu = this.getLineMenu()
         return {
-            dataSource: dataSource,
+            dataView: dataView,
             smartSearch: smartSearch,
             menu: menu,
             buttons: buttons,
@@ -30,12 +30,12 @@ export class GenericListAdapter {
      * if the view blocks of the selected view are changed,
      * or that the data itself changed return dataSource otherwise return undefined
      */
-    getDataSource(): DataSource | undefined{
+    getDataView(): GridDataView | undefined{
         //first we can set the data and then update the dataview if needed
         if(this.listContainer.Layout?.View){
             const viewBlocksAdapter = new GridViewBlockAdapter(this.listContainer.Layout.View.ViewBlocks?.Blocks)
             const dataview = viewBlocksAdapter.adapt()
-            return new DataSource(dataview, [{name: 'a', age: 1}])
+            return dataview
         }
         return undefined
     }

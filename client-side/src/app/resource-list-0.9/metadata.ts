@@ -1,16 +1,15 @@
 
-import { MenuDataViewField, SchemeFieldType } from "@pepperi-addons/papi-sdk"
-import { DataSource } from "./helpers/data-source"
+import { GridDataView, MenuDataViewField, SchemeFieldType } from "@pepperi-addons/papi-sdk"
 import { PepMenuItem } from "@pepperi-addons/ngx-lib/menu"
 import { PepButton } from "@pepperi-addons/ngx-lib/button"
 import { PepStyleType } from "@pepperi-addons/ngx-lib"
 
 export const loadListEventKey = "OnClientLoadList"
-
+export const stateChangeEventKey = "OnClientStateChange"
 export type SmartSearchField = MenuDataViewField & {Type: SchemeFieldType}
 
 export type GenericListAdapterResult = {
-    dataSource?: DataSource,
+    dataView?: GridDataView,
     smartSearch?: SmartSearchInput,
     menu?: PepMenuItem[]
     buttons?: GVButton[],

@@ -4,15 +4,13 @@ import { router as viewsRouter } from './routes/views.routes'
 import { MenuBuilder } from './events/helpers/menu-builder';
 import { ListService } from './services/list.service';
 import { LoadListEventService } from './events/services/load-list-event.service';
-import { DataRow, MenuBlock } from 'shared';
+import { DataRow, MenuBlock, loadListEventKey } from 'shared';
 import { ChangeStateEventService } from './events/services/state-change-event.service';
-
 export async function load(configuration: any) {
 
 
     //interceptors:
-
-    pepperi.events.intercept('OnClientLoadList' as any, {}, async (data, next, main) => {
+    pepperi.events.intercept(loadListEventKey as any, {}, async (data, next, main) => {
         try{
             const state = data.State
             const changes = data.Changes

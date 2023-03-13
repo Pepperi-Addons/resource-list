@@ -1,4 +1,6 @@
-<pep-generic-list class="generic-list"
+<pep-generic-list 
+    *ngIf="loadCompleted"
+    class="generic-list" 
     [showTopBar]="true"
     [dataSource]="dataSource"
     [showSearch]="true"
@@ -24,3 +26,4 @@
         </ng-container>
     </ng-container>
 </pep-generic-list>
+
