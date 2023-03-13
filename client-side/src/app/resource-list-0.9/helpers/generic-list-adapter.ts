@@ -3,9 +3,8 @@ import { GridViewBlockAdapter } from "./view-blocks-adapter";
 import { GridDataView } from "@pepperi-addons/papi-sdk";
 import { GenericListAdapterResult, SmartSearchInput } from "../metadata";
 import { PepMenuItem } from "@pepperi-addons/ngx-lib/menu";
-import { GVButton } from "src/app/generic-viewer/generic-viewer.model";
+import { GVButton } from "../metadata"
 import { PepStyleType } from "@pepperi-addons/ngx-lib";
-import { ClientEventsService } from "../services/client-events.service";
 import { Subject } from "rxjs";
 import { PepSelectionData } from "@pepperi-addons/ngx-lib/list";
 
@@ -36,7 +35,7 @@ export class GenericListAdapter {
         if(this.listContainer.Layout?.View){
             const viewBlocksAdapter = new GridViewBlockAdapter(this.listContainer.Layout.View.ViewBlocks?.Blocks)
             const dataview = viewBlocksAdapter.adapt()
-            dataview
+            return dataview
         }
         return undefined
     }
