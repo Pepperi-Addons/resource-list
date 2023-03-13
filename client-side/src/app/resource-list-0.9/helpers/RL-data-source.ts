@@ -28,7 +28,7 @@ export class RLDataSource implements IRLDataSource{
     private dataView: GridDataView
     private count: number
 
-    constructor(private clientEventsService: ClientEventsService, private stateManager: StateManager, private isCloned :boolean = false){
+    constructor(private clientEventsService: ClientEventsService, private stateManager: StateManager, private isCloned: boolean = false){
     
     }
 
