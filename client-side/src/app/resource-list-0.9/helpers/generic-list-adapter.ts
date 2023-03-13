@@ -3,7 +3,7 @@ import { GridViewBlockAdapter } from "./view-blocks-adapter";
 import { DataSource } from "./data-source";
 import { GenericListAdapterResult, SmartSearchInput } from "../metadata";
 import { PepMenuItem } from "@pepperi-addons/ngx-lib/menu";
-import { GVButton } from "src/app/generic-viewer/generic-viewer.model";
+import { GVButton } from "../metadata"
 import { PepStyleType } from "@pepperi-addons/ngx-lib";
 import { Subject, async } from "rxjs";
 import { PepSelectionData } from "@pepperi-addons/ngx-lib/list";

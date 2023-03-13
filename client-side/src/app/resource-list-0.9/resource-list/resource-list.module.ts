@@ -13,7 +13,6 @@ import { PepButtonModule } from '@pepperi-addons/ngx-lib/button';
   declarations: [
     ResourceListComponent,
     ListUIComponent,
-    ListUIComponent
   ],
   imports: [
     CommonModule,
