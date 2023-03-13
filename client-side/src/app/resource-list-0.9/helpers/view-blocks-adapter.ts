@@ -4,11 +4,16 @@ export interface IViewBlocksAdapter{
     adapt(): BaseDataView
 }
 
-export class ViewBlocksAdapter implements IViewBlocksAdapter{
+export class GridViewBlockAdapter implements IViewBlocksAdapter{
     dataView: GridDataView = {
         Type: 'Grid',
         Fields: [],
-        Columns: []
+        Columns: [],
+        Context: {
+            Name: '',
+            Profile: { InternalID: 0 },
+            ScreenSize: 'Landscape'
+          },
     }
     constructor(private blocks: ViewBlock[] = []){
 
