@@ -1,16 +1,15 @@
-import { ListContainer } from "shared";
-import { ViewBlocksAdapter } from "./view-blocks-adapter";
+import { ListContainer, ListMenuBlock } from "shared";
+import { GridViewBlockAdapter } from "./view-blocks-adapter";
 import { GridDataView } from "@pepperi-addons/papi-sdk";
 import { GenericListAdapterResult, SmartSearchInput } from "../metadata";
 import { PepMenuItem } from "@pepperi-addons/ngx-lib/menu";
-import { GVButton } from "src/app/generic-viewer/generic-viewer.model";
+import { GVButton } from "../metadata"
 import { PepStyleType } from "@pepperi-addons/ngx-lib";
-import { ClientEventsService } from "../services/client-events.service";
 import { Subject } from "rxjs";
 import { PepListSelectionType, PepSelectionData } from "@pepperi-addons/ngx-lib/list";
 
 export class GenericListAdapter {
-    constructor(private listContainer: Partial<ListContainer>, private clientEventService: ClientEventsService, private lineMenuSubject: Subject<{key: string, data?: any}>){
+    constructor(private listContainer: Partial<ListContainer>,  private lineMenuSubject: Subject<{key: string, data?: any}>){
 
     }
     adapt(): GenericListAdapterResult{
@@ -40,7 +39,7 @@ export class GenericListAdapter {
     getDataView(): GridDataView | undefined{
         //first we can set the data and then update the dataview if needed
         if(this.listContainer.Layout?.View){
-            const viewBlocksAdapter = new ViewBlocksAdapter(this.listContainer.Layout.View.ViewBlocks.Blocks)
+            const viewBlocksAdapter = new GridViewBlockAdapter(this.listContainer.Layout.View.ViewBlocks?.Blocks)
             const dataview = viewBlocksAdapter.adapt()
             dataview
         }
@@ -85,12 +84,26 @@ export class GenericListAdapter {
                 return {
                     key: menuBlock.Key,
                     value: menuBlock.Title,
-                    styleType: menuBlock.ButtonStyleType.toLowerCase() as PepStyleType
+                    styleType: this.listStyleTypeToNgxStyleType(menuBlock.ButtonStyleType || 'Regular')
                 }
             })
         }
         return undefined
     }
+
+    private listStyleTypeToNgxStyleType(type: ListMenuBlock['ButtonStyleType']): PepStyleType{
+        switch(type){
+            case 'Regular':
+            case 'Strong':
+            case 'Weak':
+                return type.toLowerCase() as PepStyleType
+            case 'WeakInvert':
+                return 'weak-invert'
+            default:
+                throw Error(`style type ${type} is not supported`)
+        }
+    }
+    
     getLineMenu(){
         if(this.listContainer.Layout?.LineMenu){
             return {
