@@ -1,14 +1,14 @@
 import { IPepGenericListParams } from "@pepperi-addons/ngx-composite-lib/generic-list";
 import { ListState } from "shared";
 
-export class GLParamsAdapter{
+export class ChangesBuilder{
 
     constructor(private params: IPepGenericListParams){
     
     }
 
     //convert params to state
-    adapt(): Partial<ListState>{
+    build(): Partial<ListState>{
 
         const changes: Partial<ListState> = {}
         changes.SearchString = this.params.searchString || ''

@@ -1,7 +1,7 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { SmartSearchInput } from '../../metadata';
-import { IPepMenuItemClickEvent, PepMenuItem } from '@pepperi-addons/ngx-lib/menu';
-import { GVButton } from 'src/app/generic-viewer/generic-viewer.model';
+import { PepMenuItem } from '@pepperi-addons/ngx-lib/menu';
+import { GVButton } from '../../metadata'
 import { RLDataSource } from '../../helpers/RL-data-source';
 import { PepListSelectionType } from '@pepperi-addons/ngx-lib/list';
 import { GenericListComponent } from '@pepperi-addons/ngx-composite-lib/generic-list';

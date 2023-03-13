@@ -12,8 +12,8 @@ export class StateManager{
 
     }
 
-    isFirstState(): boolean{
-        return this.isFirst
+    isStateEmpty(): boolean{
+        return !this.state
     }
 
     getStateObserver(){
@@ -44,16 +44,17 @@ export class StateManager{
         return this.changes
 
     }
+    
     buildChanges(){
 
     }
+
     setState(state: Partial<ListState>){
         this.state = state
-        this.isFirst = false
     }
+
     updateState(state: Partial<ListState>){
         this.state = {...(this.state || {}), ...state}
-        this.isFirst = false
     }
 
     getState(){

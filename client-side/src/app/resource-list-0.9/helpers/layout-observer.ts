@@ -1,7 +1,7 @@
 import { Subject } from "rxjs"
 import { GenericListAdapterResult, SmartSearchInput } from "../metadata"
 import { PepMenuItem } from "@pepperi-addons/ngx-lib/menu"
-import { GVButton } from "src/app/generic-viewer/generic-viewer.model"
+import { GVButton } from "../metadata"
 import { PepListSelectionType, PepSelectionData } from "@pepperi-addons/ngx-lib/list"
 
 export class LayoutObserver{

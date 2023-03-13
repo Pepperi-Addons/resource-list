@@ -4,11 +4,10 @@ import { StateManager } from "./state-manager";
 import { ListContainer, ListState, DataRow } from "shared";
 import { GenericListAdapter } from "./generic-list-adapter";
 import { GridDataView } from "@pepperi-addons/papi-sdk";
-import { ViewBlocksAdapter } from "./view-blocks-adapter";
+import { GridViewBlockAdapter } from "./view-blocks-adapter";
 import { IPepGenericListDataSource, IPepGenericListInitData, IPepGenericListParams } from "@pepperi-addons/ngx-composite-lib/generic-list";
 import { LayoutObserver } from "./layout-observer";
-import { GLParamsAdapter } from "./GL-params-adapter";
-import { StateObserver } from "./state-observer";
+import { ChangesBuilder } from "./changes-bulder";
 
 
 export interface IRLDataSource extends IPepGenericListDataSource{
@@ -39,7 +38,7 @@ export class RLDataSource implements IRLDataSource{
 
     private async getListContainer(changes: Partial<ListState>){
         const state = this.stateManager.getState()
-        if(this.stateManager.isFirstState()){
+        if(this.stateManager.isStateEmpty()){
             return await this.clientEventsService.emitLoadListEvent(undefined, this.stateManager.getChanges())
         }
         return await this.clientEventsService.emitStateChangedEvent(state, changes)
@@ -48,7 +47,7 @@ export class RLDataSource implements IRLDataSource{
     private getGenericListData(listContainer: ListContainer){
         const lineMenuSubject = new Subject<{key: string, data?: any}>()
         lineMenuSubject.subscribe((event) => this.onClientLineMenuClick(event.key, event.data))
-        const genericListAdapter = new GenericListAdapter(listContainer, this.clientEventsService, lineMenuSubject)
+        const genericListAdapter = new GenericListAdapter(listContainer, lineMenuSubject)
         return genericListAdapter.adapt()
     }
     
@@ -58,7 +57,7 @@ export class RLDataSource implements IRLDataSource{
             this.count = listContainer.Data.Count
         }
         if(listContainer.Layout?.View?.ViewBlocks?.Blocks){
-            const viewBlocksAdapter = new ViewBlocksAdapter(listContainer.Layout.View.ViewBlocks.Blocks)
+            const viewBlocksAdapter = new GridViewBlockAdapter(listContainer.Layout.View.ViewBlocks.Blocks)
             this.dataView = viewBlocksAdapter.adapt()
         }
     }
