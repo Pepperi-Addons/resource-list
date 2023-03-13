@@ -4,7 +4,7 @@ import { IPepGenericListDataSource } from '@pepperi-addons/ngx-composite-lib/gen
 import { GVButton, SmartSearchInput } from '../metadata';
 import { PepMenuItem } from '@pepperi-addons/ngx-lib/menu';
 import { StateManager } from '../helpers/state-manager';
-import { RLDataSource } from '../helpers/RL-data-source';
+import { ListDataSource } from '../helpers/list-data-source';
 
 @Component({
   selector: 'resource-list',
@@ -27,7 +27,7 @@ export class ResourceListComponent implements OnInit {
 
   async load(){
     const state = new StateManager(undefined, {ListKey: "LIST_KEY"})
-    this.dataSource = new RLDataSource(this.clientEventService, state)
+    this.dataSource = new ListDataSource(this.clientEventService, state)
   }
 
   onClientMenuClick(key: string, data?: any){

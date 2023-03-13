@@ -11,10 +11,10 @@ import { ChangesBuilder } from "./changes-bulder";
 import { StateObserver } from "./state-observer";
 
 
-export interface IRLDataSource extends IPepGenericListDataSource{
+export interface IListDataSource extends IPepGenericListDataSource{
     subscribeToLayoutChanges(): LayoutObserver
     subscribeToStateChanges(): StateObserver
-    onMenuClick(key: string): Promise<RLDataSource>
+    onMenuClick(key: string): Promise<ListDataSource>
 }
 
 /**
@@ -22,7 +22,7 @@ export interface IRLDataSource extends IPepGenericListDataSource{
  * this class will respond to this events by emitting events to the cpi side and adapt the result.
  * this class will also hold state manager in order to send the cpi side events the state changes
  */
-export class RLDataSource implements IRLDataSource{
+export class ListDataSource implements IListDataSource{
     private layoutObserver: LayoutObserver = new LayoutObserver()
     private items: DataRow[]
     private dataView: GridDataView
@@ -78,13 +78,13 @@ export class RLDataSource implements IRLDataSource{
     //     }
     // }
 
-    async onMenuClick(key: string): Promise<RLDataSource>{
+    async onMenuClick(key: string): Promise<ListDataSource>{
         const listContainer = await this.clientEventsService.emitMenuClickEvent(this.stateManager.getState(), key)
         this.updateList(listContainer)
         return this.clone()
     }
-    private clone(): RLDataSource{
-        const newDataSource = new RLDataSource(this.clientEventsService, this.stateManager, true)
+    private clone(): ListDataSource{
+        const newDataSource = new ListDataSource(this.clientEventsService, this.stateManager, true)
         newDataSource.layoutObserver = this.layoutObserver
         newDataSource.dataView = this.dataView
         newDataSource.items = this.items
