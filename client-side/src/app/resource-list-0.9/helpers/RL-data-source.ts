@@ -8,6 +8,7 @@ import { GridViewBlockAdapter } from "./view-blocks-adapter";
 import { IPepGenericListDataSource, IPepGenericListInitData, IPepGenericListParams } from "@pepperi-addons/ngx-composite-lib/generic-list";
 import { LayoutObserver } from "./layout-observer";
 import { ChangesBuilder } from "./changes-bulder";
+import { StateObserver } from "./state-observer";
 
 
 export interface IRLDataSource extends IPepGenericListDataSource{
@@ -100,8 +101,8 @@ export class RLDataSource implements IRLDataSource{
     async init(params: IPepGenericListParams): Promise<IPepGenericListInitData>{
         //if the list is just cloned there is no need to emit an event because the first init happen because the data source was cloned! and not because an event
         if(!this.isCloned){
-            const paramsAdapter = new GLParamsAdapter(params)
-            const changes = paramsAdapter.adapt()
+            const paramsAdapter = new ChangesBuilder(params)
+            const changes = paramsAdapter.build()
             //emit event to get the list container
             const listContainer = await this.getListContainer(changes)
             //update the list and variables 

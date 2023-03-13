@@ -5,7 +5,6 @@ import { ListState } from "shared";
 import { StateObserver } from "./state-observer";
 
 export class StateManager{
-    private isFirst: boolean = true
     private stateObserver: StateObserver = new StateObserver()
 
     constructor(private state: Partial<ListState>, private changes: Partial<ListState>){
