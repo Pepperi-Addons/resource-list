@@ -3,9 +3,8 @@ import { ClientEventsService } from '../services/client-events.service';
 import { ListContainer } from 'shared';
 import { IPepGenericListDataSource, IPepGenericListInitData, IPepGenericListParams } from '@pepperi-addons/ngx-composite-lib/generic-list';
 import { GenericListAdapter } from '../helpers/generic-list-adapter';
-import { GenericListAdapterResult, SmartSearchInput } from '../metadata';
+import { GVButton, GenericListAdapterResult, SmartSearchInput } from '../metadata';
 import { PepMenuItem } from '@pepperi-addons/ngx-lib/menu';
-import { GVButton } from 'src/app/generic-viewer/generic-viewer.model';
 import { Subject } from 'rxjs';
 
 @Component({
@@ -49,7 +48,7 @@ export class ResourceListComponent implements OnInit {
     if(listContainer){
       const lineMenuSubject = new Subject<{key: string, data?: any}>()
       lineMenuSubject.subscribe((event) => this.onClientMenuClick(event.key, event.data))
-      const genericListAdapter = new GenericListAdapter(listContainer, this.clientEventService, lineMenuSubject)
+      const genericListAdapter = new GenericListAdapter(listContainer, lineMenuSubject)
       const genericListData = genericListAdapter.adapt()
       this.setGenericListVariables(genericListData)
     }
