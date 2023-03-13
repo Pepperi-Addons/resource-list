@@ -36,7 +36,6 @@ export class RLDataSource implements IRLDataSource{
         return this.stateManager.getStateObserver()
     }
 
-
     private async getListContainer(changes: Partial<ListState>){
         const state = this.stateManager.getState()
         if(this.stateManager.isStateEmpty()){
@@ -97,16 +96,24 @@ export class RLDataSource implements IRLDataSource{
     private onClientLineMenuClick(key: string, data?: any){
         console.log('menu clicked!!')
     }
+    async update(params: IPepGenericListParams): Promise<any[]> {
+        await this.changeState(params)
+        return this.items
+    }
+
+    private async changeState(params: IPepGenericListParams){
+        const paramsAdapter = new ChangesBuilder(params)
+        const changes = paramsAdapter.build()
+        //emit event to get the list container
+        const listContainer = await this.getListContainer(changes)
+        //update the list and variables 
+        this.updateList(listContainer)
+    }
     
     async init(params: IPepGenericListParams): Promise<IPepGenericListInitData>{
         //if the list is just cloned there is no need to emit an event because the first init happen because the data source was cloned! and not because an event
         if(!this.isCloned){
-            const paramsAdapter = new ChangesBuilder(params)
-            const changes = paramsAdapter.build()
-            //emit event to get the list container
-            const listContainer = await this.getListContainer(changes)
-            //update the list and variables 
-            this.updateList(listContainer)
+            await this.changeState(params)
         }
         this.isCloned = false
         this.stateManager.updateVariables()
@@ -118,23 +125,24 @@ export class RLDataSource implements IRLDataSource{
     }
 
     updateList(listContainer: ListContainer){
-                //adapt the data to be compatible to the generic list 
-                const genericListData = this.getGenericListData(listContainer)
+        //adapt the data to be compatible to the generic list 
+        const genericListData = this.getGenericListData(listContainer)
 
-                //update the state 
-                if(listContainer.State){
-                    this.stateManager.updateState(listContainer.State)
-                }
-                //update generic list params if needed
-                // this.updateGenericListParams(params, this.stateManager.getState())
-        
-                //update data view data and count
-                this.updateVariables(listContainer)
-        
-                //notify observers 
-                this.layoutObserver.notifyObservers(genericListData)
-        
-                //reset changes
-                this.stateManager.resetChanges()
+        //update the state 
+        if(listContainer.State){
+            this.stateManager.updateState(listContainer.State)
+        }
+
+        //update generic list params if needed
+        // this.updateGenericListParams(params, this.stateManager.getState())
+
+        //update data view data and count
+        this.updateVariables(listContainer)
+
+        //notify observers 
+        this.layoutObserver.notifyObservers(genericListData)
+
+        //reset changes
+        this.stateManager.resetChanges()
     }
 }
