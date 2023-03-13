@@ -3,9 +3,10 @@ import { ClientEventsService } from '../services/client-events.service';
 import { GridViewBlockAdapter } from '../helpers/view-blocks-adapter';
 import { ListContainer } from 'shared';
 import { IPepGenericListDataSource, IPepGenericListInitData, IPepGenericListParams } from '@pepperi-addons/ngx-composite-lib/generic-list';
-import { SmartSearchInput } from '../metadata';
+import { GenericListAdapter } from '../helpers/generic-list-adapter';
+import { GVButton, GenericListAdapterResult, SmartSearchInput } from '../metadata';
 import { PepMenuItem } from '@pepperi-addons/ngx-lib/menu';
-import { GVButton } from 'src/app/generic-viewer/generic-viewer.model';
+import { Subject } from 'rxjs';
 import { StateManager } from '../helpers/state-manager';
 import { RLDataSource } from '../helpers/RL-data-source';
 
