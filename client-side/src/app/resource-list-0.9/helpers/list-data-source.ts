@@ -10,7 +10,7 @@ import { LayoutObserver } from "./layout-observer";
 import { ChangesBuilder } from "./changes-bulder";
 
 
-export interface IRLDataSource extends IPepGenericListDataSource{
+export interface IListDataSource extends IPepGenericListDataSource{
     subscribe(): LayoutObserver
 }
 
@@ -19,7 +19,7 @@ export interface IRLDataSource extends IPepGenericListDataSource{
  * this class will respond to this events by emitting events to the cpi side and adapt the result.
  * this class will also hold state manager in order to send the cpi side events the state changes
  */
-export class RLDataSource implements IRLDataSource{
+export class ListDataSource implements IListDataSource{
     private layoutObserver: LayoutObserver = new LayoutObserver()
     private items: DataRow[]
     private dataView: GridDataView

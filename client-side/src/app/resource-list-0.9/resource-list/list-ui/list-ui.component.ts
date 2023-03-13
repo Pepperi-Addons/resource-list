@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { SmartSearchInput } from '../../metadata';
 import { PepMenuItem } from '@pepperi-addons/ngx-lib/menu';
 import { GVButton } from '../../metadata'
-import { RLDataSource } from '../../helpers/RL-data-source';
+import { ListDataSource } from '../../helpers/list-data-source';
 import { PepListSelectionType } from '@pepperi-addons/ngx-lib/list';
 
 @Component({
@@ -11,7 +11,7 @@ import { PepListSelectionType } from '@pepperi-addons/ngx-lib/list';
   styleUrls: ['./list-ui.component.scss']
 })
 export class ListUIComponent implements OnInit {
-   @Input() dataSource: RLDataSource
+   @Input() dataSource: ListDataSource
    smartSearch: SmartSearchInput = {dataView: {Type: "Menu", Fields: []}}
    menu: PepMenuItem[] = []
    buttons: GVButton[] = [] 
