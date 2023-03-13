@@ -1,5 +1,5 @@
 import { ListContainer } from "shared";
-import { ViewBlocksAdapter } from "./view-blocks-adapter";
+import { GridViewBlockAdapter } from "./view-blocks-adapter";
 import { DataSource } from "./data-source";
 import { MenuDataView, SchemeFieldType } from "@pepperi-addons/papi-sdk";
 import { GenericListAdapterResult, SmartSearchField, SmartSearchInput } from "../metadata";
@@ -23,7 +23,7 @@ export class GenericListAdapter {
     getDataSource(): DataSource | undefined{
         //first we can set the data and then update the dataview if needed
         if(this.listContainer.Layout?.View){
-            const viewBlocksAdapter = new ViewBlocksAdapter(this.listContainer.Layout.View.ViewBlocks.Blocks)
+            const viewBlocksAdapter = new GridViewBlockAdapter(this.listContainer.Layout.View.ViewBlocks?.Blocks)
             const dataview = viewBlocksAdapter.adapt()
             return new DataSource(dataview)
         }
