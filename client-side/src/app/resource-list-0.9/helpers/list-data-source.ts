@@ -124,7 +124,6 @@ export class ListDataSource implements IListDataSource{
         }
         this.isCloned = false
         this.stateManager.updateVariables()
-        debugger
         return {
             dataView: this.dataView,
             items: this.items,
