@@ -24,6 +24,7 @@ export class ResourceListComponent implements OnInit {
   ngOnInit(): void {
     this.init()
     
+    
   }
   
   async init(){

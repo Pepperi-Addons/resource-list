@@ -1,14 +1,10 @@
 import { ListContainer, ListMenuBlock } from "shared";
 import { GridViewBlockAdapter } from "./view-blocks-adapter";
 import { DataSource } from "./data-source";
-import { MenuDataView, SchemeFieldType } from "@pepperi-addons/papi-sdk";
-import { GenericListAdapterResult, SmartSearchField, SmartSearchInput } from "../metadata";
+import { GenericListAdapterResult, SmartSearchInput } from "../metadata";
 import { PepMenuItem } from "@pepperi-addons/ngx-lib/menu";
-import { PepButton } from "@pepperi-addons/ngx-lib/button";
 import { GVButton } from "src/app/generic-viewer/generic-viewer.model";
-import { PepAddonService, PepStyleStateType, PepStyleType } from "@pepperi-addons/ngx-lib";
-import { title } from "process";
-import { ClientEventsService } from "../services/client-events.service";
+import { PepStyleType } from "@pepperi-addons/ngx-lib";
 import { Subject, async } from "rxjs";
 import { PepSelectionData } from "@pepperi-addons/ngx-lib/list";
 
