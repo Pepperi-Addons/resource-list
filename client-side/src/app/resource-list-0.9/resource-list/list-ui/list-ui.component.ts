@@ -1,7 +1,7 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { SmartSearchInput } from '../../metadata';
 import { PepMenuItem } from '@pepperi-addons/ngx-lib/menu';
-import { GVButton } from 'src/app/generic-viewer/generic-viewer.model';
+import { GVButton } from '../../metadata'
 import { RLDataSource } from '../../helpers/RL-data-source';
 
 @Component({

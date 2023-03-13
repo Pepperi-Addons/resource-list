@@ -35,7 +35,7 @@ export class GenericListAdapter {
         if(this.listContainer.Layout?.View){
             const viewBlocksAdapter = new GridViewBlockAdapter(this.listContainer.Layout.View.ViewBlocks?.Blocks)
             const dataview = viewBlocksAdapter.adapt()
-            dataview
+            return dataview
         }
         return undefined
     }

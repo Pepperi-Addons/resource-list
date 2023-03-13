@@ -2,13 +2,12 @@ import { IPepGenericListParams } from "@pepperi-addons/ngx-composite-lib/generic
 import { ListState } from "shared";
 
 export class StateManager{
-    private isFirst: boolean = true
     constructor(private state: Partial<ListState>, private changes: Partial<ListState>){
 
     }
 
-    isFirstState(): boolean{
-        return this.isFirst
+    isStateEmpty(): boolean{
+        return !this.state
     }
 
     buildChangesFromPageParams(params: IPepGenericListParams){
@@ -30,16 +29,17 @@ export class StateManager{
         return this.changes
 
     }
+    
     buildChanges(){
 
     }
+
     setState(state: Partial<ListState>){
         this.state = state
-        this.isFirst = false
     }
+
     updateState(state: Partial<ListState>){
         this.state = {...(this.state || {}), ...state}
-        this.isFirst = false
     }
 
     getState(){

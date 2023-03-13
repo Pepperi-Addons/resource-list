@@ -7,7 +7,7 @@ import { GridDataView } from "@pepperi-addons/papi-sdk";
 import { GridViewBlockAdapter } from "./view-blocks-adapter";
 import { IPepGenericListDataSource, IPepGenericListInitData, IPepGenericListParams } from "@pepperi-addons/ngx-composite-lib/generic-list";
 import { LayoutObserver } from "./layout-observer";
-import { GLParamsAdapter } from "./GL-params-adapter";
+import { ChangesBuilder } from "./changes-bulder";
 
 
 export interface IRLDataSource extends IPepGenericListDataSource{
@@ -31,7 +31,7 @@ export class RLDataSource implements IRLDataSource{
 
     private async getListContainer(changes: Partial<ListState>){
         const state = this.stateManager.getState()
-        if(this.stateManager.isFirstState()){
+        if(this.stateManager.isStateEmpty()){
             return await this.clientEventsService.emitLoadListEvent(undefined, this.stateManager.getChanges())
         }
         return await this.clientEventsService.emitStateChangedEvent(state, changes)
@@ -76,8 +76,8 @@ export class RLDataSource implements IRLDataSource{
     }
     
     async init(params: IPepGenericListParams): Promise<IPepGenericListInitData>{
-        const paramsAdapter = new GLParamsAdapter(params)
-        const changes = paramsAdapter.adapt()
+        const paramsAdapter = new ChangesBuilder(params)
+        const changes = paramsAdapter.build()
         //emit event to get the list container
         const listContainer = await this.getListContainer(changes)
 
