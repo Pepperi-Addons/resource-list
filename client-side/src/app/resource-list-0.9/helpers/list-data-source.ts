@@ -5,10 +5,11 @@ import { ListContainer, ListState, DataRow } from "shared";
 import { GenericListAdapter } from "./generic-list-adapter";
 import { GridDataView } from "@pepperi-addons/papi-sdk";
 import { GridViewBlockAdapter } from "./view-blocks-adapter";
-import { IPepGenericListDataSource, IPepGenericListInitData, IPepGenericListParams } from "@pepperi-addons/ngx-composite-lib/generic-list";
+import { IPepGenericListDataSource, IPepGenericListInitData, IPepGenericListListInputs, IPepGenericListParams } from "@pepperi-addons/ngx-composite-lib/generic-list";
 import { LayoutObserver } from "./layout-observer";
 import { ChangesBuilder } from "./changes-bulder";
 import { StateObserver } from "./state-observer";
+import { type } from "os";
 
 
 export interface IListDataSource extends IPepGenericListDataSource{
@@ -27,6 +28,12 @@ export class ListDataSource implements IListDataSource{
     private items: DataRow[]
     private dataView: GridDataView
     private count: number
+    public inputs?: IPepGenericListListInputs = {
+        pager: {
+            size: 50,
+            type: 'pages'
+        }
+    }
 
     constructor(private clientEventsService: ClientEventsService, private stateManager: StateManager, private isCloned :boolean = false){
     
@@ -117,6 +124,7 @@ export class ListDataSource implements IListDataSource{
         }
         this.isCloned = false
         this.stateManager.updateVariables()
+        debugger
         return {
             dataView: this.dataView,
             items: this.items,

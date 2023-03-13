@@ -8,8 +8,10 @@ export class ViewRelationService{
     async getRows(searchResult: AddonsDataSearchResult, blocks: ViewBlock[]): Promise<DataRow[]>{
         const relationGroups = groupRelationBlocks(blocks)
         const gridArray = await this.drawRows(relationGroups, blocks, searchResult)
+        debugger
         const result: DataRow[] = []
         //iterate over all the grids we get, and merge the rows by the same order
+        //TODO grid array suppose to be array of grids and not array of rows!
         gridArray.forEach(grid => {
             const row = grid.reduce((acc, curr) => {
                 return {...acc, ...curr}
