@@ -12,6 +12,7 @@ import { PepButtonModule } from '@pepperi-addons/ngx-lib/button';
 @NgModule({
   declarations: [
     ResourceListComponent,
+    ListUIComponent,
     ListUIComponent
   ],
   imports: [
