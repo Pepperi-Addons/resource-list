@@ -1,8 +1,8 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { SmartSearchInput } from '../../metadata';
 import { IPepMenuItemClickEvent, PepMenuItem } from '@pepperi-addons/ngx-lib/menu';
-import { GVButton } from 'src/app/generic-viewer/generic-viewer.model';
-import { RLDataSource } from '../../helpers/RL-data-source';
+import { GVButton } from '../../metadata'
+import { ListDataSource } from '../../helpers/list-data-source';
 import { PepListSelectionType } from '@pepperi-addons/ngx-lib/list';
 import { GenericListComponent } from '@pepperi-addons/ngx-composite-lib/generic-list';
 
@@ -12,7 +12,7 @@ import { GenericListComponent } from '@pepperi-addons/ngx-composite-lib/generic-
   styleUrls: ['./list-ui.component.scss']
 })
 export class ListUIComponent implements OnInit {
-   @Input() dataSource: RLDataSource
+   @Input() dataSource: ListDataSource
    smartSearch: SmartSearchInput = {dataView: {Type: "Menu", Fields: []}}
    menu: PepMenuItem[] = []
    buttons: GVButton[] = [] 
