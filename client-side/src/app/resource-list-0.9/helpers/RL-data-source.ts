@@ -90,19 +90,6 @@ export class RLDataSource implements IRLDataSource{
     }
     
     async init(params: IPepGenericListParams): Promise<IPepGenericListInitData>{
-        debugger
-        if(params.filters){
-            const jsonFilters = NgXToJSONFilterAdapter.adapt(params.filters, {
-                Name: {
-                    Type: 'String'
-                },
-                age: {
-                    Type: 'DateTime'
-                }
-            })
-            const ngxFilters = JSONToNGXFilterAdapter.adapt(jsonFilters)
-            debugger
-        }
         //if the list is just cloned there is no need to emit an event because the first init happen because the data source was cloned! and not because an event
         if(!this.isCloned){
             const paramsAdapter = new GLParamsAdapter(params)
