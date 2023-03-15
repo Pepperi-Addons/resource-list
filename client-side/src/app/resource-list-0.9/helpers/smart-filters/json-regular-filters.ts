@@ -61,7 +61,7 @@ export class DateFilter extends RegularFilter implements JSONDateTimeFilter{
                 this.Operation = "Between"
                 break;
             case "inTheLast":
-                this.Values.push("Months")
+                this.Values.push(capitalizeFirstLetter(filter.operatorUnit.id))
                 this.Operation = "InTheLast"
                 break;
             case "today":

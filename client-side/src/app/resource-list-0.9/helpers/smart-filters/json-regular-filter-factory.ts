@@ -3,7 +3,7 @@ import { SchemeFieldType } from "@pepperi-addons/papi-sdk"
 import { JSONRegularFilter } from "@pepperi-addons/pepperi-filters"
 import { DateFilter, DoubleFilter, IntegerFilter, StringFilter } from "./json-regular-filters"
 
-export class JSONRegularFilterBuilder{
+export class JSONRegularFilterFactory{
     static create(filter: IPepSmartFilterData, type: SchemeFieldType): JSONRegularFilter{
 
         switch (type){

@@ -60,7 +60,7 @@ export class GenericListAdapter {
             return {
                 dataView: {
                     Type: 'Menu',
-                    Fields: this.listContainer.Layout.SmartSearch.Fields
+                    Fields: [...this.listContainer.Layout.SmartSearch.Fields, {FieldID: 'age', Title: 'age', Type: 'DateTime'}]
                 }
             }
         }
