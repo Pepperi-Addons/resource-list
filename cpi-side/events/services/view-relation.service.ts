@@ -7,29 +7,34 @@ export class ViewRelationService{
     
     async getRows(searchResult: AddonsDataSearchResult, blocks: ViewBlock[]): Promise<DataRow[]>{
         const relationGroups = groupRelationBlocks(blocks)
-        const gridArray = await this.drawRows(relationGroups, blocks, searchResult)
+        const gridArray = await this.drawGrids(relationGroups, blocks, searchResult)
+
+        //find the grid with the minimum number of objects
+        const minLength = gridArray.reduce((acc, curr) => Math.min(acc, curr.length), Infinity)
         const result: DataRow[] = []
-        //iterate over all the grids we get, and merge the rows by the same order
-        gridArray.forEach(grid => {
-            const row = grid.reduce((acc, curr) => {
-                return {...acc, ...curr}
+
+        for(let i = 0; i < minLength; i++){
+            const ithRow = gridArray.reduce((row, currentGrid) => {
+                return {...row, ...currentGrid[i]}
             }, {})
-            result.push(row)
-        })
+            result.push(ithRow)
+        }
+
         return result
     }
 
-    private async drawRows(relationBlocks: RelationBlock[], viewBlocks: ViewBlock[], searchResult: AddonsDataSearchResult){
+    private async drawGrids(relationBlocks: RelationBlock[], viewBlocks: ViewBlock[], searchResult: AddonsDataSearchResult){
         return Promise.all(relationBlocks.map(async relationBlock => {
-            return await this.drawRow(relationBlock, viewBlocks, searchResult)
+            return await this.drawGrid(relationBlock, viewBlocks, searchResult)
         }))
     }
 
-    private async drawRow(block: RelationBlock, viewBlocks: ViewBlock[], searchResult: AddonsDataSearchResult): Promise<DataRow[]>{
+    private async drawGrid(block: RelationBlock, viewBlocks: ViewBlock[], searchResult: AddonsDataSearchResult): Promise<DataRow[]>{
         const result =  await pepperi.addons.api.uuid(block.AddonUUID).post({
             url: block.DrawURL,
             body: { Data: searchResult.Objects , ViewBlocks: viewBlocks }
         })
+
         if(!result.Data){
             throw new Error(`in draw blocks - addon with uuid ${block.AddonUUID} inside draw url ${block.DrawURL} doesn't return object of type RowData[]`)
         }

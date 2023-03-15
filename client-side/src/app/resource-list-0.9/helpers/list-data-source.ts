@@ -4,20 +4,20 @@ import { StateManager } from "./state-manager";
 import { ListContainer, ListState, DataRow } from "shared";
 import { GenericListAdapter } from "./generic-list-adapter";
 import { GridDataView } from "@pepperi-addons/papi-sdk";
-import { ViewBlocksAdapter } from "./view-blocks-adapter";
-import { IPepGenericListDataSource, IPepGenericListInitData, IPepGenericListParams } from "@pepperi-addons/ngx-composite-lib/generic-list";
+import { GridViewBlockAdapter } from "./view-blocks-adapter";
+import { IPepGenericListDataSource, IPepGenericListInitData, IPepGenericListListInputs, IPepGenericListParams } from "@pepperi-addons/ngx-composite-lib/generic-list";
 import { LayoutObserver } from "./layout-observer";
-import { GLParamsAdapter } from "./GL-params-adapter";
+import { ChangesBuilder } from "./changes-builder";
 import { StateObserver } from "./state-observer";
 import { NgXToJSONFilterAdapter } from "./smart-filters/ngx-to-json-filters-adapter";
 import { JSONToNGXFilterAdapter } from "./smart-filters/json-regular-filters/json-to-ngx-filters-adapter";
 
 
 
-export interface IRLDataSource extends IPepGenericListDataSource{
+export interface IListDataSource extends IPepGenericListDataSource{
     subscribeToLayoutChanges(): LayoutObserver
     subscribeToStateChanges(): StateObserver
-    onMenuClick(key: string): Promise<RLDataSource>
+    onMenuClick(key: string): Promise<ListDataSource>
 }
 
 /**
@@ -25,11 +25,17 @@ export interface IRLDataSource extends IPepGenericListDataSource{
  * this class will respond to this events by emitting events to the cpi side and adapt the result.
  * this class will also hold state manager in order to send the cpi side events the state changes
  */
-export class RLDataSource implements IRLDataSource{
+export class ListDataSource implements IListDataSource{
     private layoutObserver: LayoutObserver = new LayoutObserver()
     private items: DataRow[]
     private dataView: GridDataView
     private count: number
+    public inputs?: IPepGenericListListInputs = {
+        pager: {
+            size: 50,
+            type: 'pages'
+        }
+    }
 
     constructor(private clientEventsService: ClientEventsService, private stateManager: StateManager, private isCloned: boolean = false){
     
@@ -39,10 +45,9 @@ export class RLDataSource implements IRLDataSource{
         return this.stateManager.getStateObserver()
     }
 
-
     private async getListContainer(changes: Partial<ListState>){
         const state = this.stateManager.getState()
-        if(this.stateManager.isFirstState()){
+        if(this.stateManager.isStateEmpty()){
             return await this.clientEventsService.emitLoadListEvent(undefined, this.stateManager.getChanges())
         }
         return await this.clientEventsService.emitStateChangedEvent(state, changes)
@@ -51,7 +56,7 @@ export class RLDataSource implements IRLDataSource{
     private getGenericListData(listContainer: ListContainer){
         const lineMenuSubject = new Subject<{key: string, data?: any}>()
         lineMenuSubject.subscribe((event) => this.onClientLineMenuClick(event.key, event.data))
-        const genericListAdapter = new GenericListAdapter(listContainer, this.clientEventsService, lineMenuSubject)
+        const genericListAdapter = new GenericListAdapter(listContainer, lineMenuSubject)
         return genericListAdapter.adapt()
     }
     
@@ -61,7 +66,7 @@ export class RLDataSource implements IRLDataSource{
             this.count = listContainer.Data.Count
         }
         if(listContainer.Layout?.View?.ViewBlocks?.Blocks){
-            const viewBlocksAdapter = new ViewBlocksAdapter(listContainer.Layout.View.ViewBlocks.Blocks)
+            const viewBlocksAdapter = new GridViewBlockAdapter(listContainer.Layout.View.ViewBlocks.Blocks)
             this.dataView = viewBlocksAdapter.adapt()
         }
     }
@@ -70,13 +75,13 @@ export class RLDataSource implements IRLDataSource{
         return this.layoutObserver
     }
 
-    async onMenuClick(key: string): Promise<RLDataSource>{
+    async onMenuClick(key: string): Promise<ListDataSource>{
         const listContainer = await this.clientEventsService.emitMenuClickEvent(this.stateManager.getState(), key)
         this.updateList(listContainer)
         return this.clone()
     }
-    private clone(): RLDataSource{
-        const newDataSource = new RLDataSource(this.clientEventsService, this.stateManager, true)
+    private clone(): ListDataSource{
+        const newDataSource = new ListDataSource(this.clientEventsService, this.stateManager, true)
         newDataSource.layoutObserver = this.layoutObserver
         newDataSource.dataView = this.dataView
         newDataSource.items = this.items
@@ -88,16 +93,24 @@ export class RLDataSource implements IRLDataSource{
     private onClientLineMenuClick(key: string, data?: any){
         console.log('menu clicked!!')
     }
+    async update(params: IPepGenericListParams): Promise<any[]> {
+        await this.changeState(params)
+        return this.items
+    }
+
+    private async changeState(params: IPepGenericListParams){
+        const paramsAdapter = new ChangesBuilder(params)
+        const changes = paramsAdapter.build()
+        //emit event to get the list container
+        const listContainer = await this.getListContainer(changes)
+        //update the list and variables 
+        this.updateList(listContainer)
+    }
     
     async init(params: IPepGenericListParams): Promise<IPepGenericListInitData>{
         //if the list is just cloned there is no need to emit an event because the first init happen because the data source was cloned! and not because an event
         if(!this.isCloned){
-            const paramsAdapter = new GLParamsAdapter(params)
-            const changes = paramsAdapter.adapt()
-            //emit event to get the list container
-            const listContainer = await this.getListContainer(changes)
-            //update the list and variables 
-            this.updateList(listContainer)
+            await this.changeState(params)
         }
         this.isCloned = false
         this.stateManager.updateVariables()
@@ -109,8 +122,8 @@ export class RLDataSource implements IRLDataSource{
     }
 
     updateList(listContainer: ListContainer){
-                //adapt the data to be compatible to the generic list 
-                const genericListData = this.getGenericListData(listContainer)
+        //adapt the data to be compatible to the generic list 
+        const genericListData = this.getGenericListData(listContainer)
 
                 //update the state 
                 if(listContainer.State){
