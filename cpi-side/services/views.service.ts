@@ -11,10 +11,10 @@ export class ViewsService{
         const [view,viewDataview, lineMenuItems, menuItems, smartSearchDataView, searchDataView] = await Promise.all([
             this.getView(viewKey) as Promise<View>,
             this.getDataView(`GV_${dataViewKey}_View`),
-            this.getDataView(`RV_${dataViewKey}_LineMenu`),
-            this.getDataView(`GV_${dataViewKey}_Menu`),
-            this.getDataView(`GV_${dataViewKey}_SmartSearch`),
-            this.getDataView(`GV_${dataViewKey}_Search`)
+            this.getDataView(`RV_${dataViewKey}_LineMenuLandscape`),
+            this.getDataView(`GV_${dataViewKey}_MenuLandscape`),
+            this.getDataView(`GV_${dataViewKey}_SmartSearchLandscape`),
+            this.getDataView(`GV_${dataViewKey}_SearchLandscape`)
         ])
         let result: any = {
             view : view,
@@ -50,8 +50,8 @@ export class ViewsService{
         }
         const dataViewKey = this.getDataViewKeyFromUUID(view.Key)
         const dataview = await this.getDataView(`GV_${dataViewKey}_View`) as GridDataView
-        const smartSearchDataView = await this.getDataView(`GV_${dataViewKey}_SmartSearch`) as MenuDataView
-        const searchDataView = await this.getDataView(`GV_${dataViewKey}_Search`) as MenuDataView
+        const smartSearchDataView = await this.getDataView(`GV_${dataViewKey}_SmartSearchLandscape`) as MenuDataView
+        const searchDataView = await this.getDataView(`GV_${dataViewKey}_SearchLandscape`) as MenuDataView
         return {
             view: view,
             viewDataview: dataview,
