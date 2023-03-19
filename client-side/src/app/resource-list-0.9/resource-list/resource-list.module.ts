@@ -6,6 +6,7 @@ import { ListUIComponent } from './list-ui/list-ui.component';
 import { PepGenericListModule } from '@pepperi-addons/ngx-composite-lib/generic-list';
 import { PepMenuModule } from '@pepperi-addons/ngx-lib/menu';
 import { PepButtonModule } from '@pepperi-addons/ngx-lib/button';
+import { PepSelectModule } from '@pepperi-addons/ngx-lib/select';
 
 
 
@@ -18,7 +19,8 @@ import { PepButtonModule } from '@pepperi-addons/ngx-lib/button';
     CommonModule,
     PepGenericListModule,
     PepMenuModule,
-    PepButtonModule
+    PepButtonModule,
+    PepSelectModule
   ],
   providers: [
     ClientEventsService

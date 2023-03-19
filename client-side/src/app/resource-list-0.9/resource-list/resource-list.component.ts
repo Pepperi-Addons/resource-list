@@ -5,7 +5,7 @@ import { GVButton, SmartSearchInput } from '../metadata';
 import { PepMenuItem } from '@pepperi-addons/ngx-lib/menu';
 import { StateManager } from '../helpers/state-manager';
 import { PepperiList } from '../helpers/pepperi-list';
-import { ListContainer, Sorting } from 'shared';
+import { ListContainer, Sorting, ViewsMenu } from 'shared';
 import { IPepSelectionOption } from '@pepperi-addons/ngx-lib/select-panel';
 import { IPepListSortingChangeEvent, PepListSelectionType } from '@pepperi-addons/ngx-lib/list';
 import { ReplaySubject } from 'rxjs';
@@ -20,13 +20,14 @@ export class ResourceListComponent implements OnInit {
   smartSearch: SmartSearchInput
   menu: PepMenuItem[]
   buttons: GVButton[]
-  lineMenu: any = {get: () => {}}
+  lineMenu: any
   dataSource: IPepGenericListDataSource
   loadCompleted: boolean = false
   search: boolean
   title: string
   selectionType: PepListSelectionType
-  
+  viewsMenu: ViewsMenu
+  selectedViewKey: string
 
   pageIndex: ReplaySubject<number> = new ReplaySubject()
   searchString: ReplaySubject<string> = new ReplaySubject()
@@ -54,15 +55,17 @@ export class ResourceListComponent implements OnInit {
 
   subscribeToLayoutChanges(){
     this.pepperiList.subscribeToLayoutChanges()
-    .onButtonsChanged((buttons: GVButton[]) => this.buttons = buttons)
-    .onMenuChanged((menu: PepMenuItem[]) => this.menu = menu)
+    .onButtonsChanged(buttons => this.buttons = buttons)
+    .onMenuChanged(menu => this.menu = menu)
     .onLineMenuChanged((lineMenu) => this.lineMenu = lineMenu)
     .onSmartSearchChanged(data => this.smartSearch = data)
     .onSearchChanged(visible => this.search = visible)
     .onTitleChanged(title => this.title = title)
-    .onSelectionTypeChanged(selectionType => {
-      this.selectionType = selectionType
+    .onSelectionTypeChanged(selectionType => this.selectionType = selectionType)
+    .onViewsMenuChanged(viewsMenu => {
+      this.viewsMenu = viewsMenu
     })
+    .onSelectedViewChanged(key => this.selectedViewKey = key)
   }
 
   subscribeToStateChanges(){

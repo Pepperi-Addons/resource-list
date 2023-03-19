@@ -133,6 +133,5 @@ export class PepperiList implements IStateChangedHandler{
 
         //notify state observers 
         this.stateManager.notifyObservers()
-        //reset changes
     }
 }

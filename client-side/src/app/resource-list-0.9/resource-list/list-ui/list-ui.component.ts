@@ -6,6 +6,7 @@ import { PepperiList } from '../../helpers/pepperi-list';
 import { IPepListSortingChangeEvent, PepListSelectionType } from '@pepperi-addons/ngx-lib/list';
 import { GenericListComponent } from '@pepperi-addons/ngx-composite-lib/generic-list';
 import { ReplaySubject } from 'rxjs';
+import { ViewsMenu } from 'shared';
 
 @Component({
   selector: 'list-ui',
@@ -22,6 +23,8 @@ export class ListUIComponent implements OnInit {
   @Input() search: boolean
   @Input() title: string
   @Input() selectionType: PepListSelectionType
+  @Input() viewsMenu: ViewsMenu
+  @Input() selectedViewKey: string
 
   //state inputs
   @Input() searchString: ReplaySubject<string>
@@ -47,9 +50,11 @@ export class ListUIComponent implements OnInit {
     this.sorting.subscribe(sorting => this.list.listInputs.sorting = sorting)
   }
 
-  async onMenuClicked(event: IPepMenuItemClickEvent){
+  onMenuClicked(event: IPepMenuItemClickEvent){
     this.menuClickedEvent.emit(event.source.key)
-    // const newDataSource = await this.dataSource.onMenuClick(event.source.key)
-    // this.dataSource = newDataSource
+  }
+
+  onViewChange(event){
+
   }
 }

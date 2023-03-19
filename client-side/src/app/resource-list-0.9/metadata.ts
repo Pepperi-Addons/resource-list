@@ -5,6 +5,7 @@ import { PepButton } from "@pepperi-addons/ngx-lib/button"
 import { PepStyleType } from "@pepperi-addons/ngx-lib"
 import { PepListSelectionType } from "@pepperi-addons/ngx-lib/list"
 import { IPepGenericListInitData } from "@pepperi-addons/ngx-composite-lib/generic-list"
+import { ViewsMenu } from "shared"
 
 export const loadListEventKey = "OnClientLoadList"
 export const stateChangeEventKey = "OnClientStateChange"
@@ -19,6 +20,8 @@ export type GenericListAdapterResult = {
     search?: boolean, 
     title?: string,
     selectionType?: PepListSelectionType
+    viewsMenu?: ViewsMenu
+    selectedViewKey?: string
 }
 
 export interface GVButton extends PepButton {
@@ -35,3 +38,5 @@ export type SmartSearchInput = {
 export function capitalizeFirstLetter(s: string){
     return s.charAt(0).toUpperCase() + s.slice(1)
  }
+
+ export type PepSelectElement = {key: string, value: string}

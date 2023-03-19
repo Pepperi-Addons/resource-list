@@ -29,7 +29,9 @@ export class GenericListAdapter {
             lineMenu: lineMenu,
             search: search,
             title: title,
-            selectionType: selectionType
+            selectionType: selectionType,
+            viewsMenu: this.listContainer?.Layout?.ViewsMenu,
+            selectedViewKey: this.listContainer?.Layout?.View?.Key
         }
     }
     /**
