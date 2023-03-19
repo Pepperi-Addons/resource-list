@@ -1,7 +1,20 @@
-import { AddonDataScheme, BaseDataView, DataViewFieldType, GridDataView, GridDataViewField, SchemeFieldType } from "@pepperi-addons/papi-sdk";
+import { IPepGenericListInitData } from "@pepperi-addons/ngx-composite-lib/generic-list";
+import { AddonDataScheme, BaseDataView, CardsGridDataView, DataViewFieldType, GridDataView, GridDataViewField, SchemeFieldType } from "@pepperi-addons/papi-sdk";
 import { ViewBlock } from "shared";
+
 export interface IViewBlocksAdapter{
-    adapt(): BaseDataView
+    adapt(): IPepGenericListInitData['dataView']
+}
+
+export class ViewBlocksAdapterFactory{
+    static create(type: "Grid" | "Cards", viewBlocks: ViewBlock[]): IViewBlocksAdapter{
+        switch (type){
+            case "Grid":
+                return new GridViewBlockAdapter(viewBlocks)
+            default:
+                throw Error(`view blocks adapter for type ${type} is not implemented yet`)
+        }
+    }
 }
 
 export class GridViewBlockAdapter implements IViewBlocksAdapter{

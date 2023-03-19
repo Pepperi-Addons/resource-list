@@ -4,6 +4,7 @@ import { PepMenuItem } from "@pepperi-addons/ngx-lib/menu"
 import { PepButton } from "@pepperi-addons/ngx-lib/button"
 import { PepStyleType } from "@pepperi-addons/ngx-lib"
 import { PepListSelectionType } from "@pepperi-addons/ngx-lib/list"
+import { IPepGenericListInitData } from "@pepperi-addons/ngx-composite-lib/generic-list"
 
 export const loadListEventKey = "OnClientLoadList"
 export const stateChangeEventKey = "OnClientStateChange"

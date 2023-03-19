@@ -1,4 +1,4 @@
-import { Subject } from "rxjs"
+import { BehaviorSubject, ReplaySubject, Subject } from "rxjs"
 import { GenericListAdapterResult, SmartSearchInput } from "../metadata"
 import { PepMenuItem } from "@pepperi-addons/ngx-lib/menu"
 import { GVButton } from "../metadata"
@@ -6,13 +6,13 @@ import { PepListSelectionType, PepSelectionData } from "@pepperi-addons/ngx-lib/
 
 export class LayoutObserver{
     //subjects 
-    private $smartSearch: Subject<SmartSearchInput> = new Subject()
-    private $menu: Subject<PepMenuItem[]> = new Subject()
-    private $buttons: Subject<GVButton[]> = new Subject()
-    private $lineMenu: Subject<LineMenuActionsObject> = new Subject()
-    private $search: Subject<boolean> = new Subject()
-    private $title: Subject<string> = new Subject()
-    private $selectionType: Subject<PepListSelectionType> = new Subject()
+    private $smartSearch: BehaviorSubject<SmartSearchInput> = new BehaviorSubject({dataView: {Fields: [], Type: 'Menu'}})
+    private $menu: BehaviorSubject<PepMenuItem[]> = new BehaviorSubject([])
+    private $buttons: BehaviorSubject<GVButton[]> = new BehaviorSubject([])
+    private $lineMenu: BehaviorSubject<LineMenuActionsObject> = new BehaviorSubject({get: async () => []})
+    private $search: BehaviorSubject<boolean> = new BehaviorSubject(false)
+    private $title: BehaviorSubject<string> = new BehaviorSubject('')
+    private $selectionType: BehaviorSubject<PepListSelectionType> = new BehaviorSubject('none')
 
     /**
      * 
@@ -21,13 +21,13 @@ export class LayoutObserver{
      * for example if the menu changed, this function will emit menu changed event and invoke the onMenuChange call
      */
     notifyObservers(data: GenericListAdapterResult){
-        if(data.lineMenu){
+        if(data.lineMenu != undefined){
             this.$lineMenu.next(data.lineMenu)
         }
-        if(data.buttons){
+        if(data.buttons != undefined){
             this.$buttons.next(data.buttons)
         }
-        if(data.menu){
+        if(data.menu != undefined){
             this.$menu.next(data.menu)
         }
         if(data.smartSearch){
@@ -36,10 +36,10 @@ export class LayoutObserver{
         if(data.search != undefined){
             this.$search.next(data.search)
         }
-        if(data.title){
+        if(data.title != undefined){
             this.$title.next(data.title)
         }
-        if(data.selectionType){
+        if(data.selectionType != undefined){
             this.$selectionType.next(data.selectionType)
         }
     }

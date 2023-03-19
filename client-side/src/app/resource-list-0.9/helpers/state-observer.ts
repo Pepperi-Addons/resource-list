@@ -1,16 +1,12 @@
-import { Subject } from "rxjs"
-import { GenericListAdapterResult, SmartSearchInput } from "../metadata"
-import { PepMenuItem } from "@pepperi-addons/ngx-lib/menu"
-import { GVButton } from "src/app/generic-viewer/generic-viewer.model"
+import { ReplaySubject } from "rxjs"
 import { IPepListSortingChangeEvent, PepListSelectionType, PepSelectionData } from "@pepperi-addons/ngx-lib/list"
 import { ListState } from "shared"
-import { stat } from "fs"
 
 export class StateObserver{
     //subjects 
-    private $searchString: Subject<string> = new Subject()
-    private $pageIndex: Subject<number> = new Subject()
-    private $sorting: Subject<IPepListSortingChangeEvent> = new Subject()
+    private $searchString: ReplaySubject<string> = new ReplaySubject()
+    private $pageIndex: ReplaySubject<number> = new ReplaySubject()
+    private $sorting: ReplaySubject<IPepListSortingChangeEvent> = new ReplaySubject()
 
 
     notifyObservers(state: Partial<ListState>){
