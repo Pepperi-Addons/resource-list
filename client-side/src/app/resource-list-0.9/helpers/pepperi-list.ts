@@ -37,7 +37,7 @@ export class PepperiList implements IStateChangedHandler{
     private $dataSource: ReplaySubject<IPepGenericListDataSource> = new ReplaySubject()
     private stateManager: StateManager = new StateManager({})
     
-    constructor(private clientEventsService: ClientEventsService,  private listContainer: Required<ListContainer>){
+    constructor(private clientEventsService: ClientEventsService,  private listContainer: ListContainer){
         this.$dataSource.next(new ListDataSource(this))
         this.updateList(listContainer)
     }
@@ -52,7 +52,7 @@ export class PepperiList implements IStateChangedHandler{
 
     private async getListContainer(changes: Partial<ListState>){
         const state = this.stateManager.getState()
-        return await this.clientEventsService.emitStateChangedEvent(state, changes)
+        return await this.clientEventsService.emitStateChangedEvent(state, changes, this.listContainer.List)
     }
 
     private convertToListLayout(listContainer: ListContainer): GenericListAdapterResult{
@@ -80,7 +80,7 @@ export class PepperiList implements IStateChangedHandler{
     }
 
     async onMenuClick(key: string){
-        const listContainer = await this.clientEventsService.emitMenuClickEvent(this.stateManager.getState(), key)
+        const listContainer = await this.clientEventsService.emitMenuClickEvent(this.stateManager.getState(), key, this.listContainer.List)
         //update the state if needed
         Object.assign(this.listContainer.State, listContainer.State || {})
         //update the layout if needed

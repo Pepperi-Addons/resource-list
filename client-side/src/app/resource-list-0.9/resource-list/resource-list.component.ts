@@ -5,7 +5,7 @@ import { GVButton, SmartSearchInput } from '../metadata';
 import { PepMenuItem } from '@pepperi-addons/ngx-lib/menu';
 import { StateManager } from '../helpers/state-manager';
 import { PepperiList } from '../helpers/pepperi-list';
-import { ListContainer, Sorting, ViewsMenu } from 'shared';
+import { List, ListContainer, Sorting, ViewsMenu } from 'shared';
 import { IPepSelectionOption } from '@pepperi-addons/ngx-lib/select-panel';
 import { IPepListSortingChangeEvent, PepListSelectionType } from '@pepperi-addons/ngx-lib/list';
 import { ReplaySubject } from 'rxjs';
@@ -29,10 +29,122 @@ export class ResourceListComponent implements OnInit {
   viewsMenu: ViewsMenu
   selectedViewKey: string
 
+  //subjects for state
   pageIndex: ReplaySubject<number> = new ReplaySubject()
   searchString: ReplaySubject<string> = new ReplaySubject()
   sorting: ReplaySubject<IPepListSortingChangeEvent> = new ReplaySubject()
-  //subjects for state
+  list1: List = {
+    Key: "LIST_KEY",
+    Name: "FirstList",
+    Resource: "Friends",
+    Views: [
+        {
+            Key: "7debbfa8-a085-11ed-a8fc-0242ac120002",
+            Type: "Grid",
+            Title: "FirstView",
+            Blocks: [
+                {
+                    Title: "My name",
+                    Configuration: {
+                        Type: "TextBox",
+                        FieldID: "name",
+                        Width: 10
+                    },
+                    DrawURL: 'addon-cpi/drawGrid',
+                    AddonUUID: '0e2ae61b-a26a-4c26-81fe-13bdd2e4aaa3'
+                },
+                {
+                    Title: "My age",
+                    Configuration: {
+                        Type: "NumberInteger",
+                        FieldID: "age",
+                        Width: 10
+                    },
+                    DrawURL: 'addon-cpi/drawGrid',
+                    AddonUUID: '0e2ae61b-a26a-4c26-81fe-13bdd2e4aaa3'
+                },
+            ],
+        }
+    ],
+    Menu: {
+        Blocks: [
+            {
+                Key: 'recycleBin',
+                Title: 'Recycle Bin',
+                DrawURL: 'addon-cpi/drawMenuBlock',
+                AddonUUID: '0e2ae61b-a26a-4c26-81fe-13bdd2e4aaa3',
+                ExecuteURL: 'addon-cpi/menuExecution'
+            },
+            {
+                Key: 'import',
+                Title: 'Import',
+                DrawURL: 'addon-cpi/drawMenuBlock',
+                AddonUUID: '0e2ae61b-a26a-4c26-81fe-13bdd2e4aaa3',
+                ExecuteURL: 'addon-cpi/menuExecution'
+            },
+            {
+                Key: 'export',
+                Title: 'Export',
+                DrawURL: 'addon-cpi/drawMenuBlock',
+                AddonUUID: '0e2ae61b-a26a-4c26-81fe-13bdd2e4aaa3',
+                ExecuteURL: 'addon-cpi/menuExecution'
+            },
+            {
+                Key: 'new',
+                Title: 'New',
+                DrawURL: 'addon-cpi/drawMenuBlock',
+                AddonUUID: '0e2ae61b-a26a-4c26-81fe-13bdd2e4aaa3',
+                ButtonStyleType: "Strong",
+                ExecuteURL: 'addon-cpi/menuExecution'
+            }
+        ]
+    },
+    LineMenu: {
+        Blocks: [
+            {
+                Key: "delete",
+                Title: "Delete",
+                DrawURL: 'addon-cpi/drawLineMenuBlock',
+                AddonUUID: '0e2ae61b-a26a-4c26-81fe-13bdd2e4aaa3',
+                ExecuteURL: 'addon-cpi/menuExecution'
+            },
+            {
+                Key: "edit",
+                Title: "Edit",
+                DrawURL: 'addon-cpi/drawLineMenuBlock',
+                AddonUUID: '0e2ae61b-a26a-4c26-81fe-13bdd2e4aaa3',
+                ExecuteURL: 'addon-cpi/menuExecution'
+            }
+        ]
+    },
+    Search: {
+        Fields: [
+            {
+                FieldID: "Key"
+            },
+            {
+                FieldID: "name"
+            }
+        ]
+    },
+    SmartSearch: {
+        Fields: [
+            {
+                FieldID: "name",
+                Title: "name",
+                Type: "String"
+            },
+            {
+                FieldID: "age",
+                Title: "name",
+                Type: "String"
+            }
+        ]
+    },
+    SelectionType: "Single",
+    Sorting: {Ascending: false, FieldID: "name"}
+}
+
   
   constructor(private clientEventService: ClientEventsService) { }
 
@@ -41,7 +153,8 @@ export class ResourceListComponent implements OnInit {
   }
 
   async load(){
-    const container = await this.clientEventService.emitLoadListEvent(undefined,{ListKey: "LIST_KEY", SearchString: 'aa'}) as Required<ListContainer>
+
+    const container = await this.clientEventService.emitLoadListEvent(undefined,{ListKey: "LIST_KEY", SearchString: 'aa'}, this.list1) as Required<ListContainer>
     this.pepperiList = new PepperiList(this.clientEventService, container)
     this.subscribeToChanges()
     this.loadCompleted = true

@@ -1,4 +1,4 @@
-import { ListContainer } from "shared"
+import { List, ListContainer } from "shared"
 import { ListState } from "shared"
 import { ListService } from "../../services/list.service"
 import { defaultStateValues } from "../metadata"
@@ -6,13 +6,13 @@ import { EventService } from "./event.service"
 
 export class LoadListEventService extends EventService{
 
-    async execute(state: ListState | undefined, changes: Partial<ListState>): Promise<ListContainer> {
+    async execute(state: ListState | undefined, changes: Partial<ListState>, listConfiguration?: List): Promise<ListContainer> {
         if(!changes?.ListKey){
             throw new Error(`list key must be supplied on load list event`)
         }
         
         const service = new ListService()
-        const list = await service.getList(changes.ListKey)
+        const list = listConfiguration || await service.getList(changes.ListKey)
 
         if(!list){
             throw new Error(`list with key ${changes.ListKey} does not exist`)
@@ -31,7 +31,8 @@ export class LoadListEventService extends EventService{
         return {
             Layout: layout,
             Data: data,
-            State: newState
+            State: newState,
+            List: list
         }
     }
 
