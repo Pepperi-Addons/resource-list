@@ -1,3 +1,4 @@
+
 <pep-generic-list 
     class="generic-list" 
     [showTopBar]="true"
@@ -20,14 +21,16 @@
         </pep-menu>
         <pep-select 
             *ngIf="viewsMenu.Items.length > 0"
-            class="buttons-holder pep-spacing-element"
+            class="pep-spacing-element"
             [value]="selectedViewKey"
             label="select view"
             type="select"
-            [visible]="true || viewsMenu.Visible"
+            [visible]="viewsMenu.Visible"
             [mandatory]="false"
             xAlignment="left"
+            [emptyOption]="false"
             [options]="viewsMenu.Items"
+            [renderTitle]="false"
             (valueChange)="onViewChange($event)">
         </pep-select>
         <ng-container *ngIf="buttons.length > 0">
