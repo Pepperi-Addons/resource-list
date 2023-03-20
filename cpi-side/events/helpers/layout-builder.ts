@@ -119,6 +119,7 @@ export class ListLayoutBuilder implements IListLayoutBuilder{
      */
     private views(views: View[] = [], viewKey?: string): ListLayoutBuilder{
         const result: ViewLayout = {
+            Key: "",
             ViewBlocks: {
                 Blocks: []
             },
@@ -147,8 +148,7 @@ export class ListLayoutBuilder implements IListLayoutBuilder{
         //add type and view blocks to the view
         result.Type = selectedView.Type
         result.ViewBlocks.Blocks = selectedView.Blocks
-
-        const viewBlocks = selectedView.Blocks
+        result.Key = selectedView.Key
         this.listModel.View = result
         return this
     }
