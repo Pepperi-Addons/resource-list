@@ -7,7 +7,7 @@ export class StateObserver{
     private $searchString: ReplaySubject<string> = new ReplaySubject()
     private $pageIndex: ReplaySubject<number> = new ReplaySubject()
     private $sorting: ReplaySubject<IPepListSortingChangeEvent> = new ReplaySubject()
-
+    private $selectedViewKey: ReplaySubject<string>  = new ReplaySubject()
 
     notifyObservers(state: Partial<ListState>){
         this.$searchString.next(state.SearchString)
@@ -18,6 +18,8 @@ export class StateObserver{
                 sortBy: state.Sorting.FieldID  
             })
         }
+        this.$selectedViewKey.next(state.ViewKey)
+
     }
     // update variables
 
@@ -31,6 +33,10 @@ export class StateObserver{
     }
     onSortingChanged(cb: (data: IPepListSortingChangeEvent) => void): StateObserver{
         this.$sorting.subscribe(cb)
+        return this
+    }
+    onViewKeyChanged(cb: (key: string) => void): StateObserver{
+        this.$selectedViewKey.subscribe(cb)
         return this
     }
 }

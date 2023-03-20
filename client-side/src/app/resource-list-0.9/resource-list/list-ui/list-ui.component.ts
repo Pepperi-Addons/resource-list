@@ -25,13 +25,14 @@ export class ListUIComponent implements OnInit {
   @Input() selectionType: PepListSelectionType
   @Input() viewsMenu: ViewsMenu
   @Input() selectedViewKey: string
-
+  
   //state inputs
   @Input() searchString: ReplaySubject<string>
   @Input() pageIndex: ReplaySubject<number>
   @Input() sorting: ReplaySubject<IPepListSortingChangeEvent>
   
   @Output() menuClickedEvent: EventEmitter<string> = new EventEmitter() 
+  @Output() viewChangedEVent: EventEmitter<string> = new EventEmitter()
   
   //generic list instance
   @ViewChild(GenericListComponent) list: GenericListComponent
@@ -55,6 +56,6 @@ export class ListUIComponent implements OnInit {
   }
 
   onViewChange(event){
-
+    this.viewChangedEVent.emit(event.source.key)
   }
 }

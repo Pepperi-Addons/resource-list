@@ -1,12 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ClientEventsService } from '../services/client-events.service';
 import { IPepGenericListDataSource } from '@pepperi-addons/ngx-composite-lib/generic-list';
-import { GVButton, SmartSearchInput } from '../metadata';
+import { GVButton, SmartSearchInput, ViewsMenuUI } from '../metadata';
 import { PepMenuItem } from '@pepperi-addons/ngx-lib/menu';
-import { StateManager } from '../helpers/state-manager';
 import { PepperiList } from '../helpers/pepperi-list';
 import { List, ListContainer, Sorting, ViewsMenu } from 'shared';
-import { IPepSelectionOption } from '@pepperi-addons/ngx-lib/select-panel';
 import { IPepListSortingChangeEvent, PepListSelectionType } from '@pepperi-addons/ngx-lib/list';
 import { ReplaySubject } from 'rxjs';
 
@@ -26,9 +24,9 @@ export class ResourceListComponent implements OnInit {
   search: boolean
   title: string
   selectionType: PepListSelectionType
-  viewsMenu: ViewsMenu
+  viewsMenu: ViewsMenuUI
   selectedViewKey: string
-
+  
   //subjects for state
   pageIndex: ReplaySubject<number> = new ReplaySubject()
   searchString: ReplaySubject<string> = new ReplaySubject()
@@ -55,6 +53,33 @@ export class ResourceListComponent implements OnInit {
                 },
                 {
                     Title: "My age",
+                    Configuration: {
+                        Type: "NumberInteger",
+                        FieldID: "age",
+                        Width: 10
+                    },
+                    DrawURL: 'addon-cpi/drawGrid',
+                    AddonUUID: '0e2ae61b-a26a-4c26-81fe-13bdd2e4aaa3'
+                },
+            ],
+        },
+        {
+            Key: "17e76a7e-c725-11ed-afa1-0242ac120002",
+            Type: "Grid",
+            Title: "SecondView",
+            Blocks: [
+                {
+                    Title: "Second name",
+                    Configuration: {
+                        Type: "TextBox",
+                        FieldID: "name",
+                        Width: 10
+                    },
+                    DrawURL: 'addon-cpi/drawGrid',
+                    AddonUUID: '0e2ae61b-a26a-4c26-81fe-13bdd2e4aaa3'
+                },
+                {
+                    Title: "Second age",
                     Configuration: {
                         Type: "NumberInteger",
                         FieldID: "age",
@@ -155,6 +180,7 @@ export class ResourceListComponent implements OnInit {
   async load(){
 
     const container = await this.clientEventService.emitLoadListEvent(undefined,{ListKey: "LIST_KEY", SearchString: 'aa'}, this.list1) as Required<ListContainer>
+    debugger
     this.pepperiList = new PepperiList(this.clientEventService, container)
     this.subscribeToChanges()
     this.loadCompleted = true
@@ -175,10 +201,18 @@ export class ResourceListComponent implements OnInit {
     .onSearchChanged(visible => this.search = visible)
     .onTitleChanged(title => this.title = title)
     .onSelectionTypeChanged(selectionType => this.selectionType = selectionType)
+    // needs to change the key and value properties to lower case to be compatible with pep select component
     .onViewsMenuChanged(viewsMenu => {
-      this.viewsMenu = viewsMenu
-    })
-    .onSelectedViewChanged(key => this.selectedViewKey = key)
+        this.viewsMenu = {
+            Visible: viewsMenu.Visible,
+            Items: viewsMenu.Items.map(view => {
+                return {
+                    key: view.Key,
+                    value: view.Value
+                }
+            })
+        }
+        })
   }
 
   subscribeToStateChanges(){
@@ -186,10 +220,14 @@ export class ResourceListComponent implements OnInit {
     .onPageIndexChanged((index => this.pageIndex.next(index)))
     .onSearchStringChanged((str) => this.searchString.next(str))
     .onSortingChanged((sorting) => this.sorting.next(sorting))
+    .onViewKeyChanged(key => this.selectedViewKey = key)
   }
 
   onClientMenuClick(key: string){
     this.pepperiList.onMenuClick(key)
+  }
+  onViewChanged(key: string){
+    debugger
   }
 
 }

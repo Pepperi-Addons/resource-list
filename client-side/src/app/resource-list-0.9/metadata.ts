@@ -40,3 +40,6 @@ export function capitalizeFirstLetter(s: string){
  }
 
  export type PepSelectElement = {key: string, value: string}
+
+
+ export type ViewsMenuUI = {Visible: boolean, Items: {key: string, value: string}[] }
