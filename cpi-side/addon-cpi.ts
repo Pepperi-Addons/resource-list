@@ -14,10 +14,12 @@ export async function load(configuration: any) {
         try{
             const state = data.State
             const changes = data.Changes
-            if(!changes || !changes.ListKey){
-                throw Error(`changes is required and needs to contain ListKey`)
+            const list = data.List
+            //if we don't get a key from the list and not from the changes, there could not be any load list
+            if(!list?.Key && (!changes || !changes.ListKey)){
+                throw Error(`list or changes are required,  and needs to contain ListKey`)
             }
-            return await new LoadListEventService().execute(state, changes)
+            return await new LoadListEventService().execute(state, changes, list)
         }catch(err){
             throw Error(`error inside OnClientLoadList event: ${err}`)
         }
