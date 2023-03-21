@@ -28,10 +28,12 @@ export async function load(configuration: any) {
         try{
             const state = data.State
             const changes = data.Changes
-            if(!state?.ViewKey || !state?.ListKey){
-                throw Error(`in client state change event -list key and view key must be exist in the state object`)
+            const list = data.List
+            //we must have some list and view in order to change state
+            if((!list?.ListKey && !list?.ViewKey) || (!state?.ListKey && !state?.ViewKey)){
+                throw Error(`in client state change event -list key and view key must be exist in the state object or in the list configuration`)
             }
-            return await new ChangeStateEventService().execute(state, changes)
+            return await new ChangeStateEventService().execute(state, changes, list)
         }catch(err){
             throw Error(`error inside onClientStateChanged event: ${err}`)
         }
@@ -40,8 +42,9 @@ export async function load(configuration: any) {
         try{
             const state = data.State
             const key = data.Key
-            if(!state?.ListKey){
-                throw Error(`in menu click event - state must includes list key`)
+            const list = data.List
+            if(!state?.ListKey && !list?.ListKey){
+                throw Error(`in menu click event - state or list must includes list key`)
             }
             if(!key){
                 throw Error(`in menu click event - no key found for the menu item`)

@@ -7,9 +7,6 @@ export class ListBuilder{
     constructor(){}
 
     async buildLayout(list: List, state: ListState | undefined , changes: Partial<ListState>): Promise<Partial<ListLayout> | undefined>{
-        if(!changes.ListKey){
-            return undefined
-        }
        return  await new ListLayoutBuilder(list, state ,changes).build()
     }
 

@@ -1,4 +1,4 @@
-import { ListContainer } from "shared"
+import { List, ListContainer } from "shared"
 import { ListState } from "shared"
 import { ListService } from "../../services/list.service"
 import { RequireField, defaultStateValues } from "../metadata"
@@ -11,9 +11,9 @@ export class ChangeStateEventService extends EventService{
      * @param changes 
      * @returns 
      */
-    async execute(state: RequireField<ListState, "ViewKey"> , changes: Partial<ListState>): Promise<ListContainer> {        
+    async execute(state: RequireField<ListState, "ViewKey"> , changes: Partial<ListState>, listConfiguration?: List): Promise<ListContainer> {        
         const service = new ListService()
-        const list = await service.getList(state.ListKey)
+        const list = listConfiguration ||  await service.getList(state.ListKey)
 
         if(!list){
             throw new Error(`list with key ${state.ListKey} does not exist`)
