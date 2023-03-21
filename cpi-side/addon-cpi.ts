@@ -6,6 +6,7 @@ import { ListService } from './services/list.service';
 import { LoadListEventService } from './events/services/load-list-event.service';
 import { DataRow, ListContainer, MenuBlock, loadListEventKey, menuClickEventKey, stateChangeEventKey } from 'shared';
 import { ChangeStateEventService } from './events/services/state-change-event.service';
+
 import { MenuClickService } from './events/services/menu-click.service';
 
 export async function load(configuration: any) {

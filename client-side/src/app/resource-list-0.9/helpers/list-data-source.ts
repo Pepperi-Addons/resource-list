@@ -6,7 +6,10 @@ import { GenericListAdapter } from "./generic-list-adapter";
 import { GridDataView } from "@pepperi-addons/papi-sdk";
 import { GridViewBlockAdapter } from "./view-blocks-adapter";
 import { IPepGenericListDataSource, IPepGenericListInitData, IPepGenericListListInputs, IPepGenericListParams } from "@pepperi-addons/ngx-composite-lib/generic-list";
+import { IPepGenericListDataSource, IPepGenericListInitData, IPepGenericListListInputs, IPepGenericListParams } from "@pepperi-addons/ngx-composite-lib/generic-list";
 import { LayoutObserver } from "./layout-observer";
+import { ChangesBuilder } from "./changes-builder";
+import { StateObserver } from "./state-observer";
 import { ChangesBuilder } from "./changes-builder";
 import { StateObserver } from "./state-observer";
 
@@ -42,6 +45,10 @@ export class ListDataSource implements IListDataSource{
         return this.stateManager.getStateObserver()
     }
 
+    subscribeToStateChanges(): StateObserver {
+        return this.stateManager.getStateObserver()
+    }
+
     private async getListContainer(changes: Partial<ListState>){
         const state = this.stateManager.getState()
         if(this.stateManager.isStateEmpty()){
@@ -69,8 +76,22 @@ export class ListDataSource implements IListDataSource{
     }
     //will expose the option to observe the changes on the layout by returning the observer as result
     subscribeToLayoutChanges(): LayoutObserver{
+    subscribeToLayoutChanges(): LayoutObserver{
         return this.layoutObserver
     }
+
+    async onMenuClick(key: string): Promise<ListDataSource>{
+        const listContainer = await this.clientEventsService.emitMenuClickEvent(this.stateManager.getState(), key)
+        this.updateList(listContainer)
+        return this.clone()
+    }
+    private clone(): ListDataSource{
+        const newDataSource = new ListDataSource(this.clientEventsService, this.stateManager, true)
+        newDataSource.layoutObserver = this.layoutObserver
+        newDataSource.dataView = this.dataView
+        newDataSource.items = this.items
+        newDataSource.count = this.count
+        return newDataSource
 
     async onMenuClick(key: string): Promise<ListDataSource>{
         const listContainer = await this.clientEventsService.emitMenuClickEvent(this.stateManager.getState(), key)
@@ -96,10 +117,35 @@ export class ListDataSource implements IListDataSource{
     }
 
     private async changeState(params: IPepGenericListParams){
+    async update(params: IPepGenericListParams): Promise<any[]> {
+        await this.changeState(params)
+        return this.items
+    }
+
+    private async changeState(params: IPepGenericListParams){
         const paramsAdapter = new ChangesBuilder(params)
         const changes = paramsAdapter.build()
         //emit event to get the list container
         const listContainer = await this.getListContainer(changes)
+        //update the list and variables 
+        this.updateList(listContainer)
+    }
+    
+    async init(params: IPepGenericListParams): Promise<IPepGenericListInitData>{
+        //if the list is just cloned there is no need to emit an event because the first init happen because the data source was cloned! and not because an event
+        if(!this.isCloned){
+            await this.changeState(params)
+        }
+        this.isCloned = false
+        this.stateManager.updateVariables()
+        return {
+            dataView: this.dataView,
+            items: this.items,
+            totalCount: this.count
+        }
+    }
+
+    updateList(listContainer: ListContainer){
         //update the list and variables 
         this.updateList(listContainer)
     }
