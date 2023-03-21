@@ -9,6 +9,7 @@ import { LayoutObserver } from "./layout-observer";
 import { StateObserver } from "./state-observer";
 import { ListDataSource } from "./list-data-source";
 import { GenericListAdapterResult } from "../metadata";
+import { debug } from "console";
 
 
 
@@ -84,7 +85,7 @@ export class PepperiList implements IStateChangedHandler{
         //update the state if needed
         Object.assign(this.listContainer.State, listContainer.State || {})
         //update the layout if needed
-        Object.assign(this.listContainer.Layout, listContainer.State || {})
+        Object.assign(this.listContainer.Layout, listContainer.Layout || {})
 
         if(listContainer.Data){
             this.listContainer.Data = listContainer.Data
@@ -137,11 +138,10 @@ export class PepperiList implements IStateChangedHandler{
 
     async onViewChanged(key: string){
         const listContainer = await this.clientEventsService.emitStateChangedEvent(this.stateManager.getState(), {ViewKey: key},  this.listContainer.List)
-        debugger
         //update the state if needed
         Object.assign(this.listContainer.State, listContainer.State || {})
         //update the layout if needed
-        Object.assign(this.listContainer.Layout, listContainer.State || {})
+        Object.assign(this.listContainer.Layout, listContainer.Layout || {})
 
         if(listContainer.Data){
             this.listContainer.Data = listContainer.Data
