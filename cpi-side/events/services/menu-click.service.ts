@@ -1,11 +1,11 @@
-import { ListState, ListContainer } from "shared";
+import { ListState, ListContainer, List } from "shared";
 import { ListService } from "../../services/list.service";
 
 export class MenuClickService{
 
-    async execute(state: ListState, key: string): Promise<ListContainer> {
+    async execute(state: ListState, key: string, listConfiguration?: List): Promise<ListContainer> {
         const service = new ListService()
-        const list = await service.getList(state.ListKey)
+        const list = listConfiguration || await service.getList(state.ListKey)
         if(!list){
             throw Error(`on menu click event - list with key ${state.ListKey} does not exist`)
         }
