@@ -8,6 +8,7 @@ import { DataRow, ListContainer, MenuBlock, loadListEventKey, menuClickEventKey,
 import { ChangeStateEventService } from './events/services/state-change-event.service';
 import { MenuClickService } from './events/services/menu-click.service';
 import { LoadListController } from './events/contorllers/load-list.controller';
+import { StateChangeController } from './events/contorllers/state-change.controller';
 
 export async function load(configuration: any) {
     //interceptors:
@@ -15,18 +16,7 @@ export async function load(configuration: any) {
         return await LoadListController.loadList(data.State, data.Changes, data.List)
     })
     pepperi.events.intercept(stateChangeEventKey as any, {}, async (data, next, main) => {
-        try{
-            const state = data.State
-            const changes = data.Changes
-            const list = data.List
-            //we must have some list and view in order to change state
-            if((!list?.ListKey && !list?.ViewKey) || (!state?.ListKey && !state?.ViewKey)){
-                throw Error(`in client state change event -list key and view key must be exist in the state object or in the list configuration`)
-            }
-            return await new ChangeStateEventService().execute(state, changes, list)
-        }catch(err){
-            throw Error(`error inside onClientStateChanged event: ${err}`)
-        }
+        return await StateChangeController.onStateChanged(data.State, data.Changes, data.List)
     })
     pepperi.events.intercept(menuClickEventKey as any, {}, async (data, next, main) => {
         try{
