@@ -3,12 +3,10 @@ import { router as genericResourceRouter }  from './routes/generic-resource.rout
 import { router as viewsRouter } from './routes/views.routes'
 import { MenuBuilder } from './events/helpers/menu-builder';
 import { ListService } from './services/list.service';
-import { LoadListEventService } from './events/services/load-list-event.service';
 import { DataRow, ListContainer, MenuBlock, loadListEventKey, menuClickEventKey, stateChangeEventKey } from 'shared';
-import { ChangeStateEventService } from './events/services/state-change-event.service';
-import { MenuClickService } from './events/services/menu-click.service';
 import { LoadListController } from './events/contorllers/load-list.controller';
 import { StateChangeController } from './events/contorllers/state-change.controller';
+import { MenuClickController } from './events/contorllers/menu-click.controller';
 
 export async function load(configuration: any) {
     //interceptors:
@@ -19,20 +17,7 @@ export async function load(configuration: any) {
         return await StateChangeController.onStateChanged(data.State, data.Changes, data.List)
     })
     pepperi.events.intercept(menuClickEventKey as any, {}, async (data, next, main) => {
-        try{
-            const state = data.State
-            const key = data.Key
-            const list = data.List
-            if(!state?.ListKey && !list?.ListKey){
-                throw Error(`in menu click event - state or list must includes list key`)
-            }
-            if(!key){
-                throw Error(`in menu click event - no key found for the menu item`)
-            }
-            return await new MenuClickService().execute(state, key, list)        
-        }catch(err){
-            throw Error(`error inside onClientMenuClick event: ${err}`)
-        }
+        return await MenuClickController.onMenuClicked(data.State, data.Changes, data.List)
     })
 }
 
@@ -62,19 +47,17 @@ router.post('/menu', async (req, res, next) => {
 //route for testing event
 router.post('/OnClientLoadList', async (req, res, next) => {
     if(!req.body){
-        throw Error('on client load list endpoint - request must sent with a')
+        throw Error('on client load list endpoint - request must sent with a body')
     }
 
     return res.json(await LoadListController.loadList(req.body.State, req.body.Changes, req.body.List))
 })
 
 router.post('/onClientStateChange', async (req, res, next) => {
-    const state = req.body.State
-    const changes = req.body.Changes
-    if(!state?.ViewKey || !state?.ListKey){
-        throw Error(`in client state change event -list key and view key must be exist in the state object`)
+    if(!req.body){
+        throw Error('on client state change endpoint - request must sent with a body')
     }
-    return res.json(await new ChangeStateEventService().execute(state, changes))
+    return res.json(await StateChangeController.onStateChanged(req.body.State, req.body.Changes, req.body.List))
 })
 
 router.post('/drawGrid' ,async (req,res,next) => {
