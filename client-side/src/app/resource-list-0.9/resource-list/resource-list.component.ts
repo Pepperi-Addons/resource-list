@@ -178,9 +178,7 @@ export class ResourceListComponent implements OnInit {
   }
 
   async load(){
-
     const container = await this.clientEventService.emitLoadListEvent(undefined,{ListKey: "LIST_KEY", SearchString: 'aa'}, this.list1) as Required<ListContainer>
-    debugger
     this.pepperiList = new PepperiList(this.clientEventService, container)
     this.subscribeToChanges()
     this.loadCompleted = true
@@ -227,7 +225,7 @@ export class ResourceListComponent implements OnInit {
     this.pepperiList.onMenuClick(key)
   }
   onViewChanged(key: string){
-    debugger
+    this.pepperiList.onViewChanged(key)
   }
 
 }

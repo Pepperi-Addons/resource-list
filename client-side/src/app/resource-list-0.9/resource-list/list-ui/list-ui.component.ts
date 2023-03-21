@@ -32,7 +32,7 @@ export class ListUIComponent implements OnInit {
   @Input() sorting: ReplaySubject<IPepListSortingChangeEvent>
   
   @Output() menuClickedEvent: EventEmitter<string> = new EventEmitter() 
-  @Output() viewChangedEVent: EventEmitter<string> = new EventEmitter()
+  @Output() viewChangedEvent: EventEmitter<string> = new EventEmitter()
   
   //generic list instance
   @ViewChild(GenericListComponent) list: GenericListComponent
@@ -55,7 +55,7 @@ export class ListUIComponent implements OnInit {
     this.menuClickedEvent.emit(event.source.key)
   }
 
-  onViewChange(event){
-    this.viewChangedEVent.emit(event.source.key)
+  onViewChanged(event){
+    this.viewChangedEvent.emit(event)
   }
 }

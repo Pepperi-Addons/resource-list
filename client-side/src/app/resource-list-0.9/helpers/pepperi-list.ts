@@ -134,4 +134,21 @@ export class PepperiList implements IStateChangedHandler{
         //notify state observers 
         this.stateManager.notifyObservers()
     }
+
+    async onViewChanged(key: string){
+        const listContainer = await this.clientEventsService.emitStateChangedEvent(this.stateManager.getState(), {ViewKey: key},  this.listContainer.List)
+        debugger
+        //update the state if needed
+        Object.assign(this.listContainer.State, listContainer.State || {})
+        //update the layout if needed
+        Object.assign(this.listContainer.Layout, listContainer.State || {})
+
+        if(listContainer.Data){
+            this.listContainer.Data = listContainer.Data
+        }
+        //update the data source on the ui component
+        this.$dataSource.next(new ListDataSource(this))
+
+
+    }
 }
