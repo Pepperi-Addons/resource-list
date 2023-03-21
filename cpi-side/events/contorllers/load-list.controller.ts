@@ -2,7 +2,7 @@ import { List, ListState } from "shared";
 import { LoadListEventService } from "../services/load-list-event.service";
 
 export class LoadListController{
-    static async loadList(state: Partial<ListState>, changes: Partial<ListState>, list?: List){
+    static async loadList(state: Partial<ListState>, changes: ListState, list?: List){
         try{
             //if we don't get a key from the list and not from the changes, there could not be any load list
             if(!list?.Key && (!changes || !changes.ListKey)){
