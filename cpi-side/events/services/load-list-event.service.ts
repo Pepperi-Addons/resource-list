@@ -7,10 +7,6 @@ import { EventService } from "./event.service"
 export class LoadListEventService extends EventService{
 
     async execute(state: Partial<ListState> | undefined, changes: ListState, listConfiguration?: List): Promise<ListContainer> {
-        if(!changes?.ListKey){
-            throw new Error(`list key must be supplied on load list event`)
-        }
-        
         const service = new ListService()
         const list = listConfiguration || await service.getList(changes.ListKey)
 
