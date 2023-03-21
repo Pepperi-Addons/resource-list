@@ -7,12 +7,16 @@
     [inline] ="false"
     [addPadding]="true"
     [smartFilter]="smartSearch"
-    [actions]="lineMenu">
+    [actions]="lineMenu"
+    [showSearch]="search"
+    [title]="title"
+    [selectionType]="selectionType">
     <ng-container right-buttons>
         <pep-menu *ngIf="menu"
             iconName="system_menu" 
             type="action" 
             class="pep-spacing-element"
+            (menuItemClick)="onMenuClicked($event)"
             [items]="menu">
         </pep-menu>
         <ng-container *ngIf="buttons">
@@ -22,6 +26,7 @@
                 class= 'pep-spacing-element'
                 [value]="button.value"
                 [styleType]="button.styleType"
+                (buttonClick)="onMenuClicked($event)"
         ></pep-button>
         </ng-container>
     </ng-container>

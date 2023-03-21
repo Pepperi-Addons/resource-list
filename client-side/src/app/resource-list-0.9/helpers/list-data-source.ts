@@ -5,13 +5,16 @@ import { ListContainer, ListState, DataRow } from "shared";
 import { GenericListAdapter } from "./generic-list-adapter";
 import { GridDataView } from "@pepperi-addons/papi-sdk";
 import { GridViewBlockAdapter } from "./view-blocks-adapter";
-import { IPepGenericListDataSource, IPepGenericListInitData, IPepGenericListParams } from "@pepperi-addons/ngx-composite-lib/generic-list";
+import { IPepGenericListDataSource, IPepGenericListInitData, IPepGenericListListInputs, IPepGenericListParams } from "@pepperi-addons/ngx-composite-lib/generic-list";
 import { LayoutObserver } from "./layout-observer";
-import { ChangesBuilder } from "./changes-bulder";
+import { ChangesBuilder } from "./changes-builder";
+import { StateObserver } from "./state-observer";
 
 
 export interface IListDataSource extends IPepGenericListDataSource{
-    subscribe(): LayoutObserver
+    subscribeToLayoutChanges(): LayoutObserver
+    subscribeToStateChanges(): StateObserver
+    onMenuClick(key: string): Promise<ListDataSource>
 }
 
 /**
@@ -24,9 +27,19 @@ export class ListDataSource implements IListDataSource{
     private items: DataRow[]
     private dataView: GridDataView
     private count: number
+    public inputs?: IPepGenericListListInputs = {
+        pager: {
+            size: 50,
+            type: 'pages'
+        }
+    }
 
-    constructor(private clientEventsService: ClientEventsService, private stateManager: StateManager){
+    constructor(private clientEventsService: ClientEventsService, private stateManager: StateManager, private isCloned :boolean = false){
     
+    }
+
+    subscribeToStateChanges(): StateObserver {
+        return this.stateManager.getStateObserver()
     }
 
     private async getListContainer(changes: Partial<ListState>){
@@ -55,32 +68,57 @@ export class ListDataSource implements IListDataSource{
         }
     }
     //will expose the option to observe the changes on the layout by returning the observer as result
-    subscribe(): LayoutObserver{
+    subscribeToLayoutChanges(): LayoutObserver{
         return this.layoutObserver
     }
 
-    private updateGenericListParams(params: IPepGenericListParams, state: Partial<ListState>){
-        params.filters = state.SmartSearchQuery
-        params.pageIndex = state.PageIndex
-        params.searchString = state.SearchString
-        if(state.Sorting){
-            params.sorting = {
-                sortBy: state.Sorting.FieldID,
-                isAsc: state.Sorting.Ascending
-            }
-        }
+    async onMenuClick(key: string): Promise<ListDataSource>{
+        const listContainer = await this.clientEventsService.emitMenuClickEvent(this.stateManager.getState(), key)
+        this.updateList(listContainer)
+        return this.clone()
+    }
+    private clone(): ListDataSource{
+        const newDataSource = new ListDataSource(this.clientEventsService, this.stateManager, true)
+        newDataSource.layoutObserver = this.layoutObserver
+        newDataSource.dataView = this.dataView
+        newDataSource.items = this.items
+        newDataSource.count = this.count
+        return newDataSource
+
     }
 
     private onClientLineMenuClick(key: string, data?: any){
         console.log('menu clicked!!')
     }
-    
-    async init(params: IPepGenericListParams): Promise<IPepGenericListInitData>{
+    async update(params: IPepGenericListParams): Promise<any[]> {
+        await this.changeState(params)
+        return this.items
+    }
+
+    private async changeState(params: IPepGenericListParams){
         const paramsAdapter = new ChangesBuilder(params)
         const changes = paramsAdapter.build()
         //emit event to get the list container
         const listContainer = await this.getListContainer(changes)
+        //update the list and variables 
+        this.updateList(listContainer)
+    }
+    
+    async init(params: IPepGenericListParams): Promise<IPepGenericListInitData>{
+        //if the list is just cloned there is no need to emit an event because the first init happen because the data source was cloned! and not because an event
+        if(!this.isCloned){
+            await this.changeState(params)
+        }
+        this.isCloned = false
+        this.stateManager.updateVariables()
+        return {
+            dataView: this.dataView,
+            items: this.items,
+            totalCount: this.count
+        }
+    }
 
+    updateList(listContainer: ListContainer){
         //adapt the data to be compatible to the generic list 
         const genericListData = this.getGenericListData(listContainer)
 
@@ -88,8 +126,9 @@ export class ListDataSource implements IListDataSource{
         if(listContainer.State){
             this.stateManager.updateState(listContainer.State)
         }
+
         //update generic list params if needed
-        this.updateGenericListParams(params, this.stateManager.getState())
+        // this.updateGenericListParams(params, this.stateManager.getState())
 
         //update data view data and count
         this.updateVariables(listContainer)
@@ -99,11 +138,5 @@ export class ListDataSource implements IListDataSource{
 
         //reset changes
         this.stateManager.resetChanges()
-
-        return {
-            dataView: this.dataView,
-            items: this.items,
-            totalCount: this.count
-        }
     }
 }

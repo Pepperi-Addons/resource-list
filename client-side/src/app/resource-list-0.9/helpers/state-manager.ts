@@ -1,7 +1,12 @@
 import { IPepGenericListParams } from "@pepperi-addons/ngx-composite-lib/generic-list";
+import { IPepListSortingChangeEvent } from "@pepperi-addons/ngx-lib/list";
+import { Subject } from "rxjs";
 import { ListState } from "shared";
+import { StateObserver } from "./state-observer";
 
 export class StateManager{
+    private stateObserver: StateObserver = new StateObserver()
+
     constructor(private state: Partial<ListState>, private changes: Partial<ListState>){
 
     }
@@ -9,6 +14,15 @@ export class StateManager{
     isStateEmpty(): boolean{
         return !this.state
     }
+
+    getStateObserver(){
+        return this.stateObserver
+    }
+
+    updateVariables(){
+        this.stateObserver.notifyObservers(this.state)
+    }
+
 
     buildChangesFromPageParams(params: IPepGenericListParams){
         //if search string changed

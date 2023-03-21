@@ -6,7 +6,7 @@ import { PepMenuItem } from "@pepperi-addons/ngx-lib/menu";
 import { GVButton } from "../metadata"
 import { PepStyleType } from "@pepperi-addons/ngx-lib";
 import { Subject } from "rxjs";
-import { PepSelectionData } from "@pepperi-addons/ngx-lib/list";
+import { PepListSelectionType, PepSelectionData } from "@pepperi-addons/ngx-lib/list";
 
 export class GenericListAdapter {
     constructor(private listContainer: Partial<ListContainer>,  private lineMenuSubject: Subject<{key: string, data?: any}>){
@@ -18,12 +18,18 @@ export class GenericListAdapter {
         const menu = this.getMenu()
         const buttons = this.getButtons()
         const lineMenu = this.getLineMenu()
+        const search = this.getSearch()
+        const title = this.getTitle()
+        const selectionType = this.getSelectionType()
         return {
             dataView: dataView,
             smartSearch: smartSearch,
             menu: menu,
             buttons: buttons,
-            lineMenu: lineMenu
+            lineMenu: lineMenu,
+            search: search,
+            title: title,
+            selectionType: selectionType
         }
     }
     /**
@@ -39,6 +45,15 @@ export class GenericListAdapter {
         }
         return undefined
     }
+
+    getSelectionType(): PepListSelectionType | undefined{
+        const selectionType = this.listContainer?.Layout?.SelectionType
+        if(selectionType){
+            return selectionType.toLowerCase() as PepListSelectionType
+        }
+        return undefined
+    }
+
     getSmartSearch(): SmartSearchInput | undefined{
         if(this.listContainer.Layout?.SmartSearch){
             return {
@@ -104,5 +119,13 @@ export class GenericListAdapter {
             }
         }
         return undefined
+    }
+
+    getSearch(): boolean | undefined{
+        return this.listContainer?.Layout?.Search?.Visible
+    }
+
+    getTitle(): string | undefined {
+        return this.listContainer?.Layout?.Title
     }
 }

@@ -2,7 +2,7 @@ import { Subject } from "rxjs"
 import { GenericListAdapterResult, SmartSearchInput } from "../metadata"
 import { PepMenuItem } from "@pepperi-addons/ngx-lib/menu"
 import { GVButton } from "../metadata"
-import { PepSelectionData } from "@pepperi-addons/ngx-lib/list"
+import { PepListSelectionType, PepSelectionData } from "@pepperi-addons/ngx-lib/list"
 
 export class LayoutObserver{
     //subjects 
@@ -10,6 +10,9 @@ export class LayoutObserver{
     private $menu: Subject<PepMenuItem[]> = new Subject()
     private $buttons: Subject<GVButton[]> = new Subject()
     private $lineMenu: Subject<LineMenuActionsObject> = new Subject()
+    private $search: Subject<boolean> = new Subject()
+    private $title: Subject<string> = new Subject()
+    private $selectionType: Subject<PepListSelectionType> = new Subject()
 
     /**
      * 
@@ -30,11 +33,30 @@ export class LayoutObserver{
         if(data.smartSearch){
             this.$smartSearch.next(data.smartSearch)
         }
+        if(data.search != undefined){
+            this.$search.next(data.search)
+        }
+        if(data.title){
+            this.$title.next(data.title)
+        }
+        if(data.selectionType){
+            this.$selectionType.next(data.selectionType)
+        }
     }
     // update variables
 
     onSmartSearchChanged(cb: (data: SmartSearchInput) => void){
         this.$smartSearch.subscribe(cb)
+        return this
+    }
+
+    onSelectionTypeChanged(cb: (selectionType: PepListSelectionType) => void){
+        this.$selectionType.subscribe(cb)
+        return this
+    }
+
+    onSearchChanged(cb: (visible: boolean) => void){
+        this.$search.subscribe(cb)
         return this
     }
 
@@ -50,6 +72,11 @@ export class LayoutObserver{
 
     onButtonsChanged(cb: (data: GVButton[]) => void){
         this.$buttons.subscribe(cb)
+        return this
+    }
+    
+    onTitleChanged(cb: (title: string) => void){
+        this.$title.subscribe(cb)
         return this
     }
 }
