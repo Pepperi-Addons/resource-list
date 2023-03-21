@@ -7,22 +7,12 @@ import { LoadListEventService } from './events/services/load-list-event.service'
 import { DataRow, ListContainer, MenuBlock, loadListEventKey, menuClickEventKey, stateChangeEventKey } from 'shared';
 import { ChangeStateEventService } from './events/services/state-change-event.service';
 import { MenuClickService } from './events/services/menu-click.service';
+import { LoadListController } from './events/contorllers/load-list.controller';
 
 export async function load(configuration: any) {
     //interceptors:
     pepperi.events.intercept(loadListEventKey as any, {}, async (data, next, main) => {
-        try{
-            const state = data.State
-            const changes = data.Changes
-            const list = data.List
-            //if we don't get a key from the list and not from the changes, there could not be any load list
-            if(!list?.Key && (!changes || !changes.ListKey)){
-                throw Error(`list or changes are required,  and needs to contain ListKey`)
-            }
-            return await new LoadListEventService().execute(state, changes, list)
-        }catch(err){
-            throw Error(`error inside OnClientLoadList event: ${err}`)
-        }
+        return await LoadListController.loadList(data.State, data.Changes, data.List)
     })
     pepperi.events.intercept(stateChangeEventKey as any, {}, async (data, next, main) => {
         try{
@@ -49,7 +39,7 @@ export async function load(configuration: any) {
             if(!key){
                 throw Error(`in menu click event - no key found for the menu item`)
             }
-            return await new MenuClickService().execute(state, key)        
+            return await new MenuClickService().execute(state, key, list)        
         }catch(err){
             throw Error(`error inside onClientMenuClick event: ${err}`)
         }
@@ -81,10 +71,11 @@ router.post('/menu', async (req, res, next) => {
 })
 //route for testing event
 router.post('/OnClientLoadList', async (req, res, next) => {
-    const state = req.body.State
-    const changes = req.body.Changes
+    if(!req.body){
+        throw Error('on client load list endpoint - request must sent with a')
+    }
 
-    return res.json(await new LoadListEventService().execute(state, changes))
+    return res.json(await LoadListController.loadList(req.body.State, req.body.Changes, req.body.List))
 })
 
 router.post('/onClientStateChange', async (req, res, next) => {
