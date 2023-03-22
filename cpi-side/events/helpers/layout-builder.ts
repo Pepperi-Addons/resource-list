@@ -10,7 +10,7 @@ export interface IListLayoutBuilder{
 export class ListLayoutBuilder implements IListLayoutBuilder{
     private listModel: Partial<ListLayout> = {}
 
-    constructor(private list: List,private state: Partial<ListState> | undefined,  private changes: Partial<ListState>){
+    constructor(private list: List,private state: Partial<ListState>,  private changes: Partial<ListState>){
     }
 
     /**

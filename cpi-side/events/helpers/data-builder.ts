@@ -7,28 +7,31 @@ import { isArrayEquals } from "./utils";
 
 export class ListDataBuilder{
     private listData: ListData = { Items: [], Count: 0}
-    constructor(private list: List, private state: Partial<ListState>, private changes: Partial<ListState>){}
+    constructor(private list: List, private state: Partial<ListState> = {}, private changes: Partial<ListState> = {}){}
 
     async build(): Promise<ListData | undefined>{
 
         if(!this.isDataNeedsToChange()){
             return undefined
         }
+        //building the new state
+        const newState = {...this.state, ...this.changes}
 
-        const selectedView = this.getSelectedView()
+        const selectedView = this.getSelectedView(newState)
+
         if(!selectedView){
             return { Items: [], Count: 0 }
         }
         
         //prepare the search body
         const viewFields: string[] = selectedView.Blocks.map(block => block.Configuration.FieldID)
-        const query = this.createQuery(this.list.Filter)
+        const query = this.createQuery(newState,this.list.Filter)
 
         const searchBody: SearchBody = {
             Fields: viewFields,
             Where: query,
-            Page: this.state?.PageIndex || 1,
-            PageSize: this.state?.PageSize || 100,
+            Page: newState.PageIndex || 1,
+            PageSize: newState.PageSize || 100,
             IncludeCount: true
         }
         //get the resource items
@@ -39,13 +42,27 @@ export class ListDataBuilder{
         this.listData = {Items: viewRows, Count: items.Count}
         return this.listData
     }
-
+    /**
+     * decide if the data needs to be changed.
+     * the data needs to be changed if at least on of the following properties:
+     * list key, view key, search string, smart search query has changed or deleted
+     * @returns 
+     */
     private isDataNeedsToChange(): boolean{
-        return Boolean(this.changes.ListKey != this.state.ListKey || this.changes.ViewKey != this.changes.ViewKey || this.changes.SearchString != this.state.SearchString || isArrayEquals(this.changes.SmartSearchQuery, this.state.SmartSearchQuery) || this.changes.PageIndex != this.state.PageIndex)
+        const changesKeySet= new Set(Object.keys(this.changes) as Array<keyof Partial<ListState>>)
+        return Boolean(
+                changesKeySet.has("ListKey") ||
+                changesKeySet.has("ViewKey") ||
+                changesKeySet.has("SearchString") ||
+                changesKeySet.has("SmartSearchQuery") ||
+                changesKeySet.has("PageIndex") ||
+                changesKeySet.has("PageSize") ||
+                changesKeySet.has("PageType")
+                )
     }
 
-    private getSelectedView(): View | undefined{
-        const viewKey = this.state?.ViewKey
+    private getSelectedView(state: Partial<ListState>): View | undefined{
+        const viewKey = state.ViewKey
         const selectedView = this.list.Views.find(view => view.Key == viewKey)
         if(!selectedView && this.list.Views.length > 0){
             return this.list.Views[0]
@@ -53,13 +70,13 @@ export class ListDataBuilder{
         return selectedView
     }
     
-    private createQuery(filter?: JSONFilter): string{
+    private createQuery(state: Partial<ListState>, filter?: JSONFilter): string{
         let queryArray: string[] = []
-        if(this.state.SearchString && this.list.Search.Fields.length > 0){
-            queryArray.push(`(${this.buildSearchQuery(this.list.Search.Fields)})`)
+        if(state.SearchString && this.list.Search.Fields.length > 0){
+            queryArray.push(`(${this.buildSearchQuery(state, this.list.Search.Fields)})`)
         }
-        if(this.state.SmartSearchQuery && this.state.SmartSearchQuery.length > 0){
-            queryArray.push(`(${this.buildSmartSearchQuery(this.state.SmartSearchQuery)})`)
+        if(state.SmartSearchQuery && state.SmartSearchQuery.length > 0){
+            queryArray.push(`(${this.buildSmartSearchQuery(state.SmartSearchQuery)})`)
         }
         if(filter){
             queryArray.push(`(${toApiQueryString(filter)})`)
@@ -67,8 +84,8 @@ export class ListDataBuilder{
         return queryArray.join(' AND ')
     }
 
-    private buildSearchQuery(searchFields: ListSearchField[]){
-        return searchFields.map(searchField => `${searchField.FieldID} LIKE '%${this.state.SearchString}%'`).join(' OR ')
+    private buildSearchQuery(state: Partial<ListState>, searchFields: ListSearchField[]){
+        return searchFields.map(searchField => `${searchField.FieldID} LIKE '%${state.SearchString}%'`).join(' OR ')
     }
 
     private buildSmartSearchQuery(smartSearch: JSONRegularFilter[]): string{
