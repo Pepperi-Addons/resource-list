@@ -3,14 +3,12 @@ import { ClientEventsService } from "../services/client-events.service";
 import { StateManager } from "./state-manager";
 import { ListContainer, ListState, DataRow } from "shared";
 import { GenericListAdapter } from "./generic-list-adapter";
-import { GridViewBlockAdapter, ViewBlocksAdapterFactory } from "./view-blocks-adapter";
+import { ViewBlocksAdapterFactory } from "./view-blocks-adapter";
 import { IPepGenericListDataSource, IPepGenericListInitData, IPepGenericListParams } from "@pepperi-addons/ngx-composite-lib/generic-list";
 import { LayoutObserver } from "./layout-observer";
 import { StateObserver } from "./state-observer";
 import { ListDataSource } from "./list-data-source";
 import { GenericListAdapterResult } from "../metadata";
-import { debug } from "console";
-
 
 
 export interface IListDataSource extends IPepGenericListDataSource{
