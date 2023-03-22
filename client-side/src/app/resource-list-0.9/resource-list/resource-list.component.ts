@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ClientEventsService } from '../services/client-events.service';
-import { IPepGenericListDataSource } from '@pepperi-addons/ngx-composite-lib/generic-list';
+import { IPepGenericListDataSource, IPepGenericListPager } from '@pepperi-addons/ngx-composite-lib/generic-list';
 import { GVButton, SmartSearchInput, ViewsMenuUI } from '../metadata';
 import { PepMenuItem } from '@pepperi-addons/ngx-lib/menu';
 import { PepperiList } from '../helpers/pepperi-list';
@@ -31,7 +31,7 @@ export class ResourceListComponent implements OnInit {
   //pages subjects
   $pageIndex: ReplaySubject<number> = new ReplaySubject()
   $pageSize: ReplaySubject<number> = new ReplaySubject()
-  $pageType: ReplaySubject<PageType> = new ReplaySubject()
+  $pageType: ReplaySubject<IPepGenericListPager['type']> = new ReplaySubject()
 
   $searchString: ReplaySubject<string> = new ReplaySubject()
   $sorting: ReplaySubject<IPepListSortingChangeEvent> = new ReplaySubject()
@@ -183,7 +183,7 @@ export class ResourceListComponent implements OnInit {
   }
 
   async load(){
-    const container = await this.clientEventService.emitLoadListEvent(undefined,{ListKey: "LIST_KEY", SearchString: 'aa', PageSize: 1, PageIndex: 0, PageType: "Pages"}, this.list1) as Required<ListContainer>
+    const container = await this.clientEventService.emitLoadListEvent(undefined,{ListKey: "LIST_KEY",  PageSize: 1 , PageIndex: 0, PageType: "Pages"}, this.list1) as Required<ListContainer>
     this.pepperiList = new PepperiList(this.clientEventService, container)
     this.subscribeToChanges()
     this.loadCompleted = true

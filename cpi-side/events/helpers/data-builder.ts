@@ -31,7 +31,7 @@ export class ListDataBuilder{
             Fields: viewFields,
             Where: query,
             Page: newState.PageIndex || 1,
-            PageSize: newState.PageSize || 100,
+            PageSize: newState.PageSize || 25,
             IncludeCount: true
         }
         //get the resource items

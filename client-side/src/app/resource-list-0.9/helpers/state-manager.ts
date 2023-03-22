@@ -22,11 +22,11 @@ export class StateManager{
         const changes: Partial<ListState> = {}
         //if search string changed
         if(params.searchString != this.state.SearchString){
-            changes.SearchString = params.searchString || ''
+            changes.SearchString = params.searchString
         }
         //if page index changed
         if(params.pageIndex != this.state.PageIndex){
-            changes.PageIndex = params.pageIndex || 1
+            changes.PageIndex = params.pageIndex
         }
         //if sorting changed
         if(params.sorting?.isAsc !=  this.state.Sorting?.Ascending || params.sorting?.sortBy != this.state.Sorting?.FieldID){

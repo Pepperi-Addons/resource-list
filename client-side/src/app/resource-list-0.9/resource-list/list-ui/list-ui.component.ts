@@ -4,7 +4,7 @@ import { IPepMenuItemClickEvent, PepMenuItem } from '@pepperi-addons/ngx-lib/men
 import { GVButton } from '../../metadata'
 import { PepperiList } from '../../helpers/pepperi-list';
 import { IPepListSortingChangeEvent, PepListSelectionType } from '@pepperi-addons/ngx-lib/list';
-import { GenericListComponent } from '@pepperi-addons/ngx-composite-lib/generic-list';
+import { GenericListComponent, IPepGenericListPager } from '@pepperi-addons/ngx-composite-lib/generic-list';
 import { ReplaySubject } from 'rxjs';
 import { PageType, ViewsMenu } from 'shared';
 
@@ -31,7 +31,7 @@ export class ListUIComponent implements OnInit {
 
   //pager states
   @Input() $pageIndex: ReplaySubject<number>
-  @Input() $pageType: ReplaySubject<PageType>
+  @Input() $pageType: ReplaySubject<IPepGenericListPager['type']>
   @Input() $pageSize: ReplaySubject<number>
   
   @Input() $sorting: ReplaySubject<IPepListSortingChangeEvent>
@@ -54,7 +54,8 @@ export class ListUIComponent implements OnInit {
     this.$searchString.subscribe(str => this.list.searchString = str)
     //pager observables 
     this.$pageIndex.subscribe(index => this.list.pager.index = index)
-
+    this.$pageSize.subscribe(size => this.list.pager.size = size)
+    this.$pageType.subscribe(type => this.list.pager.type = type)
 
     this.$sorting.subscribe(sorting => this.list.listInputs.sorting = sorting)
   }

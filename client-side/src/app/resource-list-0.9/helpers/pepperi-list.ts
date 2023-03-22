@@ -110,7 +110,6 @@ export class PepperiList implements IStateChangedHandler{
             listContainer = await this.getListContainer(changes)
         }
         this.updateList(listContainer)
-
         return {
             dataView: this.dataView,
             items: this.items,
