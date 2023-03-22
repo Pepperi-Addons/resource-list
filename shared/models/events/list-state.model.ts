@@ -6,8 +6,9 @@ export interface ListState {
     SearchString?: string, // default no search 
     SmartSearchQuery?: JSONRegularFilter[]
     Sorting?: Sorting, // default CreationDateTime, Ascending=false
-    PageSize?: number //default is 100!
+    PageSize?: number //default is 25!
     PageIndex?: number // default = 1 (first page)
+    PageType?: PageType
     ItemSelection?: ItemSelection // default empty 
 }
 
@@ -19,5 +20,7 @@ interface ItemSelection{
     SelectAll: boolean // default false 
     Items: string[] 
 }
+
+export type PageType = "Scroll" | "Pages"
 
 

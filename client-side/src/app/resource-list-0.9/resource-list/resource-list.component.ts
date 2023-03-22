@@ -4,7 +4,7 @@ import { IPepGenericListDataSource } from '@pepperi-addons/ngx-composite-lib/gen
 import { GVButton, SmartSearchInput, ViewsMenuUI } from '../metadata';
 import { PepMenuItem } from '@pepperi-addons/ngx-lib/menu';
 import { PepperiList } from '../helpers/pepperi-list';
-import { List, ListContainer, Sorting, ViewsMenu } from 'shared';
+import { List, ListContainer, PageType, Sorting, ViewsMenu } from 'shared';
 import { IPepListSortingChangeEvent, PepListSelectionType } from '@pepperi-addons/ngx-lib/list';
 import { ReplaySubject } from 'rxjs';
 
@@ -28,9 +28,14 @@ export class ResourceListComponent implements OnInit {
   selectedViewKey: string
   
   //subjects for state
-  pageIndex: ReplaySubject<number> = new ReplaySubject()
-  searchString: ReplaySubject<string> = new ReplaySubject()
-  sorting: ReplaySubject<IPepListSortingChangeEvent> = new ReplaySubject()
+  //pages subjects
+  $pageIndex: ReplaySubject<number> = new ReplaySubject()
+  $pageSize: ReplaySubject<number> = new ReplaySubject()
+  $pageType: ReplaySubject<PageType> = new ReplaySubject()
+
+  $searchString: ReplaySubject<string> = new ReplaySubject()
+  $sorting: ReplaySubject<IPepListSortingChangeEvent> = new ReplaySubject()
+
   list1: List = {
     Key: "LIST_KEY",
     Name: "FirstList",
@@ -178,7 +183,7 @@ export class ResourceListComponent implements OnInit {
   }
 
   async load(){
-    const container = await this.clientEventService.emitLoadListEvent(undefined,{ListKey: "LIST_KEY", SearchString: 'aa'}, this.list1) as Required<ListContainer>
+    const container = await this.clientEventService.emitLoadListEvent(undefined,{ListKey: "LIST_KEY", SearchString: 'aa', PageSize: 1, PageIndex: 0, PageType: "Pages"}, this.list1) as Required<ListContainer>
     this.pepperiList = new PepperiList(this.clientEventService, container)
     this.subscribeToChanges()
     this.loadCompleted = true
@@ -215,9 +220,11 @@ export class ResourceListComponent implements OnInit {
 
   subscribeToStateChanges(){
     this.pepperiList.subscribeToStateChanges()
-    .onPageIndexChanged((index => this.pageIndex.next(index)))
-    .onSearchStringChanged((str) => this.searchString.next(str))
-    .onSortingChanged((sorting) => this.sorting.next(sorting))
+    .onPageIndexChanged(index => this.$pageIndex.next(index))
+    .onPageSizeChanged(size => this.$pageSize.next(size))
+    .onPageTypeChanged(type => this.$pageType.next(type))
+    .onSearchStringChanged(str => this.$searchString.next(str))
+    .onSortingChanged(sorting => this.$sorting.next(sorting))
     .onViewKeyChanged(key => this.selectedViewKey = key)
   }
 

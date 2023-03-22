@@ -6,7 +6,7 @@ import { PepperiList } from '../../helpers/pepperi-list';
 import { IPepListSortingChangeEvent, PepListSelectionType } from '@pepperi-addons/ngx-lib/list';
 import { GenericListComponent } from '@pepperi-addons/ngx-composite-lib/generic-list';
 import { ReplaySubject } from 'rxjs';
-import { ViewsMenu } from 'shared';
+import { PageType, ViewsMenu } from 'shared';
 
 @Component({
   selector: 'list-ui',
@@ -27,9 +27,14 @@ export class ListUIComponent implements OnInit {
   @Input() selectedViewKey: string
   
   //state inputs
-  @Input() searchString: ReplaySubject<string>
-  @Input() pageIndex: ReplaySubject<number>
-  @Input() sorting: ReplaySubject<IPepListSortingChangeEvent>
+  @Input() $searchString: ReplaySubject<string>
+
+  //pager states
+  @Input() $pageIndex: ReplaySubject<number>
+  @Input() $pageType: ReplaySubject<PageType>
+  @Input() $pageSize: ReplaySubject<number>
+  
+  @Input() $sorting: ReplaySubject<IPepListSortingChangeEvent>
   
   @Output() menuClickedEvent: EventEmitter<string> = new EventEmitter() 
   @Output() viewChangedEvent: EventEmitter<string> = new EventEmitter()
@@ -46,9 +51,12 @@ export class ListUIComponent implements OnInit {
     
   }
   ngAfterViewInit(){
-    this.searchString.subscribe(str => this.list.searchString = str)
-    this.pageIndex.subscribe(index => this.list.pager.index = index)
-    this.sorting.subscribe(sorting => this.list.listInputs.sorting = sorting)
+    this.$searchString.subscribe(str => this.list.searchString = str)
+    //pager observables 
+    this.$pageIndex.subscribe(index => this.list.pager.index = index)
+
+
+    this.$sorting.subscribe(sorting => this.list.listInputs.sorting = sorting)
   }
 
   onMenuClicked(event: IPepMenuItemClickEvent){

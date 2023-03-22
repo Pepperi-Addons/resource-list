@@ -1,11 +1,13 @@
 import { ReplaySubject } from "rxjs"
 import { IPepListSortingChangeEvent, PepListSelectionType, PepSelectionData } from "@pepperi-addons/ngx-lib/list"
-import { ListState } from "shared"
+import { ListState, PageType } from "shared"
 
 export class StateObserver{
     //subjects 
     private $searchString: ReplaySubject<string> = new ReplaySubject()
     private $pageIndex: ReplaySubject<number> = new ReplaySubject()
+    private $pageSize: ReplaySubject<number> = new ReplaySubject()
+    private $pageType: ReplaySubject<PageType> = new ReplaySubject()
     private $sorting: ReplaySubject<IPepListSortingChangeEvent> = new ReplaySubject()
     private $selectedViewKey: ReplaySubject<string>  = new ReplaySubject()
 
@@ -37,6 +39,14 @@ export class StateObserver{
     }
     onViewKeyChanged(cb: (key: string) => void): StateObserver{
         this.$selectedViewKey.subscribe(cb)
+        return this
+    }
+    onPageSizeChanged(cb: (size: number) => void): StateObserver{
+        this.$pageSize.subscribe(cb)
+        return this
+    }
+    onPageTypeChanged(cb: (type: PageType) => void): StateObserver{
+        this.$pageType.subscribe(cb)
         return this
     }
 }
