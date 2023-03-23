@@ -7,9 +7,11 @@ import { GVButton } from "../metadata"
 import { PepStyleType } from "@pepperi-addons/ngx-lib";
 import { Subject } from "rxjs";
 import { PepListSelectionType, PepSelectionData } from "@pepperi-addons/ngx-lib/list";
+import { ILineMenuHandler } from "./pepperi-list";
+import { LineMenuExecutor } from "./line-menu-executor";
 
 export class GenericListAdapter {
-    constructor(private listContainer: Partial<ListContainer>,  private lineMenuSubject: Subject<{key: string, data?: any}>){
+    constructor(private listContainer: Partial<ListContainer>,  private lineMenuHandler: ILineMenuHandler){
 
     }
     adapt(): GenericListAdapterResult{
@@ -107,18 +109,9 @@ export class GenericListAdapter {
     }
     
     getLineMenu(){
-        if(this.listContainer.Layout?.LineMenu){
-            return {
-                get: async (data: PepSelectionData) => {
-                    return this.listContainer.Layout.LineMenu.Blocks.filter(block => !block.Hidden)
-                    .map(block => {
-                        return {
-                            title: block.Title,
-                            handler: async (selectedRows) => this.lineMenuSubject.next({key: block.Key, data: selectedRows})
-                        }
-                    })
-                }
-            }
+        debugger
+        if(this.listContainer.Layout?.LineMenu != undefined){
+            return new LineMenuExecutor(this.listContainer.Layout.LineMenu, this.lineMenuHandler)
         }
         return undefined
     }

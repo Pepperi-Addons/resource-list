@@ -4,7 +4,7 @@ import { IPepGenericListDataSource, IPepGenericListPager } from '@pepperi-addons
 import { GVButton, SmartSearchInput, ViewsMenuUI } from '../metadata';
 import { PepMenuItem } from '@pepperi-addons/ngx-lib/menu';
 import { PepperiList } from '../helpers/pepperi-list';
-import { List, ListContainer, PageType, Sorting, ViewsMenu } from 'shared';
+import { List, ListContainer } from 'shared';
 import { IPepListSortingChangeEvent, PepListSelectionType } from '@pepperi-addons/ngx-lib/list';
 import { ReplaySubject } from 'rxjs';
 
@@ -183,7 +183,20 @@ export class ResourceListComponent implements OnInit {
   }
 
   async load(){
-    const container = await this.clientEventService.emitLoadListEvent(undefined,{ListKey: "LIST_KEY",  PageSize: 1 , PageIndex: 0, PageType: "Pages"}, this.list1) as Required<ListContainer>
+    const container = await this.clientEventService.emitLoadListEvent(undefined,{ListKey: "LIST_KEY", PageSize: 1 , PageIndex: 1, PageType: "Pages", ItemSelection: {SelectAll: false, Items: []}}, this.list1) as Required<ListContainer>
+    // container.Layout.LineMenu = {
+    //     Blocks: [
+    //         {
+    //             Key: 'first',
+    //             ExecuteURL: 'aaa',
+    //             AddonUUID: 'asdasd',
+    //             Hidden: false,
+    //             DrawURL: 'afas',
+    //             Title: 'First',
+    //         }
+    //     ]
+    // }
+    container.Layout.SelectionType = "Multi"
     this.pepperiList = new PepperiList(this.clientEventService, container)
     this.subscribeToChanges()
     this.loadCompleted = true
