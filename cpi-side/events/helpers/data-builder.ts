@@ -30,7 +30,7 @@ export class ListDataBuilder{
         const searchBody: SearchBody = {
             Fields: viewFields,
             Where: query,
-            Page: newState.PageIndex || 1,
+            Page: newState.PageIndex || 0,
             PageSize: newState.PageSize || 25,
             IncludeCount: true
         }
