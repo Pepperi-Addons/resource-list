@@ -8,15 +8,17 @@ export class MenuBuilder{
 
     async build(menu: ListMenu, state: Partial<ListState> | undefined, changes: Partial<ListState>): Promise<Menu | null>{
         const drawFunctionsArray = groupRelationBlocks(menu.Blocks)
-        const drawnBlocks = (await this.drawBlocks(drawFunctionsArray, state, changes)).filter(block => block).flat().map(block => {
-            block!.Key = `${block?.AddonUUID}_${block?.Key}`
-            return block
-        }) as MenuBlock[]
+        const drawnBlocks = (await this.drawBlocks(drawFunctionsArray, state, changes)).filter(block => block)
+        //if all the draw functions return undefined there is nothing to be rendered
         if(drawnBlocks.length == 0){
             return null
         }
+        
         return  {
-            Blocks: drawnBlocks
+            Blocks: drawnBlocks.flat().map(block => {
+                block!.Key = `${block?.AddonUUID}_${block?.Key}`
+                return block
+            }) as MenuBlock[]
         }
 
     }
