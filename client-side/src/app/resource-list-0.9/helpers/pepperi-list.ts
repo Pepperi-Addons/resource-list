@@ -11,6 +11,7 @@ import { ListDataSource } from "./list-data-source";
 import { GenericListAdapterResult } from "../metadata";
 import { PepSelectionData } from "@pepperi-addons/ngx-lib/list";
 import { ListActions } from "./list-actions";
+import { PepRowData } from "@pepperi-addons/ngx-lib";
 
 
 export interface IStateChangedHandler{
@@ -43,19 +44,39 @@ export class PepperiList implements IStateChangedHandler, ILineMenuHandler{
         this.$dataSource.next(new ListDataSource(this))
         this.updateList(listContainer)
     }
+    
+    private isSelectedLinesChanged(data: PepSelectionData){
+        const state = this.stateManager.getState()
+        
+        const listSelectedItems = data.rows
+        const listSelectionType = data.selectionType == 0
+        
+        const stateSelectedItems = state.ItemSelection?.Items || []
+        const stateSelectionType = state.ItemSelection?.SelectAll
+
+        return stateSelectionType != listSelectionType ||
+        !(stateSelectedItems.length == listSelectedItems.length && stateSelectedItems.every((item, index) => item == listSelectedItems[index]))
+
+
+    }
     /**
      * this function invoked every time a line was selected.
-     * the function will change the state of the list to inform that line was selected, and will build a new list
+     * the function will change the state of the list if selected lines was changed, and will build a new list
      * @param data the rows that were selected, and selectionType(if select all happen or not)
      * @returns void
      */
     async onLineSelected(data: PepSelectionData){
+        if(!this.isSelectedLinesChanged(data)){
+            return
+        }
+        //if the selected lines changed
         const changes: Partial<ListState> = {
             ItemSelection: {
                 SelectAll: data.selectionType == 0,
                 Items: data.rows
             }
         }
+
         const listContainer = await this.clientEventsService.emitStateChangedEvent(this.stateManager.getState(), changes)
         this.reloadList(listContainer)
     }
@@ -107,8 +128,6 @@ export class PepperiList implements IStateChangedHandler, ILineMenuHandler{
         Object.assign(this.listContainer.State, listContainer.State || {})
         //update the layout if needed
         Object.assign(this.listContainer.Layout, listContainer.Layout || {})
-        //because we are reloading the list this will be the first invocation of list actions
-        this.listActions.isFirstInvocation = true
 
         if(listContainer.Data){
             this.listContainer.Data = listContainer.Data
@@ -128,10 +147,6 @@ export class PepperiList implements IStateChangedHandler, ILineMenuHandler{
     }
 
     async onListEvent(params: IPepGenericListParams, isFirstEvent?: boolean): Promise<IPepGenericListInitData>{
-        //on every list event the 'get' method of the listActions gets invoked, I know it's ugly and you want to remove this line of code, but trust me DON'T.
-        if(this.listActions){
-            this.listActions.isFirstInvocation = true
-        }
         let listContainer: ListContainer = this.listContainer
         //in case of first init the container already updated
         if(!isFirstEvent){

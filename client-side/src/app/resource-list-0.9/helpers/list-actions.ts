@@ -22,11 +22,8 @@ export class ListActions implements IPepGenericListActions{
      * @returns  array of line actions which is title and handler
      */
     async get(data: PepSelectionData): Promise<{ title: string; handler: (obj: any) => Promise<void>; }[]> {
-        if(this.isFirstInvocation){
-            this.isFirstInvocation = false
-            return this.lineMenuActions
-        }
-        this.lineMenuHandler.onLineSelected(data)
+        await this.lineMenuHandler.onLineSelected(data)
+        return this.lineMenuActions
     }
 
 }
