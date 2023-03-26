@@ -3,6 +3,7 @@ import { ViewsService } from './services/views.service';
 import { EditorsService } from './services/editors.service';
 import { UDCService } from './udc.service';
 import { GenericViewerService } from './services/generic-viewer.service';
+import { AddonDataScheme, PapiClient } from '@pepperi-addons/papi-sdk';
 
 export async function get_all_collections(client: Client, request: Request){
     validateRequest('GET', request)
@@ -110,5 +111,18 @@ export async function get_search_fields_for_resource(client: Client, request: Re
         const service = new GenericViewerService(client);
         return await service.GetResourceSearchFields(resourceName);
     }
+}
+
+
+export async function get_resource_fields(client: Client, request: Request){
+    const papiClient = new PapiClient({
+        baseURL: client.BaseURL,
+        token: client.OAuthAccessToken,
+        addonUUID: client.AddonUUID,
+        addonSecretKey: client.AddonSecretKey,
+        actionUUID: client.ActionUUID
+    })
+    const resource = await papiClient.resources.resource('resources').key(request.query.Name).get() as AddonDataScheme
+    return resource?.Fields || {}
 }
 
