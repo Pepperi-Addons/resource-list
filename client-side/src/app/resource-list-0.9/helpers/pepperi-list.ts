@@ -128,7 +128,7 @@ export class PepperiList implements IStateChangedHandler, ILineMenuHandler{
     }
 
     async onListEvent(params: IPepGenericListParams, isFirstEvent?: boolean): Promise<IPepGenericListInitData>{
-        //on every list event the listActions 'get' method invoked, I know it's ugly and you want to remove this line of code trust, but trust me DON'T.
+        //on every list event the listActions 'get' method invoked, I know it's ugly and you want to remove this line of code, but trust me DON'T.
         if(this.listActions){
             this.listActions.isFirstInvocation = true
         }
