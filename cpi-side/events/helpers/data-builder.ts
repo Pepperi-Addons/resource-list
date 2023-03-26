@@ -25,6 +25,9 @@ export class ListDataBuilder{
         
         //prepare the search body
         const viewFields: string[] = selectedView.Blocks.map(block => block.Configuration.FieldID)
+        //we should always ask for key also
+        viewFields.push('Key')
+
         const query = this.createQuery(newState,this.list.Filter)
 
         const searchBody: SearchBody = {
