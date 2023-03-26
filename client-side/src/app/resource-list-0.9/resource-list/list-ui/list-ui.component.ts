@@ -4,7 +4,7 @@ import { IPepMenuItemClickEvent, PepMenuItem } from '@pepperi-addons/ngx-lib/men
 import { GVButton } from '../../metadata'
 import { PepperiList } from '../../helpers/pepperi-list';
 import { IPepListSortingChangeEvent, PepListSelectionType } from '@pepperi-addons/ngx-lib/list';
-import { GenericListComponent, IPepGenericListPager } from '@pepperi-addons/ngx-composite-lib/generic-list';
+import { GenericListComponent, IPepGenericListActions, IPepGenericListPager } from '@pepperi-addons/ngx-composite-lib/generic-list';
 import { ReplaySubject } from 'rxjs';
 import { PageType, ViewsMenu } from 'shared';
 
@@ -19,7 +19,7 @@ export class ListUIComponent implements OnInit {
   @Input() smartSearch: SmartSearchInput
   @Input() menu: PepMenuItem[]
   @Input() buttons: GVButton[]
-  @Input() lineMenu: any
+  @Input() lineMenu: IPepGenericListActions
   @Input() search: boolean
   @Input() title: string
   @Input() selectionType: PepListSelectionType

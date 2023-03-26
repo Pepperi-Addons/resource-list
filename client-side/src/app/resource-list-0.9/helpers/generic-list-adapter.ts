@@ -5,10 +5,9 @@ import { GenericListAdapterResult, SmartSearchInput } from "../metadata";
 import { PepMenuItem } from "@pepperi-addons/ngx-lib/menu";
 import { GVButton } from "../metadata"
 import { PepStyleType } from "@pepperi-addons/ngx-lib";
-import { Subject } from "rxjs";
 import { PepListSelectionType, PepSelectionData } from "@pepperi-addons/ngx-lib/list";
 import { ILineMenuHandler } from "./pepperi-list";
-import { LineMenuExecutor } from "./line-menu-executor";
+import { ListActions } from "./list-actions";
 
 export class GenericListAdapter {
     constructor(private listContainer: Partial<ListContainer>,  private lineMenuHandler: ILineMenuHandler){
@@ -19,7 +18,6 @@ export class GenericListAdapter {
         const smartSearch = this.getSmartSearch()
         const menu = this.getMenu()
         const buttons = this.getButtons()
-        const lineMenu = this.getLineMenu()
         const search = this.getSearch()
         const title = this.getTitle()
         const selectionType = this.getSelectionType()
@@ -28,7 +26,6 @@ export class GenericListAdapter {
             smartSearch: smartSearch,
             menu: menu,
             buttons: buttons,
-            lineMenu: lineMenu,
             search: search,
             title: title,
             selectionType: selectionType,
@@ -108,14 +105,6 @@ export class GenericListAdapter {
         }
     }
     
-    getLineMenu(){
-        debugger
-        if(this.listContainer.Layout?.LineMenu != undefined){
-            return new LineMenuExecutor(this.listContainer.Layout.LineMenu, this.lineMenuHandler)
-        }
-        return undefined
-    }
-
     getSearch(): boolean | undefined{
         return this.listContainer?.Layout?.Search?.Visible
     }

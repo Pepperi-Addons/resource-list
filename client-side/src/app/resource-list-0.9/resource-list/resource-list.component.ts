@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ClientEventsService } from '../services/client-events.service';
-import { IPepGenericListDataSource, IPepGenericListPager } from '@pepperi-addons/ngx-composite-lib/generic-list';
+import { IPepGenericListActions, IPepGenericListDataSource, IPepGenericListPager } from '@pepperi-addons/ngx-composite-lib/generic-list';
 import { GVButton, SmartSearchInput, ViewsMenuUI } from '../metadata';
 import { PepMenuItem } from '@pepperi-addons/ngx-lib/menu';
 import { PepperiList } from '../helpers/pepperi-list';
@@ -18,7 +18,7 @@ export class ResourceListComponent implements OnInit {
   smartSearch: SmartSearchInput
   menu: PepMenuItem[]
   buttons: GVButton[]
-  lineMenu: any
+  lineMenu: IPepGenericListActions
   dataSource: IPepGenericListDataSource
   loadCompleted: boolean = false
   search: boolean
@@ -27,14 +27,15 @@ export class ResourceListComponent implements OnInit {
   viewsMenu: ViewsMenuUI
   selectedViewKey: string
   
-  //subjects for state
-  //pages subjects
+
+  //pager subjects
   $pageIndex: ReplaySubject<number> = new ReplaySubject()
   $pageSize: ReplaySubject<number> = new ReplaySubject()
   $pageType: ReplaySubject<IPepGenericListPager['type']> = new ReplaySubject()
 
   $searchString: ReplaySubject<string> = new ReplaySubject()
   $sorting: ReplaySubject<IPepListSortingChangeEvent> = new ReplaySubject()
+
 
   list1: List = {
     Key: "LIST_KEY",
@@ -171,7 +172,7 @@ export class ResourceListComponent implements OnInit {
             }
         ]
     },
-    SelectionType: "Single",
+    SelectionType: "Multi",
     Sorting: {Ascending: false, FieldID: "name"}
 }
 
@@ -183,7 +184,7 @@ export class ResourceListComponent implements OnInit {
   }
 
   async load(){
-    const container = await this.clientEventService.emitLoadListEvent(undefined,{ListKey: "LIST_KEY", PageSize: 1 , PageIndex: 1, PageType: "Pages", ItemSelection: {SelectAll: false, Items: []}}, this.list1) as Required<ListContainer>
+    const container = await this.clientEventService.emitLoadListEvent(undefined,{ListKey: "LIST_KEY", PageSize: 1 , PageIndex: 0, PageType: "Pages", ItemSelection: {SelectAll: false, Items: ['adasdas']}}, this.list1) as Required<ListContainer>
     // container.Layout.LineMenu = {
     //     Blocks: [
     //         {
@@ -196,7 +197,7 @@ export class ResourceListComponent implements OnInit {
     //         }
     //     ]
     // }
-    container.Layout.SelectionType = "Multi"
+    // container.Layout.SelectionType = "Multi"
     this.pepperiList = new PepperiList(this.clientEventService, container)
     this.subscribeToChanges()
     this.loadCompleted = true
@@ -204,6 +205,7 @@ export class ResourceListComponent implements OnInit {
 
   subscribeToChanges(){
     this.pepperiList.subscribeToDataSource((ds: IPepGenericListDataSource) => this.dataSource = ds)
+    this.pepperiList.subscribeToListActions((actions) => this.lineMenu = actions)
     this.subscribeToLayoutChanges()
     this.subscribeToStateChanges()
   }
@@ -212,7 +214,6 @@ export class ResourceListComponent implements OnInit {
     this.pepperiList.subscribeToLayoutChanges()
     .onButtonsChanged(buttons => this.buttons = buttons)
     .onMenuChanged(menu => this.menu = menu)
-    .onLineMenuChanged((lineMenu) => this.lineMenu = lineMenu)
     .onSmartSearchChanged(data => this.smartSearch = data)
     .onSearchChanged(visible => this.search = visible)
     .onTitleChanged(title => this.title = title)
