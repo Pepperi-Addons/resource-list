@@ -20,7 +20,7 @@ import semver from 'semver'
 
 
 export async function install(client: Client, request: Request): Promise<any> {
-    await createAddonBlockRelation(client)
+    await createAddonsBlocksRelation(client)
     await createPageBlockRelation(client);
     await createSettingsRelation(client);
     await createDIMXRelation(client)
@@ -41,7 +41,7 @@ export async function upgrade(client: Client, request: Request): Promise<any> {
         await viewsService.createSchema()
         await editorsService.createSchema()
     }
-    await createAddonBlockRelation(client)
+    await createAddonsBlocksRelation(client)
     await createPageBlockRelation(client);
     await createSettingsRelation(client);
     await createDIMXRelation(client)
@@ -95,7 +95,7 @@ export async function downgrade(client: Client, request: Request): Promise<any> 
     return {success:true,resultObject:{}}
 }
 
-async function createAddonBlockRelation(client: Client){
+async function createAddonsBlocksRelation(client: Client){
     const blockName = "ResourceSelection"
     const addonBlockRelation: Relation = {
         RelationName: "AddonBlock",
@@ -110,8 +110,25 @@ async function createAddonBlockRelation(client: Client){
         ElementsModule: 'WebComponents',
         ElementName: `resource-selection-element-${client.AddonUUID}`,
     };
+    const listABIName = "ListABI"
+    const listABIBlockRelation: Relation = {
+        RelationName: "AddonBlock",
+        Name: `${listABIName}`,
+        Description: `${listABIName} addon block`,
+        Type: "NgComponent",
+        SubType: "NG14",
+        AddonUUID: client.AddonUUID,
+        AddonRelativeURL: `file_${client.AddonUUID}`,
+        ComponentName: `${listABIName}Component`,
+        ModuleName: `${listABIName}Module`,
+        ElementsModule: 'WebComponents',
+        ElementName: `list-abi-element-${client.AddonUUID}`,
+    };
     const addonService = new AddonService(client)
-    await addonService.upsertRelation(addonBlockRelation) 
+    await Promise.all([
+        addonService.upsertRelation(addonBlockRelation),
+        addonService.upsertRelation(listABIBlockRelation) 
+    ])
 }
 async function createPageBlockRelation(client: Client): Promise<any> {
     try {
