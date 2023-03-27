@@ -12,6 +12,8 @@ import { GenericListAdapterResult } from "../metadata";
 import { PepSelectionData } from "@pepperi-addons/ngx-lib/list";
 import { ListActions } from "./list-actions";
 import { PepRowData } from "@pepperi-addons/ngx-lib";
+import { AddonDataScheme } from "@pepperi-addons/papi-sdk";
+import { debug } from "console";
 
 
 export interface IStateChangedHandler{
@@ -39,7 +41,7 @@ export class PepperiList implements IStateChangedHandler, ILineMenuHandler{
     private listActions: ListActions
     private $listActions: ReplaySubject<IPepGenericListActions> = new ReplaySubject()
     
-    constructor(private clientEventsService: ClientEventsService,  private listContainer: ListContainer){
+    constructor(private clientEventsService: ClientEventsService,  private listContainer: ListContainer, private resourceFields: AddonDataScheme['Fields']){
         this.listActions = new ListActions(listContainer?.Layout?.LineMenu?.Blocks, this)
         this.$dataSource.next(new ListDataSource(this))
         this.updateList(listContainer)
@@ -150,7 +152,7 @@ export class PepperiList implements IStateChangedHandler, ILineMenuHandler{
         let listContainer: ListContainer = this.listContainer
         //in case of first init the container already updated
         if(!isFirstEvent){
-            const changes = this.stateManager.buildChangesFromPageParams(params)
+            const changes = this.stateManager.buildChangesFromPageParams(params, this.resourceFields)
             listContainer = await this.getListContainer(changes)
         }
         this.updateList(listContainer)

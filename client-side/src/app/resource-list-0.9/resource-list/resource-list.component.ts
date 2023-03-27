@@ -7,6 +7,7 @@ import { PepperiList } from '../helpers/pepperi-list';
 import { List, ListContainer } from 'shared';
 import { IPepListSortingChangeEvent, PepListSelectionType } from '@pepperi-addons/ngx-lib/list';
 import { ReplaySubject } from 'rxjs';
+import { ResourceService } from '../services/resources.service';
 
 @Component({
   selector: 'resource-list',
@@ -177,7 +178,7 @@ export class ResourceListComponent implements OnInit {
 }
 
   
-  constructor(private clientEventService: ClientEventsService) { }
+  constructor(private clientEventService: ClientEventsService, private resourceService: ResourceService) { }
 
   ngOnInit(): void {
     this.load()
@@ -185,20 +186,13 @@ export class ResourceListComponent implements OnInit {
 
   async load(){
     const container = await this.clientEventService.emitLoadListEvent(undefined,{ListKey: "LIST_KEY", PageSize: 1 , PageIndex: 0, PageType: "Pages", ItemSelection: {SelectAll: false, Items: ['adasdas']}}, this.list1) as Required<ListContainer>
-    // container.Layout.LineMenu = {
-    //     Blocks: [
-    //         {
-    //             Key: 'first',
-    //             ExecuteURL: 'aaa',
-    //             AddonUUID: 'asdasd',
-    //             Hidden: false,
-    //             DrawURL: 'afas',
-    //             Title: 'First',
-    //         }
-    //     ]
-    // }
-    // container.Layout.SelectionType = "Multi"
-    this.pepperiList = new PepperiList(this.clientEventService, container)
+    const resource = container?.List?.Resource
+    if(!resource){
+        throw Error(`there is no resource on list container list object`)
+    }
+    //get resource fields 
+    const resourceFields = await this.resourceService.getResourceFields(resource)
+    this.pepperiList = new PepperiList(this.clientEventService, container, resourceFields)
     this.subscribeToChanges()
     this.loadCompleted = true
   }
