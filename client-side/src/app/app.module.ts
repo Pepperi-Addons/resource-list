@@ -50,6 +50,8 @@ import { ViewsEventsTabComponent } from './views-events-tab/views-events-tab.com
 import { ViewsSmartSearchTabComponent } from './views-smart-search-tab/views-smart-search-tab.component';
 import { ViewsSearchTabComponent } from './views-search-tab/views-search-tab.component';
 import { ResourceListComponent } from './resource-list-0.9/resource-list/resource-list.component';
+import { ListAbiComponent } from './resource-list-0.9/list-abi/list-abi.component';
+import { ListPageBlockComponent } from './resource-list-0.9/list-page-block/list-page-block.component';
 @NgModule({
     imports: [
         BrowserModule,
@@ -108,6 +110,7 @@ import { ResourceListComponent } from './resource-list-0.9/resource-list/resourc
         ViewsEventsTabComponent,
         ViewsSearchTabComponent,
         ViewsSmartSearchTabComponent,
+        ListAbiComponent,
     ],
     providers: [
         TranslateStore
@@ -134,5 +137,6 @@ export class AppModule implements DoBootstrap {
         this.pepAddonService.defineCustomElement(`data-config-block-editor-element-${config.AddonUUID}`, DataConfigurationBlockEditorComponent, this.injector);
         this.pepAddonService.defineCustomElement(`resource-selection-element-${config.AddonUUID}`, ResourceSelectionComponent, this.injector)
         this.pepAddonService.defineCustomElement(`resource-list-element-${config.AddonUUID}`, ResourceListComponent, this.injector)
+        this.pepAddonService.defineCustomElement(`list-page-block-element-${config.AddonUUID}`, ListPageBlockComponent, this.injector)
     }
 }
