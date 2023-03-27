@@ -67,4 +67,5 @@ export class ListUIComponent implements OnInit {
   onViewChanged(event){
     this.viewChangedEvent.emit(event)
   }
+
 }

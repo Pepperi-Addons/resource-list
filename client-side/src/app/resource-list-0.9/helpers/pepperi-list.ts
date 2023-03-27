@@ -1,5 +1,5 @@
 import { ReplaySubject } from "rxjs";
-import { ClientEventsService } from "../services/client-events.service";
+import { ClientEventsService, ICPIEventsService } from "../services/client-events.service";
 import { StateManager } from "./state-manager";
 import { ListContainer, ListState, DataRow } from "shared";
 import { GenericListAdapter } from "./generic-list-adapter";
@@ -41,7 +41,7 @@ export class PepperiList implements IStateChangedHandler, ILineMenuHandler{
     private listActions: ListActions
     private $listActions: ReplaySubject<IPepGenericListActions> = new ReplaySubject()
     
-    constructor(private clientEventsService: ClientEventsService,  private listContainer: ListContainer, private resourceFields: AddonDataScheme['Fields']){
+    constructor(private clientEventsService: ICPIEventsService,  private listContainer: ListContainer, private resourceFields: AddonDataScheme['Fields']){
         this.listActions = new ListActions(listContainer?.Layout?.LineMenu?.Blocks, this)
         this.$dataSource.next(new ListDataSource(this))
         this.updateList(listContainer)

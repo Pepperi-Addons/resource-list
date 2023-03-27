@@ -26,6 +26,9 @@ import { ResourceService } from '../services/resources.service';
   providers: [
     ClientEventsService,
     ResourceService
+  ],
+  exports:[
+    ResourceListComponent
   ]
 })
 export class ResourceListModule { }
