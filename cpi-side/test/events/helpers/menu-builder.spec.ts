@@ -25,7 +25,8 @@ describe('menu builder tests', () => {
                 ButtonStyleType: "Strong",
                 DrawURL: "addon-cpi/drawMenuBlock",
                 AddonUUID: "0e2ae61b-a26a-4c26-81fe-13bdd2e4aaa3",
-                Hidden: false
+                Hidden: false,
+                ExecuteURL: 'addon-cpi/menuExecution'
             }
             list.Menu.Blocks.push(newButton)
 
@@ -50,7 +51,8 @@ describe('menu builder tests', () => {
                 ButtonStyleType: "Strong",
                 DrawURL: "addon-cpi/drawMenuBlock",
                 AddonUUID: "0e2ae61b-a26a-4c26-81fe-13bdd2e4aaa3",
-                Hidden: false
+                Hidden: false,
+                ExecuteURL: 'addon-cpi/menuExecution'
             }
             list.Menu.Blocks.push(newButton)
             /** create stub that returns undefined */

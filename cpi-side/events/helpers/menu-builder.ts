@@ -8,7 +8,10 @@ export class MenuBuilder{
 
     async build(menu: ListMenu, state: ListState | undefined, changes: Partial<ListState>): Promise<Menu | null>{
         const drawFunctionsArray = groupRelationBlocks(menu.Blocks)
-        const drawnBlocks = (await this.drawBlocks(drawFunctionsArray, state, changes)).filter(block => block).flat() as MenuBlock[]
+        const drawnBlocks = (await this.drawBlocks(drawFunctionsArray, state, changes)).filter(block => block).flat().map(block => {
+            block!.Key = `${block?.AddonUUID}_${block?.Key}`
+            return block
+        }) as MenuBlock[]
         if(drawnBlocks.length == 0){
             return null
         }

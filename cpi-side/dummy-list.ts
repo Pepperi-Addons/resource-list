@@ -36,11 +36,33 @@ export const LIST1: List = {
     Menu: {
         Blocks: [
             {
-                Key: "New",
-                Title: "Add",
-                ButtonStyleType: "Strong",
+                Key: 'recycleBin',
+                Title: 'Recycle Bin',
                 DrawURL: 'addon-cpi/drawMenuBlock',
-                AddonUUID: '0e2ae61b-a26a-4c26-81fe-13bdd2e4aaa3'
+                AddonUUID: '0e2ae61b-a26a-4c26-81fe-13bdd2e4aaa3',
+                ExecuteURL: 'addon-cpi/menuExecution'
+            },
+            {
+                Key: 'import',
+                Title: 'Import',
+                DrawURL: 'addon-cpi/drawMenuBlock',
+                AddonUUID: '0e2ae61b-a26a-4c26-81fe-13bdd2e4aaa3',
+                ExecuteURL: 'addon-cpi/menuExecution'
+            },
+            {
+                Key: 'export',
+                Title: 'Export',
+                DrawURL: 'addon-cpi/drawMenuBlock',
+                AddonUUID: '0e2ae61b-a26a-4c26-81fe-13bdd2e4aaa3',
+                ExecuteURL: 'addon-cpi/menuExecution'
+            },
+            {
+                Key: 'new',
+                Title: 'New',
+                DrawURL: 'addon-cpi/drawMenuBlock',
+                AddonUUID: '0e2ae61b-a26a-4c26-81fe-13bdd2e4aaa3',
+                ButtonStyleType: "Strong",
+                ExecuteURL: 'addon-cpi/menuExecution'
             }
         ]
     },
@@ -50,13 +72,15 @@ export const LIST1: List = {
                 Key: "delete",
                 Title: "Delete",
                 DrawURL: 'addon-cpi/drawLineMenuBlock',
-                AddonUUID: '0e2ae61b-a26a-4c26-81fe-13bdd2e4aaa3'
+                AddonUUID: '0e2ae61b-a26a-4c26-81fe-13bdd2e4aaa3',
+                ExecuteURL: 'addon-cpi/menuExecution'
             },
             {
                 Key: "edit",
                 Title: "Edit",
                 DrawURL: 'addon-cpi/drawLineMenuBlock',
-                AddonUUID: '0e2ae61b-a26a-4c26-81fe-13bdd2e4aaa3'
+                AddonUUID: '0e2ae61b-a26a-4c26-81fe-13bdd2e4aaa3',
+                ExecuteURL: 'addon-cpi/menuExecution'
             }
         ]
     },
