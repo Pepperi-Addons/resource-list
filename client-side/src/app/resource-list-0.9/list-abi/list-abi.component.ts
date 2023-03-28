@@ -28,12 +28,23 @@ export class ListAbiComponent implements OnInit {
   }
 
   onDoneClicked(){
-    const selectedItems = this.list?.getSelectedItems()?.rows || []
-    this.hostEvents.emit(selectedItems.map(key => {
+    const selectedObjects = (this.list?.getSelectedItems()?.rows || []).map(key => {
       return {
         Key: key
       }
-    }))
+    })
+
+    this.hostEvents.emit({
+      actions: 'on-done',
+      data: {
+        selectedObjects: selectedObjects
+      }})
   }
 
+  onCancelClicked(){
+    this.hostEvents.emit({
+      action: 'on-cancel',
+      data: { }
+    })
+  }
 }
