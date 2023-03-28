@@ -1,9 +1,9 @@
 <div class="list">
     <pep-generic-list class="generic-list" 
-    [title]="genericViewer?.view?.Name"
+    [title]="genericViewer?.title"
     [showTopBar]="true"
     [dataSource]="dataSource"
-    [showSearch]="true"
+    [showSearch]="listOptions.showSearch"
     [inline] ="listOptions.inlineList"
     [actions]="listOptions.actions"
     uuidMapping = 'Key'

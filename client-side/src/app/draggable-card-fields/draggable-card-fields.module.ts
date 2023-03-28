@@ -13,6 +13,7 @@ import { PepSelectModule } from '@pepperi-addons/ngx-lib/select';
 import { DraggableCardFieldsComponent } from './draggable-card-fields.component'
 import { config } from '../addon.config';
 import { pepIconArrowDown, pepIconArrowUp, PepIconRegistry, pepIconSystemBin, pepIconSystemMove } from '@pepperi-addons/ngx-lib/icon';
+import { PepTextboxModule } from '@pepperi-addons/ngx-lib/textbox';
 
 const pepIcons = [
     pepIconSystemMove,
@@ -32,6 +33,7 @@ const pepIcons = [
         PepSelectModule,
         PepGroupButtonsModule,
         PepImageModule,
+        PepTextboxModule,
         TranslateModule.forChild({
             loader: {
                 provide: TranslateLoader,
