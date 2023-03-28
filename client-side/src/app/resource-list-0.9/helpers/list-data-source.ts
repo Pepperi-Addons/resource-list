@@ -9,8 +9,6 @@ import { IPepGenericListDataSource, IPepGenericListInitData, IPepGenericListList
 import { LayoutObserver } from "./layout-observer";
 import { ChangesBuilder } from "./changes-builder";
 import { StateObserver } from "./state-observer";
-import { NgXToJSONFilterAdapter } from "./smart-filters/ngx-to-json-filters-adapter";
-import { JSONToNGXFilterAdapter } from "./smart-filters/json-regular-filters/json-to-ngx-filters-adapter";
 
 
 
