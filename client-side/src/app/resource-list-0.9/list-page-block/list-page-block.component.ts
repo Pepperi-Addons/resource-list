@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewContainerRef } from '@angular/core';
+import { MatDialogRef } from '@angular/material/dialog';
+import { PepAddonBlockLoaderService } from '@pepperi-addons/ngx-lib/remote-loader';
 import { List, ListContainer } from 'shared';
 import { ClientEventsService, ICPIEventsService } from '../services/client-events.service';
 
@@ -150,16 +152,31 @@ export class ListPageBlockComponent implements OnInit {
     },
     State: {
       ListKey: "LIST_KEY",
-      SearchString: "WOHOOOOO!!!"
+      SearchString: "a"
     }
   }
 
-  constructor(public clientEventService: ClientEventsService) { }
+  listABICompRef: MatDialogRef<any,any>
+
+  constructor(public clientEventService: ClientEventsService, private addonBlockService: PepAddonBlockLoaderService, private viewContainerRef: ViewContainerRef) { }
 
   ngOnInit(): void {
   }
 
   ngOnChanges(){
+  }
+
+  onClick(){
+    const hostObject = {
+      listContainer: this.listContainer,
+      cpiEventsService: this.clientEventService
+    }
+    this.listABICompRef = this.addonBlockService.loadAddonBlockInDialog({
+      name: 'ListABI',
+      hostObject: hostObject,
+      container: this.viewContainerRef
+    })
+    
   }
 
 }

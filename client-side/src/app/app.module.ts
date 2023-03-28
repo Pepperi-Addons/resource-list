@@ -110,7 +110,6 @@ import { ListPageBlockComponent } from './resource-list-0.9/list-page-block/list
         ViewsEventsTabComponent,
         ViewsSearchTabComponent,
         ViewsSmartSearchTabComponent,
-        ListAbiComponent,
     ],
     providers: [
         TranslateStore
@@ -138,5 +137,6 @@ export class AppModule implements DoBootstrap {
         this.pepAddonService.defineCustomElement(`resource-selection-element-${config.AddonUUID}`, ResourceSelectionComponent, this.injector)
         this.pepAddonService.defineCustomElement(`resource-list-element-${config.AddonUUID}`, ResourceListComponent, this.injector)
         this.pepAddonService.defineCustomElement(`list-page-block-element-${config.AddonUUID}`, ListPageBlockComponent, this.injector)
+        this.pepAddonService.defineCustomElement(`list-abi-element-${config.AddonUUID}`, ListAbiComponent, this.injector)
     }
 }
