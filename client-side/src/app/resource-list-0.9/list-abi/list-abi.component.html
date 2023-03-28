@@ -3,3 +3,10 @@
     [listContainer]="hostObject.listContainer"
 ></resource-list>
 
+<pep-button 
+    class="pep-spacing-element"
+    [sizeType]="'md'" 
+    [value]="'DONE' | translate"
+    [styleType]="'strong'" 
+    (buttonClick)="onDoneClicked()"
+></pep-button>

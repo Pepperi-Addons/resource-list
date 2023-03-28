@@ -1,5 +1,6 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { ListContainer } from 'shared';
+import { ResourceListComponent } from '../resource-list/resource-list.component';
 import { ClientEventsService } from '../services/client-events.service';
 
 @Component({
@@ -12,7 +13,9 @@ export class ListAbiComponent implements OnInit {
   @Input() hostObject: any;
   @Output() hostEvents: EventEmitter<any> = new EventEmitter<any>();
 
-  constructor(public clientEventsService: ClientEventsService) { }
+  @ViewChild(ResourceListComponent) list: ResourceListComponent
+  
+  constructor(public clientEventsService: ClientEventsService,) { }
 
   ngOnInit(): void {
     this.clientEventsService = this.hostObject.cpiEventService || this.clientEventsService
@@ -22,6 +25,15 @@ export class ListAbiComponent implements OnInit {
     if(!listContainer || !listContainer.State || !listContainer.State.ListKey){
       throw Error(`inside LIST ABI - problem with list container in the host object, list container must be exist and includes state with list key as property`)  
     }
+  }
+
+  onDoneClicked(){
+    const selectedItems = this.list?.getSelectedItems()?.rows || []
+    this.hostEvents.emit(selectedItems.map(key => {
+      return {
+        Key: key
+      }
+    }))
   }
 
 }

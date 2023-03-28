@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { ClientEventsService, ICPIEventsService } from '../services/client-events.service';
 import { IPepGenericListActions, IPepGenericListDataSource, IPepGenericListPager } from '@pepperi-addons/ngx-composite-lib/generic-list';
 import { GVButton, SmartSearchInput, ViewsMenuUI } from '../metadata';
@@ -8,6 +8,7 @@ import { List, ListContainer, ListState } from 'shared';
 import { IPepListSortingChangeEvent, PepListSelectionType } from '@pepperi-addons/ngx-lib/list';
 import { ReplaySubject } from 'rxjs';
 import { ResourceService } from '../services/resources.service';
+import { ListUIComponent } from './list-ui/list-ui.component';
 
 @Component({
   selector: 'resource-list',
@@ -40,7 +41,7 @@ export class ResourceListComponent implements OnInit {
   $searchString: ReplaySubject<string> = new ReplaySubject()
   $sorting: ReplaySubject<IPepListSortingChangeEvent> = new ReplaySubject()
 
-
+  @ViewChild(ListUIComponent) list: ListUIComponent
 
 
   
@@ -107,6 +108,10 @@ export class ResourceListComponent implements OnInit {
   }
   onViewChanged(key: string){
     this.pepperiList.onViewChanged(key)
+  }
+
+  getSelectedItems(){
+    return this.list?.getSelectedItems()
   }
 
 }
