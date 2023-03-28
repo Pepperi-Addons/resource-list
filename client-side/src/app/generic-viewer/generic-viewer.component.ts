@@ -75,7 +75,7 @@ export class GenericViewerComponent implements OnInit {
     async createListOptions(): Promise<ListOptions>{
 
       const actions =  this.actions
-      const selectionType = this.configurationObject.selectionList?.selection || "single"
+      const selectionType = this.genericViewer.lineMenuItems.Fields.length > 0 ? this.configurationObject.selectionList?.selection || "single" : 'none'
       const menuItems = this.menuItems || []
       const dropDownOfViews = this.dropDownOfViews || []
       const buttons: GVButton[] = this.createButtonArray()
@@ -89,7 +89,8 @@ export class GenericViewerComponent implements OnInit {
           buttons: buttons,
           smartSearchDataView: smartSearchDataView,
           searchDataView: searchDataView,
-          inlineList: this.genericViewerDataSource.isInlineList()
+          inlineList: this.genericViewerDataSource.isInlineList(),
+          showSearch: searchDataView.Fields.length > 0
       }
     }
     ngOnInit(): void {
@@ -203,6 +204,7 @@ export class GenericViewerComponent implements OnInit {
       return item[fieldID];
     }
     async DisplayViewInList(viewKey){
+      this.listOptions = await this.createListOptions()
       if(this.genericViewer.viewDataview){
         await this.loadList(this.genericViewer.viewDataview)
       }
@@ -214,7 +216,9 @@ export class GenericViewerComponent implements OnInit {
     }
     async onViewChanged($event){
       this.genericViewer = await this.genericResourceService.getGenericView($event)
-      this.genericViewerDataSource = new RegularGVDataSource(this.genericViewer, this.genericResourceService)
+      const seletedView = this.dropDownOfViews.find(item => item.key === $event)
+      this.genericViewer.title = seletedView ? seletedView.value : '';
+      this.genericViewerDataSource = new RegularGVDataSource(this.genericViewer, this.genericResourceService, [], this.accountUUID)
       this.loadViewBlock()
     }
     async getItemsCopy(){
@@ -228,6 +232,7 @@ export class GenericViewerComponent implements OnInit {
       if(this.genericViewer?.view?.isFirstFieldDrillDown && fields.length > 0){
         fields[0].Type = "Link"
       }
+      this.genericViewer.lineMenuItems.Fields.length
       this.dataSource = new DataSource(new DynamicItemsDataSource(async (params) => {
         const resourceFields = await this.genericViewerDataSource.getFields()
         const items = await this.genericViewerDataSource.getItems(params, fields, resourceFields, this.accountUUID)
@@ -238,7 +243,7 @@ export class GenericViewerComponent implements OnInit {
           items: items,
           totalCount: items.length
         }
-      }), fields,columns)
+      }), fields,columns, undefined, this.listOptions)
       }
 
     async onFieldDrillDown(event: any){
@@ -257,7 +262,8 @@ export class GenericViewerComponent implements OnInit {
         text: "Back to list"
       })]
       this.menuItems = this.menuItems.filter(menuItem => menuItem.key != "RecycleBin")
-      this.dataSource = new DataSource(deletedItems, this.dataSource.getFields(), this.dataSource.getColumns())
+      this.listOptions = await this.createListOptions()
+      this.dataSource = new DataSource(deletedItems, this.dataSource.getFields(), this.dataSource.getColumns(), undefined, this.listOptions)
       this.actions.get = this.getRecycleBinActions()
       this.listOptions = await this.createListOptions()
     }

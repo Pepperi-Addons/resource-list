@@ -34,7 +34,8 @@ export class BlockComponent implements OnInit {
       this.setConfigurationObject(hostObject)
       if(this.configurationObject.viewsList.length > 0){
         this.genericViewer = await this.genericResourceService.getGenericView(this.configurationObject.viewsList[0].key)
-        this.genericViewerDataSource = new RegularGVDataSource(this.genericViewer, this.genericResourceService)
+        this.genericViewer.title = this.configurationObject.viewsList[0].value;
+        this.genericViewerDataSource = new RegularGVDataSource(this.genericViewer, this.genericResourceService, [], this.accountUUID)
         this.hasViewToDisplay = true
       }
     }
@@ -42,7 +43,7 @@ export class BlockComponent implements OnInit {
       return viewsList.filter(card => card.selectedView).map(card => {
         return {
           key: card.selectedView.key,
-          value: card.selectedView.value
+          value: card.title
         }
       })
     }

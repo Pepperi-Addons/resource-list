@@ -6,6 +6,7 @@ import { GENERIC_RESOURCE_OFFLINE_URL, GENERIC_VIEWS_RESOURCE } from "../metadat
 import { IPepGenericListParams } from "@pepperi-addons/ngx-composite-lib/generic-list";
 import { SmartSearchParser } from "../smart-search-parser/smart-search-parser";
 import { UtilitiesService } from "./utilities-service";
+import { Sorting } from "shared";
 
 
 @Injectable({ providedIn: 'root' })
@@ -43,7 +44,8 @@ export class GenericResourceOfflineService{
         dataViewFields?: GridDataViewField[],
         resourceFields?: AddonDataScheme['Fields'],
         accountUUID?:string | undefined,
-        searchDataView?: MenuDataView): Promise<any> {
+        searchDataView?: MenuDataView,
+        sorting?: Sorting): Promise<any> {
         try{
             const keyFiledIndex = fields.findIndex(field => field == "Key")
             if(keyFiledIndex < 0){
@@ -76,7 +78,7 @@ export class GenericResourceOfflineService{
             stringQueryArray.push(`(Hidden=${getDeletedItems})`)
             let query = {where: stringQueryArray.join(' AND '), include_deleted: getDeletedItems}
 
-        return (await this.addonService.postAddonCPICall(config.AddonUUID, `${GENERIC_RESOURCE_OFFLINE_URL}/get_items/${resourceName}`, {query: query, fields: fields})).Objects || []
+        return (await this.addonService.postAddonCPICall(config.AddonUUID, `${GENERIC_RESOURCE_OFFLINE_URL}/get_items/${resourceName}`, {query: query, fields: fields, insideAccount: accountUUIDQuery != '', sorting: sorting})).Objects || []
         }catch(e){
             console.log(`error: ${e}`)
             this.utilitiesService.showDialog('error', 'GeneralErrorMsg', 'close')
@@ -101,8 +103,8 @@ export class GenericResourceOfflineService{
         return `${queryArray.join(' OR ')}`
     }
 
-    async postItem(resourceName, item){
-        return await this.addonService.postAddonCPICall(config.AddonUUID, `${GENERIC_RESOURCE_OFFLINE_URL}/post_item/${resourceName}`, item)
+    async postItem(resourceName, item, accountUUID: string = ''){
+        return await this.addonService.postAddonCPICall(config.AddonUUID, `${GENERIC_RESOURCE_OFFLINE_URL}/post_item/${resourceName}`, {item: item, insideAccount: accountUUID != ''})
     }
     async getResource(name: string){
         return await this.addonService.getAddonCPICall(config.AddonUUID, `${GENERIC_RESOURCE_OFFLINE_URL}/${name}`) as AddonDataScheme

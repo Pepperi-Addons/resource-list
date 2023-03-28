@@ -54,6 +54,7 @@ export interface IReferenceField {
     SelectionListKey: string
   }
   export interface IGenericViewer{
+    title: string,
     view: View,
     viewDataview: GridDataView
     editor?: Editor

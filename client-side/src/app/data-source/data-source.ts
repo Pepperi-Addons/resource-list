@@ -1,6 +1,7 @@
 import { IPepGenericListDataSource, IPepGenericListInitData, IPepGenericListListInputs, IPepGenericListParams } from "@pepperi-addons/ngx-composite-lib/generic-list";
 import { GridDataViewColumn } from "@pepperi-addons/papi-sdk";
 import { IPepListSortingChangeEvent } from "@pepperi-addons/ngx-lib/list";
+import { ListOptions } from "../generic-viewer/generic-viewer.model";
 
 export interface ItemsDataSource {
   getItems(params: IPepGenericListParams): Promise<{
@@ -41,9 +42,13 @@ export class DynamicItemsDataSource implements ItemsDataSource {
 export class DataSource implements IPepGenericListDataSource{
   private items: any[] = []
   itemsDataSource: ItemsDataSource;
+  inputs?: IPepGenericListListInputs;
 
-    constructor(itemsDataSource: ItemsDataSource | any[], private fields: any[], private widthArray: GridDataViewColumn[] = [], private searchCB = (str, items) => items){
+    constructor(itemsDataSource: ItemsDataSource | any[], private fields: any[], private widthArray: GridDataViewColumn[] = [], private searchCB = (str, items) => items, private listOptions?: ListOptions){
       this.itemsDataSource = Array.isArray(itemsDataSource) ? new StaticItemsDataSource(itemsDataSource, searchCB) : itemsDataSource;
+      this.inputs = {
+        selectionType: this.listOptions?.selectionType || 'single',
+      }
     }
     
     async init(params: IPepGenericListParams): Promise<IPepGenericListInitData> {
@@ -66,9 +71,11 @@ export class DataSource implements IPepGenericListDataSource{
             MinimumColumnWidth: 0
           },
           totalCount: result.items.length,
-          items: result.items
+          items: result.items,
         }; 
     }
+    
+
     getItems(){
       return this.items
     }

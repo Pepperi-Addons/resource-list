@@ -54,6 +54,7 @@ export class SelectionListComponent implements OnInit {
 
   loadVariablesFromDialog(){
     this.genericViewer = this.dialogData.genericViewer
+    this.genericViewer.title = this.genericViewer.view.Name;
     this.selectionListConfiguration = this.dialogData.configurationObj
     this.genericViewerDataSource = this.dialogData.gvDataSource
   }

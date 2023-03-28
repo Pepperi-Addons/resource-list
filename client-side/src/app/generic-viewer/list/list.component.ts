@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { GenericListComponent } from '@pepperi-addons/ngx-composite-lib/generic-list';
 import { DataSource } from 'src/app/data-source/data-source';
 import { IGenericViewer, SelectOption } from 'shared';
@@ -10,7 +10,7 @@ import { debug } from 'console';
   templateUrl: './list.component.html',
   styleUrls: ['./list.component.scss']
 })
-export class ListComponent implements OnInit {
+export class ListComponent implements OnInit, OnChanges {
   @Input() dataSource: DataSource
   @Input() genericViewer: IGenericViewer
   @Input() listOptions: ListOptions
@@ -26,6 +26,12 @@ export class ListComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
+    console.log(this.listOptions)
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    console.log('inside ngOnChanges', changes);
+    console.log('list options:', this.listOptions)
   }
 
   onFieldClicked(event){

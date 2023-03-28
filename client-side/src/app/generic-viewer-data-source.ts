@@ -1,6 +1,6 @@
 import { AddonDataScheme, GridDataViewField, SchemeField } from "@pepperi-addons/papi-sdk";
 import { IPepGenericListParams } from "@pepperi-addons/ngx-composite-lib/generic-list";
-import { IGenericViewer } from "shared";
+import { IGenericViewer, Sorting } from "shared";
 import * as uuid from 'uuid';
 import { GenericResourceOfflineService } from "./services/generic-resource-offline.service";
 import { IDataViewField } from "./metadata";
@@ -98,7 +98,8 @@ export class RegularGVDataSource implements IGenericViewerDataSource{
     constructor(
         public genericViewer: IGenericViewer,
         private genericResourceService: GenericResourceOfflineService,
-        private items?: any[]
+        private items?: any[],
+        private accountUUID: string = ''
     ){
         this.fieldsIDs = (this.genericViewer.viewDataview.Fields || []).map(gridDataViewField => gridDataViewField.FieldID)
     }
@@ -116,13 +117,13 @@ export class RegularGVDataSource implements IGenericViewerDataSource{
         return await  this.getDeletedItems()
     }
     private async postItem(item: any){
-        return await this.genericResourceService.postItem(this.genericViewer.view.Resource.Name, item)
+        return await this.genericResourceService.postItem(this.genericViewer.view.Resource.Name, item, this.accountUUID)
     }
     async getItems(params?: IPepGenericListParams, fields?:GridDataViewField[], resourceFields?:AddonDataScheme['Fields'], accountUUID?:string | undefined): Promise<any[]>{
         return await this._getItems(false, params, fields, resourceFields, accountUUID)
     }
     private async _getItems(deleted:boolean, params?: IPepGenericListParams, fields? : GridDataViewField[], resourceFields?: AddonDataScheme['Fields'], accountUUID?:string | undefined){
-        return await this.genericResourceService.getItems(this.genericViewer.view.Resource.Name, deleted,  this.fieldsIDs, this.genericViewer.filter, params, fields, resourceFields, accountUUID, this.genericViewer.searchDataView)
+        return await this.genericResourceService.getItems(this.genericViewer.view.Resource.Name, deleted,  this.fieldsIDs, this.genericViewer.filter, params, fields, resourceFields, accountUUID, this.genericViewer.searchDataView, this.genericViewer.view.Sorting)
     }
     async getFields(){
         if(!this.fields){
