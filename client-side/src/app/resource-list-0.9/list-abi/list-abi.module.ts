@@ -6,6 +6,7 @@ import { PepButtonModule } from '@pepperi-addons/ngx-lib/button';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { PepAddonService } from '@pepperi-addons/ngx-lib';
 import { config } from '../../addon.config';
+import { PepDialogModule } from '@pepperi-addons/ngx-lib/dialog';
 
 
 
@@ -17,6 +18,7 @@ import { config } from '../../addon.config';
     CommonModule,
     ResourceListModule,
     PepButtonModule,
+    PepDialogModule,
     TranslateModule.forChild({
       loader: {
           provide: TranslateLoader,

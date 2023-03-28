@@ -1,12 +1,26 @@
-<resource-list
-    [cpiEventService]="clientEventsService"
-    [listContainer]="hostObject.listContainer"
-></resource-list>
 
-<pep-button 
-    class="pep-spacing-element"
-    [sizeType]="'md'" 
-    [value]="'DONE' | translate"
-    [styleType]="'strong'" 
-    (buttonClick)="onDoneClicked()"
-></pep-button>
+<pep-dialog>
+    <ng-container pep-dialog-content>
+        <resource-list
+            [cpiEventService]="clientEventsService"
+            [listContainer]="hostObject.listContainer"
+        ></resource-list>
+    </ng-container>
+    <ng-container pep-dialog-actions>
+        <pep-button 
+            class="pep-spacing-element"
+            [sizeType]="'md'" 
+            [value]="'DONE' | translate"
+            [styleType]="'strong'" 
+            (buttonClick)="onDoneClicked()"
+        ></pep-button>
+    
+        <pep-button 
+            class="pep-spacing-element"
+            [sizeType]="'md'" 
+            [value]="'CANCEL' | translate"
+            [styleType]="'weak'" 
+            (buttonClick)="onCancelClicked()"
+        ></pep-button>
+    </ng-container>
+</pep-dialog>
