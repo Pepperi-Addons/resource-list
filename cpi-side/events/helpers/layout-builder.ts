@@ -74,7 +74,12 @@ export class ListLayoutBuilder implements IListLayoutBuilder{
     }
     private async buildMenu(menuConfiguration: ListMenu){
         const menuBuilder = new MenuBuilder()
-        return await menuBuilder.build(menuConfiguration, this.state, this.changes)
+        let menu =  await menuBuilder.build(menuConfiguration, this.state, this.changes)
+        //if we are loading the list, the default value of menu needs to be an empty array
+        if(this.changes.ListKey && !menu){
+            menu = {Blocks: []}
+        }
+        return menu
     }
     /**
      * this function will set the line menu on the list layout if the line menu needs to be rendered.
