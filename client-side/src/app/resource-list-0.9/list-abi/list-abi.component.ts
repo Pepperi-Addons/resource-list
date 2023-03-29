@@ -20,6 +20,7 @@ export class ListAbiComponent implements OnInit {
   ngOnInit(): void {
     this.clientEventsService = this.hostObject.cpiEventService || this.clientEventsService
     this.validateListContainer(this.hostObject.listContainer)
+    
   }
   validateListContainer(listContainer: ListContainer){
     if(!listContainer || !listContainer.State || !listContainer.State.ListKey){

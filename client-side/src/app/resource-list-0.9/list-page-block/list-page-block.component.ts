@@ -169,7 +169,8 @@ export class ListPageBlockComponent implements OnInit {
   onClick(){
     const hostObject = {
       listContainer: this.listContainer,
-      cpiEventsService: this.clientEventService
+      cpiEventsService: this.clientEventService,
+      isDialog: true
     }
     this.listABICompRef = this.addonBlockService.loadAddonBlockInDialog({
       name: 'ListABI',
