@@ -53,7 +53,7 @@ export class ReferenceFieldsTableComponent implements OnInit {
     item.SelectionListKey = newItem.SelectionListKey
   }
   private openEditDialog(fieldID){
-    const item = this.dataSource.getItems().find(item => item.FieldID == fieldID)
+    const item = this.dataSource.getItems().Objects.find(item => item.FieldID == fieldID)
     const formData = {
       //I'm using the spread operator in order to deep copy the *non-nested* object
       item: {...item},
@@ -66,7 +66,7 @@ export class ReferenceFieldsTableComponent implements OnInit {
     this.dialogService.openDialog(ReferenceFieldEditDialogComponent, formData, config).afterClosed().subscribe((value => {
       if(value){
         this.updateItemInList(item, value)
-        this.dataSource = new DataSource(this.dataSource.getItems(), this.dataSource.getFields(), this.dataSource.getColumns())
+        this.dataSource = new DataSource(this.dataSource.getItems().Objects, this.dataSource.getFields(), this.dataSource.getColumns())
 
       }
     }))

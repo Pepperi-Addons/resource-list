@@ -1,4 +1,4 @@
-import { AddonDataScheme, GridDataViewField, SchemeField } from "@pepperi-addons/papi-sdk";
+import { AddonData, AddonDataScheme, GridDataViewField, SchemeField, SearchData } from "@pepperi-addons/papi-sdk";
 import { IPepGenericListParams } from "@pepperi-addons/ngx-composite-lib/generic-list";
 import { IGenericViewer, Sorting } from "shared";
 import * as uuid from 'uuid';
@@ -10,10 +10,10 @@ export interface IGenericViewerDataSource{
     type: "contained" | "regular"
     addItem(item: any):Promise<any>
     deleteItem(item:any):Promise<any>
-    getItems(params?: IPepGenericListParams, fields?: GridDataViewField[], resourceFields?: AddonDataScheme['Fields'], accountUUID?: string | undefined):Promise<any[]>
+    getItems(params?: IPepGenericListParams, fields?: GridDataViewField[], resourceFields?: AddonDataScheme['Fields'], accountUUID?: string | undefined):Promise<SearchData<AddonData>>
     getFields():Promise<AddonDataScheme['Fields']>
-    getDeletedItems(): Promise<any[]>
-    restore(item: any): Promise<any[]>
+    getDeletedItems(): Promise<SearchData<AddonData>>
+    restore(item: any): Promise<SearchData<AddonData>>
     update(item: any): Promise<any>
     getEditorItemByKey(key: string)
     isInlineList()
@@ -25,7 +25,7 @@ export class ContainedArrayGVDataSource implements IGenericViewerDataSource{
     deletedItems: any[] = []
     fields: AddonDataScheme['Fields'] = {}
     constructor(public genericViewer: IGenericViewer, private genericResourceService: GenericResourceOfflineService, items?: any[]){
-        if(items){
+        if(Array.isArray(items)){
             this.setItems(items)
         }
     }
@@ -44,15 +44,19 @@ export class ContainedArrayGVDataSource implements IGenericViewerDataSource{
 
     }
     
-    async restore(item: any): Promise<any[]> {
+    async restore(item: any): Promise<SearchData<AddonData>> {
         const index = this.deletedItems.findIndex(listItem => listItem.Key == item.Key)
         if(index < 0){
-            return this.deletedItems
+            return {
+                Objects: this.deletedItems
+            }
         }
         const restoredItem = this.deletedItems[index]
         this.deletedItems.splice(index, 1)
         this.items.push(restoredItem)
-        return this.deletedItems
+        return {
+            Objects: this.deletedItems
+        }
     }
     async addItem(item: any): Promise<any> {
         this.items.push({...item, Key: uuid.v4()})
@@ -64,8 +68,10 @@ export class ContainedArrayGVDataSource implements IGenericViewerDataSource{
         this.items.splice(index, 1)
         return item
     }
-    async getItems(): Promise<any[]> {
-        return this.items || []
+    async getItems(): Promise<SearchData<AddonData>> {
+        return {
+            Objects: this.items || []
+        }
     }
     async getFields(): Promise<AddonDataScheme['Fields']> {
         if(Object.keys(this.fields || {}).length === 0){
@@ -107,7 +113,7 @@ export class RegularGVDataSource implements IGenericViewerDataSource{
     async getEditorItemByKey(key: string){
         const fieldIDsArray = (this.genericViewer.editorDataView?.Fields || []).map(field => field.FieldID)
         const query = `Key='${key}'`
-        const result = await this.genericResourceService.getItems(this.genericViewer.editor?.Resource?.Name, false, fieldIDsArray, query)
+        const result = (await this.genericResourceService.getItems(this.genericViewer.editor?.Resource?.Name, false, fieldIDsArray, query)).Objects
         return result.length > 0? result[0] : {}
       }
 
@@ -119,10 +125,10 @@ export class RegularGVDataSource implements IGenericViewerDataSource{
     private async postItem(item: any){
         return await this.genericResourceService.postItem(this.genericViewer.view.Resource.Name, item, this.accountUUID)
     }
-    async getItems(params?: IPepGenericListParams, fields?:GridDataViewField[], resourceFields?:AddonDataScheme['Fields'], accountUUID?:string | undefined): Promise<any[]>{
+    async getItems(params?: IPepGenericListParams, fields?:GridDataViewField[], resourceFields?:AddonDataScheme['Fields'], accountUUID?:string | undefined): Promise<SearchData<AddonData>>{
         return await this._getItems(false, params, fields, resourceFields, accountUUID)
     }
-    private async _getItems(deleted:boolean, params?: IPepGenericListParams, fields? : GridDataViewField[], resourceFields?: AddonDataScheme['Fields'], accountUUID?:string | undefined){
+    private async _getItems(deleted:boolean, params?: IPepGenericListParams, fields? : GridDataViewField[], resourceFields?: AddonDataScheme['Fields'], accountUUID?:string | undefined): Promise<SearchData<AddonData>> {
         return await this.genericResourceService.getItems(this.genericViewer.view.Resource.Name, deleted,  this.fieldsIDs, this.genericViewer.filter, params, fields, resourceFields, accountUUID, this.genericViewer.searchDataView, this.genericViewer.view.Sorting)
     }
     async getFields(){
