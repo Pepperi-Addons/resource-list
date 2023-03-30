@@ -5,9 +5,9 @@ import { RelationBlock } from "../metadata";
 
 export class ViewRelationService{
     
-    async getRows(searchResult: AddonsDataSearchResult, blocks: ViewBlock[]): Promise<DataRow[]>{
+    async getRows(searchResult: AddonsDataSearchResult, blocks: ViewBlock[], resource: string): Promise<DataRow[]>{
         const relationGroups = groupRelationBlocks(blocks)
-        const gridArray = await this.drawGrids(relationGroups, blocks, searchResult)
+        const gridArray = await this.drawGrids(relationGroups, blocks, searchResult, resource)
 
         //find the grid with the minimum number of objects
         const minLength = gridArray.reduce((acc, curr) => Math.min(acc, curr.length), Infinity)
@@ -23,16 +23,16 @@ export class ViewRelationService{
         return result
     }
 
-    private async drawGrids(relationBlocks: RelationBlock[], viewBlocks: ViewBlock[], searchResult: AddonsDataSearchResult){
+    private async drawGrids(relationBlocks: RelationBlock[], viewBlocks: ViewBlock[], searchResult: AddonsDataSearchResult, resource: string){
         return Promise.all(relationBlocks.map(async relationBlock => {
-            return await this.drawGrid(relationBlock, viewBlocks, searchResult)
+            return await this.drawGrid(relationBlock, viewBlocks, searchResult, resource)
         }))
     }
 
-    private async drawGrid(block: RelationBlock, viewBlocks: ViewBlock[], searchResult: AddonsDataSearchResult): Promise<DataRow[]>{
+    private async drawGrid(block: RelationBlock, viewBlocks: ViewBlock[], searchResult: AddonsDataSearchResult, resource: string): Promise<DataRow[]>{
         const result =  await pepperi.addons.api.uuid(block.AddonUUID).post({
             url: block.DrawURL,
-            body: { Data: searchResult.Objects , ViewBlocks: viewBlocks }
+            body: { Data: searchResult.Objects , ViewBlocks: viewBlocks, Resource: resource }
         })
 
         if(!result.Data){

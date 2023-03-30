@@ -3,10 +3,13 @@ import { router as genericResourceRouter }  from './routes/generic-resource.rout
 import { router as viewsRouter } from './routes/views.routes'
 import { MenuBuilder } from './events/helpers/menu-builder';
 import { ListService } from './services/list.service';
-import { DataRow, ListContainer, MenuBlock, loadListEventKey, menuClickEventKey, stateChangeEventKey } from 'shared';
+import { DataRow, ListContainer, MenuBlock, loadListEventKey, menuClickEventKey, stateChangeEventKey, ViewBlock } from 'shared';
 import { LoadListController } from './events/contorllers/load-list.controller';
 import { StateChangeController } from './events/contorllers/state-change.controller';
 import { MenuClickController } from './events/contorllers/menu-click.controller';
+import { AddonsDataSearchResult } from '@pepperi-addons/cpi-node/build/cpi-side/client-api';
+import { ResourceService } from './events/services/resource.service';
+import { GenericResourceService } from './services/generic-resource.service';
 
 export async function load(configuration: any) {
     //interceptors:
@@ -61,21 +64,54 @@ router.post('/onClientStateChange', async (req, res, next) => {
 })
 
 router.post('/drawGrid' ,async (req,res,next) => {
-    const data = req.body.Data 
-    const viewBlocks = req.body.ViewBlocks
+    const data: AddonsDataSearchResult['Objects'] = req.body.Data 
+    const viewBlocks: ViewBlock[] = req.body.ViewBlocks
+    const resource: string = req.body.Resource
     const grid: DataRow[] = []
+
+    const resourceService = new ResourceService()
+    //get fields of resource
+    const resourceMetaData = await resourceService.getResourceFields(resource)
+    const fields = resourceMetaData['Fields']
+    if(!fields){
+        throw Error(`in draw view blocks resource fields is undefined`)
+    }
+    //iterate over the fields
     data?.forEach(item => {
         const row: DataRow = {}
         viewBlocks.forEach(block => {
-               let value = item[block.Configuration.FieldID]
-               if(block.Configuration.FieldID == "friends"){
-                   value = value.join(" , ")
-               }
-               row[block.Configuration.FieldID] = value    
-       })
-       grid.push(row)
-    })      
+            let value = item[block.Configuration.FieldID]
+            const field = fields[block.Configuration.FieldID]
+            //if its an array we need to reformat the value
+            if(field?.Type == "Array"){
+                //array of complex object should be X items selected where x is the length of the array
+                if(field?.Items?.Type == "Object" || field?.Items?.Type == "ContainedResource"){
+                    value = `${value.length} items selected`
+                }
+                //array of simple values should be comma separated string
+                else{
+                    value = value.join(' , ')
+                }
+            }
+            row[block.Configuration.FieldID] = value   
+        })
+        grid.push(row)
+    })
     return res.json({ Data: grid })
+    // //if fields is primitive array - comma separated string
+    // //if field is objects array - X items selected
+    // data?.forEach(item => {
+    //     const row: DataRow = {}
+    //     viewBlocks.forEach(block => {
+    //            let value = item[block.Configuration.FieldID]
+    //            if(block.Configuration.FieldID == "friends"){
+    //                value = value.join(" , ")
+    //            }
+    //            row[block.Configuration.FieldID] = value    
+    //    })
+    //    grid.push(row)
+    // })      
+    // return res.json({ Data: grid })
 })
 
 router.post('/drawMenuBlock', (req, res, next) => {
