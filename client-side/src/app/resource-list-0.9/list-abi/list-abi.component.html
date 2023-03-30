@@ -4,7 +4,7 @@
 ></ng-container>
 
 <ng-template #dialog>
-    <pep-dialog>
+    <pep-dialog [showHeader]="false">
         <ng-container pep-dialog-content>
             <resource-list
                 [cpiEventService]="clientEventsService"
