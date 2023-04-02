@@ -1,4 +1,4 @@
-import { AddonDataScheme, SearchBody } from "@pepperi-addons/papi-sdk"
+import { AddonDataScheme, FindOptions, SearchBody } from "@pepperi-addons/papi-sdk"
 import { GenericResourceEndpoint } from "@pepperi-addons/papi-sdk/dist/endpoints";
 import { Sorting } from "shared";
 import { UtilitiesService } from "./utilities.service";
@@ -8,12 +8,15 @@ export class GenericResourceService {
 
     constructor(private inAccountContext) { }
     
-    async getItems(resourceName: string, query: {where: string}, fields: string[], sorting?: Sorting){
+    async getItems(resourceName: string, query: FindOptions, fields: string[], sorting?: Sorting){
         const apiBaseObj = await this.getBaseObject();
         const sortingStr = this.utilities.getSortingString(sorting);
         const body: SearchBody = {
             Fields: fields,
-            Where: query.where
+            Where: query.where,
+            Page: query.page,
+            PageSize: query.page_size,
+            IncludeCount: true
         }
         if (sortingStr != '') {
             body.OrderBy = sortingStr;
