@@ -48,7 +48,7 @@ export class GenericResourceOfflineService{
         sorting?: Sorting): Promise<SearchData<AddonData>> {
         try{
             const pageSize = (params?.toIndex - params?.fromIndex) + 1 || API_PAGE_SIZE;
-            const page = params?.pageIndex || (params?.fromIndex / pageSize) + 1 || 1;
+            const page = params?.pageIndex || Math.ceil(params?.fromIndex / pageSize) || 1;
             const keyFiledIndex = fields.findIndex(field => field == "Key")
             if(keyFiledIndex < 0){
                 fields = [...fields, "Key"]
