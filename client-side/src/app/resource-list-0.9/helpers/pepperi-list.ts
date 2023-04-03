@@ -11,9 +11,7 @@ import { ListDataSource } from "./list-data-source";
 import { GenericListAdapterResult } from "../metadata";
 import { PepSelectionData } from "@pepperi-addons/ngx-lib/list";
 import { ListActions } from "./list-actions";
-import { PepRowData } from "@pepperi-addons/ngx-lib";
 import { AddonDataScheme } from "@pepperi-addons/papi-sdk";
-import { debug } from "console";
 
 
 export interface IStateChangedHandler{
@@ -174,11 +172,15 @@ export class PepperiList implements IStateChangedHandler, ILineMenuHandler{
         //update list actions
         this.updateListActions(listContainer)
         //adapt the data to be compatible to the generic list 
+        
         const listData = this.convertToListLayout(listContainer)
         //update the state 
         if(listContainer.State){
             this.stateManager.updateState(listContainer.State)
         }
+
+        this.updateSelectedLines()
+
         //update data view data and count
         this.updatePepperiListProperties(listContainer)
 
@@ -187,6 +189,19 @@ export class PepperiList implements IStateChangedHandler, ILineMenuHandler{
 
         //notify state observers 
         this.stateManager.notifyObservers()
+    }
+
+    //select the items base on the current state
+    updateSelectedLines(){
+        const state = this.stateManager.getState()
+        const isAllSelected = state?.ItemSelection?.SelectAll || false
+        const selectedItemsKeySet = new Set(state?.ItemSelection?.Items || [])
+        //loop over the items and select the items that selected in the state (or )
+        this.items?.forEach(item => {
+            const isSelected = selectedItemsKeySet.has(item.Key as string)
+            //item is selected if not all the items selected and the item selected, or that all the the items selected and the item itself is not selected
+            item.IsSelected = (!isAllSelected && isSelected) || (isAllSelected && !isSelected)
+        })
     }
 
     async onViewChanged(key: string){
