@@ -25,6 +25,15 @@ export class ViewsFilterService{
                     item['OptionalValues'] = optionalValues;
                 }
                 result.push(item);
+                Object.keys(resourceField.IndexedFields || {}).forEach(fieldName => {
+                    const innerField = resourceField.IndexedFields[fieldName]
+                    const innerItem = {
+                        FieldID: `${fieldID}.${fieldName}`, 
+                        Title: `${fieldID}.${fieldName}`,
+                        FieldType: innerField.Type === 'Resource' ? 'String': innerField.Type,
+                    }
+                    result.push(innerItem);
+                });
             }
         })
         return result
