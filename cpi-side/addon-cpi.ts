@@ -73,6 +73,8 @@ router.post('/drawGrid' ,async (req,res,next) => {
                }
                row[block.Configuration.FieldID] = value    
        })
+       //add key to the row, because key should always exist
+       row.Key = item.Key
        grid.push(row)
     })      
     return res.json({ Data: grid })
