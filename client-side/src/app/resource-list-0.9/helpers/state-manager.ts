@@ -20,14 +20,23 @@ export class StateManager{
 
     buildChangesFromPageParams(params: IPepGenericListParams){
         const changes: Partial<ListState> = {}
+        params.fromIndex = 0
+        params.toIndex = 5
+        const pager = this.getPageIndexAndPageSize(params)
         //if search string changed
         if(params.searchString != this.state.SearchString){
             changes.SearchString = params.searchString || ''
         }
+
         //if page index changed
-        if(params.pageIndex != this.state.PageIndex){
-            changes.PageIndex = params.pageIndex || 1
+        if(pager?.pageIndex != this.state.PageIndex){
+            changes.PageIndex = pager?.pageIndex || 1
         }
+        //if page size changed
+        if(pager?.pageSize != this.state.PageSize){
+            changes.PageSize = pager?.pageSize || 25
+        }
+
         //if sorting changed
         if(params.sorting?.isAsc !=  this.state.Sorting?.Ascending || params.sorting?.sortBy != this.state.Sorting?.FieldID){
             changes.Sorting = {
@@ -36,6 +45,23 @@ export class StateManager{
             }
         }
         return changes
+    }
+
+    private getPageIndexAndPageSize(params: IPepGenericListParams){
+        if(params.fromIndex != undefined && params.toIndex != undefined){
+            const pageSize = params.toIndex - params.fromIndex + 1
+            return {
+                pageIndex: Math.floor(((params.toIndex + 1)/ ( (pageSize) || 1))),
+                pageSize: pageSize
+            }
+        }
+        else if(params.pageIndex != undefined){
+            return {
+                pageIndex: params.pageIndex,
+                pageSize: this.state.PageSize || 25 //25 by default
+            }
+        }
+        return undefined
     }
     
 
