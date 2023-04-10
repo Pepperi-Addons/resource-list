@@ -185,14 +185,14 @@ export class ResourceListComponent implements OnInit {
   }
 
   async load(){
-    this.pepperiList = new PepperiList(this.clientEventService, undefined, {ListKey: "LIST_KEY", SearchString: 'aa'})
+    this.pepperiList = new PepperiList(this.clientEventService, {ListKey: "LIST_KEY", SearchString: 'aa'})
     this.subscribeToChanges()
+    this.lineMenu = this.pepperiList.getListActions()
     this.loadCompleted = true
   }
 
   subscribeToChanges(){
     this.pepperiList.subscribeToDataSource((ds: IPepGenericListDataSource) => this.dataSource = ds)
-    this.pepperiList.subscribeToListActions((actions) => this.lineMenu = actions)
     this.subscribeToLayoutChanges()
     this.subscribeToStateChanges()
   }
