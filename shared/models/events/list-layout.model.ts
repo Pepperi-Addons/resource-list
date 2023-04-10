@@ -30,6 +30,7 @@ export interface ViewBlocks{
 export interface ViewLayout{
     Type: ViewType
     ViewBlocks : ViewBlocks
+    Key: string
 
 }
 

@@ -3,6 +3,7 @@ import { List, ListSearchField, ListView as View, ListData, ListState } from "sh
 import { SearchBody } from "@pepperi-addons/papi-sdk";
 import { ResourceService } from "../services/resource.service";
 import { ViewRelationService } from "../services/view-relation.service";
+import { isArrayEquals } from "./utils";
 
 export class ListDataBuilder{
     private listData: ListData = { Items: [], Count: 0}
@@ -40,7 +41,7 @@ export class ListDataBuilder{
     }
 
     private isDataNeedsToChange(): boolean{
-        return Boolean(this.changes.ListKey || this.changes.ViewKey || this.changes.SearchString || this.changes.SmartSearchQuery || this.changes.PageIndex)
+        return Boolean(this.changes.ListKey != this.state.ListKey || this.changes.ViewKey != this.changes.ViewKey || this.changes.SearchString != this.state.SearchString || isArrayEquals(this.changes.SmartSearchQuery, this.state.SmartSearchQuery) || this.changes.PageIndex != this.state.PageIndex)
     }
 
     private getSelectedView(): View | undefined{

@@ -1,5 +1,5 @@
 import { ListContainer, ListMenuBlock } from "shared";
-import { GridViewBlockAdapter } from "./view-blocks-adapter";
+import { GridViewBlockAdapter } from "./view-blocks-adapters/grid-view-blocks-adapter";
 import { GridDataView } from "@pepperi-addons/papi-sdk";
 import { GenericListAdapterResult, SmartSearchInput } from "../metadata";
 import { PepMenuItem } from "@pepperi-addons/ngx-lib/menu";
@@ -29,7 +29,9 @@ export class GenericListAdapter {
             lineMenu: lineMenu,
             search: search,
             title: title,
-            selectionType: selectionType
+            selectionType: selectionType,
+            viewsMenu: this.listContainer?.Layout?.ViewsMenu,
+            selectedViewKey: this.listContainer?.Layout?.View?.Key
         }
     }
     /**
