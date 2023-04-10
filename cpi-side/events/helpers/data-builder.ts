@@ -50,14 +50,12 @@ export class ListDataBuilder{
      */
     private isDataNeedsToChange(): boolean{
         const changesKeySet= new Set(Object.keys(this.changes) as Array<keyof Partial<ListState>>)
-        return Boolean(
-                changesKeySet.has("ListKey") ||
-                changesKeySet.has("ViewKey") ||
-                changesKeySet.has("SearchString") ||
-                changesKeySet.has("SmartSearchQuery") ||
-                changesKeySet.has("PageIndex") ||
-                changesKeySet.has("PageSize")
-                )
+        return changesKeySet.has("ListKey") ||
+            changesKeySet.has("ViewKey") ||
+            changesKeySet.has("SearchString") ||
+            changesKeySet.has("SmartSearchQuery") ||
+            changesKeySet.has("PageIndex") ||
+            changesKeySet.has("PageSize")
     }
 
     private getSelectedView(state: Partial<ListState>): View | undefined{
