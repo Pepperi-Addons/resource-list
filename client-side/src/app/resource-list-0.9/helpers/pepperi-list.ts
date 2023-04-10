@@ -3,7 +3,7 @@ import { ClientEventsService } from "../services/client-events.service";
 import { StateManager } from "./state-manager";
 import { ListContainer, ListState, DataRow } from "shared";
 import { GenericListAdapter } from "./generic-list-adapter";
-import { GridViewBlockAdapter, ViewBlocksAdapterFactory } from "./view-blocks-adapter";
+import { ViewBlocksAdapterFactory } from "./view-blocks-adapters/view-blocks-adapter";
 import { IPepGenericListDataSource, IPepGenericListInitData, IPepGenericListParams } from "@pepperi-addons/ngx-composite-lib/generic-list";
 import { LayoutObserver } from "./layout-observer";
 import { StateObserver } from "./state-observer";
@@ -35,11 +35,11 @@ export class PepperiList implements IStateChangedHandler{
     private dataView: IPepGenericListInitData['dataView']
     private count: number
     private $dataSource: ReplaySubject<IPepGenericListDataSource> = new ReplaySubject()
-    private stateManager: StateManager = new StateManager({})
-    
-    constructor(private clientEventsService: ClientEventsService,  private listContainer: ListContainer){
+    private stateManager: StateManager
+    private listContainer: ListContainer
+    constructor(private clientEventsService: ClientEventsService,private state?: Partial<ListState>, private changes?: ListState){
+        this.stateManager = new StateManager(state)
         this.$dataSource.next(new ListDataSource(this))
-        this.updateList(listContainer)
     }
 
     subscribeToStateChanges(): StateObserver {
@@ -52,7 +52,10 @@ export class PepperiList implements IStateChangedHandler{
 
     private async getListContainer(changes: Partial<ListState>){
         const state = this.stateManager.getState()
-        return await this.clientEventsService.emitStateChangedEvent(state, changes, this.listContainer.List)
+        if(!state){
+            return await this.clientEventsService.emitLoadListEvent(undefined, changes)
+        }
+        return await this.clientEventsService.emitStateChangedEvent(state, changes)
     }
 
     private convertToListLayout(listContainer: ListContainer): GenericListAdapterResult{
@@ -101,13 +104,15 @@ export class PepperiList implements IStateChangedHandler{
         return Object.keys(changes).length > 0
     }
 
-    async onListEvent(params: IPepGenericListParams, isFirstEvent?: boolean): Promise<IPepGenericListInitData>{
+    async onListEvent(params: IPepGenericListParams): Promise<IPepGenericListInitData>{
         let listContainer: ListContainer = this.listContainer
-        //in case of first init the container already updated
-        if(!isFirstEvent){
-            const changes = this.stateManager.buildChangesFromPageParams(params)
-            listContainer = await this.getListContainer(changes)
-        }
+        const state = this.stateManager.getState()
+
+        //if we don't have a state then its load list event and we don't need to build the changes from the params
+        const changes = state? this.stateManager.buildChangesFromPageParams(params): this.changes
+        listContainer = await this.getListContainer(changes)
+
+        //update all observers
         this.updateList(listContainer)
 
         return {

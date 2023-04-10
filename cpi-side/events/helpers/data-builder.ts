@@ -3,7 +3,7 @@ import { List, ListSearchField, ListView as View, ListData, ListState } from "sh
 import { SearchBody } from "@pepperi-addons/papi-sdk";
 import { ResourceService } from "../services/resource.service";
 import { ViewRelationService } from "../services/view-relation.service";
-import { isArrayEquals } from "./utils";
+import * as _ from 'lodash';
 
 export class ListDataBuilder{
     private listData: ListData = { Items: [], Count: 0}
@@ -56,8 +56,7 @@ export class ListDataBuilder{
                 changesKeySet.has("SearchString") ||
                 changesKeySet.has("SmartSearchQuery") ||
                 changesKeySet.has("PageIndex") ||
-                changesKeySet.has("PageSize") ||
-                changesKeySet.has("PageType")
+                changesKeySet.has("PageSize")
                 )
     }
 

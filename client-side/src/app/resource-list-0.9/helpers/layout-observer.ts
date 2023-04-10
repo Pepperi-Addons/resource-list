@@ -26,13 +26,13 @@ export class LayoutObserver{
      * for example if the menu changed, this function will emit menu changed event and invoke the onMenuChange call
      */
     notifyObservers(data: GenericListAdapterResult){
-        if(data.lineMenu != undefined){
+        if(data.lineMenu){
             this.$lineMenu.next(data.lineMenu)
         }
-        if(data.buttons != undefined){
+        if(data.buttons){
             this.$buttons.next(data.buttons)
         }
-        if(data.menu != undefined){
+        if(data.menu){
             this.$menu.next(data.menu)
         }
         if(data.smartSearch){
@@ -44,13 +44,13 @@ export class LayoutObserver{
         if(data.title != undefined){
             this.$title.next(data.title)
         }
-        if(data.selectionType != undefined){
+        if(data.selectionType){
             this.$selectionType.next(data.selectionType)
         }
-        if(data.viewsMenu != undefined){
+        if(data.viewsMenu){
             this.$viewsMenu.next(data.viewsMenu)
         }
-        if(data.selectedViewKey != undefined){
+        if(data.selectedViewKey){
             this.$selectedView.next(data.selectedViewKey)
         }
     }
