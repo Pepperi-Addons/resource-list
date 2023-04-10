@@ -39,7 +39,7 @@ export class PepperiList implements IStateChangedHandler, ILineMenuHandler{
 
     constructor(private clientEventsService: ClientEventsService, private changes?: ListState, private list?: List){
         this.stateManager = new StateManager(undefined)
-        //create default list container
+        //create default list containers
         this.listContainer = {
             Layout: {},
             Data: {
