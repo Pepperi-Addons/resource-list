@@ -32,8 +32,8 @@ export class ListDataBuilder{
         const searchBody: SearchBody = {
             Fields: viewFields,
             Where: query,
-            Page: newState.PageIndex || 0,
-            PageSize: newState.PageSize || 25,
+            Page: newState.PageIndex || 1,
+            PageSize: newState.PageSize || 100,
             IncludeCount: true
         }
         //get the resource items
