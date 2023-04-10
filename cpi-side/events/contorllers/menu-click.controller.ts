@@ -12,7 +12,7 @@ export class MenuClickController{
             }
             return await new MenuClickService().execute(state, key, list)        
         }catch(err){
-            throw Error(`error inside onClientMenuClick event: ${err}`)
+            throw Error(`error inside onClientMenuClick event: ${JSON.stringify(err)}`)
         }
     }
 }

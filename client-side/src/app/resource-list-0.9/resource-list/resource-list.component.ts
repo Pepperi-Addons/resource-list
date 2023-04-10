@@ -185,14 +185,7 @@ export class ResourceListComponent implements OnInit {
   }
 
   async load(){
-    const container = await this.clientEventService.emitLoadListEvent(undefined,{ListKey: "LIST_KEY", PageSize: 1 , PageIndex: 0, PageType: "Pages", ItemSelection: {SelectAll: false, Items: ['adasdas']}}, this.list1) as Required<ListContainer>
-    const resource = container?.List?.Resource
-    if(!resource){
-        throw Error(`there is no resource on list container list object`)
-    }
-    //get resource fields 
-    const resourceFields = await this.resourceService.getResourceFields(resource)
-    this.pepperiList = new PepperiList(this.clientEventService, container, resourceFields)
+    this.pepperiList = new PepperiList(this.clientEventService, undefined, {ListKey: "LIST_KEY", SearchString: 'aa'})
     this.subscribeToChanges()
     this.loadCompleted = true
   }

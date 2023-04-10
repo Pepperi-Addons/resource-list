@@ -26,14 +26,3 @@ export function groupRelationBlocks<T extends RelationBlock>(arr: T[]){
     return drawFunctionsArray
 }
 
-export function isArrayEquals<T>(arr: T[] | undefined, arr2: T[] | undefined): boolean{
-    //if both undefined then they are equals, if just one of them is undefined then they are not equals
-    if(!arr && !arr2){
-        return true
-    }
-    if(!arr || !arr2){
-        return false
-    }
-    return arr?.length != arr2?.length && arr.every((val, index) => arr2[index] == val)
-}
-

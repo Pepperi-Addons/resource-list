@@ -3,7 +3,7 @@ import { List, ListSearchField, ListView as View, ListData, ListState } from "sh
 import { SearchBody } from "@pepperi-addons/papi-sdk";
 import { ResourceService } from "../services/resource.service";
 import { ViewRelationService } from "../services/view-relation.service";
-import { isArrayEquals } from "./utils";
+import * as _ from 'lodash';
 
 export class ListDataBuilder{
     private listData: ListData = { Items: [], Count: 0}
@@ -52,15 +52,12 @@ export class ListDataBuilder{
      */
     private isDataNeedsToChange(): boolean{
         const changesKeySet= new Set(Object.keys(this.changes) as Array<keyof Partial<ListState>>)
-        return Boolean(
-                changesKeySet.has("ListKey") ||
-                changesKeySet.has("ViewKey") ||
-                changesKeySet.has("SearchString") ||
-                changesKeySet.has("SmartSearchQuery") ||
-                changesKeySet.has("PageIndex") ||
-                changesKeySet.has("PageSize") ||
-                changesKeySet.has("PageType")
-                )
+        return changesKeySet.has("ListKey") ||
+            changesKeySet.has("ViewKey") ||
+            changesKeySet.has("SearchString") ||
+            changesKeySet.has("SmartSearchQuery") ||
+            changesKeySet.has("PageIndex") ||
+            changesKeySet.has("PageSize")
     }
 
     private getSelectedView(state: Partial<ListState>): View | undefined{
