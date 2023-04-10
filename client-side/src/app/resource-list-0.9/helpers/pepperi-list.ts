@@ -1,7 +1,7 @@
 import { ReplaySubject, Subject } from "rxjs";
 import { ClientEventsService } from "../services/client-events.service";
 import { StateManager } from "./state-manager";
-import { ListContainer, ListState, DataRow, MenuBlock } from "shared";
+import { ListContainer, ListState, DataRow, MenuBlock, List } from "shared";
 import { GenericListAdapter } from "./generic-list-adapter";
 import { ViewBlocksAdapterFactory } from "./view-blocks-adapters/view-blocks-adapter";
 import { IPepGenericListActions, IPepGenericListDataSource, IPepGenericListInitData, IPepGenericListParams } from "@pepperi-addons/ngx-composite-lib/generic-list";
@@ -36,9 +36,8 @@ export class PepperiList implements IStateChangedHandler, ILineMenuHandler{
     private stateManager: StateManager
     private listContainer: ListContainer
     private listActions: ListActions
-    private $listActions: ReplaySubject<IPepGenericListActions> = new ReplaySubject()
 
-    constructor(private clientEventsService: ClientEventsService, private changes?: ListState){
+    constructor(private clientEventsService: ClientEventsService, private changes?: ListState, private list?: List){
         this.stateManager = new StateManager(undefined)
         //create default list container
         this.listContainer = {
@@ -46,7 +45,8 @@ export class PepperiList implements IStateChangedHandler, ILineMenuHandler{
             Data: {
                 Items: []
             },
-            State: {}
+            State: {},
+            List: list
         }
         this.listActions = new ListActions(this)
 
@@ -101,9 +101,9 @@ export class PepperiList implements IStateChangedHandler, ILineMenuHandler{
     private async getListContainer(changes: Partial<ListState>){
         const state = this.stateManager.getState()
         if(!state){
-            return await this.clientEventsService.emitLoadListEvent(undefined, changes)
+            return await this.clientEventsService.emitLoadListEvent(undefined, changes, this.list)
         }
-        return await this.clientEventsService.emitStateChangedEvent(state, changes)
+        return await this.clientEventsService.emitStateChangedEvent(state, changes, this.list)
     }
 
     private convertToListLayout(listContainer: ListContainer): GenericListAdapterResult{

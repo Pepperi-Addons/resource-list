@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ClientEventsService } from '../services/client-events.service';
-import { IPepGenericListActions, IPepGenericListDataSource, IPepGenericListPager } from '@pepperi-addons/ngx-composite-lib/generic-list';
+import { IPepGenericListActions, IPepGenericListDataSource, IPepGenericListPager, IPepGenericListParams } from '@pepperi-addons/ngx-composite-lib/generic-list';
 import { GVButton, SmartSearchInput, ViewsMenuUI } from '../metadata';
 import { PepMenuItem } from '@pepperi-addons/ngx-lib/menu';
 import { PepperiList } from '../helpers/pepperi-list';
-import { List, ListContainer } from 'shared';
+import { List } from 'shared';
 import { IPepListSortingChangeEvent, PepListSelectionType } from '@pepperi-addons/ngx-lib/list';
 import { ReplaySubject } from 'rxjs';
 import { ResourceService } from '../services/resources.service';
@@ -14,6 +14,7 @@ import { ResourceService } from '../services/resources.service';
   templateUrl: './resource-list.component.html',
   styleUrls: ['./resource-list.component.scss']
 })
+
 export class ResourceListComponent implements OnInit {
   pepperiList: PepperiList
   smartSearch: SmartSearchInput
@@ -28,7 +29,6 @@ export class ResourceListComponent implements OnInit {
   viewsMenu: ViewsMenuUI
   selectedViewKey: string
   
-
   //pager subjects
   $pageIndex: ReplaySubject<number> = new ReplaySubject()
   $pageSize: ReplaySubject<number> = new ReplaySubject()
@@ -177,7 +177,6 @@ export class ResourceListComponent implements OnInit {
     Sorting: {Ascending: false, FieldID: "name"}
 }
 
-  
   constructor(private clientEventService: ClientEventsService, private resourceService: ResourceService) { }
 
   ngOnInit(): void {
@@ -185,7 +184,7 @@ export class ResourceListComponent implements OnInit {
   }
 
   async load(){
-    this.pepperiList = new PepperiList(this.clientEventService, {ListKey: "LIST_KEY", SearchString: 'aa'})
+    this.pepperiList = new PepperiList(this.clientEventService, {ListKey: "LIST_KEY", SearchString: 'aa'}, this.list1)
     this.subscribeToChanges()
     this.lineMenu = this.pepperiList.getListActions()
     this.loadCompleted = true
@@ -216,7 +215,7 @@ export class ResourceListComponent implements OnInit {
                 }
             })
         }
-        })
+    })
   }
 
   subscribeToStateChanges(){
