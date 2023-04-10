@@ -1,7 +1,7 @@
 import { ReplaySubject, Subject } from "rxjs";
 import { ClientEventsService } from "../services/client-events.service";
 import { StateManager } from "./state-manager";
-import { ListContainer, ListState, DataRow } from "shared";
+import { ListContainer, ListState, DataRow, List } from "shared";
 import { GenericListAdapter } from "./generic-list-adapter";
 import { ViewBlocksAdapterFactory } from "./view-blocks-adapters/view-blocks-adapter";
 import { IPepGenericListDataSource, IPepGenericListInitData, IPepGenericListParams } from "@pepperi-addons/ngx-composite-lib/generic-list";
@@ -37,8 +37,8 @@ export class PepperiList implements IStateChangedHandler{
     private $dataSource: ReplaySubject<IPepGenericListDataSource> = new ReplaySubject()
     private stateManager: StateManager
     private listContainer: ListContainer
-    constructor(private clientEventsService: ClientEventsService,private state?: Partial<ListState>, private changes?: ListState){
-        this.stateManager = new StateManager(state)
+    constructor(private clientEventsService: ClientEventsService, private changes?: ListState, private list?: List){
+        this.stateManager = new StateManager(undefined)
         this.$dataSource.next(new ListDataSource(this))
     }
 
@@ -53,9 +53,9 @@ export class PepperiList implements IStateChangedHandler{
     private async getListContainer(changes: Partial<ListState>){
         const state = this.stateManager.getState()
         if(!state){
-            return await this.clientEventsService.emitLoadListEvent(undefined, changes)
+            return await this.clientEventsService.emitLoadListEvent(undefined, changes, this.list)
         }
-        return await this.clientEventsService.emitStateChangedEvent(state, changes)
+        return await this.clientEventsService.emitStateChangedEvent(state, changes, this.list)
     }
 
     private convertToListLayout(listContainer: ListContainer): GenericListAdapterResult{
@@ -83,7 +83,7 @@ export class PepperiList implements IStateChangedHandler{
     }
 
     async onMenuClick(key: string){
-        const listContainer = await this.clientEventsService.emitMenuClickEvent(this.stateManager.getState(), key)
+        const listContainer = await this.clientEventsService.emitMenuClickEvent(this.stateManager.getState(), key, this.list)
         //update the state if needed
         Object.assign(this.listContainer.State, listContainer.State || {})
         //update the layout if needed
