@@ -37,8 +37,8 @@ export class PepperiList implements IStateChangedHandler{
     private $dataSource: ReplaySubject<IPepGenericListDataSource> = new ReplaySubject()
     private stateManager: StateManager
     private listContainer: ListContainer
-    constructor(private clientEventsService: ClientEventsService, private changes: ListState){
-        this.stateManager = new StateManager(undefined)
+    constructor(private clientEventsService: ClientEventsService,private state?: Partial<ListState>, private changes?: ListState){
+        this.stateManager = new StateManager(state)
         this.$dataSource.next(new ListDataSource(this))
     }
 
@@ -104,20 +104,13 @@ export class PepperiList implements IStateChangedHandler{
         return Object.keys(changes).length > 0
     }
 
-    async onListEvent(params: IPepGenericListParams, isFirstEvent?: boolean): Promise<IPepGenericListInitData>{
+    async onListEvent(params: IPepGenericListParams): Promise<IPepGenericListInitData>{
         let listContainer: ListContainer = this.listContainer
         const state = this.stateManager.getState()
 
-        //when first loading the list there is no state so we need to emit load list event without building the changes
-        if(!state){
-            listContainer = await this.getListContainer(this.changes)
-        }
-
-        //in case of first init the container already updated 
-        if(!isFirstEvent){
-            const changes = this.stateManager.buildChangesFromPageParams(params)
-            listContainer = await this.getListContainer(changes)
-        }
+        //if we don't have a state then its load list event and we don't need to build the changes from the params
+        const changes = state? this.stateManager.buildChangesFromPageParams(params): this.changes
+        listContainer = await this.getListContainer(changes)
 
         //update all observers
         this.updateList(listContainer)
