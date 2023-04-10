@@ -20,8 +20,6 @@ export class StateManager{
 
     buildChangesFromPageParams(params: IPepGenericListParams){
         const changes: Partial<ListState> = {}
-        params.fromIndex = 0
-        params.toIndex = 5
         const pager = this.getPageIndexAndPageSize(params)
         //if search string changed
         if(params.searchString != this.state.SearchString){
@@ -51,11 +49,11 @@ export class StateManager{
         if(params.fromIndex != undefined && params.toIndex != undefined){
             const pageSize = params.toIndex - params.fromIndex + 1
             return {
-                pageIndex: Math.floor(((params.toIndex + 1)/ ( (pageSize) || 1))),
+                pageIndex: Math.floor((params.fromIndex / pageSize || 1)) + 1 || 0,
                 pageSize: pageSize
             }
         }
-        else if(params.pageIndex != undefined){
+        if(params.pageIndex != undefined){
             return {
                 pageIndex: params.pageIndex,
                 pageSize: this.state.PageSize || 25 //25 by default

@@ -41,7 +41,7 @@ export class ResourceListComponent implements OnInit {
   }
 
   async load(){
-    this.pepperiList = new PepperiList(this.clientEventService, {ListKey: "LIST_KEY", SearchString: 'aa'})
+    this.pepperiList = new PepperiList(this.clientEventService, undefined, {ListKey: "LIST_KEY", SearchString: 'aa'})
     this.subscribeToChanges()
     this.loadCompleted = true
   }
