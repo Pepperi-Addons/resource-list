@@ -74,7 +74,7 @@ export async function get_generic_view(client: Client, request: Request){
     return await service.getGenericView(key)
 }
 /**
- * POST endpoint
+ * POST endpoint.
  * this is a post endpoint because in get request the url cannot be more than 2048 bytes
  * body:{
  * dataView: GridDataView
