@@ -20,9 +20,9 @@ export class ChangeStateEventService extends EventService{
         }
 
         const layout = await this.listBuilder.buildLayout(list, state, changes)
-
-        const newState: ListState = {...defaultStateValues, ...state, ...changes,}
-        const data = await this.listBuilder.buildData(list, newState, changes)
+        const data = await this.listBuilder.buildData(list, state, changes)
+        
+        const newState: ListState = {...defaultStateValues, ...state, ...changes}
         return {
             Layout: layout,
             Data: data,
