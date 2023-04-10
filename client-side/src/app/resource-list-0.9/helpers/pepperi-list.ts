@@ -37,8 +37,8 @@ export class PepperiList implements IStateChangedHandler{
     private $dataSource: ReplaySubject<IPepGenericListDataSource> = new ReplaySubject()
     private stateManager: StateManager
     private listContainer: ListContainer
-    constructor(private clientEventsService: ClientEventsService,private state?: Partial<ListState>, private changes?: ListState){
-        this.stateManager = new StateManager(state)
+    constructor(private clientEventsService: ClientEventsService, private changes?: ListState){
+        this.stateManager = new StateManager(undefined)
         this.$dataSource.next(new ListDataSource(this))
     }
 
