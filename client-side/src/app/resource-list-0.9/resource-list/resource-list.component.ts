@@ -53,6 +53,9 @@ export class ResourceListComponent implements OnInit {
   }
 
   async load(){
+    if(!this.cpiEventService || (!this.listContainer?.State?.ListKey && this.listContainer?.List)){
+        throw Error(`error in resource list ABI component - cpi events service must be exist, list container must have a list or a list key inside the state`)
+    }
     this.pepperiList = new PepperiList(this.cpiEventService, this.listContainer?.State , this.listContainer?.List)
     this.subscribeToChanges()
     this.lineMenu = this.pepperiList.getListActions()
