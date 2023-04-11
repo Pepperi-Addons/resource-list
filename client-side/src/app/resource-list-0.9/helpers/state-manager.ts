@@ -4,6 +4,7 @@ import { JSONRegularFilter } from "@pepperi-addons/pepperi-filters";
 import { ListState } from "shared";
 import { NgXToJSONFilterAdapter } from "./smart-filters/ngx-to-json-filters-adapter";
 import { StateObserver } from "./state-observer";
+import * as _ from "lodash";
 
 export class StateManager{
 
@@ -50,7 +51,7 @@ export class StateManager{
         const stateSmartSearch = this.state.SmartSearchQuery || []
         const listSmartSearch = NgXToJSONFilterAdapter.adapt(params.filters, resourceFields)
 
-        if(this.isSmartSearchChanged(listSmartSearch, stateSmartSearch)){
+        if(_.isEqual(stateSmartSearch, listSmartSearch)){
             changes.SmartSearchQuery = listSmartSearch
         }
 
@@ -72,23 +73,6 @@ export class StateManager{
             }
         }
         return undefined
-    }
-    
-
-
-    private isSmartSearchChanged(listSmartSearch: JSONRegularFilter[], stateSmartSearch: JSONRegularFilter[]){
-        if(listSmartSearch.length != stateSmartSearch.length){
-            return true
-        }
-
-        return listSmartSearch.every((filter, index) => {
-            const stateFilter = stateSmartSearch[index]
-            return filter.ApiName != stateFilter.ApiName || 
-                filter.FieldType != stateFilter.FieldType ||
-                filter.Operation != stateFilter.Operation || 
-                filter.Values.length != stateFilter.Values?.length ||
-                filter.Values.every((val, i) => val != stateFilter.Values[i])
-        })
     }
 
     setState(state: Partial<ListState>){
