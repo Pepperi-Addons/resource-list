@@ -15,6 +15,7 @@ import { ListUIComponent } from './list-ui/list-ui.component';
   templateUrl: './resource-list.component.html',
   styleUrls: ['./resource-list.component.scss']
 })
+
 export class ResourceListComponent implements OnInit {
   @Input() listContainer: ListContainer
   @Input() cpiEventService: ICPIEventsService
@@ -45,28 +46,21 @@ export class ResourceListComponent implements OnInit {
 
 
   
-  constructor(private resourceService: ResourceService) { }
+  constructor() { }
 
   ngOnInit(): void {
     this.load()
   }
 
   async load(){
-    const container = await this.cpiEventService.emitLoadListEvent(undefined, this.listContainer.State, this.listContainer.List) as Required<ListContainer>
-    const resource = this.listContainer?.List?.Resource
-    if(!resource){
-        throw Error(`there is no resource on list container list object`)
-    }
-    //get resource fields
-    const resourceFields = await this.resourceService.getResourceFields(resource)
-    this.pepperiList = new PepperiList(this.cpiEventService, container, resourceFields)
+    this.pepperiList = new PepperiList(this.cpiEventService, this.listContainer?.State , this.listContainer?.List)
     this.subscribeToChanges()
+    this.lineMenu = this.pepperiList.getListActions()
     this.loadCompleted = true
   }
 
   subscribeToChanges(){
     this.pepperiList.subscribeToDataSource((ds: IPepGenericListDataSource) => this.dataSource = ds)
-    this.pepperiList.subscribeToListActions((actions) => this.lineMenu = actions)
     this.subscribeToLayoutChanges()
     this.subscribeToStateChanges()
   }
@@ -90,7 +84,7 @@ export class ResourceListComponent implements OnInit {
                 }
             }) || []
         }
-        })
+    })
   }
 
   subscribeToStateChanges(){

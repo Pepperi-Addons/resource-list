@@ -3,7 +3,7 @@ import { List, ListSearchField, ListView as View, ListData, ListState } from "sh
 import { SearchBody } from "@pepperi-addons/papi-sdk";
 import { ResourceService } from "../services/resource.service";
 import { ViewRelationService } from "../services/view-relation.service";
-import { isArrayEquals } from "./utils";
+import * as _ from 'lodash';
 
 export class ListDataBuilder{
     private listData: ListData = { Items: [], Count: 0}
@@ -24,16 +24,19 @@ export class ListDataBuilder{
         
         //prepare the search body
         const viewFields: string[] = selectedView.Blocks.map(block => block.Configuration.FieldID)
-        //we should always ask for key also
-        viewFields.push('Key')
+        //add key field if it doesn't exist
+        const isKeyInViewFields = viewFields.find(viewField => viewField == "Key")
+        if(!isKeyInViewFields){
+            viewFields.push('Key')
+        }
 
         const query = this.createQuery(newState,this.list.Filter)
 
         const searchBody: SearchBody = {
             Fields: viewFields,
             Where: query,
-            Page: newState.PageIndex || 0,
-            PageSize: newState.PageSize || 25,
+            Page: newState.PageIndex || 1,
+            PageSize: newState.PageSize || 100,
             IncludeCount: true
         }
         //get the resource items
@@ -52,15 +55,12 @@ export class ListDataBuilder{
      */
     private isDataNeedsToChange(): boolean{
         const changesKeySet= new Set(Object.keys(this.changes) as Array<keyof Partial<ListState>>)
-        return Boolean(
-                changesKeySet.has("ListKey") ||
-                changesKeySet.has("ViewKey") ||
-                changesKeySet.has("SearchString") ||
-                changesKeySet.has("SmartSearchQuery") ||
-                changesKeySet.has("PageIndex") ||
-                changesKeySet.has("PageSize") ||
-                changesKeySet.has("PageType")
-                )
+        return changesKeySet.has("ListKey") ||
+            changesKeySet.has("ViewKey") ||
+            changesKeySet.has("SearchString") ||
+            changesKeySet.has("SmartSearchQuery") ||
+            changesKeySet.has("PageIndex") ||
+            changesKeySet.has("PageSize")
     }
 
     private getSelectedView(state: Partial<ListState>): View | undefined{

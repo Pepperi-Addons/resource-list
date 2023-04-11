@@ -1,5 +1,5 @@
 import { ListContainer, ListMenuBlock } from "shared";
-import { GridViewBlockAdapter } from "./view-blocks-adapter";
+import { GridViewBlockAdapter } from "./view-blocks-adapters/grid-view-blocks-adapter";
 import { GridDataView } from "@pepperi-addons/papi-sdk";
 import { GenericListAdapterResult, SmartSearchInput } from "../metadata";
 import { PepMenuItem } from "@pepperi-addons/ngx-lib/menu";
@@ -8,6 +8,8 @@ import { PepStyleType } from "@pepperi-addons/ngx-lib";
 import { PepListSelectionType, PepSelectionData } from "@pepperi-addons/ngx-lib/list";
 import { ILineMenuHandler } from "./pepperi-list";
 import { ListActions } from "./list-actions";
+import { ViewBlocksAdapterFactory } from "./view-blocks-adapters/view-blocks-adapter";
+import { IPepGenericListInitData } from "@pepperi-addons/ngx-composite-lib/generic-list";
 
 export class GenericListAdapter {
     constructor(private listContainer: Partial<ListContainer>,  private lineMenuHandler: ILineMenuHandler){
@@ -37,10 +39,10 @@ export class GenericListAdapter {
      * if the view blocks of the selected view are changed,
      * or that the data itself changed return dataSource otherwise return undefined
      */
-    getDataView(): GridDataView | undefined{
+    getDataView(): IPepGenericListInitData['dataView'] | undefined{
         //first we can set the data and then update the dataview if needed
         if(this.listContainer.Layout?.View){
-            const viewBlocksAdapter = new GridViewBlockAdapter(this.listContainer.Layout.View.ViewBlocks?.Blocks)
+            const viewBlocksAdapter = ViewBlocksAdapterFactory.create(this.listContainer.Layout.View.Type, this.listContainer.Layout.View.ViewBlocks?.Blocks)
             const dataview = viewBlocksAdapter.adapt()
             return dataview
         }
@@ -60,7 +62,7 @@ export class GenericListAdapter {
             return {
                 dataView: {
                     Type: 'Menu',
-                    Fields: [...this.listContainer.Layout.SmartSearch.Fields, {FieldID: 'age', Title: 'age', Type: 'DateTime'}]
+                    Fields: this.listContainer.Layout.SmartSearch.Fields
                 }
             }
         }
