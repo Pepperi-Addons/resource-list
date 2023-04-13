@@ -29,12 +29,7 @@ export class ListAbiComponent implements OnInit {
   }
 
   onDoneClicked(){
-    const selectedObjects = (this.list?.getSelectedItems()?.rows || []).map(key => {
-      return {
-        Key: key
-      }
-    })
-
+    const selectedObjects = this.list?.getSelectedItems()?.rows || []
     this.hostEvents.emit({
       actions: 'on-done',
       data: {
@@ -45,7 +40,7 @@ export class ListAbiComponent implements OnInit {
   onCancelClicked(){
     this.hostEvents.emit({
       action: 'on-cancel',
-      data: { }
+      data: {}
     })
   }
 }
