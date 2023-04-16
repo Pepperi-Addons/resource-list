@@ -145,6 +145,6 @@ export class ReferenceFieldsTableComponent implements OnInit {
     ]
   }
   getResourceFields(){
-    return this.dataSource?.getItems() || []
+    return this.dataSource?.getItems().Objects || []
   }
 }
