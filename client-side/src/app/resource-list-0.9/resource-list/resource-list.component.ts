@@ -1,14 +1,14 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { ClientEventsService, ICPIEventsService } from '../services/client-events.service';
-import { IPepGenericListActions, IPepGenericListDataSource, IPepGenericListPager } from '@pepperi-addons/ngx-composite-lib/generic-list';
+import { IPepGenericListActions, IPepGenericListDataSource, IPepGenericListPager, IPepGenericListParams } from '@pepperi-addons/ngx-composite-lib/generic-list';
 import { GVButton, SmartSearchInput, ViewsMenuUI } from '../metadata';
 import { PepMenuItem } from '@pepperi-addons/ngx-lib/menu';
 import { PepperiList } from '../helpers/pepperi-list';
-import { List, ListContainer, ListState } from 'shared';
 import { IPepListSortingChangeEvent, PepListSelectionType } from '@pepperi-addons/ngx-lib/list';
 import { ReplaySubject } from 'rxjs';
 import { ResourceService } from '../services/resources.service';
 import { ListUIComponent } from './list-ui/list-ui.component';
+import { ListContainer } from 'shared'
 
 @Component({
   selector: 'resource-list',
@@ -32,8 +32,7 @@ export class ResourceListComponent implements OnInit {
   selectionType: PepListSelectionType
   viewsMenu: ViewsMenuUI
   selectedViewKey: string
-
-
+  
   //pager subjects
   $pageIndex: ReplaySubject<number> = new ReplaySubject()
   $pageSize: ReplaySubject<number> = new ReplaySubject()
@@ -41,12 +40,10 @@ export class ResourceListComponent implements OnInit {
 
   $searchString: ReplaySubject<string> = new ReplaySubject()
   $sorting: ReplaySubject<IPepListSortingChangeEvent> = new ReplaySubject()
-
+  
   @ViewChild(ListUIComponent) list: ListUIComponent
 
-
-  
-  constructor() { }
+  constructor(private clientEventService: ClientEventsService, private resourceService: ResourceService) { }
 
   ngOnInit(): void {
     this.load()
