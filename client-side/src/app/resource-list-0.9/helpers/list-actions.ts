@@ -4,7 +4,6 @@ import { MenuBlock } from "shared";
 import { ILineMenuHandler } from "./pepperi-list";
 
 export class ListActions implements IPepGenericListActions{
-    isFirstInvocation: boolean = true
     lineMenuActions: { title: string; handler: (obj: any) => Promise<void>; }[]
 
     constructor(private lineMenuBlocks: MenuBlock[] = [], private lineMenuHandler: ILineMenuHandler){
