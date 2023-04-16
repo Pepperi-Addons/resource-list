@@ -31,7 +31,7 @@
             [emptyOption]="false"
             [options]="viewsMenu.Items"
             [renderTitle]="false"
-            (valueChange)="onViewChange($event)">
+            (valueChange)="onViewChanged($event)">
         </pep-select>
         <ng-container *ngIf="buttons.length > 0">
             <pep-button

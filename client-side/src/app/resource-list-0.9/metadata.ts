@@ -12,11 +12,10 @@ export const stateChangeEventKey = "OnClientStateChange"
 export type SmartSearchField = MenuDataViewField & {Type: SchemeFieldType}
 
 export type GenericListAdapterResult = {
-    dataView?: GridDataView,
+    dataView?: IPepGenericListInitData['dataView'],
     smartSearch?: SmartSearchInput,
     menu?: PepMenuItem[]
     buttons?: GVButton[],
-    lineMenu?: any,
     search?: boolean, 
     title?: string,
     selectionType?: PepListSelectionType
@@ -40,3 +39,6 @@ export function capitalizeFirstLetter(s: string){
  }
 
  export type PepSelectElement = {key: string, value: string}
+
+
+ export type ViewsMenuUI = {Visible: boolean, Items: {key: string, value: string}[] }

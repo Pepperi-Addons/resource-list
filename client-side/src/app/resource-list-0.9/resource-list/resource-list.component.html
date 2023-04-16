@@ -8,11 +8,14 @@
     [menu]="menu"
     [lineMenu]="lineMenu"
     [selectionType]="selectionType"
-    [searchString]="searchString"
-    [pageIndex]="pageIndex"
-    [sorting]="sorting"
+    [$searchString]="$searchString"
+    [$sorting]="$sorting"
     [selectedViewKey]="selectedViewKey"
     [viewsMenu]="viewsMenu"
+    [$pageIndex]="$pageIndex"
+    [$pageSize]="$pageSize"
+    [$pageType]="$pageType"
     (menuClickedEvent)="onClientMenuClick($event)"
+    (viewChangedEvent)="onViewChanged($event)"
     
 ></list-ui>

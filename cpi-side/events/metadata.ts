@@ -23,5 +23,6 @@ export const defaultStateValues: Omit<ListState, "ListKey" | "ViewKey"> = {
     SmartSearchQuery: [],
     PageSize: 100,
     PageIndex: 1,
+    PageType: "Pages",
     ItemSelection: {Items: [], SelectAll: false},
 }

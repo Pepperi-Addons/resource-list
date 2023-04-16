@@ -7,6 +7,7 @@ import { PepGenericListModule } from '@pepperi-addons/ngx-composite-lib/generic-
 import { PepMenuModule } from '@pepperi-addons/ngx-lib/menu';
 import { PepButtonModule } from '@pepperi-addons/ngx-lib/button';
 import { PepSelectModule } from '@pepperi-addons/ngx-lib/select';
+import { ResourceService } from '../services/resources.service';
 
 
 
@@ -23,7 +24,8 @@ import { PepSelectModule } from '@pepperi-addons/ngx-lib/select';
     PepSelectModule
   ],
   providers: [
-    ClientEventsService
+    ClientEventsService,
+    ResourceService
   ]
 })
 export class ResourceListModule { }

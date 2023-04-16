@@ -1,6 +1,10 @@
 import { IPepGenericListParams } from "@pepperi-addons/ngx-composite-lib/generic-list";
+import { AddonDataScheme } from "@pepperi-addons/papi-sdk";
+import { JSONRegularFilter } from "@pepperi-addons/pepperi-filters";
 import { ListState } from "shared";
+import { NgXToJSONFilterAdapter } from "./smart-filters/ngx-to-json-filters-adapter";
 import { StateObserver } from "./state-observer";
+import * as _ from "lodash";
 
 export class StateManager{
 
@@ -18,7 +22,7 @@ export class StateManager{
     }
 
 
-    buildChangesFromPageParams(params: IPepGenericListParams){
+    buildChangesFromPageParams(params: IPepGenericListParams, resourceFields: AddonDataScheme['Fields']){
         const changes: Partial<ListState> = {}
         const pager = this.getPageIndexAndPageSize(params)
         //if search string changed
@@ -32,7 +36,7 @@ export class StateManager{
         }
         //if page size changed
         if(pager?.pageSize != this.state.PageSize){
-            changes.PageSize = pager?.pageSize || 25
+            changes.PageSize = pager?.pageSize || 100
         }
 
         //if sorting changed
@@ -42,6 +46,15 @@ export class StateManager{
                 FieldID: params.sorting?.sortBy
             }
         }
+
+        //update smart search if changed
+        const stateSmartSearch = this.state.SmartSearchQuery || []
+        const listSmartSearch = NgXToJSONFilterAdapter.adapt(params.filters, resourceFields)
+
+        if(_.isEqual(stateSmartSearch, listSmartSearch)){
+            changes.SmartSearchQuery = listSmartSearch
+        }
+
         return changes
     }
 
@@ -49,19 +62,18 @@ export class StateManager{
         if(params.fromIndex != undefined && params.toIndex != undefined){
             const pageSize = params.toIndex - params.fromIndex + 1
             return {
-                pageIndex: Math.floor((params.fromIndex / pageSize || 1)) + 1 || 0,
+                pageIndex: Math.floor((params.fromIndex / (pageSize || 1))) + 1 || 0,
                 pageSize: pageSize
             }
         }
         if(params.pageIndex != undefined){
             return {
                 pageIndex: params.pageIndex,
-                pageSize: this.state.PageSize || 25 //25 by default
+                pageSize: this.state.PageSize || 100 //100 by default
             }
         }
         return undefined
     }
-    
 
     setState(state: Partial<ListState>){
         this.state = state

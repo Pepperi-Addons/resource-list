@@ -10,7 +10,6 @@ export class ListDataBuilder{
     constructor(private list: List, private state: Partial<ListState> = {}, private changes: Partial<ListState> = {}){}
 
     async build(): Promise<ListData | undefined>{
-
         if(!this.isDataNeedsToChange()){
             return undefined
         }
@@ -25,6 +24,12 @@ export class ListDataBuilder{
         
         //prepare the search body
         const viewFields: string[] = selectedView.Blocks.map(block => block.Configuration.FieldID)
+        //add key field if it doesn't exist
+        const isKeyInViewFields = viewFields.find(viewField => viewField == "Key")
+        if(!isKeyInViewFields){
+            viewFields.push('Key')
+        }
+
         const query = this.createQuery(newState,this.list.Filter)
 
         const searchBody: SearchBody = {
@@ -89,8 +94,11 @@ export class ListDataBuilder{
         if(smartSearch.length == 0){
             return ''
         }
-        const firstFilter = smartSearch.pop() as JSONRegularFilter
-        const jsonFilter = concat(true, firstFilter, ...smartSearch)
+        //make a copy because we are changing the array
+        const smartSearchCopy = JSON.parse(JSON.stringify(smartSearch))
+        
+        const firstFilter = smartSearchCopy.pop() as JSONRegularFilter
+        const jsonFilter = concat(true, firstFilter, ...smartSearchCopy)
         return toApiQueryString(jsonFilter) || ''
     }  
 

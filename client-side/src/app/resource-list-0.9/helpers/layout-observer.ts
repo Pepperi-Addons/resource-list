@@ -12,7 +12,6 @@ export class LayoutObserver{
     private $smartSearch: BehaviorSubject<SmartSearchInput> = new BehaviorSubject({dataView: {Fields: [], Type: 'Menu'}})
     private $menu: BehaviorSubject<PepMenuItem[]> = new BehaviorSubject([])
     private $buttons: BehaviorSubject<GVButton[]> = new BehaviorSubject([])
-    private $lineMenu: BehaviorSubject<LineMenuActionsObject> = new BehaviorSubject({get: async () => []})
     private $search: BehaviorSubject<boolean> = new BehaviorSubject(false)
     private $title: BehaviorSubject<string> = new BehaviorSubject('')
     private $selectionType: BehaviorSubject<PepListSelectionType> = new BehaviorSubject('none')
@@ -26,9 +25,6 @@ export class LayoutObserver{
      * for example if the menu changed, this function will emit menu changed event and invoke the onMenuChange call
      */
     notifyObservers(data: GenericListAdapterResult){
-        if(data.lineMenu){
-            this.$lineMenu.next(data.lineMenu)
-        }
         if(data.buttons){
             this.$buttons.next(data.buttons)
         }
@@ -76,10 +72,6 @@ export class LayoutObserver{
         return this
     }
 
-    onLineMenuChanged(cb: (data: LineMenuActionsObject) => void): LayoutObserver{
-        this.$lineMenu.subscribe(cb)
-        return this
-    }
 
     onButtonsChanged(cb: (data: GVButton[]) => void): LayoutObserver{
         this.$buttons.subscribe(cb)

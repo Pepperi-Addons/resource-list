@@ -5,11 +5,14 @@ import { GenericListAdapterResult, SmartSearchInput } from "../metadata";
 import { PepMenuItem } from "@pepperi-addons/ngx-lib/menu";
 import { GVButton } from "../metadata"
 import { PepStyleType } from "@pepperi-addons/ngx-lib";
-import { Subject } from "rxjs";
 import { PepListSelectionType, PepSelectionData } from "@pepperi-addons/ngx-lib/list";
+import { ILineMenuHandler } from "./pepperi-list";
+import { ListActions } from "./list-actions";
+import { ViewBlocksAdapterFactory } from "./view-blocks-adapters/view-blocks-adapter";
+import { IPepGenericListInitData } from "@pepperi-addons/ngx-composite-lib/generic-list";
 
 export class GenericListAdapter {
-    constructor(private listContainer: Partial<ListContainer>,  private lineMenuSubject: Subject<{key: string, data?: any}>){
+    constructor(private listContainer: Partial<ListContainer>,  private lineMenuHandler: ILineMenuHandler){
 
     }
     adapt(): GenericListAdapterResult{
@@ -17,7 +20,6 @@ export class GenericListAdapter {
         const smartSearch = this.getSmartSearch()
         const menu = this.getMenu()
         const buttons = this.getButtons()
-        const lineMenu = this.getLineMenu()
         const search = this.getSearch()
         const title = this.getTitle()
         const selectionType = this.getSelectionType()
@@ -26,7 +28,6 @@ export class GenericListAdapter {
             smartSearch: smartSearch,
             menu: menu,
             buttons: buttons,
-            lineMenu: lineMenu,
             search: search,
             title: title,
             selectionType: selectionType,
@@ -38,10 +39,10 @@ export class GenericListAdapter {
      * if the view blocks of the selected view are changed,
      * or that the data itself changed return dataSource otherwise return undefined
      */
-    getDataView(): GridDataView | undefined{
+    getDataView(): IPepGenericListInitData['dataView'] | undefined{
         //first we can set the data and then update the dataview if needed
         if(this.listContainer.Layout?.View){
-            const viewBlocksAdapter = new GridViewBlockAdapter(this.listContainer.Layout.View.ViewBlocks?.Blocks)
+            const viewBlocksAdapter = ViewBlocksAdapterFactory.create(this.listContainer.Layout.View.Type, this.listContainer.Layout.View.ViewBlocks?.Blocks)
             const dataview = viewBlocksAdapter.adapt()
             return dataview
         }
@@ -106,23 +107,6 @@ export class GenericListAdapter {
         }
     }
     
-    getLineMenu(){
-        if(this.listContainer.Layout?.LineMenu){
-            return {
-                get: async (data: PepSelectionData) => {
-                    return this.listContainer.Layout.LineMenu.Blocks.filter(block => !block.Hidden)
-                    .map(block => {
-                        return {
-                            title: block.Title,
-                            handler: async (selectedRows) => this.lineMenuSubject.next({key: block.Key, data: selectedRows})
-                        }
-                    })
-                }
-            }
-        }
-        return undefined
-    }
-
     getSearch(): boolean | undefined{
         return this.listContainer?.Layout?.Search?.Visible
     }
