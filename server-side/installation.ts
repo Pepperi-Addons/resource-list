@@ -113,7 +113,7 @@ async function createAddonsBlocksRelation(client: Client){
         ElementsModule: 'WebComponents',
         ElementName: `resource-selection-element-${client.AddonUUID}`,
     };
-    const listABIName = "ListABI"
+    const listABIName = "List"
     const listABIBlockRelation: Relation = {
         RelationName: "AddonBlock",
         Name: `${listABIName}`,
