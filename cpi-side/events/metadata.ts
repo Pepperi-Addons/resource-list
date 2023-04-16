@@ -21,7 +21,7 @@ export interface DrawViewOutputData{
 export const defaultStateValues: Omit<ListState, "ListKey" | "ViewKey"> = {
     SearchString: "",
     SmartSearchQuery: [],
-    PageSize: 100,
+    PageSize: 25,
     PageIndex: 1,
     PageType: "Pages",
     ItemSelection: {Items: [], SelectAll: false},

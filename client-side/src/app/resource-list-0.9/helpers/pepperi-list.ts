@@ -1,5 +1,5 @@
-import { ReplaySubject, Subject } from "rxjs";
-import { ClientEventsService } from "../services/client-events.service";
+import { ReplaySubject } from "rxjs";
+import { ClientEventsService, ICPIEventsService } from "../services/client-events.service";
 import { StateManager } from "./state-manager";
 import { ListContainer, ListState, DataRow, MenuBlock, List } from "shared";
 import { GenericListAdapter } from "./generic-list-adapter";
@@ -12,6 +12,7 @@ import { GenericListAdapterResult } from "../metadata";
 import { PepSelectionData } from "@pepperi-addons/ngx-lib/list";
 import { ListActions } from "./list-actions";
 import * as _ from "lodash";
+import { AddonDataScheme } from "@pepperi-addons/papi-sdk";
 
 
 export interface IStateChangedHandler{
@@ -33,24 +34,20 @@ export interface ILineMenuHandler{
 export class PepperiList implements IStateChangedHandler, ILineMenuHandler{
     private layoutObserver: LayoutObserver = new LayoutObserver()
     private $dataSource: ReplaySubject<IPepGenericListDataSource> = new ReplaySubject()
-    private stateManager: StateManager
-    private listContainer: ListContainer
+    private stateManager: StateManager = new StateManager({})
     private listActions: ListActions
-
-    constructor(private clientEventsService: ClientEventsService, private changes?: Partial<ListState>, private list?: List){
+    private $listActions: ReplaySubject<IPepGenericListActions> = new ReplaySubject()
+    
+    
+    constructor(private clientEventsService: ICPIEventsService, private listContainer: ListContainer, private changes?: Partial<ListState>){
         this.stateManager = new StateManager(undefined)
-        //create default list container
-        this.listContainer = {
-            Layout: {},
-            Data: {
-                Items: []
-            },
-            State: {},
-            List: list
-        }
-        this.listActions = new ListActions(this)
 
+        this.listActions = new ListActions(listContainer?.Layout?.LineMenu?.Blocks, this)
         this.$dataSource.next(new ListDataSource(this))
+    }
+    
+    getLineMenuBlocksArray(){
+        return this.listContainer?.Layout?.LineMenu?.Blocks || []
     }
     
     private isSelectedLinesChanged(data: PepSelectionData){
@@ -62,7 +59,10 @@ export class PepperiList implements IStateChangedHandler, ILineMenuHandler{
         const stateSelectedItems = state.ItemSelection?.Items || []
         const stateSelectionType = state.ItemSelection?.SelectAll
 
-        return stateSelectionType != listSelectionType || !_.isEqual(stateSelectedItems, listSelectedItems)
+        return stateSelectionType != listSelectionType ||
+        !(stateSelectedItems.length == listSelectedItems.length && stateSelectedItems.every((item, index) => item == listSelectedItems[index]))
+
+
     }
     /**
      * this function invoked every time a line was selected.
@@ -86,10 +86,6 @@ export class PepperiList implements IStateChangedHandler, ILineMenuHandler{
         this.reloadList(listContainer)
     }
 
-    getLineMenuBlocksArray(){
-        return this.listContainer?.Layout?.LineMenu?.Blocks || []
-    }
-
     subscribeToStateChanges(): StateObserver {
         return this.stateManager.getStateObserver()
     }
@@ -101,9 +97,9 @@ export class PepperiList implements IStateChangedHandler, ILineMenuHandler{
     private async getListContainer(changes: Partial<ListState>){
         const state = this.stateManager.getState()
         if(!state){
-            return await this.clientEventsService.emitLoadListEvent(undefined, changes, this.list)
+            return await this.clientEventsService.emitLoadListEvent(undefined, changes, this.listContainer.List)
         }
-        return await this.clientEventsService.emitStateChangedEvent(state, changes, this.list)
+        return await this.clientEventsService.emitStateChangedEvent(state, changes, this.listContainer.List)
     }
 
     private convertToListLayout(listContainer: ListContainer): GenericListAdapterResult{
@@ -129,8 +125,8 @@ export class PepperiList implements IStateChangedHandler, ILineMenuHandler{
         return this.layoutObserver
     }
 
-    getListActions(): ListActions{
-        return this.listActions
+    subscribeToListActions(cb: (actions: IPepGenericListActions) => void): void{
+        this.$listActions.subscribe(cb)
     }
 
 
@@ -139,6 +135,10 @@ export class PepperiList implements IStateChangedHandler, ILineMenuHandler{
         this.updatePepperiListProperties(listContainer)
         //update the data source on the ui component
         this.$dataSource.next(new ListDataSource(this))
+    }
+
+    getListActions(): ListActions{
+        return this.listActions
     }
 
     async onMenuClick(key: string, data?: PepSelectionData){
