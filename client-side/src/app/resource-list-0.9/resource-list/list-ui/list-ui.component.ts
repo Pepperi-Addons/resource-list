@@ -41,8 +41,6 @@ export class ListUIComponent implements OnInit {
   
   //generic list instance
   @ViewChild(GenericListComponent) list: GenericListComponent
-
-  loadCompleted: boolean = false
   
   constructor() { }
 
@@ -67,4 +65,9 @@ export class ListUIComponent implements OnInit {
   onViewChanged(event){
     this.viewChangedEvent.emit(event)
   }
+
+  getSelectedItems(){
+    return this.list?.getSelectedItems()
+  }
+
 }

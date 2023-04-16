@@ -1,13 +1,14 @@
-import { Component, OnInit } from '@angular/core';
-import { ClientEventsService } from '../services/client-events.service';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { ClientEventsService, ICPIEventsService } from '../services/client-events.service';
 import { IPepGenericListActions, IPepGenericListDataSource, IPepGenericListPager, IPepGenericListParams } from '@pepperi-addons/ngx-composite-lib/generic-list';
 import { GVButton, SmartSearchInput, ViewsMenuUI } from '../metadata';
 import { PepMenuItem } from '@pepperi-addons/ngx-lib/menu';
 import { PepperiList } from '../helpers/pepperi-list';
-import { List } from 'shared';
 import { IPepListSortingChangeEvent, PepListSelectionType } from '@pepperi-addons/ngx-lib/list';
 import { ReplaySubject } from 'rxjs';
 import { ResourceService } from '../services/resources.service';
+import { ListUIComponent } from './list-ui/list-ui.component';
+import { ListContainer } from 'shared'
 
 @Component({
   selector: 'resource-list',
@@ -16,6 +17,9 @@ import { ResourceService } from '../services/resources.service';
 })
 
 export class ResourceListComponent implements OnInit {
+  @Input() listContainer: ListContainer
+  @Input() cpiEventService: ICPIEventsService
+
   pepperiList: PepperiList
   smartSearch: SmartSearchInput
   menu: PepMenuItem[]
@@ -36,146 +40,8 @@ export class ResourceListComponent implements OnInit {
 
   $searchString: ReplaySubject<string> = new ReplaySubject()
   $sorting: ReplaySubject<IPepListSortingChangeEvent> = new ReplaySubject()
-
-
-  list1: List = {
-    Key: "LIST_KEY",
-    Name: "FirstList",
-    Resource: "Friends",
-    Views: [
-        {
-            Key: "7debbfa8-a085-11ed-a8fc-0242ac120002",
-            Type: "Grid",
-            Title: "FirstView",
-            Blocks: [
-                {
-                    Title: "My name",
-                    Configuration: {
-                        Type: "TextBox",
-                        FieldID: "name",
-                        Width: 10
-                    },
-                    DrawURL: 'addon-cpi/drawGrid',
-                    AddonUUID: '0e2ae61b-a26a-4c26-81fe-13bdd2e4aaa3'
-                },
-                {
-                    Title: "My age",
-                    Configuration: {
-                        Type: "NumberInteger",
-                        FieldID: "age",
-                        Width: 10
-                    },
-                    DrawURL: 'addon-cpi/drawGrid',
-                    AddonUUID: '0e2ae61b-a26a-4c26-81fe-13bdd2e4aaa3'
-                },
-            ],
-        },
-        {
-            Key: "17e76a7e-c725-11ed-afa1-0242ac120002",
-            Type: "Grid",
-            Title: "SecondView",
-            Blocks: [
-                {
-                    Title: "Second name",
-                    Configuration: {
-                        Type: "TextBox",
-                        FieldID: "name",
-                        Width: 10
-                    },
-                    DrawURL: 'addon-cpi/drawGrid',
-                    AddonUUID: '0e2ae61b-a26a-4c26-81fe-13bdd2e4aaa3'
-                },
-                {
-                    Title: "Second age",
-                    Configuration: {
-                        Type: "NumberInteger",
-                        FieldID: "age",
-                        Width: 10
-                    },
-                    DrawURL: 'addon-cpi/drawGrid',
-                    AddonUUID: '0e2ae61b-a26a-4c26-81fe-13bdd2e4aaa3'
-                },
-            ],
-        }
-    ],
-    Menu: {
-        Blocks: [
-            {
-                Key: 'recycleBin',
-                Title: 'Recycle Bin',
-                DrawURL: 'addon-cpi/drawMenuBlock',
-                AddonUUID: '0e2ae61b-a26a-4c26-81fe-13bdd2e4aaa3',
-                ExecuteURL: 'addon-cpi/menuExecution'
-            },
-            {
-                Key: 'import',
-                Title: 'Import',
-                DrawURL: 'addon-cpi/drawMenuBlock',
-                AddonUUID: '0e2ae61b-a26a-4c26-81fe-13bdd2e4aaa3',
-                ExecuteURL: 'addon-cpi/menuExecution'
-            },
-            {
-                Key: 'export',
-                Title: 'Export',
-                DrawURL: 'addon-cpi/drawMenuBlock',
-                AddonUUID: '0e2ae61b-a26a-4c26-81fe-13bdd2e4aaa3',
-                ExecuteURL: 'addon-cpi/menuExecution'
-            },
-            {
-                Key: 'new',
-                Title: 'New',
-                DrawURL: 'addon-cpi/drawMenuBlock',
-                AddonUUID: '0e2ae61b-a26a-4c26-81fe-13bdd2e4aaa3',
-                ButtonStyleType: "Strong",
-                ExecuteURL: 'addon-cpi/menuExecution'
-            }
-        ]
-    },
-    LineMenu: {
-        Blocks: [
-            {
-                Key: "delete",
-                Title: "Delete",
-                DrawURL: 'addon-cpi/drawLineMenuBlock',
-                AddonUUID: '0e2ae61b-a26a-4c26-81fe-13bdd2e4aaa3',
-                ExecuteURL: 'addon-cpi/menuExecution'
-            },
-            {
-                Key: "edit",
-                Title: "Edit",
-                DrawURL: 'addon-cpi/drawLineMenuBlock',
-                AddonUUID: '0e2ae61b-a26a-4c26-81fe-13bdd2e4aaa3',
-                ExecuteURL: 'addon-cpi/menuExecution'
-            }
-        ]
-    },
-    Search: {
-        Fields: [
-            {
-                FieldID: "Key"
-            },
-            {
-                FieldID: "name"
-            }
-        ]
-    },
-    SmartSearch: {
-        Fields: [
-            {
-                FieldID: "name",
-                Title: "name",
-                Type: "String"
-            },
-            {
-                FieldID: "age",
-                Title: "name",
-                Type: "String"
-            }
-        ]
-    },
-    SelectionType: "Multi",
-    Sorting: {Ascending: false, FieldID: "name"}
-}
+  
+  @ViewChild(ListUIComponent) list: ListUIComponent
 
   constructor(private clientEventService: ClientEventsService, private resourceService: ResourceService) { }
 
@@ -184,7 +50,10 @@ export class ResourceListComponent implements OnInit {
   }
 
   async load(){
-    this.pepperiList = new PepperiList(this.clientEventService, {ListKey: "LIST_KEY", SearchString: 'aa'}, this.list1)
+    if(!this.cpiEventService || (!this.listContainer?.State?.ListKey && this.listContainer?.List)){
+        throw Error(`error in resource list ABI component - cpi events service must be exist, list container must have a list or a list key inside the state`)
+    }
+    this.pepperiList = new PepperiList(this.cpiEventService, this.listContainer?.State , this.listContainer?.List)
     this.subscribeToChanges()
     this.lineMenu = this.pepperiList.getListActions()
     this.loadCompleted = true
@@ -207,13 +76,13 @@ export class ResourceListComponent implements OnInit {
     // needs to change the key and value properties to lower case to be compatible with pep select component
     .onViewsMenuChanged(viewsMenu => {
         this.viewsMenu = {
-            Visible: viewsMenu.Visible,
-            Items: viewsMenu.Items.map(view => {
+            Visible: viewsMenu?.Visible,
+            Items: viewsMenu?.Items.map(view => {
                 return {
                     key: view.Key,
                     value: view.Value
                 }
-            })
+            }) || []
         }
     })
   }
@@ -233,6 +102,10 @@ export class ResourceListComponent implements OnInit {
   }
   onViewChanged(key: string){
     this.pepperiList.onViewChanged(key)
+  }
+
+  getSelectedItems(){
+    return this.list?.getSelectedItems()
   }
 
 }

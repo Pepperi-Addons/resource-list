@@ -20,7 +20,7 @@ import semver from 'semver'
 
 
 export async function install(client: Client, request: Request): Promise<any> {
-    await createAddonBlockRelation(client)
+    await createAddonsBlocksRelation(client)
     await createPageBlockRelation(client);
     await createSettingsRelation(client);
     await createDIMXRelation(client)
@@ -35,13 +35,16 @@ export async function uninstall(client: Client, request: Request): Promise<any> 
 }
 
 export async function upgrade(client: Client, request: Request): Promise<any> {
+    if(request.body.FromVersion && semver.compare(request.body.FromVersion, '0.9.40') < 0){
+        await createAddonsBlocksRelation(client)
+    }
+
     if (request.body.FromVersion && semver.compare(request.body.FromVersion, '0.7.0') < 0) {
         const viewsService = new ViewsService(client)
         const editorsService = new EditorsService(client)
         await viewsService.createSchema()
         await editorsService.createSchema()
     }
-    await createAddonBlockRelation(client)
     await createPageBlockRelation(client);
     await createSettingsRelation(client);
     await createDIMXRelation(client)
@@ -95,7 +98,7 @@ export async function downgrade(client: Client, request: Request): Promise<any> 
     return {success:true,resultObject:{}}
 }
 
-async function createAddonBlockRelation(client: Client){
+async function createAddonsBlocksRelation(client: Client){
     const blockName = "ResourceSelection"
     const addonBlockRelation: Relation = {
         RelationName: "AddonBlock",
@@ -110,8 +113,25 @@ async function createAddonBlockRelation(client: Client){
         ElementsModule: 'WebComponents',
         ElementName: `resource-selection-element-${client.AddonUUID}`,
     };
+    const listABIName = "List"
+    const listABIBlockRelation: Relation = {
+        RelationName: "AddonBlock",
+        Name: `${listABIName}`,
+        Description: `${listABIName} addon block`,
+        Type: "NgComponent",
+        SubType: "NG14",
+        AddonUUID: client.AddonUUID,
+        AddonRelativeURL: `file_${client.AddonUUID}`,
+        ComponentName: `${listABIName}Component`,
+        ModuleName: `${listABIName}Module`,
+        ElementsModule: 'WebComponents',
+        ElementName: `list-abi-element-${client.AddonUUID}`,
+    };
     const addonService = new AddonService(client)
-    await addonService.upsertRelation(addonBlockRelation) 
+    await Promise.all([
+        addonService.upsertRelation(addonBlockRelation),
+        addonService.upsertRelation(listABIBlockRelation) 
+    ])
 }
 async function createPageBlockRelation(client: Client): Promise<any> {
     try {
@@ -134,26 +154,27 @@ async function createPageBlockRelation(client: Client): Promise<any> {
             EditorElementName: `viewer-block-editor-element-${client.AddonUUID}`
 
         };
-        const resourceListRelation: Relation = {
+        const listPageBlockName = 'ListPageBlock'
+        const listPageBlockRelation: Relation = {
             RelationName: "PageBlock",
-            Name: 'ResourceList',
-            Description: `resource viewer`,
+            Name: `${listPageBlockName}`,
+            Description: `list page block`,
             Type: "NgComponent",
             SubType: "NG14",
             AddonUUID: client.AddonUUID,
             AddonRelativeURL: fileName,
-            ComponentName: `ResourceListComponent`, // This is should be the block component name (from the client-side)
-            ModuleName: `ResourceListModule`, // This is should be the block module name (from the client-side)
+            ComponentName: `${listPageBlockName}Component`, // This is should be the block component name (from the client-side)
+            ModuleName: `${listPageBlockName}Module`, // This is should be the block module name (from the client-side)
             EditorComponentName: `BlockEditorComponent`, // This is should be the block editor component name (from the client-side)
             EditorModuleName: `BlockEditorModule`, // This is should be the block editor module name (from the client-side)
             ElementsModule: 'WebComponents',
-            ElementName: `resource-list-element-${client.AddonUUID}`,
+            ElementName: `list-page-block-element-${client.AddonUUID}`,
             EditorElementName: `viewer-block-editor-element-${client.AddonUUID}`
 
         };
         const service = new AddonService(client);
         const dataViewerResult = await service.upsertRelation(dataViewerRelation)
-        const resourceListResult = await service.upsertRelation(resourceListRelation)
+        const resourceListResult = await service.upsertRelation(listPageBlockRelation)
 
         const dataConfigurationBlockRelation: Relation = {
             RelationName: "PageBlock",

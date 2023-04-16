@@ -1,0 +1,39 @@
+
+<ng-container
+    *ngIf="hostObject.isDialog; then dialog; else page"
+></ng-container>
+
+<ng-template #dialog>
+    <pep-dialog [showHeader]="false">
+        <ng-container pep-dialog-content>
+            <resource-list
+                [cpiEventService]="clientEventsService"
+                [listContainer]="hostObject.listContainer"
+            ></resource-list>
+        </ng-container>
+        <ng-container pep-dialog-actions>
+            <pep-button 
+                class="pep-spacing-element"
+                [sizeType]="'md'" 
+                [value]="'DONE' | translate"
+                [styleType]="'strong'" 
+                (buttonClick)="onDoneClicked()"
+            ></pep-button>
+        
+            <pep-button 
+                class="pep-spacing-element"
+                [sizeType]="'md'" 
+                [value]="'CANCEL' | translate"
+                [styleType]="'weak'" 
+                (buttonClick)="onCancelClicked()"
+            ></pep-button>
+        </ng-container>
+    </pep-dialog>
+</ng-template>
+
+<ng-template #page>
+    <resource-list
+        [cpiEventService]="clientEventsService"
+        [listContainer]="hostObject.listContainer"
+    ></resource-list>
+</ng-template>
