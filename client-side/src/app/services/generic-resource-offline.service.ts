@@ -6,7 +6,7 @@ import { GENERIC_RESOURCE_OFFLINE_URL, GENERIC_VIEWS_RESOURCE, API_PAGE_SIZE } f
 import { IPepGenericListParams } from "@pepperi-addons/ngx-composite-lib/generic-list";
 import { SmartSearchParser } from "../smart-search-parser/smart-search-parser";
 import { UtilitiesService } from "./utilities-service";
-import { Sorting } from "shared";
+import { OldSorting, Sorting } from "shared";
 
 
 @Injectable({ providedIn: 'root' })
@@ -45,7 +45,7 @@ export class GenericResourceOfflineService{
         resourceFields?: AddonDataScheme['Fields'],
         accountUUID?:string | undefined,
         searchDataView?: MenuDataView,
-        sorting?: Sorting): Promise<SearchData<AddonData>> {
+        sorting?: OldSorting): Promise<SearchData<AddonData>> {
         try{
             const pageSize = (params?.toIndex - params?.fromIndex) + 1 || API_PAGE_SIZE;
             const page = params?.pageIndex || Math.ceil(params?.fromIndex / pageSize) || 1;
