@@ -232,7 +232,6 @@ export class GenericViewerComponent implements OnInit {
       if(this.genericViewer?.view?.isFirstFieldDrillDown && fields.length > 0){
         fields[0].Type = "Link"
       }
-      this.genericViewer.lineMenuItems.Fields.length
       this.dataSource = new DataSource(new DynamicItemsDataSource(async (params) => {
         const resourceFields = await this.genericViewerDataSource.getFields()
         const items = await this.genericViewerDataSource.getItems(params, fields, resourceFields, this.accountUUID)
@@ -334,7 +333,7 @@ export class GenericViewerComponent implements OnInit {
                     const items = (await this.genericViewerDataSource.getItems()).Objects
                     const item = items.find(item => item.Key == selectedItemKey)
                     const dialogData = {
-                      item : item,
+                      item : await this.genericViewerDataSource.getEditorItemByKey(selectedItemKey) || {},
                       editorDataView: this.genericViewer.editorDataView,
                       editor: this.genericViewer.editor,
                       originalValue: item,

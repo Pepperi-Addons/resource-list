@@ -408,5 +408,4 @@ export class FieldEditorComponent implements OnInit {
       this.dataView.Fields.splice(index, 1, dvField);
     }
   }
-
 }

@@ -1,6 +1,6 @@
 import { AddonData, AddonDataScheme, GridDataViewField, SchemeField, SearchData } from "@pepperi-addons/papi-sdk";
 import { IPepGenericListParams } from "@pepperi-addons/ngx-composite-lib/generic-list";
-import { IGenericViewer, Sorting } from "shared";
+import { IGenericViewer } from "shared";
 import * as uuid from 'uuid';
 import { GenericResourceOfflineService } from "./services/generic-resource-offline.service";
 import { IDataViewField } from "./metadata";

@@ -1,0 +1,21 @@
+<list-ui
+    *ngIf="loadCompleted"
+    [dataSource]="dataSource"
+    [title]="title"
+    [search]="search"
+    [smartSearch]="smartSearch"
+    [buttons]="buttons"
+    [menu]="menu"
+    [lineMenu]="lineMenu"
+    [selectionType]="selectionType"
+    [$searchString]="$searchString"
+    [$sorting]="$sorting"
+    [selectedViewKey]="selectedViewKey"
+    [viewsMenu]="viewsMenu"
+    [$pageIndex]="$pageIndex"
+    [$pageSize]="$pageSize"
+    [$pageType]="$pageType"
+    (menuClickedEvent)="onClientMenuClick($event)"
+    (viewChangedEvent)="onViewChanged($event)"
+    
+></list-ui>

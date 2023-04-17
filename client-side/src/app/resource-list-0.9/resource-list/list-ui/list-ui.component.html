@@ -1,0 +1,49 @@
+
+<pep-generic-list 
+    class="generic-list" 
+    [showTopBar]="true"
+    [dataSource]="dataSource"
+    [showSearch]="true"
+    [inline] ="false"
+    [addPadding]="true"
+    [smartFilter]="smartSearch"
+    [actions]="lineMenu"
+    [showSearch]="search"
+    [title]="title"
+    [selectionType]="selectionType"
+    uuidMapping="Key">
+    <ng-container right-buttons>
+        <pep-menu *ngIf="menu"
+        iconName="system_menu" 
+        type="action" 
+        class="pep-spacing-element"
+        (menuItemClick)="onMenuClicked($event)"
+        [items]="menu">
+        </pep-menu>
+        <pep-select 
+            *ngIf="viewsMenu.Items.length > 0"
+            class="pep-spacing-element"
+            [value]="selectedViewKey"
+            label="select view"
+            type="select"
+            [visible]="viewsMenu.Visible"
+            [mandatory]="false"
+            xAlignment="left"
+            [emptyOption]="false"
+            [options]="viewsMenu.Items"
+            [renderTitle]="false"
+            (valueChange)="onViewChanged($event)">
+        </pep-select>
+        <ng-container *ngIf="buttons.length > 0">
+            <pep-button
+                *ngFor="let button of buttons"
+                [key]="button.key"
+                class= 'pep-spacing-element'
+                [value]="button.value"
+                [styleType]="button.styleType"
+                (buttonClick)="onMenuClicked($event)"
+            ></pep-button>
+        </ng-container>
+    </ng-container>
+</pep-generic-list>
+

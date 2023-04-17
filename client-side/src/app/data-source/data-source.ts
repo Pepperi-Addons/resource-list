@@ -56,11 +56,11 @@ export class DataSource implements IPepGenericListDataSource{
       this.items = await this.itemsDataSource.getItems(params)
       return {
           dataView: {
-            Context: {
-              Name: '',
-              Profile: { InternalID: 0 },
-              ScreenSize: 'Landscape'
-            },
+          Context: {
+            Name: '',
+            Profile: { InternalID: 0 },
+            ScreenSize: 'Landscape'
+          },
             Type: 'Grid',
             
             Title: 'Block',
