@@ -5,14 +5,16 @@ import { PepSelectionData } from "@pepperi-addons/ngx-lib/list";
 
 
 export interface ICPIEventsService{
+    addonService: PepAddonService
     emitLoadListEvent(state: Partial<ListState> | undefined, changes: Partial<ListState>, list?: List) : Promise<ListContainer>
     emitStateChangedEvent(state: Partial<ListState>, changes: Partial<ListState>, list?: List): Promise<ListContainer>
     emitMenuClickEvent(state: Partial<ListState>, key: string, list?: List, data?: PepSelectionData): Promise<ListContainer>
 }
 
-@Injectable({ providedIn: 'root' })
+@Injectable({providedIn: 'root'})
 export class ClientEventsService implements ICPIEventsService{
-    constructor(private addonService: PepAddonService){
+
+    constructor(public addonService: PepAddonService){
         
     }
     async emitLoadListEvent(state: Partial<ListState> | undefined ,changes: Partial<ListState>, list?: List): Promise<ListContainer>{

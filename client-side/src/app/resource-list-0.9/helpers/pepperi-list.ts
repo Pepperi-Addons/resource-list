@@ -1,9 +1,9 @@
 import { ReplaySubject } from "rxjs";
 import { ClientEventsService, ICPIEventsService } from "../services/client-events.service";
 import { StateManager } from "./state-manager";
-import { ListContainer, ListState, DataRow } from "shared";
+import { ListContainer, ListState, DataRow, MenuBlock, List } from "shared";
 import { GenericListAdapter } from "./generic-list-adapter";
-import { ViewBlocksAdapterFactory } from "./view-blocks-adapter";
+import { ViewBlocksAdapterFactory } from "./view-blocks-adapters/view-blocks-adapter";
 import { IPepGenericListActions, IPepGenericListDataSource, IPepGenericListInitData, IPepGenericListParams } from "@pepperi-addons/ngx-composite-lib/generic-list";
 import { LayoutObserver } from "./layout-observer";
 import { StateObserver } from "./state-observer";
@@ -11,6 +11,7 @@ import { ListDataSource } from "./list-data-source";
 import { GenericListAdapterResult } from "../metadata";
 import { PepSelectionData } from "@pepperi-addons/ngx-lib/list";
 import { ListActions } from "./list-actions";
+import * as _ from "lodash";
 import { AddonDataScheme } from "@pepperi-addons/papi-sdk";
 
 
@@ -21,6 +22,7 @@ export interface IStateChangedHandler{
 export interface ILineMenuHandler{
     onLineSelected(data: PepSelectionData): void
     onMenuClick(key: string, data?: PepSelectionData): Promise<void>
+    getLineMenuBlocksArray(): MenuBlock[]
 }
 
 /**
@@ -30,19 +32,23 @@ export interface ILineMenuHandler{
  */
 
 export class PepperiList implements IStateChangedHandler, ILineMenuHandler{
-    private layoutObserver: LayoutObserver = new LayoutObserver()
-    private items: DataRow[]
-    private dataView: IPepGenericListInitData['dataView']
-    private count: number
-    private $dataSource: ReplaySubject<IPepGenericListDataSource> = new ReplaySubject()
-    private stateManager: StateManager = new StateManager({})
-    private listActions: ListActions
-    private $listActions: ReplaySubject<IPepGenericListActions> = new ReplaySubject()
+    private layoutObserver: LayoutObserver = new LayoutObserver();
+    private $dataSource: ReplaySubject<IPepGenericListDataSource> = new ReplaySubject();
+    private items: DataRow[];
+    private stateManager: StateManager = new StateManager({});
+    private listActions: ListActions;
+    private $listActions: ReplaySubject<IPepGenericListActions> = new ReplaySubject();
     
-    constructor(private clientEventsService: ICPIEventsService,  private listContainer: ListContainer, private resourceFields: AddonDataScheme['Fields']){
+    
+    constructor(private clientEventsService: ICPIEventsService, private listContainer: ListContainer, private changes?: Partial<ListState>){
+        this.stateManager = new StateManager(undefined)
+
         this.listActions = new ListActions(listContainer?.Layout?.LineMenu?.Blocks, this)
         this.$dataSource.next(new ListDataSource(this))
-        this.updateList(listContainer)
+    }
+    
+    getLineMenuBlocksArray(){
+        return this.listContainer?.Layout?.LineMenu?.Blocks || []
     }
     
     private isSelectedLinesChanged(data: PepSelectionData){
@@ -85,14 +91,15 @@ export class PepperiList implements IStateChangedHandler, ILineMenuHandler{
         return this.stateManager.getStateObserver()
     }
     
-
-
     subscribeToDataSource(cb: (ds: IPepGenericListDataSource) => void){
         this.$dataSource.subscribe(cb)
     }
 
     private async getListContainer(changes: Partial<ListState>){
         const state = this.stateManager.getState()
+        if(!state){
+            return await this.clientEventsService.emitLoadListEvent(undefined, changes, this.listContainer.List)
+        }
         return await this.clientEventsService.emitStateChangedEvent(state, changes, this.listContainer.List)
     }
 
@@ -100,17 +107,18 @@ export class PepperiList implements IStateChangedHandler, ILineMenuHandler{
         const genericListAdapter = new GenericListAdapter(listContainer, this)
         return genericListAdapter.adapt()
     }
-    
+    /**
+     * 
+     * @param listContainer 
+     * this function updates the list container object and the state
+     */
     private updatePepperiListProperties(listContainer: ListContainer){
         if(listContainer.Data){
-            this.items = listContainer.Data.Items
-            this.count = listContainer.Data.Count
+            this.listContainer.Data = listContainer.Data
         }
+        this.listContainer.Layout = {...(this.listContainer.Layout || {}), ...(listContainer.Layout || {})}
+        this.stateManager.updateState(listContainer.State)
 
-        if(listContainer.Layout?.View?.ViewBlocks?.Blocks){
-            const viewBlocksAdapter = ViewBlocksAdapterFactory.create(listContainer.Layout.View.Type, listContainer.Layout.View.ViewBlocks.Blocks)
-            this.dataView = viewBlocksAdapter.adapt()
-        }
     }
 
     //will expose the option to observe the changes on the layout by returning the observer as result
@@ -121,19 +129,16 @@ export class PepperiList implements IStateChangedHandler, ILineMenuHandler{
     subscribeToListActions(cb: (actions: IPepGenericListActions) => void): void{
         this.$listActions.subscribe(cb)
     }
-
-
+    
     private reloadList(listContainer: ListContainer){
-        //update the state if needed
-        Object.assign(this.listContainer.State, listContainer.State || {})
-        //update the layout if needed
-        Object.assign(this.listContainer.Layout, listContainer.Layout || {})
-
-        if(listContainer.Data){
-            this.listContainer.Data = listContainer.Data
-        }
+        //update the list layout
+        this.updatePepperiListProperties(listContainer)
         //update the data source on the ui component
         this.$dataSource.next(new ListDataSource(this))
+    }
+
+    getListActions(): ListActions{
+        return this.listActions
     }
 
     async onMenuClick(key: string, data?: PepSelectionData){
@@ -142,55 +147,39 @@ export class PepperiList implements IStateChangedHandler, ILineMenuHandler{
         this.reloadList(listContainer)
     }
 
-    isStateChanged(changes: Partial<ListState>){
-        return Object.keys(changes).length > 0
-    }
+    async onListEvent(params: IPepGenericListParams): Promise<IPepGenericListInitData>{
+        const state = this.stateManager.getState()
 
-    async onListEvent(params: IPepGenericListParams, isFirstEvent?: boolean): Promise<IPepGenericListInitData>{
-        let listContainer: ListContainer = this.listContainer
-        //in case of first init the container already updated
-        if(!isFirstEvent){
-            const changes = this.stateManager.buildChangesFromPageParams(params, this.resourceFields)
-            listContainer = await this.getListContainer(changes)
-        }
-        this.updateList(listContainer)
-        return {
-            dataView: this.dataView,
-            items: this.items,
-            totalCount: this.count
-        }
-    }
+        //if we don't have a state then its load list event and we don't need to build the changes from the params
+        const changes = state? this.stateManager.buildChangesFromPageParams(params, {}): this.changes
+        const listContainer = await this.getListContainer(changes)
 
-    updateListActions(listContainer: ListContainer){
-        if(listContainer.Layout?.LineMenu?.Blocks){
-            this.listActions = new ListActions(listContainer.Layout?.LineMenu?.Blocks, this)
-            this.$listActions.next(this.listActions)
-        }
-    }
-
-    updateList(listContainer: ListContainer){
-        //update list actions
-        this.updateListActions(listContainer)
-        //adapt the data to be compatible to the generic list 
-        
-        const listData = this.convertToListLayout(listContainer)
-        //update the state 
-        if(listContainer.State){
-            this.stateManager.updateState(listContainer.State)
-        }
-
-        this.updateSelectedLines()
-
-        //update data view data and count
         this.updatePepperiListProperties(listContainer)
+
+        //adapt the data to be compatible to the generic list 
+        const listData = this.convertToListLayout(listContainer)
 
         //notify observers 
         this.layoutObserver.notifyObservers(listData)
 
         //notify state observers 
         this.stateManager.notifyObservers()
-    }
 
+        let dataView = listData.dataView
+
+        //if the event didn't returned a dataview use the previous one
+        if(!dataView){
+            const viewBlocksAdapter = ViewBlocksAdapterFactory.create(this.listContainer.Layout.View.Type, this.listContainer.Layout.View.ViewBlocks.Blocks)
+            dataView = viewBlocksAdapter.adapt()
+        }
+
+        return {
+            dataView: dataView,
+            items: this.items || [],
+            totalCount: this.listContainer?.Data?.Count
+        }
+    }
+    
     //select the items base on the current state
     updateSelectedLines(){
         const state = this.stateManager.getState()

@@ -1,20 +1,21 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { ClientEventsService, ICPIEventsService } from '../services/client-events.service';
-import { IPepGenericListActions, IPepGenericListDataSource, IPepGenericListPager } from '@pepperi-addons/ngx-composite-lib/generic-list';
+import { IPepGenericListActions, IPepGenericListDataSource, IPepGenericListPager, IPepGenericListParams } from '@pepperi-addons/ngx-composite-lib/generic-list';
 import { GVButton, SmartSearchInput, ViewsMenuUI } from '../metadata';
 import { PepMenuItem } from '@pepperi-addons/ngx-lib/menu';
 import { PepperiList } from '../helpers/pepperi-list';
-import { List, ListContainer, ListState } from 'shared';
 import { IPepListSortingChangeEvent, PepListSelectionType } from '@pepperi-addons/ngx-lib/list';
 import { ReplaySubject } from 'rxjs';
 import { ResourceService } from '../services/resources.service';
 import { ListUIComponent } from './list-ui/list-ui.component';
+import { ListContainer } from 'shared'
 
 @Component({
   selector: 'resource-list',
   templateUrl: './resource-list.component.html',
   styleUrls: ['./resource-list.component.scss']
 })
+
 export class ResourceListComponent implements OnInit {
   @Input() listContainer: ListContainer
   @Input() cpiEventService: ICPIEventsService
@@ -31,8 +32,7 @@ export class ResourceListComponent implements OnInit {
   selectionType: PepListSelectionType
   viewsMenu: ViewsMenuUI
   selectedViewKey: string
-
-
+  
   //pager subjects
   $pageIndex: ReplaySubject<number> = new ReplaySubject()
   $pageSize: ReplaySubject<number> = new ReplaySubject()
@@ -40,27 +40,22 @@ export class ResourceListComponent implements OnInit {
 
   $searchString: ReplaySubject<string> = new ReplaySubject()
   $sorting: ReplaySubject<IPepListSortingChangeEvent> = new ReplaySubject()
-
+  
   @ViewChild(ListUIComponent) list: ListUIComponent
 
-
-  
-  constructor(private resourceService: ResourceService) { }
+  constructor(private clientEventService: ClientEventsService, private resourceService: ResourceService) { }
 
   ngOnInit(): void {
     this.load()
   }
 
   async load(){
-    const container = await this.cpiEventService.emitLoadListEvent(undefined, this.listContainer.State, this.listContainer.List) as Required<ListContainer>
-    const resource = this.listContainer?.List?.Resource
-    if(!resource){
-        throw Error(`there is no resource on list container list object`)
+    if(!this.cpiEventService || (!this.listContainer?.State?.ListKey && this.listContainer?.List)){
+        throw Error(`error in resource list ABI component - cpi events service must be exist, list container must have a list or a list key inside the state`)
     }
-    //get resource fields
-    const resourceFields = await this.resourceService.getResourceFields(resource)
-    this.pepperiList = new PepperiList(this.cpiEventService, container, resourceFields)
+    this.pepperiList = new PepperiList(this.cpiEventService, this.listContainer , this.listContainer?.State)
     this.subscribeToChanges()
+    this.lineMenu = this.pepperiList.getListActions()
     this.loadCompleted = true
   }
 
@@ -90,7 +85,7 @@ export class ResourceListComponent implements OnInit {
                 }
             }) || []
         }
-        })
+    })
   }
 
   subscribeToStateChanges(){

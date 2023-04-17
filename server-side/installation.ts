@@ -35,13 +35,16 @@ export async function uninstall(client: Client, request: Request): Promise<any> 
 }
 
 export async function upgrade(client: Client, request: Request): Promise<any> {
+    if(request.body.FromVersion && semver.compare(request.body.FromVersion, '0.9.40') < 0){
+        await createAddonsBlocksRelation(client)
+    }
+
     if (request.body.FromVersion && semver.compare(request.body.FromVersion, '0.7.0') < 0) {
         const viewsService = new ViewsService(client)
         const editorsService = new EditorsService(client)
         await viewsService.createSchema()
         await editorsService.createSchema()
     }
-    await createAddonsBlocksRelation(client)
     await createPageBlockRelation(client);
     await createSettingsRelation(client);
     await createDIMXRelation(client)
@@ -110,7 +113,7 @@ async function createAddonsBlocksRelation(client: Client){
         ElementsModule: 'WebComponents',
         ElementName: `resource-selection-element-${client.AddonUUID}`,
     };
-    const listABIName = "ListABI"
+    const listABIName = "List"
     const listABIBlockRelation: Relation = {
         RelationName: "AddonBlock",
         Name: `${listABIName}`,

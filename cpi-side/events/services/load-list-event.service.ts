@@ -8,7 +8,7 @@ export class LoadListEventService extends EventService{
 
     async execute(state: Partial<ListState> | undefined = {}, changes: ListState, listConfiguration?: List): Promise<ListContainer> {
         const service = new ListService()
-        const list = listConfiguration || await service.getList(changes.ListKey)
+        const list = listConfiguration? listConfiguration: await service.getList(changes.ListKey)
 
         if(!list){
             throw new Error(`list with key ${changes.ListKey} does not exist`)
