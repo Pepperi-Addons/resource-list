@@ -32,11 +32,12 @@ export interface ILineMenuHandler{
  */
 
 export class PepperiList implements IStateChangedHandler, ILineMenuHandler{
-    private layoutObserver: LayoutObserver = new LayoutObserver()
-    private $dataSource: ReplaySubject<IPepGenericListDataSource> = new ReplaySubject()
-    private stateManager: StateManager = new StateManager({})
-    private listActions: ListActions
-    private $listActions: ReplaySubject<IPepGenericListActions> = new ReplaySubject()
+    private layoutObserver: LayoutObserver = new LayoutObserver();
+    private $dataSource: ReplaySubject<IPepGenericListDataSource> = new ReplaySubject();
+    private items: DataRow[];
+    private stateManager: StateManager = new StateManager({});
+    private listActions: ListActions;
+    private $listActions: ReplaySubject<IPepGenericListActions> = new ReplaySubject();
     
     
     constructor(private clientEventsService: ICPIEventsService, private listContainer: ListContainer, private changes?: Partial<ListState>){
@@ -128,8 +129,7 @@ export class PepperiList implements IStateChangedHandler, ILineMenuHandler{
     subscribeToListActions(cb: (actions: IPepGenericListActions) => void): void{
         this.$listActions.subscribe(cb)
     }
-
-
+    
     private reloadList(listContainer: ListContainer){
         //update the list layout
         this.updatePepperiListProperties(listContainer)
@@ -175,14 +175,37 @@ export class PepperiList implements IStateChangedHandler, ILineMenuHandler{
 
         return {
             dataView: dataView,
-            items: this.listContainer?.Data?.Items || [],
+            items: this.items || [],
             totalCount: this.listContainer?.Data?.Count
         }
     }
-
+    
+    //select the items base on the current state
+    updateSelectedLines(){
+        const state = this.stateManager.getState()
+        const isAllSelected = state?.ItemSelection?.SelectAll || false
+        const selectedItemsKeySet = new Set(state?.ItemSelection?.Items || [])
+        //loop over the items and select the items that selected in the state (or )
+        this.items?.forEach(item => {
+            const isSelected = selectedItemsKeySet.has(item.Key as string)
+            //item is selected if not all the items selected and the item selected, or that all the the items selected and the item itself is not selected
+            item.IsSelected = (!isAllSelected && isSelected) || (isAllSelected && !isSelected)
+        })
+    }
 
     async onViewChanged(key: string){
         const listContainer = await this.clientEventsService.emitStateChangedEvent(this.stateManager.getState(), {ViewKey: key},  this.listContainer.List)
-        this.reloadList(listContainer)
+        //update the state if needed
+        Object.assign(this.listContainer.State, listContainer.State || {})
+        //update the layout if needed
+        Object.assign(this.listContainer.Layout, listContainer.Layout || {})
+
+        if(listContainer.Data){
+            this.listContainer.Data = listContainer.Data
+        }
+        //update the data source on the ui component
+        this.$dataSource.next(new ListDataSource(this))
+
+
     }
 }
