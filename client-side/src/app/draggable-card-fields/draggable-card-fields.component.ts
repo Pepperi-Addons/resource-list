@@ -46,6 +46,7 @@ export class DraggableCardFieldsComponent {
         this.viewsDropDown = this.getViewsDropDownByResource(event)
         if(this.viewsDropDown.length > 0){
             this.card.selectedView = this.viewsDropDown[0]
+            this.card.title = this.viewsDropDown[0].value;
         }
         else{
             this.card.selectedView = undefined
@@ -76,6 +77,12 @@ export class DraggableCardFieldsComponent {
 
     onViewChanged(key){
         this.card.selectedView = this.viewsDropDown.find((view) => key === view.key) 
+        this.card.title = this.card.selectedView.value;
+        this.updateCard.emit(this.card)
+    }
+
+    onTitleChanged(title){
+        this.card.title = title;
         this.updateCard.emit(this.card)
     }
 

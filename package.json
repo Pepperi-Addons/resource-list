@@ -14,8 +14,6 @@
 	"author": "",
 	"license": "ISC",
 	"dependencies": {
-		"@pepperi-addons/scripts": "^2.0.13",
-		"@types/lodash": "^4.14.192",
-		"lodash": "^4.17.21"
+		"@pepperi-addons/scripts": "^2.0.13"
 	}
 }

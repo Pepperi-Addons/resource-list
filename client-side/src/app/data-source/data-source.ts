@@ -1,12 +1,10 @@
 import { IPepGenericListDataSource, IPepGenericListInitData, IPepGenericListListInputs, IPepGenericListParams } from "@pepperi-addons/ngx-composite-lib/generic-list";
-import { GridDataViewColumn } from "@pepperi-addons/papi-sdk";
+import { AddonData, GridDataViewColumn, SearchData } from "@pepperi-addons/papi-sdk";
 import { IPepListSortingChangeEvent } from "@pepperi-addons/ngx-lib/list";
+import { ListOptions } from "../generic-viewer/generic-viewer.model";
 
 export interface ItemsDataSource {
-  getItems(params: IPepGenericListParams): Promise<{
-    items: any[];
-    totalCount: number
-  }>
+  getItems(params: IPepGenericListParams): Promise<SearchData<AddonData>>
 }
 
 export class StaticItemsDataSource implements ItemsDataSource {
@@ -15,7 +13,7 @@ export class StaticItemsDataSource implements ItemsDataSource {
 
   }
 
-  async getItems(params: IPepGenericListParams): Promise<{ items: any[]; totalCount: number; }> {
+  async getItems(params: IPepGenericListParams): Promise<SearchData<AddonData>> {
       let items = this.items;
 
       if (params.searchString) {
@@ -23,33 +21,39 @@ export class StaticItemsDataSource implements ItemsDataSource {
       }
 
       return {
-        items: items,
-        totalCount: items.length
+        Objects: items,
+        Count: items.length
       };
   }
 }
 
 export class DynamicItemsDataSource implements ItemsDataSource {
 
-  constructor (private func: (params: IPepGenericListParams) => Promise<{ items: any[]; totalCount: number; }>) {}
+  constructor (private func: (params: IPepGenericListParams) => Promise<SearchData<AddonData>>) {}
 
-  async getItems(params: IPepGenericListParams): Promise<{ items: any[]; totalCount: number; }> {
+  async getItems(params: IPepGenericListParams): Promise<SearchData<AddonData>> {
       return this.func(params)
   }
 }
 
 export class DataSource implements IPepGenericListDataSource{
-  private items: any[] = []
+  private items: SearchData<AddonData> = {
+    Objects: [],
+    Count: 0
+  }
   itemsDataSource: ItemsDataSource;
+  inputs?: IPepGenericListListInputs;
 
-    constructor(itemsDataSource: ItemsDataSource | any[], private fields: any[], private widthArray: GridDataViewColumn[] = [], private searchCB = (str, items) => items){
+    constructor(itemsDataSource: ItemsDataSource | AddonData[], private fields: any[], private widthArray: GridDataViewColumn[] = [], private searchCB = (str, items) => items, private listOptions?: ListOptions){
       this.itemsDataSource = Array.isArray(itemsDataSource) ? new StaticItemsDataSource(itemsDataSource, searchCB) : itemsDataSource;
+      this.inputs = {
+        selectionType: this.listOptions?.selectionType || 'single',
+      }
     }
     
     async init(params: IPepGenericListParams): Promise<IPepGenericListInitData> {
       
-      const result = await this.itemsDataSource.getItems(params)
-      this.items = result.items
+      this.items = await this.itemsDataSource.getItems(params)
       return {
           dataView: {
           Context: {
@@ -65,10 +69,16 @@ export class DataSource implements IPepGenericListDataSource{
             FrozenColumnsCount: 0,
             MinimumColumnWidth: 0
           },
-          totalCount: result.items.length,
-          items: result.items
+          totalCount: this.items.Count && this.items.Count > -1 ? this.items.Count : this.items.Objects.length,
+          items: this.items.Objects,
         }; 
     }
+
+    async update (params: IPepGenericListParams) {
+      return (await this.itemsDataSource.getItems(params)).Objects;
+    }
+    
+
     getItems(){
       return this.items
     }

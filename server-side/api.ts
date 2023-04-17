@@ -113,16 +113,3 @@ export async function get_search_fields_for_resource(client: Client, request: Re
     }
 }
 
-
-export async function get_resource_fields(client: Client, request: Request){
-    const papiClient = new PapiClient({
-        baseURL: client.BaseURL,
-        token: client.OAuthAccessToken,
-        addonUUID: client.AddonUUID,
-        addonSecretKey: client.AddonSecretKey,
-        actionUUID: client.ActionUUID
-    })
-    const resource = await papiClient.resources.resource('resources').key(request.query.Name).get() as AddonDataScheme
-    return resource?.Fields || {}
-}
-

@@ -1,8 +1,9 @@
 import { Component, Injector, Input, OnInit, ViewChild } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { GenericFormComponent } from '@pepperi-addons/ngx-composite-lib/generic-form';
+import { KeyValuePair } from '@pepperi-addons/ngx-lib';
 import { PepDialogService } from '@pepperi-addons/ngx-lib/dialog';
-import { AddonDataScheme, BaseFormDataViewField, Collection, CollectionField, DataView, DataViewField, FormDataView } from '@pepperi-addons/papi-sdk';
+import { AddonData, AddonDataScheme, BaseFormDataViewField, Collection, CollectionField, DataView, DataViewField, FormDataView } from '@pepperi-addons/papi-sdk';
 import { BehaviorSubject } from 'rxjs';
 import { DROP_DOWN, Editor, IGenericViewer, IReferenceField, SELECTION_LIST, SelectOption, View } from 'shared';
 import { CastingMap } from '../casting-map';
@@ -134,7 +135,8 @@ export class FieldEditorComponent implements OnInit {
           FieldID: curr.FieldID,
           Title: curr.Title,
           Array : this.dataSource[curr.FieldID],
-          Event: eventsSubject
+          Event: eventsSubject,
+          OptionalValues: field.OptionalValues || field.Items.OptionalValues
         })
       }
       return prev
@@ -156,7 +158,9 @@ export class FieldEditorComponent implements OnInit {
   createArrayFieldsMap(resourceFields: AddonDataScheme['Fields']){
     const map = new Map<string,any>()
     Object.keys(resourceFields).map(fieldID => {
-      if(resourceFields[fieldID].Type == 'Array'){
+      const field: CollectionField = resourceFields[fieldID] as CollectionField
+      const optionalValues = field.OptionalValues || field.Items?.OptionalValues || [];
+      if(field.Type == 'Array' && optionalValues.length === 0){
         map.set(fieldID, resourceFields[fieldID])
       }
     })
@@ -192,16 +196,18 @@ export class FieldEditorComponent implements OnInit {
     }
   }
   async addOptionalValuesToDataViewField(field: IReferenceField, dataViewField: any){
-    let resourceItems = this.resourcesMap.get(field.Resource)
+    let resourceItems: AddonData[] = this.resourcesMap.get(field.Resource)
     if(!resourceItems){
-      resourceItems = await this.genericResourceService.getItems(field.Resource, false, ['Key', field.DisplayField])
+      resourceItems = (await this.genericResourceService.getItems(field.Resource, false, ['Key', field.DisplayField])).Objects
       this.resourcesMap.set(field.Resource, resourceItems )
     }
-    dataViewField['OptionalValues'] = resourceItems.map(item => {
+    dataViewField['OptionalValues'] = resourceItems.map((item):KeyValuePair<string> => {
       return {
         Key: item['Key'],
         Value: item[field.DisplayField]
       }
+    }).sort((first,second) => {
+      return first.Value.localeCompare(second.Value);
     })
   }
   castStringArray<T>(arr: string[], type: string): T[]{
@@ -211,12 +217,18 @@ export class FieldEditorComponent implements OnInit {
   castPrimitiveArraysInDataSource(){
     const castingMap = new CastingMap()
     Object.keys(this.dataSource).forEach(key => {
-      if(this.resourceFields[key]?.Type && this.resourceFields[key].Type != "Array"){
+      const field: CollectionField = this.resourceFields[key] as CollectionField
+      if(field?.Type && field.Type != "Array"){
         this.dataSource[key] = castingMap.cast(this.resourceFields[key].Type, this.dataSource[key])
       }
       //cast only arrays that not contained resource
-      else if(this.resourceFields[key]?.Type == 'Array' && this.resourceFields[key].Items.Type != 'ContainedResource'){
-        this.dataSource[key] = this.castStringArray(this.dataSource[key], this.resourceFields[key].Items.Type)
+      else if(field?.Type == 'Array' && field.Items.Type != 'ContainedResource'){
+        const optionalValues = field.OptionalValues || field.Items?.OptionalValues || [];
+        let fieldValue = this.dataSource[key];
+        if (optionalValues.length > 0) {
+          fieldValue = fieldValue.split(';');
+        }
+        this.dataSource[key] = this.castStringArray(fieldValue, this.resourceFields[key].Items.Type)
       }
     })  
   }
@@ -371,8 +383,12 @@ export class FieldEditorComponent implements OnInit {
     Object.keys(resourceFields || {}).forEach(fieldName => {
       const optionalValues = resourceFields[fieldName].OptionalValues;
       if(optionalValues && optionalValues.length > 0) {
+        // if the field is Array, and have optional values, we need to convert to ';' delimited string
+        if(resourceFields[fieldName].Type === 'Array') {
+          this.dataSource[fieldName] = (this.dataSource[fieldName] || []).join(';');
+        }
         this.changeDVFieldValue(fieldName, (dvField => {
-          dvField.Type = 'ComboBox';
+          dvField.Type = resourceFields[fieldName].Type != 'Array' ? 'ComboBox' : 'MultiTickBox';
           dvField['OptionalValues'] = optionalValues.map(item => {
             return {
               Key: item,

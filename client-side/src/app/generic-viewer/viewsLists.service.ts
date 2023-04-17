@@ -44,10 +44,10 @@ export class ViewsListsService{
         // items = this.reformatListItems(items, await genericViewerDataSource.getFields())
         return new DataSource(new DynamicItemsDataSource(async (params) => {
             const items = await genericViewerDataSource.getItems(params, fields, resourceFields, undefined)
-            const formattedItems = this.reformatListItems(items, resourceFields)
+            const formattedItems = this.reformatListItems(items.Objects, resourceFields)
             return {
-                items: formattedItems,
-                totalCount: items.length
+                Objects: formattedItems,
+                Count: items.Count
             }
 
 

@@ -1,5 +1,10 @@
 import { AddonDataScheme, BaseFormDataView, GridDataView, MenuDataView } from "@pepperi-addons/papi-sdk"
-import { Sorting } from "./models/configuration/sorting.model"
+
+export interface OldSorting{
+  FieldKey: string;
+  Ascending: boolean;
+}
+
 export interface SelectOption{
     key: string,
     value: string
@@ -18,7 +23,7 @@ export interface View{
     Description: string,
     Resource: Resource,
     Filter?: any,
-    Sorting?: Sorting,
+    Sorting?: OldSorting,
     Editor?: string,
     CreationDateTime: string,
     ModificationDateTime: string,
@@ -50,6 +55,7 @@ export interface IReferenceField {
     SelectionListKey: string
   }
   export interface IGenericViewer{
+    title: string,
     view: View,
     viewDataview: GridDataView
     editor?: Editor
@@ -66,5 +72,3 @@ export interface IReferenceField {
   export const DROP_DOWN = "DropDown"
   export const ARRAY_TYPE = "Array"
   export const CONTAINED_RESOURCE_TYPE = "ContainedResource"
-
-  
