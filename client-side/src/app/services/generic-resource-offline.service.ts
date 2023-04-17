@@ -1,8 +1,8 @@
 import { Injectable } from "@angular/core";
 import { PepAddonService } from "@pepperi-addons/ngx-lib";
-import { AddonDataScheme, GridDataViewField, MenuDataView, MenuDataViewField } from "@pepperi-addons/papi-sdk";
+import { AddonData, AddonDataScheme, FindOptions, GridDataViewField, MenuDataView, MenuDataViewField, SearchData } from "@pepperi-addons/papi-sdk";
 import { config } from "../addon.config";
-import { GENERIC_RESOURCE_OFFLINE_URL, GENERIC_VIEWS_RESOURCE } from "../metadata";
+import { GENERIC_RESOURCE_OFFLINE_URL, GENERIC_VIEWS_RESOURCE, API_PAGE_SIZE } from "../metadata";
 import { IPepGenericListParams } from "@pepperi-addons/ngx-composite-lib/generic-list";
 import { SmartSearchParser } from "../smart-search-parser/smart-search-parser";
 import { UtilitiesService } from "./utilities-service";
@@ -20,7 +20,7 @@ export class GenericResourceOfflineService{
     async getResources(): Promise<any[]>{
         return await this.addonService.getAddonCPICall(config.AddonUUID,`${GENERIC_RESOURCE_OFFLINE_URL}/resources`) || []
     }
-
+    
     private getAccountUUIDQuery(resourceFields: AddonDataScheme['Fields'] | undefined, accountUUID: string | undefined){
         if(!accountUUID){
             return ''
@@ -45,8 +45,10 @@ export class GenericResourceOfflineService{
         resourceFields?: AddonDataScheme['Fields'],
         accountUUID?:string | undefined,
         searchDataView?: MenuDataView,
-        sorting?: Sorting): Promise<any> {
+        sorting?: Sorting): Promise<SearchData<AddonData>> {
         try{
+            const pageSize = (params?.toIndex - params?.fromIndex) + 1 || API_PAGE_SIZE;
+            const page = params?.pageIndex || Math.ceil(params?.fromIndex / pageSize) || 1;
             const keyFiledIndex = fields.findIndex(field => field == "Key")
             if(keyFiledIndex < 0){
                 fields = [...fields, "Key"]
@@ -76,13 +78,21 @@ export class GenericResourceOfflineService{
             }
 
             stringQueryArray.push(`(Hidden=${getDeletedItems})`)
-            let query = {where: stringQueryArray.join(' AND '), include_deleted: getDeletedItems}
+            let query: FindOptions = {
+                where: stringQueryArray.join(' AND '), 
+                include_deleted: getDeletedItems,
+                page: page,
+                page_size: pageSize                
+            }
 
-        return (await this.addonService.postAddonCPICall(config.AddonUUID, `${GENERIC_RESOURCE_OFFLINE_URL}/get_items/${resourceName}`, {query: query, fields: fields, insideAccount: accountUUIDQuery != '', sorting: sorting})).Objects || []
+        return (await this.addonService.postAddonCPICall(config.AddonUUID, `${GENERIC_RESOURCE_OFFLINE_URL}/get_items/${resourceName}`, {query: query, fields: fields, insideAccount: accountUUIDQuery != '', sorting: sorting}))
         }catch(e){
             console.log(`error: ${e}`)
             this.utilitiesService.showDialog('error', 'GeneralErrorMsg', 'close')
-            return []
+            return {
+                Objects: [],
+                Count: 0
+            }
         }
     }
     private getSmartSearchStringQuery(resourceFields: AddonDataScheme['Fields'], params?: IPepGenericListParams ){
