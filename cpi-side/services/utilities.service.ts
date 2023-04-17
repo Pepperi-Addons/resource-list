@@ -1,9 +1,9 @@
-import { Sorting } from "shared";
+import { OldSorting } from "shared";
 
 export class UtilitiesService {
     constructor() {}
 
-    getSortingString(sorting?: Sorting): string {
+    getSortingString(sorting?: OldSorting): string {
         let res = '';
         if (sorting) {
             const direction = sorting.Ascending ? 'asc' : 'desc'
