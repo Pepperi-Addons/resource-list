@@ -37,7 +37,9 @@ export class GridViewBlockAdapter implements IViewBlocksAdapter{
                 Title: block.Title
             }
             this.dataView.Fields.push(field)
-            this.dataView.Columns.push(block.Configuration.Width || 10)
+            this.dataView.Columns.push({
+                Width: block.Configuration.Width || 10
+            })
         })
     }
     

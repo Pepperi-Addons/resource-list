@@ -8,7 +8,7 @@ import { IPepGenericListActions, IPepGenericListDataSource, IPepGenericListInitD
 import { LayoutObserver } from "./layout-observer";
 import { StateObserver } from "./state-observer";
 import { ListDataSource } from "./list-data-source";
-import { GenericListAdapterResult } from "../metadata";
+import { GenericListAdapterResult, ListEventResult } from "../metadata";
 import { PepSelectionData } from "@pepperi-addons/ngx-lib/list";
 import { ListActions } from "./list-actions";
 import * as _ from "lodash";
@@ -16,7 +16,7 @@ import { AddonDataScheme } from "@pepperi-addons/papi-sdk";
 
 
 export interface IStateChangedHandler{
-    onListEvent(params: IPepGenericListParams, isFirstEvent?: boolean): Promise<IPepGenericListInitData>
+    onListEvent(params: IPepGenericListParams, isFirstEvent?: boolean): Promise<ListEventResult>
 }
 
 export interface ILineMenuHandler{
@@ -147,17 +147,17 @@ export class PepperiList implements IStateChangedHandler, ILineMenuHandler{
         this.reloadList(listContainer)
     }
 
-    async onListEvent(params: IPepGenericListParams): Promise<IPepGenericListInitData>{
+    async onListEvent(params: IPepGenericListParams): Promise<ListEventResult>{
         const state = this.stateManager.getState()
 
         //if we don't have a state then its load list event and we don't need to build the changes from the params
         const changes = state? this.stateManager.buildChangesFromPageParams(params, {}): this.changes
-        const listContainer = await this.getListContainer(changes)
+        this.listContainer = await this.getListContainer(changes)
 
-        this.updatePepperiListProperties(listContainer)
+        this.updatePepperiListProperties(this.listContainer)
 
         //adapt the data to be compatible to the generic list 
-        const listData = this.convertToListLayout(listContainer)
+        const listData: GenericListAdapterResult = this.convertToListLayout(this.listContainer)
 
         //notify observers 
         this.layoutObserver.notifyObservers(listData)
@@ -175,8 +175,9 @@ export class PepperiList implements IStateChangedHandler, ILineMenuHandler{
 
         return {
             dataView: dataView,
-            items: this.items || [],
-            totalCount: this.listContainer?.Data?.Count
+            items: this.listContainer?.Data?.Items || [],
+            totalCount: this.listContainer?.Data?.Count,
+            listData: listData
         }
     }
     

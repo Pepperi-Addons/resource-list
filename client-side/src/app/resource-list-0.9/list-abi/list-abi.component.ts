@@ -31,7 +31,7 @@ export class ListAbiComponent implements OnInit {
   onDoneClicked(){
     const selectedObjects = this.list?.getSelectedItems()?.rows || []
     this.hostEvents.emit({
-      actions: 'on-done',
+      action: 'on-done',
       data: {
         selectedObjects: selectedObjects
       }})

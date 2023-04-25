@@ -14,7 +14,7 @@ export class LayoutObserver{
     private $buttons: BehaviorSubject<GVButton[]> = new BehaviorSubject([])
     private $search: BehaviorSubject<boolean> = new BehaviorSubject(false)
     private $title: BehaviorSubject<string> = new BehaviorSubject('')
-    private $selectionType: BehaviorSubject<PepListSelectionType> = new BehaviorSubject('none')
+    private $selectionType: BehaviorSubject<PepListSelectionType> = new BehaviorSubject('multi')
     private $viewsMenu: BehaviorSubject<ViewsMenu> = new BehaviorSubject({Visible: false, Items: []})
     private $selectedView: BehaviorSubject<string> = new BehaviorSubject('')
 
