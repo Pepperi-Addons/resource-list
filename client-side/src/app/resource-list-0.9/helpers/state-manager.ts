@@ -26,7 +26,7 @@ export class StateManager{
         const changes: Partial<ListState> = {}
         const pager = this.getPageIndexAndPageSize(params)
         //if search string changed
-        if(params.searchString != this.state.SearchString){
+        if(params.searchString !== undefined && params.searchString != this.state.SearchString){
             changes.SearchString = params.searchString || ''
         }
 

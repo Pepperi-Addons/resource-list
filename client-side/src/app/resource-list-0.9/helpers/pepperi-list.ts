@@ -100,7 +100,11 @@ export class PepperiList implements IStateChangedHandler, ILineMenuHandler{
         if(!state){
             return await this.clientEventsService.emitLoadListEvent(undefined, changes, this.listContainer.List)
         }
-        return await this.clientEventsService.emitStateChangedEvent(state, changes, this.listContainer.List)
+        // if the changes is an empty object, don't emit state changed event
+        else if(Object.keys(changes || {}).length > 0) {
+            return await this.clientEventsService.emitStateChangedEvent(state, changes, this.listContainer.List)
+        }
+        return this.listContainer;
     }
 
     private convertToListLayout(listContainer: ListContainer): GenericListAdapterResult{
@@ -152,12 +156,12 @@ export class PepperiList implements IStateChangedHandler, ILineMenuHandler{
 
         //if we don't have a state then its load list event and we don't need to build the changes from the params
         const changes = state? this.stateManager.buildChangesFromPageParams(params, {}): this.changes
-        this.listContainer = await this.getListContainer(changes)
+        const listContainer = await this.getListContainer(changes)
 
-        this.updatePepperiListProperties(this.listContainer)
+        this.updatePepperiListProperties(listContainer)
 
         //adapt the data to be compatible to the generic list 
-        const listData: GenericListAdapterResult = this.convertToListLayout(this.listContainer)
+        const listData: GenericListAdapterResult = this.convertToListLayout(listContainer)
 
         //notify observers 
         this.layoutObserver.notifyObservers(listData)
