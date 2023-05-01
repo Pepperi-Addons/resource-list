@@ -176,25 +176,33 @@ export class PepperiList implements IStateChangedHandler, ILineMenuHandler{
             const viewBlocksAdapter = ViewBlocksAdapterFactory.create(this.listContainer.Layout.View.Type, this.listContainer.Layout.View.ViewBlocks.Blocks)
             dataView = viewBlocksAdapter.adapt()
         }
+        const items = (this.listContainer?.Data?.Items || []).map(item => {
+            return {
+                fields: JSON.parse(JSON.stringify(item))
+            }
+        })
+        this.updateSelectedLines(items);
 
         return {
             dataView: dataView,
-            items: this.listContainer?.Data?.Items || [],
+            items: items,
             totalCount: this.listContainer?.Data?.Count,
             listData: listData
         }
     }
     
     //select the items base on the current state
-    updateSelectedLines(){
+    updateSelectedLines(items: DataRow[]){
         const state = this.stateManager.getState()
         const isAllSelected = state?.ItemSelection?.SelectAll || false
         const selectedItemsKeySet = new Set(state?.ItemSelection?.Items || [])
         //loop over the items and select the items that selected in the state (or )
-        this.items?.forEach(item => {
-            const isSelected = selectedItemsKeySet.has(item.Key as string)
+        items?.forEach(item => {
+            const isSelected = selectedItemsKeySet.has(item.fields['Key'] as string)
             //item is selected if not all the items selected and the item selected, or that all the the items selected and the item itself is not selected
-            item.IsSelected = (!isAllSelected && isSelected) || (isAllSelected && !isSelected)
+            item.isSelected = (!isAllSelected && isSelected) || (isAllSelected && !isSelected)
+            item.isEditable = true;
+            item.isSelectableForActions = true;
         })
     }
 
