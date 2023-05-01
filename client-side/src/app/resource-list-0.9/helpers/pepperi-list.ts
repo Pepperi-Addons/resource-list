@@ -100,7 +100,11 @@ export class PepperiList implements IStateChangedHandler, ILineMenuHandler{
         if(!state){
             return await this.clientEventsService.emitLoadListEvent(undefined, changes, this.listContainer.List)
         }
-        return await this.clientEventsService.emitStateChangedEvent(state, changes, this.listContainer.List)
+        // if the changes is an empty object, don't emit state changed event
+        else if(Object.keys(changes || {}).length > 0) {
+            return await this.clientEventsService.emitStateChangedEvent(state, changes, this.listContainer.List)
+        }
+        return this.listContainer;
     }
 
     private convertToListLayout(listContainer: ListContainer): GenericListAdapterResult{
@@ -152,12 +156,12 @@ export class PepperiList implements IStateChangedHandler, ILineMenuHandler{
 
         //if we don't have a state then its load list event and we don't need to build the changes from the params
         const changes = state? this.stateManager.buildChangesFromPageParams(params, {}): this.changes
-        this.listContainer = await this.getListContainer(changes)
+        const listContainer = await this.getListContainer(changes)
 
-        this.updatePepperiListProperties(this.listContainer)
+        this.updatePepperiListProperties(listContainer)
 
         //adapt the data to be compatible to the generic list 
-        const listData: GenericListAdapterResult = this.convertToListLayout(this.listContainer)
+        const listData: GenericListAdapterResult = this.convertToListLayout(listContainer)
 
         //notify observers 
         this.layoutObserver.notifyObservers(listData)
@@ -172,25 +176,33 @@ export class PepperiList implements IStateChangedHandler, ILineMenuHandler{
             const viewBlocksAdapter = ViewBlocksAdapterFactory.create(this.listContainer.Layout.View.Type, this.listContainer.Layout.View.ViewBlocks.Blocks)
             dataView = viewBlocksAdapter.adapt()
         }
+        const items = (this.listContainer?.Data?.Items || []).map(item => {
+            return {
+                fields: JSON.parse(JSON.stringify(item))
+            }
+        })
+        this.updateSelectedLines(items);
 
         return {
             dataView: dataView,
-            items: this.listContainer?.Data?.Items || [],
+            items: items,
             totalCount: this.listContainer?.Data?.Count,
             listData: listData
         }
     }
     
     //select the items base on the current state
-    updateSelectedLines(){
+    updateSelectedLines(items: DataRow[]){
         const state = this.stateManager.getState()
         const isAllSelected = state?.ItemSelection?.SelectAll || false
         const selectedItemsKeySet = new Set(state?.ItemSelection?.Items || [])
         //loop over the items and select the items that selected in the state (or )
-        this.items?.forEach(item => {
-            const isSelected = selectedItemsKeySet.has(item.Key as string)
+        items?.forEach(item => {
+            const isSelected = selectedItemsKeySet.has(item.fields['Key'] as string)
             //item is selected if not all the items selected and the item selected, or that all the the items selected and the item itself is not selected
-            item.IsSelected = (!isAllSelected && isSelected) || (isAllSelected && !isSelected)
+            item.isSelected = (!isAllSelected && isSelected) || (isAllSelected && !isSelected)
+            item.isEditable = true;
+            item.isSelectableForActions = true;
         })
     }
 
