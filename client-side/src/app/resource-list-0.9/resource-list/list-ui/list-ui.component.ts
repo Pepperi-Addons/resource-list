@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { SmartSearchInput } from '../../metadata';
 import { IPepMenuItemClickEvent, PepMenuItem } from '@pepperi-addons/ngx-lib/menu';
 import { GVButton } from '../../metadata'
@@ -13,7 +13,7 @@ import { PageType, ViewsMenu } from 'shared';
   templateUrl: './list-ui.component.html',
   styleUrls: ['./list-ui.component.scss']
 })
-export class ListUIComponent implements OnInit {
+export class ListUIComponent implements OnInit, OnChanges, AfterViewInit {
   //layout inputs
   @Input() dataSource: PepperiList
   @Input() smartSearch: SmartSearchInput
@@ -47,6 +47,13 @@ export class ListUIComponent implements OnInit {
 
   ngOnInit(): void {
     
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+      // console.log(`inside on changes\n current: ${changes.selectionType.currentValue}\n previous: ${changes.selectionType.previousValue}`);
+      // if(!changes.selectionType.firstChange && changes.selectionType.currentValue != changes.selectionType.previousValue) {
+      //   this.list.selectionType = changes.selectionType.currentValue;
+      // }
   }
   ngAfterViewInit(){
     this.$searchString.subscribe(str => this.list.searchString = str)

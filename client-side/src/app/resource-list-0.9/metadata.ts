@@ -42,3 +42,7 @@ export function capitalizeFirstLetter(s: string){
 
 
  export type ViewsMenuUI = {Visible: boolean, Items: {key: string, value: string}[] }
+
+ export interface ListEventResult extends IPepGenericListInitData {
+    listData?: GenericListAdapterResult
+ }

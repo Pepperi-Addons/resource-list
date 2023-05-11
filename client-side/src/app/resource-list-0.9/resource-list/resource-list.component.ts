@@ -73,7 +73,7 @@ export class ResourceListComponent implements OnInit {
     .onSmartSearchChanged(data => this.smartSearch = data)
     .onSearchChanged(visible => this.search = visible)
     .onTitleChanged(title => this.title = title)
-    .onSelectionTypeChanged(selectionType => this.selectionType = selectionType)
+    .onSelectionTypeChanged(selectionType =>{this.selectionType = selectionType})
     // needs to change the key and value properties to lower case to be compatible with pep select component
     .onViewsMenuChanged(viewsMenu => {
         this.viewsMenu = {

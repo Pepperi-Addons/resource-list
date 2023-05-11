@@ -1,4 +1,4 @@
-import { Sorting } from "shared"
+import { OldSorting } from "shared"
 import { GenericResourceService } from "../services/generic-resource.service"
 
 
@@ -8,7 +8,7 @@ export async function getItems(req, res, next){
         const query = req.body.query
         const fields = req.body.fields
         const insideAccount = req.body.insideAccount || false
-        const sorting: Sorting = req.body.sorting
+        const sorting: OldSorting = req.body.sorting
         const service = new GenericResourceService(insideAccount)
         return res.json(await service.getItems(resource, query, fields, sorting))
     }

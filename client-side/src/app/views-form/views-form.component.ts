@@ -228,6 +228,9 @@ export class ViewsFormComponent implements OnInit {
             Width: 1,
             Height: 0
             }
+        },
+        AdditionalProps: {
+          emptyOption: false
         }
       },
       {
@@ -259,9 +262,14 @@ export class ViewsFormComponent implements OnInit {
     this.currentView.Filter = this.currentFilter && Object.keys(this.currentFilter).length == 0 ? undefined: this.currentFilter
     this.currentView.Description = this.dataSource.Description
     this.currentView.Editor = this.dataSource.Editor;
-    this.currentView.Sorting = {
-      FieldKey: this.dataSource.SortingField,
-      Ascending: this.dataSource.Ascending
+    if (this.dataSource.SortingField) {
+      this.currentView.Sorting = {
+        FieldKey: this.dataSource.SortingField,
+        Ascending: this.dataSource.Ascending.toString().toLocaleLowerCase() === 'true'
+      }
+    }
+    else {
+      this.currentView.Sorting = undefined;
     }
     this.viewsService.upsertItem(this.currentView)
     this.utilitiesService.showDialog("Update", "UpdateDialogMSG", 'close')

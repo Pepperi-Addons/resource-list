@@ -26,7 +26,7 @@ export class StateManager{
         const changes: Partial<ListState> = {}
         const pager = this.getPageIndexAndPageSize(params)
         //if search string changed
-        if(params.searchString != this.state.SearchString){
+        if(params.searchString !== undefined && params.searchString != this.state.SearchString){
             changes.SearchString = params.searchString || ''
         }
 
@@ -51,7 +51,7 @@ export class StateManager{
         const stateSmartSearch = this.state.SmartSearchQuery || []
         const listSmartSearch = NgXToJSONFilterAdapter.adapt(params.filters, resourceFields)
 
-        if(_.isEqual(stateSmartSearch, listSmartSearch)){
+        if(!_.isEqual(stateSmartSearch, listSmartSearch)){
             changes.SmartSearchQuery = listSmartSearch
         }
 
@@ -62,7 +62,7 @@ export class StateManager{
         if(params.fromIndex != undefined && params.toIndex != undefined){
             const pageSize = params.toIndex - params.fromIndex + 1
             return {
-                pageIndex: Math.floor((params.fromIndex / (pageSize || 1))) + 1 || 0,
+                pageIndex: Math.ceil((params.fromIndex / (pageSize || 1))) || 0,
                 pageSize: pageSize
             }
         }
