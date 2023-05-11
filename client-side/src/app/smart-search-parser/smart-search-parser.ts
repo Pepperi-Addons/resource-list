@@ -1,5 +1,5 @@
 import { AddonDataScheme, SchemeFieldType } from "@pepperi-addons/papi-sdk";
-import { DateOperation, JSONComplexFilter, JSONDateTimeFilter, JSONDoubleFilter, JSONIntegerFilter, JSONRegularFilter, JSONStringFilter, StringOperation, concat, toApiQueryString } from "@pepperi-addons/pepperi-filters";
+import { DateOperation, JSONComplexFilter, JSONDateTimeFilter, JSONDoubleFilter, JSONIntegerFilter, JSONRegularFilter, JSONStringFilter, StringOperation, concat, toApiQueryString, JSONBoolOperation, JSONBoolFilter, JSONJsonBoolFilter } from "@pepperi-addons/pepperi-filters";
 import { NumberFilter, RegularFilter, SmartFilter } from "./smart-search-filters.model";
 
 export class SmartSearchParser{
@@ -33,8 +33,8 @@ class JSONRegularFilterBuilder{
             case "String":
                 return  new StringFilter(filter)
             //will be in the future
-            // case "Boolean":
-            //     return "Bool"
+            case "Bool":
+                return new BooleanFilter(filter);
 
             case "Double":
                 return new DoubleFilter(filter)
@@ -88,6 +88,22 @@ class IntegerFilter extends NumberFilter implements JSONIntegerFilter{
 }
 class DoubleFilter extends NumberFilter implements JSONDoubleFilter{
     FieldType: "Double" = "Double"
+}
+
+class BooleanFilter extends RegularFilter implements JSONBoolFilter{
+    FieldType: "Bool" = "Bool"
+    Operation: JSONBoolOperation
+    Values: string[];
+
+    setOperationAndValues(filter: SmartFilter): void {
+        this.Values = Object.values(filter.value)
+        switch(filter.operator.id) {
+            case 'eq': {
+                this.Operation = 'IsEqual';
+                break;
+            }
+        }
+    }
 }
 
 class DateFilter extends RegularFilter implements JSONDateTimeFilter{
