@@ -32,7 +32,7 @@ export class StateManager{
 
         //if page index changed
         if(pager?.pageIndex != this.state.PageIndex){
-            changes.PageIndex = pager?.pageIndex || 1
+            changes.PageIndex = pager?.pageIndex || 0
         }
         //if page size changed
         if(pager?.pageSize != this.state.PageSize){
