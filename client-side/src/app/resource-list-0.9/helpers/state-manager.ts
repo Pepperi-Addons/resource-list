@@ -25,8 +25,8 @@ export class StateManager{
     buildChangesFromPageParams(params: IPepGenericListParams, resourceFields: AddonDataScheme['Fields']){
         const changes: Partial<ListState> = {}
         const pager = this.getPageIndexAndPageSize(params)
-        //if search string changed
-        if(params.searchString != this.state.SearchString){
+        //if search string has been deleted or changed
+        if((params.searchString || this.state.SearchString) && params.searchString != this.state.SearchString){
             changes.SearchString = params.searchString || ''
         }
 
