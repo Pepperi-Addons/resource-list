@@ -62,7 +62,7 @@ export class StateManager{
         if(params.fromIndex != undefined && params.toIndex != undefined){
             const pageSize = params.toIndex - params.fromIndex + 1
             return {
-                pageIndex: Math.ceil((params.fromIndex / (pageSize || 1))) || 0,
+                pageIndex: Math.ceil((params.toIndex / (pageSize || 1))) || 1,
                 pageSize: pageSize
             }
         }
