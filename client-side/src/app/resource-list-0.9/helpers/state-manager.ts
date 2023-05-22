@@ -48,11 +48,11 @@ export class StateManager{
         }
 
         //update smart search if changed
-        const stateSmartSearch = this.state.SmartSearchQuery || []
+        const stateSmartSearch = this.state.SmartSearchQuery
         const listSmartSearch = NgXToJSONFilterAdapter.adapt(params.filters, resourceFields)
 
         if(!_.isEqual(stateSmartSearch, listSmartSearch)){
-            changes.SmartSearchQuery = listSmartSearch
+            // changes.SmartSearchQuery = listSmartSearch
         }
 
         return changes
