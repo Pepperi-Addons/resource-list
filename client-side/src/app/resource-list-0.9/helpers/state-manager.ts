@@ -23,6 +23,7 @@ export class StateManager{
 
 
     buildChangesFromPageParams(params: IPepGenericListParams, resourceFields: AddonDataScheme['Fields']){
+        debugger
         const changes: Partial<ListState> = {}
         const pager = this.getPageIndexAndPageSize(params)
         //if search string has been deleted or changed
@@ -59,10 +60,11 @@ export class StateManager{
     }
 
     private getPageIndexAndPageSize(params: IPepGenericListParams){
+        debugger
         if(params.fromIndex != undefined && params.toIndex != undefined){
             const pageSize = params.toIndex - params.fromIndex + 1
             return {
-                pageIndex: Math.ceil((params.fromIndex / (pageSize || 1))) || 1,
+                pageIndex: Math.ceil((params.toIndex / (pageSize || 1))) || 1,
                 pageSize: pageSize
             }
         }
