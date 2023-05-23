@@ -58,7 +58,7 @@ export class ListUIComponent implements OnInit, OnChanges, AfterViewInit {
   ngAfterViewInit(){
     this.$searchString.subscribe(str => this.list.searchString = str)
     //pager observables 
-    this.$pageIndex.subscribe(index => this.list.pager.index = index)
+    this.$pageIndex.subscribe(index => this.list.pager.index = index - 1)
     this.$pageSize.subscribe(size => this.list.pager.size = size)
     this.$pageType.subscribe(type => this.list.pager.type = type)
 
