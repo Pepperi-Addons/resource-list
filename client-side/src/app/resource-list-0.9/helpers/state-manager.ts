@@ -1,6 +1,6 @@
 import { IPepGenericListParams } from "@pepperi-addons/ngx-composite-lib/generic-list";
 import { AddonDataScheme } from "@pepperi-addons/papi-sdk";
-import { JSONRegularFilter } from "@pepperi-addons/pepperi-filters";
+import { JSONRegularFilter, ngxFilterToJsonFilter } from "@pepperi-addons/pepperi-filters";
 import { ListState } from "shared";
 import { NgXToJSONFilterAdapter } from "./smart-filters/ngx-to-json-filters-adapter";
 import { StateObserver } from "./state-observer";
@@ -49,7 +49,11 @@ export class StateManager{
 
         //update smart search if changed
         const stateSmartSearch = this.state.SmartSearchQuery
-        const listSmartSearch = NgXToJSONFilterAdapter.adapt(params.filters, resourceFields)
+        const types = {}
+        Object.keys(resourceFields).forEach(key => {
+            types[key] = resourceFields[key].Type
+        })
+        const listSmartSearch = ngxFilterToJsonFilter(params.filters, types)
 
         if(!_.isEqual(stateSmartSearch, listSmartSearch)){
             // changes.SmartSearchQuery = listSmartSearch
