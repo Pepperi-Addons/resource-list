@@ -50,10 +50,9 @@ export class StateManager{
 
         const stateSmartSearch = this.state.SmartSearchQuery
         const listSmartSearch = this.getListSmartSearchFromParams(params, smartSearchFields)
-        
         //update smart search if changed
         if(!_.isEqual(stateSmartSearch, listSmartSearch)){
-            changes.SmartSearchQuery = listSmartSearch
+            changes.SmartSearchQuery = listSmartSearch || null
         }
         return changes
     }

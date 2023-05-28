@@ -158,11 +158,6 @@ export class PepperiList implements IStateChangedHandler, ILineMenuHandler{
         //if we don't have a state then its load list event and we don't need to build the changes from the params
         const changes = state? this.stateManager.buildChangesFromPageParams(params, this.listContainer?.Layout?.SmartSearch?.Fields || []): this.changes
         const listContainer = await this.getListContainer(changes)
-        //debugging 
-        if(changes?.SmartSearchQuery){
-            const query = toApiQueryString(changes.SmartSearchQuery)
-            debugger
-        }
 
         this.updatePepperiListProperties(listContainer)
 

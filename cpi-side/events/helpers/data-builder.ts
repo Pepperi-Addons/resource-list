@@ -31,7 +31,6 @@ export class ListDataBuilder{
         }
 
         const query = this.createQuery(newState,this.list.Filter)
-        debugger
         const searchBody: SearchBody = {
             Fields: viewFields,
             Where: query,
