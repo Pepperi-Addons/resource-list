@@ -31,7 +31,7 @@ export class ListDataBuilder{
         }
 
         const query = this.createQuery(newState,this.list.Filter)
-
+        debugger
         const searchBody: SearchBody = {
             Fields: viewFields,
             Where: query,
@@ -78,7 +78,7 @@ export class ListDataBuilder{
             queryArray.push(`(${this.buildSearchQuery(state, this.list.Search.Fields)})`)
         }
         if(state.SmartSearchQuery){
-            queryArray.push(`(${toApiQueryString(state.SmartSearchQuery)}`)
+            queryArray.push(`(${toApiQueryString(state.SmartSearchQuery)})`)
         }
         if(filter){
             queryArray.push(`(${toApiQueryString(filter)})`)
