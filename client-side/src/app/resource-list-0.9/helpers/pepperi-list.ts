@@ -139,6 +139,7 @@ export class PepperiList implements IStateChangedHandler, ILineMenuHandler{
         this.updatePepperiListProperties(listContainer)
         //update the data source on the ui component
         this.$dataSource.next(new ListDataSource(this))
+        this.$listActions.next(new ListActions(listContainer?.Layout?.LineMenu?.Blocks, this))
     }
 
     getListActions(): ListActions{
