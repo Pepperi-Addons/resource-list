@@ -72,6 +72,7 @@ export class PepperiList implements IStateChangedHandler, ILineMenuHandler{
      * @returns void
      */
     async onLineSelected(data: PepSelectionData){
+        debugger
         if(!this.isSelectedLinesChanged(data)){
             return
         }
@@ -122,7 +123,13 @@ export class PepperiList implements IStateChangedHandler, ILineMenuHandler{
         }
         this.listContainer.Layout = {...(this.listContainer.Layout || {}), ...(listContainer.Layout || {})}
         this.stateManager.updateState(listContainer.State)
+    }
 
+    getSelectedItems(){
+        return {
+            objects: this.stateManager.getState().ItemSelection?.Items || [],
+            selectAll: this.stateManager.getState().ItemSelection?.SelectAll
+        }
     }
 
     //will expose the option to observe the changes on the layout by returning the observer as result
@@ -152,8 +159,9 @@ export class PepperiList implements IStateChangedHandler, ILineMenuHandler{
     }
 
     async onListEvent(params: IPepGenericListParams): Promise<ListEventResult>{
-        const state = this.stateManager.getState()
 
+        const state = this.stateManager.getState()
+        debugger
         //if we don't have a state then its load list event and we don't need to build the changes from the params
         const changes = state? this.stateManager.buildChangesFromPageParams(params, {}): this.changes
         const listContainer = await this.getListContainer(changes)

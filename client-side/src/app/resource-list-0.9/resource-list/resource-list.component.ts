@@ -106,7 +106,7 @@ export class ResourceListComponent implements OnInit {
   }
 
   getSelectedItems(){
-    return this.list?.getSelectedItems()
+    return this.pepperiList?.getSelectedItems()
   }
 
 }

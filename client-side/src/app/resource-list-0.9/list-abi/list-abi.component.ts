@@ -29,11 +29,13 @@ export class ListAbiComponent implements OnInit {
   }
 
   onDoneClicked(){
-    const selectedObjects = this.list?.getSelectedItems()?.rows || []
+    const selectedItems = this.list?.getSelectedItems()
+    debugger
     this.hostEvents.emit({
       action: 'on-done',
       data: {
-        selectedObjects: selectedObjects
+        selectedObjects: selectedItems.objects,
+        selectAll: selectedItems.selectAll
       }})
   }
 

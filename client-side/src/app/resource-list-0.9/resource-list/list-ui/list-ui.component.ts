@@ -61,8 +61,8 @@ export class ListUIComponent implements OnInit, OnChanges, AfterViewInit {
     this.$pageIndex.subscribe(index => this.list.pager.index = index - 1)
     this.$pageSize.subscribe(size => this.list.pager.size = size)
     this.$pageType.subscribe(type => this.list.pager.type = type)
-
     this.$sorting.subscribe(sorting => this.list.listInputs.sorting = sorting)
+
   }
 
   onMenuClicked(event: IPepMenuItemClickEvent){
@@ -72,9 +72,4 @@ export class ListUIComponent implements OnInit, OnChanges, AfterViewInit {
   onViewChanged(event){
     this.viewChangedEvent.emit(event)
   }
-
-  getSelectedItems(){
-    return this.list?.getSelectedItems()
-  }
-
 }
