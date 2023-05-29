@@ -3,10 +3,15 @@ import { router as genericResourceRouter }  from './routes/generic-resource.rout
 import { router as viewsRouter } from './routes/views.routes'
 import { MenuBuilder } from './events/helpers/menu-builder';
 import { ListService } from './services/list.service';
-import { DataRow, ListContainer, MenuBlock, loadListEventKey, menuClickEventKey, stateChangeEventKey } from 'shared';
+import { DataRow, ListContainer, loadListEventKey, menuClickEventKey, stateChangeEventKey } from 'shared';
 import { LoadListController } from './events/contorllers/load-list.controller';
 import { StateChangeController } from './events/contorllers/state-change.controller';
 import { MenuClickController } from './events/contorllers/menu-click.controller';
+
+
+//-----------------------------------------------------------------------
+//                       Client Events Interceptors
+//-----------------------------------------------------------------------
 
 export async function load(configuration: any) {
     //interceptors:
@@ -17,14 +22,17 @@ export async function load(configuration: any) {
         return await StateChangeController.onStateChanged(data.State, data.Changes, data.List)
     })
     pepperi.events.intercept(menuClickEventKey as any, {}, async (data, next, main) => {
-        return await MenuClickController.onMenuClicked(data.State, data.Changes, data.List)
+        return await MenuClickController.onMenuClicked(data.State, data.Key, data.List)
     })
 }
 
 
 
 export const router = Router()
-//routes:
+
+//-----------------------------------------------------------------------
+//                        Routes
+//-----------------------------------------------------------------------
 
 //generic resources routes:
 router.use('/resources', genericResourceRouter)
@@ -44,7 +52,12 @@ router.post('/menu', async (req, res, next) => {
     const menu = await new MenuBuilder().build(list.Menu, state, changes)
     res.json({Menu: menu})
 })
-//route for testing event
+
+//-----------------------------------------------------------------------
+//                        Routes For Testing Client Events
+//-----------------------------------------------------------------------
+
+
 router.post('/OnClientLoadList', async (req, res, next) => {
     if(!req.body){
         throw Error('on client load list endpoint - request must sent with a body')
@@ -59,6 +72,10 @@ router.post('/onClientStateChange', async (req, res, next) => {
     }
     return res.json(await StateChangeController.onStateChanged(req.body.State, req.body.Changes, req.body.List))
 })
+
+//-----------------------------------------------------------------------
+//                        Draw Grid Function
+//-----------------------------------------------------------------------
 
 router.post('/drawGrid' ,async (req,res,next) => {
     const data = req.body.Data 
@@ -80,91 +97,133 @@ router.post('/drawGrid' ,async (req,res,next) => {
     return res.json({ Data: grid })
 })
 
-router.post('/drawMenuBlock', (req, res, next) => {
-    const state = req.body.State
+//-----------------------------------------------------------------------
+//                        Menu Blocks Draw Functions
+//-----------------------------------------------------------------------
+
+router.post('/drawImportMenuBlock', (req, res, next) => {
+    return res.json({
+        Result: [
+            {
+                Key: 'import',
+                Title: 'Import',
+                DrawURL: 'addon-cpi/drawImportMenuBlock',
+                AddonUUID: '0e2ae61b-a26a-4c26-81fe-13bdd2e4aaa3',
+                Hidden: false,
+                ExecuteURL: 'addon-cpi/menuExecution'
+            }
+        ]
+    })
+})
+
+//drawing export menu block function
+router.post('/drawExportMenuBlock', (req, res, next) => {
+    return res.json({
+        Result: [
+            {
+                Key: 'export',
+                Title: 'Export',
+                DrawURL: 'addon-cpi/drawExportMenuBlock',
+                AddonUUID: '0e2ae61b-a26a-4c26-81fe-13bdd2e4aaa3',
+                Hidden: false,
+                ExecuteURL: 'addon-cpi/menuExecution'
+            }
+        ]
+    }) 
+})
+
+//drawing recycle bin block function
+router.post('/drawRecycleBinMenuBlock', (req, res, next) => {
+    return res.json({            
+        Result: [
+            {
+                Key: 'recycleBin',
+                Title: 'Recycle Bin',
+                DrawURL: 'addon-cpi/drawRecycleBinMenuBlock',
+                AddonUUID: '0e2ae61b-a26a-4c26-81fe-13bdd2e4aaa3',
+                Hidden: false,
+                ExecuteURL: 'addon-cpi/menuExecution'
+            }
+        ]
+    })
+})
+
+//drawing new button block function
+router.post('/drawNewButtonMenuBlock', (req, res, next) => {
+    return res.json({
+        Result: [
+            {
+                Key: 'new',
+                Title: 'New',
+                DrawURL: 'addon-cpi/drawNewButtonMenuBlock',
+                AddonUUID: '0e2ae61b-a26a-4c26-81fe-13bdd2e4aaa3',
+                Hidden: false,
+                ButtonStyleType: "Strong",
+                ExecuteURL: 'addon-cpi/menuExecution'
+            }
+        ]
+    })
+})
+
+//-----------------------------------------------------------------------
+//                        Line Menu Blocks Draw Functions
+//-----------------------------------------------------------------------
+
+router.post('/drawEditLineMenuBlock', (req, res, next) => {
     const changes = req.body.Changes
-    if(!changes?.ListKey){
+    //we will draw line menu block only when exactly one line is selected
+    const numOfSelectedItems = changes?.ItemSelection?.Items?.length || 0
+    
+    if(numOfSelectedItems != 1){
         return res.json({
             Result: null
         })
     }
-    const blocks: MenuBlock[] = [
-        {
-            Key: 'recycleBin',
-            Title: 'Recycle Bin',
-            DrawURL: 'addon-cpi/drawMenuBlock',
-            AddonUUID: '0e2ae61b-a26a-4c26-81fe-13bdd2e4aaa3',
-            Hidden: false,
-            ExecuteURL: 'addon-cpi/menuExecution'
-        },
-        {
-            Key: 'import',
-            Title: 'Import',
-            DrawURL: 'addon-cpi/drawMenuBlock',
-            AddonUUID: '0e2ae61b-a26a-4c26-81fe-13bdd2e4aaa3',
-            Hidden: false,
-            ExecuteURL: 'addon-cpi/menuExecution'
-        },
-        {
-            Key: 'export',
-            Title: 'Export',
-            DrawURL: 'addon-cpi/drawMenuBlock',
-            AddonUUID: '0e2ae61b-a26a-4c26-81fe-13bdd2e4aaa3',
-            Hidden: false,
-            ExecuteURL: 'addon-cpi/menuExecution'
-        },
-        {
-            Key: 'new',
-            Title: 'New',
-            DrawURL: 'addon-cpi/drawMenuBlock',
-            AddonUUID: '0e2ae61b-a26a-4c26-81fe-13bdd2e4aaa3',
-            Hidden: false,
-            ButtonStyleType: "Strong",
-            ExecuteURL: 'addon-cpi/menuExecution'
-        }
-    ]
     return res.json({
-        Result: blocks
+        Result: [
+            {
+                Key: 'edit',
+                Title: 'Edit',
+                DrawURL: 'addon-cpi/drawEditLineMenuBlock',
+                AddonUUID: '0e2ae61b-a26a-4c26-81fe-13bdd2e4aaa3',
+                Hidden: false,
+                ExecuteURL: 'addon-cpi/menuExecution'
+            }
+        ]
     })
 })
 
+router.post('/drawDeleteLineMenuBlock', (req, res, next) => {
+    const changes = req.body.Changes
+    //we will draw line menu block only when exactly one line is selected
+    const numOfSelectedItems = changes?.ItemSelection?.Items?.length || 0
+    
+    if(numOfSelectedItems != 1){
+        return res.json({
+            Result: null
+        })
+    }
+    return res.json({
+        Result: [
+            {
+                Key: 'delete',
+                Title: 'Delete',
+                DrawURL: 'addon-cpi/drawDeleteLineMenuBlock',
+                AddonUUID: '0e2ae61b-a26a-4c26-81fe-13bdd2e4aaa3',
+                Hidden: false,
+                ExecuteURL: 'addon-cpi/menuExecution'
+            }
+        ]
+    })
+})
+
+//-----------------------------------------------------------------------
+//                        Menu Block Execution Function
+//-----------------------------------------------------------------------
 
 router.post('/menuExecution', (req, res, next) => {
     const state = req.body.State
     const key = req.body.Key
     const container: ListContainer = {State: {...state, SearchString: key}}
     return res.json(container)
-})
-router.post('/drawLineMenuBlock', (req, res, next) => {
-    const state = req.body.State
-    const changes = req.body.Changes
-
-    //we will draw line menu block only when exactly one line is selected
-    const numOfSelectedItems = changes?.ItemSelection?.Items?.length || 0
-    if(numOfSelectedItems != 1){
-        return res.json({
-            Result: null
-        })
-    }
-    const blocks: MenuBlock[] = [
-        {
-            Key: 'edit',
-            Title: 'Edit',
-            DrawURL: 'addon-cpi/drawLineMenuBlock',
-            AddonUUID: '0e2ae61b-a26a-4c26-81fe-13bdd2e4aaa3',
-            Hidden: false,
-            ExecuteURL: 'addon-cpi/menuExecution'
-        },
-        {
-            Key: 'delete',
-            Title: 'Delete',
-            DrawURL: 'addon-cpi/drawLineMenuBlock',
-            AddonUUID: '0e2ae61b-a26a-4c26-81fe-13bdd2e4aaa3',
-            Hidden: false,
-            ExecuteURL: 'addon-cpi/menuExecution'
-        }
-    ]
-    return res.json({
-        Result: blocks
-    })
 })
