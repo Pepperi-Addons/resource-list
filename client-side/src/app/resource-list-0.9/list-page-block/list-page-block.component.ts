@@ -92,7 +92,7 @@ export class ListPageBlockComponent implements OnInit {
                 {
                     Key: 'edit',
                     AddonUUID: "0e2ae61b-a26a-4c26-81fe-13bdd2e4aaa3",
-                    DrawURL: "addon-cpi/drawLineMenuBlock",
+                    DrawURL: "addon-cpi/drawEditLineMenuBlock",
                     ExecuteURL: "addon-cpi/menuExecution",
                     Title: 'Edit'
                 }
