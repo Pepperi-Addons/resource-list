@@ -83,7 +83,7 @@ export class PepperiList implements IStateChangedHandler, ILineMenuHandler{
             }
         }
 
-        const listContainer = await this.clientEventsService.emitStateChangedEvent(this.stateManager.getState(), changes)
+        const listContainer = await this.clientEventsService.emitStateChangedEvent(this.stateManager.getState(), changes, this.listContainer?.List)
         this.reloadList(listContainer)
     }
 
