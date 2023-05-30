@@ -7,6 +7,11 @@ import { DataRow, ListContainer, loadListEventKey, menuClickEventKey, stateChang
 import { LoadListController } from './events/contorllers/load-list.controller';
 import { StateChangeController } from './events/contorllers/state-change.controller';
 import { MenuClickController } from './events/contorllers/menu-click.controller';
+import { SearchBuilder } from './events/helpers/search-builder';
+import { SmartSearchBuilder } from './events/helpers/smart-search-builder';
+import { ViewsBuilder } from './events/helpers/views-menu-builder';
+import { TitleBuilder } from './events/helpers/title-builder';
+import { SelectionTypeBuilder } from './events/helpers/selection-type.builder';
 
 
 //-----------------------------------------------------------------------
@@ -40,18 +45,7 @@ router.use('/resources', genericResourceRouter)
 //views routes:
 router.use('/views', viewsRouter)
 
-router.post('/menu', async (req, res, next) => {
-    const state = req.body.State
-    const changes = req.body.Changes || {}
-    const listKey = state?.ListKey || changes?.ListKey //list key should be at least on one of them
-    if(!listKey){
-        throw new Error(`list key must be supplied either in the state or in the changes object`)
-    }
-    const listService = new ListService()
-    const list = await listService.getList(listKey)
-    const menu = await new MenuBuilder().build(list.Menu, state, changes)
-    res.json({Menu: menu})
-})
+
 
 //-----------------------------------------------------------------------
 //                        Routes For Testing Client Events
@@ -226,4 +220,101 @@ router.post('/menuExecution', (req, res, next) => {
     const key = req.body.Key
     const container: ListContainer = {State: {...state, SearchString: key}}
     return res.json(container)
+})
+
+//-----------------------------------------------------------------------
+//                        Endpoints For Testing
+//-----------------------------------------------------------------------
+
+router.post('/search_test', async (req, res, next) => {
+    const state = req.body.State
+    const changes = req.body.Changes || {}
+    const listKey = state?.ListKey || changes?.ListKey //list key should be at least on one of them
+    if(!listKey && !req.body.List){
+        throw new Error(`list or list key needs to be supplied`)
+    }
+    const listService = new ListService()
+    const list = req.body.List || await listService.getList(listKey)
+    const searchBuilder = new SearchBuilder()
+    
+    return res.json({
+        Result: searchBuilder.build(list, state, changes)
+    })
+})
+
+router.post('/smart_search_test', async (req, res, next) => {
+    const state = req.body.State
+    const changes = req.body.Changes || {}
+    const listKey = state?.ListKey || changes?.ListKey //list key should be at least on one of them
+    if(!listKey && !req.body.List){
+        throw new Error(`list or list key needs to be supplied`)
+    }
+    const listService = new ListService()
+    const list = req.body.List || await listService.getList(listKey)
+    const smartSearchBuilder = new SmartSearchBuilder()
+    
+    return res.json({
+        Result: smartSearchBuilder.build(list, state, changes)
+    })
+})
+
+router.post('/views_test', async (req, res, next) => {
+    const state = req.body.State
+    const changes = req.body.Changes || {}
+    const listKey = state?.ListKey || changes?.ListKey //list key should be at least on one of them
+    if(!listKey && !req.body.List){
+        throw new Error(`list or list key needs to be supplied`)
+    }
+    const listService = new ListService()
+    const list = req.body.List || await listService.getList(listKey)
+    const viewsBuilder = new ViewsBuilder()
+    
+    return res.json({
+        Result: viewsBuilder.build(list, state, changes)
+    })
+})
+
+router.post('/title_test', async (req, res, next) => {
+    const state = req.body.State
+    const changes = req.body.Changes || {}
+    const listKey = state?.ListKey || changes?.ListKey //list key should be at least on one of them
+    if(!listKey && !req.body.List){
+        throw new Error(`list or list key needs to be supplied`)
+    }
+    const listService = new ListService()
+    const list = req.body.List || await listService.getList(listKey)
+    const titleBuilder = new TitleBuilder()
+    
+    return res.json({
+        Result: titleBuilder.build(list, state, changes)
+    })
+})
+
+router.post('/selection_type_test', async (req, res, next) => {
+    const state = req.body.State
+    const changes = req.body.Changes || {}
+    const listKey = state?.ListKey || changes?.ListKey //list key should be at least on one of them
+    if(!listKey && !req.body.List){
+        throw new Error(`list or list key needs to be supplied`)
+    }
+    const listService = new ListService()
+    const list = req.body.List || await listService.getList(listKey)
+    const selectionTypeBuilder = new SelectionTypeBuilder()
+    
+    return res.json({
+        Result: selectionTypeBuilder.build(list, state, changes)
+    })
+})
+
+router.post('/menu', async (req, res, next) => {
+    const state = req.body.State
+    const changes = req.body.Changes || {}
+    const listKey = state?.ListKey || changes?.ListKey //list key should be at least on one of them
+    if(!listKey){
+        throw new Error(`list key must be supplied either in the state or in the changes object`)
+    }
+    const listService = new ListService()
+    const list = await listService.getList(listKey)
+    const menu = await new MenuBuilder().build(list.Menu, state, changes)
+    res.json({Menu: menu})
 })
