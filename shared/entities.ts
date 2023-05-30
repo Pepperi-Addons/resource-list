@@ -71,3 +71,4 @@ export interface IReferenceField {
   export const DROP_DOWN = "DropDown"
   export const ARRAY_TYPE = "Array"
   export const CONTAINED_RESOURCE_TYPE = "ContainedResource"
+  export const LOAD_EVENT_KEY = "OnResourceListLoad"
