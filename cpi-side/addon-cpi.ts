@@ -306,7 +306,7 @@ router.post('/selection_type_test', async (req, res, next) => {
     })
 })
 
-router.post('/menu', async (req, res, next) => {
+router.post('/menu_test', async (req, res, next) => {
     const state = req.body.State
     const changes = req.body.Changes || {}
     const listKey = state?.ListKey || changes?.ListKey //list key should be at least on one of them
