@@ -1,10 +1,11 @@
 import { IPepGenericListParams } from "@pepperi-addons/ngx-composite-lib/generic-list";
 import { AddonDataScheme } from "@pepperi-addons/papi-sdk";
-import { JSONRegularFilter } from "@pepperi-addons/pepperi-filters";
-import { ListState } from "shared";
+import { JSONFilter, JSONRegularFilter, ngxFilterToJsonFilter } from "@pepperi-addons/pepperi-filters";
+import { ListSmartSearchField, ListState } from "shared";
 import { NgXToJSONFilterAdapter } from "./smart-filters/ngx-to-json-filters-adapter";
 import { StateObserver } from "./state-observer";
 import * as _ from "lodash";
+import { SchemeFieldType } from "@pepperi-addons/papi-sdk/dist/entities";
 
 export class StateManager{
 
@@ -22,7 +23,7 @@ export class StateManager{
     }
 
 
-    buildChangesFromPageParams(params: IPepGenericListParams, resourceFields: AddonDataScheme['Fields']){
+    buildChangesFromPageParams(params: IPepGenericListParams, smartSearchFields: ListSmartSearchField[]){
         const changes: Partial<ListState> = {}
         const pager = this.getPageIndexAndPageSize(params)
         //if search string has been deleted or changed
@@ -47,15 +48,25 @@ export class StateManager{
             }
         }
 
+        const stateSmartSearch = this.state.SmartSearchQuery
+        const listSmartSearch = this.getListSmartSearchFromParams(params, smartSearchFields)
         //update smart search if changed
-        const stateSmartSearch = this.state.SmartSearchQuery || []
-        const listSmartSearch = NgXToJSONFilterAdapter.adapt(params.filters, resourceFields)
-
         if(!_.isEqual(stateSmartSearch, listSmartSearch)){
-            changes.SmartSearchQuery = listSmartSearch
+            changes.SmartSearchQuery = listSmartSearch || null
         }
-
         return changes
+    }
+
+    getListSmartSearchFromParams(params: IPepGenericListParams,fields: ListSmartSearchField[]): JSONFilter | undefined{
+        if(!params.filters){
+            return undefined
+        }
+        //create the types object from the smart search configuration
+        const types: {[key: string]: SchemeFieldType} = {}
+        fields.forEach(field => {
+            types[field.FieldID] = field.Type
+        })
+        return ngxFilterToJsonFilter(params.filters, types)
     }
 
     private getPageIndexAndPageSize(params: IPepGenericListParams){

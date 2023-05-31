@@ -1,4 +1,4 @@
-import { JSONFilter, JSONRegularFilter, concat, toApiQueryString } from "@pepperi-addons/pepperi-filters";
+import { JSONFilter, toApiQueryString } from "@pepperi-addons/pepperi-filters";
 import { List, ListSearchField, ListView as View, ListData, ListState } from "shared"
 import { SearchBody } from "@pepperi-addons/papi-sdk";
 import { ResourceService } from "../services/resource.service";
@@ -31,7 +31,6 @@ export class ListDataBuilder{
         }
 
         const query = this.createQuery(newState,this.list.Filter)
-
         const searchBody: SearchBody = {
             Fields: viewFields,
             Where: query,
@@ -77,8 +76,8 @@ export class ListDataBuilder{
         if(state.SearchString && this.list.Search.Fields.length > 0){
             queryArray.push(`(${this.buildSearchQuery(state, this.list.Search.Fields)})`)
         }
-        if(state.SmartSearchQuery && state.SmartSearchQuery.length > 0){
-            queryArray.push(`(${this.buildSmartSearchQuery(state.SmartSearchQuery)})`)
+        if(state.SmartSearchQuery){
+            queryArray.push(`(${toApiQueryString(state.SmartSearchQuery)})`)
         }
         if(filter){
             queryArray.push(`(${toApiQueryString(filter)})`)
@@ -89,17 +88,4 @@ export class ListDataBuilder{
     private buildSearchQuery(state: Partial<ListState>, searchFields: ListSearchField[]){
         return searchFields.map(searchField => `${searchField.FieldID} LIKE '%${state.SearchString}%'`).join(' OR ')
     }
-
-    private buildSmartSearchQuery(smartSearch: JSONRegularFilter[]): string{
-        if(smartSearch.length == 0){
-            return ''
-        }
-        //make a copy because we are changing the array
-        const smartSearchCopy = JSON.parse(JSON.stringify(smartSearch))
-        
-        const firstFilter = smartSearchCopy.pop() as JSONRegularFilter
-        const jsonFilter = concat(true, firstFilter, ...smartSearchCopy)
-        return toApiQueryString(jsonFilter) || ''
-    }  
-
 }
