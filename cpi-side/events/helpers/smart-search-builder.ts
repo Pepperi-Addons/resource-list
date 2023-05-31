@@ -14,7 +14,7 @@ export class SmartSearchBuilder{
     build(list: List, state: Partial<ListState> | undefined, changes: Partial<ListState>): ListSmartSearch | null{
         return changes.ListKey != undefined ? list.SmartSearch || { Fields: [] } : null
     }
-
+5
 
     
 }

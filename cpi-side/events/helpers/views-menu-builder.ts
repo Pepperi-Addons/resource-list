@@ -5,7 +5,7 @@ export class ViewsBuilder{
 
     constructor(){}
 
-    build(list: List, state: Partial<ListState> | undefined, changes: Partial<ListState>): {Views: ViewLayout, SelectedView: string} | null{
+    build(list: List, state: Partial<ListState> | undefined, changes: Partial<ListState>): { View: ViewLayout, ViewsMenu: ViewsMenu } | null{
         //case we don't need to render the view
         if(!changes.ListKey && !changes.ViewKey){
             return null
@@ -17,15 +17,18 @@ export class ViewsBuilder{
         const viewKey = state?.ViewKey || changes.ViewKey
 
         //prepare default result
-        const result: {Views: ViewLayout, SelectedView: string} = {
-            Views: {
+        const result: {View: ViewLayout, ViewsMenu: ViewsMenu} = {
+            View: {
                 Key: "",
                 ViewBlocks: {
                     Blocks: []
                 },
                 Type: "Grid"
             },
-            SelectedView: ''
+            ViewsMenu: {
+                Visible: false,
+                Items: []
+            }
         }
 
         //in case we don't have any view we will return the default result
@@ -45,13 +48,13 @@ export class ViewsBuilder{
         views.unshift(selectedView)
 
         //build the views drop down
-        this.createViewsMenu(views)
+        const viewsMenu = this.createViewsMenu(views)
 
         //update the result object
-        result.Views.Type = selectedView.Type
-        result.Views.ViewBlocks.Blocks = selectedView.Blocks
-        result.Views.Key = selectedView.Key
-        result.SelectedView = selectedView.Key
+        result.ViewsMenu = viewsMenu
+        result.View.Type = selectedView.Type
+        result.View.ViewBlocks.Blocks = selectedView.Blocks
+        result.View.Key = selectedView.Key
 
         return result
     }

@@ -12,7 +12,7 @@ export class SelectionTypeBuilder{
      * in case of no selection type configured its will return the default value of selection type.
      */
     build(list: List, state: Partial<ListState> | undefined, changes: Partial<ListState>): SelectionType | null{
-        return changes.ListKey != undefined ? list.SelectionType || "None" : null
+        return changes.ListKey != undefined ? list.SelectionType || "Single" : null
     }
 
 
