@@ -1,8 +1,11 @@
 import { List, ListSearch, ListState, Search } from "shared";
+import { Builder } from "./abstract-builder";
 
-export class SearchBuilder{
+export class SearchBuilder extends Builder<Search>{
 
-    constructor(){}
+    constructor(){
+        super()
+    }
     /**
      * 
      * @param list - the current list configuration

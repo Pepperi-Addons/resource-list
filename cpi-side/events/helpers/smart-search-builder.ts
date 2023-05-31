@@ -1,9 +1,12 @@
 import { List, ListSmartSearch, ListState } from "shared";
+import { Builder } from "./abstract-builder";
 
-export class SmartSearchBuilder{
+export class SmartSearchBuilder extends Builder<ListSmartSearch>{
 
-    constructor(){}
-        /**
+    constructor(){
+        super()
+    }
+    /**
      * 
      * @param list - the current list configuration
      * @param state - the current state of the list

@@ -1,8 +1,11 @@
 import { List, ListSearch, ListState, SelectionType } from "shared";
+import { Builder } from "./abstract-builder";
 
-export class SelectionTypeBuilder{
+export class SelectionTypeBuilder extends Builder<SelectionType>{
 
-    constructor(){}
+    constructor(){
+        super()
+    }
     /**
      * 
      * @param list - the current list configuration

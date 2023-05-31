@@ -1,9 +1,12 @@
 import { List, ListState, ListView, View, ViewLayout, ViewsMenu } from "shared";
 import { createDropDown } from "./utils";
+import { Builder } from "./abstract-builder";
 
-export class ViewsBuilder{
+export class ViewsBuilder extends Builder<{ View: ViewLayout, ViewsMenu: ViewsMenu }>{
 
-    constructor(){}
+    constructor(){
+        super()
+    }
 
     build(list: List, state: Partial<ListState> | undefined, changes: Partial<ListState>): { View: ViewLayout, ViewsMenu: ViewsMenu } | null{
         //case we don't need to render the view

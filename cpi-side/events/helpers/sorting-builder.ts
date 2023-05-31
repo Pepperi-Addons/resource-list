@@ -1,8 +1,11 @@
 import { List, ListSearch, ListState, Sorting } from "shared";
+import { Builder } from "./abstract-builder";
 
-export class SortingBuilder{
+export class SortingBuilder extends Builder<Sorting>{
 
-    constructor(){}
+    constructor(){
+        super()
+    }
     /**
      * 
      * @param list - the current list configuration
