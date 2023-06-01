@@ -1,9 +1,11 @@
 import { ListState, ListContainer, List } from "shared";
 import { ListService } from "../../services/list.service";
+import { IContext } from "@pepperi-addons/cpi-node/build/cpi-side/events";
+import { debug } from "console";
 
 export class MenuClickService{
 
-    async execute(state: ListState, key: string, listConfiguration?: List): Promise<ListContainer> {
+    async execute(state: ListState, key: string, listConfiguration?: List, context?: IContext): Promise<ListContainer> {
         const service = new ListService()
         const list = listConfiguration || await service.getList(state.ListKey)
         if(!list){
@@ -17,11 +19,10 @@ export class MenuClickService{
         if(!block){
             throw Error(`no Block with key ${key} was found on the list ${list.Key}`)
         }
-
         //call the execute function 
         const result =  await pepperi.addons.api.uuid(addonUUID).post({
             url: block.ExecuteURL,
-            body: { State: state , Key: menuKey }
+            body: { State: state , Key: menuKey, Context: context }
         }) as ListContainer
 
         return result
