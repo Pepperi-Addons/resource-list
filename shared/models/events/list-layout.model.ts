@@ -12,7 +12,6 @@ export interface ListLayout{
     Search: Search, 
     SelectionType: SelectionType, //by default none
     SmartSearch: ListSmartSearch, // if empty array we will hide the smart search
-    Sorting: Sorting,
     View: ViewLayout
 }
 export interface Search{
