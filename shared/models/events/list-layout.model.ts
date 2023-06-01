@@ -1,7 +1,6 @@
 import { SelectionType } from "../configuration/list.model"
 import { ListMenuBlock } from "../configuration/menu.model"
 import { ListSmartSearch } from "../configuration/search.model"
-import { Sorting } from "../configuration/sorting.model"
 import {  ViewType } from "../configuration/view.model"
 import { ViewBlock } from "../view.model"
 export interface ListLayout{
