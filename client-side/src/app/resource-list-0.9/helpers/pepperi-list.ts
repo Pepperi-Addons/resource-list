@@ -118,7 +118,7 @@ export class PepperiList implements IStateChangedHandler, ILineMenuHandler{
      * this function updates the list container object and the state
      */
     private updatePepperiListProperties(listContainer: ListContainer){
-        if(listContainer.Data){
+        if(listContainer?.Data){
             this.listContainer.Data = listContainer.Data
         }
         this.listContainer.Layout = {...(this.listContainer.Layout || {}), ...(listContainer.Layout || {})}
