@@ -22,7 +22,8 @@ export class MenuClickService{
         //call the execute function 
         const result =  await pepperi.addons.api.uuid(addonUUID).post({
             url: block.ExecuteURL,
-            body: { State: state , Key: menuKey, Context: context }
+            body: { State: state , Key: menuKey},
+            context: context
         }) as ListContainer
 
         return result
