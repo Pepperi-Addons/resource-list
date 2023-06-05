@@ -36,7 +36,8 @@ export class ListDataBuilder{
             Where: query,
             Page: newState.PageIndex || 1,
             PageSize: newState.PageSize || 25,
-            IncludeCount: true
+            IncludeCount: true,
+            OrderBy: `${newState.Sorting?.FieldID || 'CreationDateTime'} ${newState?.Sorting?.Ascending ? 'asc': 'desc'}`
         }
         //get the resource items
         const genericResourceService = new ResourceService()
