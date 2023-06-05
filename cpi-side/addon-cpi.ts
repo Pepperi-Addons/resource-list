@@ -27,11 +27,9 @@ export async function load(configuration: any) {
         return await StateChangeController.onStateChanged(data.State, data.Changes, data.List)
     })
     pepperi.events.intercept(menuClickEventKey as any, {}, async (data, next, main) => {
-        return await MenuClickController.onMenuClicked(data.State, data.Key, data.List)
+        return await MenuClickController.onMenuClicked(data.State, data.Key, data.List, data?.client?.context)
     })
 }
-
-
 
 export const router = Router()
 
