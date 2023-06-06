@@ -2,7 +2,7 @@ import { AddonsDataSearchResult } from "@pepperi-addons/cpi-node/build/cpi-side/
 import { DataRow, ViewBlock } from "shared"
 import { groupRelationBlocks } from "../helpers/utils";
 import { DrawGridDefaultURL, RelationBlock } from "../metadata";
-import * as config from '../../../addon.config.json'
+import config from '../../../addon.config.json'
 export class ViewRelationService{
     
     async getRows(searchResult: AddonsDataSearchResult, blocks: ViewBlock[]): Promise<DataRow[]>{
