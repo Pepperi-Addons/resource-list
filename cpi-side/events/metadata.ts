@@ -25,3 +25,5 @@ export const defaultStateValues: Omit<ListState, "ListKey" | "ViewKey"> = {
     PageType: "Pages",
     ItemSelection: {Items: [], SelectAll: false},
 }
+
+export const DrawGridDefaultURL = "addon-cpi/drawGrid"
