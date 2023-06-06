@@ -2,13 +2,13 @@ import { AddonsDataSearchResult } from "@pepperi-addons/cpi-node/build/cpi-side/
 import { DataRow, ViewBlock } from "shared"
 import { groupRelationBlocks } from "../helpers/utils";
 import { DrawGridDefaultURL, RelationBlock } from "../metadata";
-import { AddonUUID } from '../../../addon.config.json'
+import * as config from '../../../addon.config.json'
 export class ViewRelationService{
     
     async getRows(searchResult: AddonsDataSearchResult, blocks: ViewBlock[]): Promise<DataRow[]>{
         //put default addon uuid and draw url if not exist
         blocks.forEach(block => {
-            block.AddonUUID = block.AddonUUID || AddonUUID
+            block.AddonUUID = block.AddonUUID || config.AddonUUID
             block.DrawURL = block.DrawURL || DrawGridDefaultURL
         })
         const relationGroups = groupRelationBlocks(blocks as RelationBlock[])
