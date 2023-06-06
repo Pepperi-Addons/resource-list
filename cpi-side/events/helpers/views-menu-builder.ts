@@ -17,7 +17,7 @@ export class ViewsBuilder extends Builder<{ View: ViewLayout, ViewsMenu: ViewsMe
 
         //extract views menu and view key
         const views = list.Views
-        const viewKey = state?.ViewKey || changes.ViewKey
+        const viewKey = changes.ViewKey
 
         //prepare default result
         const result: {View: ViewLayout, ViewsMenu: ViewsMenu} = {
