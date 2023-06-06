@@ -41,10 +41,10 @@ export class StateManager{
         }
 
         //if sorting changed
-        if(params.sorting?.isAsc !=  this.state.Sorting?.Ascending || params.sorting?.sortBy != this.state.Sorting?.FieldID){
+        if(params.sorting && (params.sorting.isAsc !=  this.state.Sorting?.Ascending || params.sorting.sortBy != this.state.Sorting?.FieldID)){
             changes.Sorting = {
                 Ascending: params.sorting.isAsc,
-                FieldID: params.sorting?.sortBy
+                FieldID: params.sorting.sortBy
             }
         }
 
