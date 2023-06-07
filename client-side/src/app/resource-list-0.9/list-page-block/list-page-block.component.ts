@@ -83,7 +83,7 @@ export class ListPageBlockComponent implements OnInit {
               ]
           },
           SelectionType: "Multi",
-          Sorting: {Ascending: true, FieldID: "ExternalID"},
+          Sorting: {Ascending: false, FieldID: "Name"},
           Menu: {
             Blocks: []
           },
@@ -101,7 +101,6 @@ export class ListPageBlockComponent implements OnInit {
         },
         State: {
           ListKey: "LIST_KEY",
-       
         }
     }
 
