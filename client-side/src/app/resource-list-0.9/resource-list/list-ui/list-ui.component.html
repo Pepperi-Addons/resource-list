@@ -13,7 +13,7 @@
     [selectionType]="selectionType"
     uuidMapping="Key">
     <ng-container right-buttons>
-        <pep-menu *ngIf="menu"
+        <pep-menu *ngIf="menu && menu.length > 0"
         iconName="system_menu" 
         type="action" 
         class="pep-spacing-element"
