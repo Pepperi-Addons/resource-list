@@ -30,6 +30,13 @@ export class ListDataBuilder{
             viewFields.push('Key')
         }
 
+        /**
+         * we always use sorting, but there is an hierarchy for who decide what the sorting will be this is the order were the 1 is the most significant 
+         * 1. new state
+         * 2. configuration 
+         * 3. default 
+        */
+       const sorting = this.changes.Sorting || this.state.Sorting || this.list.Sorting || {FieldID: 'CreationDateTime', Ascending: false}
         const query = this.createQuery(newState,this.list.Filter)
         const searchBody: SearchBody = {
             Fields: viewFields,
@@ -37,7 +44,7 @@ export class ListDataBuilder{
             Page: newState.PageIndex || 1,
             PageSize: newState.PageSize || 25,
             IncludeCount: true,
-            OrderBy: `${newState.Sorting?.FieldID || 'CreationDateTime'} ${newState?.Sorting?.Ascending ? 'asc': 'desc'}`
+            OrderBy: `${sorting?.FieldID || 'CreationDateTime'} ${sorting?.Ascending ? 'asc': 'desc'}`
         }
         //get the resource items
         const genericResourceService = new ResourceService()
