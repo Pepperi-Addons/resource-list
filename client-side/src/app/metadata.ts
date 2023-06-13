@@ -39,7 +39,7 @@ export interface IDataService{
 }
 
 export interface IFieldConvertor {
-  fieldToMappedField(field: DataViewField):IMappedField
+  fieldToMappedField(field: DataViewField, width?: number):IMappedField
   mappedFieldToField(mappedField: IMappedField, index: number): IDataViewField
   draggableItemToMappedField(draggableItem: IPepDraggableItem)
 }
