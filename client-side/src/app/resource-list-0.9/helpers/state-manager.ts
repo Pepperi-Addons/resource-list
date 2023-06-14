@@ -11,7 +11,7 @@ export class StateManager{
 
     private stateObserver: StateObserver = new StateObserver()
 
-    constructor(private state: Partial<ListState>){
+    constructor(private state?: Partial<ListState>){
     }
 
     getStateObserver(){
@@ -19,7 +19,7 @@ export class StateManager{
     }
 
     notifyObservers(){
-        this.stateObserver.notifyObservers(this.state)
+        this.stateObserver.notifyObservers(this.state || {})
     }
 
 

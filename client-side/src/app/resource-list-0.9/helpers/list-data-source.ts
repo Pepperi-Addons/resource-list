@@ -9,16 +9,7 @@ export class ListDataSource implements IPepGenericListDataSource{
 
     }
     async init(params: IPepGenericListParams): Promise<IPepGenericListInitData> {
-        const eventResult = await this.stateChangedHandler.onListEvent(params)
-        this.inputs = {
-            selectionType: eventResult.listData?.selectionType
-        }
-        const ret = {
-            dataView: eventResult.dataView,
-            items: eventResult.items,
-            totalCount: eventResult.totalCount,
-        }
-        return ret;
+        return  await this.stateChangedHandler.onListEvent(params)
     }
     async update(params: IPepGenericListParams): Promise<any[]> {
         const result =  await this.stateChangedHandler.onListEvent(params)
