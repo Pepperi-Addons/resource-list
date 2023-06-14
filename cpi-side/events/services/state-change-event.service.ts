@@ -3,6 +3,7 @@ import { ListState } from "shared"
 import { ListService } from "../../services/list.service"
 import { defaultStateValues } from "../metadata"
 import { EventService } from "./event.service"
+import { StateBuilder } from "../helpers/state-builder"
 
 export class ChangeStateEventService extends EventService{
     /**
@@ -21,8 +22,8 @@ export class ChangeStateEventService extends EventService{
 
         const layout = await this.listBuilder.buildLayout(list, state, changes)
         const data = await this.listBuilder.buildData(list, state, changes)
-        
-        const newState: ListState = {...defaultStateValues, ...state, ...changes}
+        const stateBuilder = new StateBuilder(list, state, changes)
+        const newState: Partial<ListState> | undefined = stateBuilder.build()
         return {
             Layout: layout,
             Data: data,
