@@ -8,7 +8,6 @@ export class StateBuilder{
     }
 
     build(): Partial<ListState> | undefined{
-        debugger
         //deep copy to not effect the changes object
         const state = JSON.parse(JSON.stringify(this.changes))
 
