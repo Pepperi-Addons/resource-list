@@ -6,14 +6,14 @@ import { PepperiList } from '../../helpers/pepperi-list';
 import { IPepListSortingChangeEvent, PepListSelectionType } from '@pepperi-addons/ngx-lib/list';
 import { GenericListComponent, IPepGenericListActions, IPepGenericListPager } from '@pepperi-addons/ngx-composite-lib/generic-list';
 import { ReplaySubject } from 'rxjs';
-import { PageType, ViewsMenu } from 'shared';
+import { ViewsMenu } from 'shared';
 
 @Component({
   selector: 'list-ui',
   templateUrl: './list-ui.component.html',
   styleUrls: ['./list-ui.component.scss']
 })
-export class ListUIComponent implements OnInit, OnChanges, AfterViewInit {
+export class ListUIComponent implements  AfterViewInit {
   //layout inputs
   @Input() dataSource: PepperiList
   @Input() smartSearch: SmartSearchInput
@@ -44,17 +44,6 @@ export class ListUIComponent implements OnInit, OnChanges, AfterViewInit {
   
   constructor() { }
 
-
-  ngOnInit(): void {
-    
-  }
-
-  ngOnChanges(changes: SimpleChanges) {
-      // console.log(`inside on changes\n current: ${changes.selectionType.currentValue}\n previous: ${changes.selectionType.previousValue}`);
-      // if(!changes.selectionType.firstChange && changes.selectionType.currentValue != changes.selectionType.previousValue) {
-      //   this.list.selectionType = changes.selectionType.currentValue;
-      // }
-  }
   ngAfterViewInit(){
     this.$searchString.subscribe(str => this.list.searchString = str)
     //pager observables 
