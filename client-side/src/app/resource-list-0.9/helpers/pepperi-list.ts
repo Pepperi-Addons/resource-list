@@ -33,16 +33,14 @@ export interface ILineMenuHandler{
 export class PepperiList implements IStateChangedHandler, ILineMenuHandler{
     private layoutObserver: LayoutObserver = new LayoutObserver();
     private $dataSource: ReplaySubject<IPepGenericListDataSource> = new ReplaySubject();
-    private items: DataRow[];
-    private stateManager: StateManager = new StateManager({});
+    private stateManager: StateManager = new StateManager();
     private listActions: ListActions;
     private $listActions: ReplaySubject<IPepGenericListActions> = new ReplaySubject();
     
     
-    constructor(private clientEventsService: ICPIEventsService, private listContainer: ListContainer, private changes?: Partial<ListState>){
-        this.stateManager = new StateManager(undefined)
-
+    constructor(private clientEventsService: ICPIEventsService, private listContainer: ListContainer){
         this.listActions = new ListActions(listContainer?.Layout?.LineMenu?.Blocks, this)
+        this.updateList(listContainer)
         this.$dataSource.next(new ListDataSource(this))
     }
     
@@ -51,13 +49,12 @@ export class PepperiList implements IStateChangedHandler, ILineMenuHandler{
     }
     
     private isSelectedLinesChanged(data: PepSelectionData){
-        const state = this.stateManager.getState()
         
         const listSelectedItems = data.rows
         const listSelectionType = data.selectionType == 0
         
-        const stateSelectedItems = state.ItemSelection?.Items || []
-        const stateSelectionType = state.ItemSelection?.SelectAll
+        const stateSelectedItems = this.listContainer.State.ItemSelection?.Items || []
+        const stateSelectionType =  this.listContainer.State.ItemSelection?.SelectAll
 
         return stateSelectionType != listSelectionType ||
         !(stateSelectedItems.length == listSelectedItems.length && stateSelectedItems.every((item, index) => item == listSelectedItems[index]))
@@ -81,8 +78,7 @@ export class PepperiList implements IStateChangedHandler, ILineMenuHandler{
                 Items: data.rows
             }
         }
-
-        const listContainer = await this.clientEventsService.emitStateChangedEvent(this.stateManager.getState(), changes, this.listContainer?.List)
+        const listContainer = await this.clientEventsService.emitStateChangedEvent(this.listContainer.State, changes, this.listContainer?.List)
         //update the list and the observers
         this.updateList(listContainer)
 
@@ -99,13 +95,9 @@ export class PepperiList implements IStateChangedHandler, ILineMenuHandler{
     }
 
     private async getListContainer(changes: Partial<ListState>){
-        const state = this.stateManager.getState()
-        if(!state){
-            return await this.clientEventsService.emitLoadListEvent(undefined, changes, this.listContainer.List) || {}
-        }
         // if the changes is an empty object, don't emit state changed event
         if(Object.keys(changes || {}).length > 0) {
-            return await this.clientEventsService.emitStateChangedEvent(state, changes, this.listContainer.List) || {}
+            return await this.clientEventsService.emitStateChangedEvent(this.listContainer.State, changes, this.listContainer.List) || {}
         }
         return this.listContainer || {};
     }
@@ -124,7 +116,7 @@ export class PepperiList implements IStateChangedHandler, ILineMenuHandler{
             this.listContainer.Data = listContainer.Data
         }
         this.listContainer.Layout = {...(this.listContainer.Layout || {}), ...(listContainer.Layout || {})}
-        this.stateManager.updateState(listContainer.State)
+        this.listContainer.State = {...(this.listContainer.State || {}), ...(listContainer.State || {})}
 
     }
 
@@ -133,7 +125,7 @@ export class PepperiList implements IStateChangedHandler, ILineMenuHandler{
         this.layoutObserver.notifyObservers(listData)
 
         //notify state observers 
-        this.stateManager.notifyObservers()
+        this.stateManager.notifyObservers(this.listContainer.State)
     }
 
     //will expose the option to observe the changes on the layout by returning the observer as result
@@ -184,7 +176,7 @@ export class PepperiList implements IStateChangedHandler, ILineMenuHandler{
     }
 
     async onMenuClick(key: string, data?: PepSelectionData){
-        const listContainer = await this.clientEventsService.emitMenuClickEvent(this.stateManager.getState(), key, this.listContainer.List, data) || {}
+        const listContainer = await this.clientEventsService.emitMenuClickEvent(this.listContainer.State, key, this.listContainer.List, data) || {}
 
         //update the list and the observers
         this.updateList(listContainer)
@@ -193,13 +185,9 @@ export class PepperiList implements IStateChangedHandler, ILineMenuHandler{
         this.reloadListIfNeeded(listContainer)
     }
 
-    async onListEvent(params: IPepGenericListParams): Promise<IPepGenericListInitData>{
-        const state = this.stateManager.getState()
-
-        //if we don't have a state then its load list event and we don't need to build the changes from the params
-        const changes = state? this.stateManager.buildChangesFromPageParams(params, this.listContainer?.Layout?.SmartSearch?.Fields || []): this.changes
+    async onListEvent(params: IPepGenericListParams, isFirstEvent: boolean): Promise<IPepGenericListInitData>{
+        const changes = isFirstEvent? {} :this.stateManager.buildChangesFromPageParams(params, this.listContainer?.Layout?.SmartSearch?.Fields || [], this.listContainer.State)
         const listContainer = await this.getListContainer(changes)
-
         this.updateList(listContainer)
 
         const viewBlocksAdapter = ViewBlocksAdapterFactory.create(this.listContainer.Layout.View.Type, this.listContainer.Layout.View.ViewBlocks.Blocks)
@@ -221,9 +209,8 @@ export class PepperiList implements IStateChangedHandler, ILineMenuHandler{
     
     //select the items base on the current state
     updateSelectedLines(items: DataRow[]){
-        const state = this.stateManager.getState()
-        const isAllSelected = state?.ItemSelection?.SelectAll || false
-        const selectedItemsKeySet = new Set(state?.ItemSelection?.Items || [])
+        const isAllSelected = this.listContainer.State.ItemSelection?.SelectAll || false
+        const selectedItemsKeySet = new Set(this.listContainer.State.ItemSelection?.Items || [])
         //loop over the items and select the items that selected in the state (or )
         items?.forEach(item => {
             const isSelected = selectedItemsKeySet.has(item.fields['Key'] as string)
@@ -235,7 +222,7 @@ export class PepperiList implements IStateChangedHandler, ILineMenuHandler{
     }
 
     async onViewChanged(key: string){
-        const listContainer = await this.clientEventsService.emitStateChangedEvent(this.stateManager.getState(), {ViewKey: key},  this.listContainer.List) || {}
+        const listContainer = await this.clientEventsService.emitStateChangedEvent(this.listContainer.State, {ViewKey: key},  this.listContainer.List) || {}
         //update the list
         this.updateList(listContainer)
         //reload

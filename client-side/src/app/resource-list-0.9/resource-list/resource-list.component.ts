@@ -43,7 +43,7 @@ export class ResourceListComponent implements OnInit {
   
   @ViewChild(ListUIComponent) list: ListUIComponent
 
-  constructor(private clientEventService: ClientEventsService, private resourceService: ResourceService) { }
+  constructor() { }
 
   ngOnInit(): void {
     this.load()
@@ -53,7 +53,8 @@ export class ResourceListComponent implements OnInit {
     if(!this.cpiEventService || (!this.listContainer?.State?.ListKey && this.listContainer?.List)){
         throw Error(`error in resource list ABI component - cpi events service must be exist, list container must have a list or a list key inside the state`)
     }
-    this.pepperiList = new PepperiList(this.cpiEventService, this.listContainer , this.listContainer?.State)
+    const list = await this.cpiEventService.emitLoadListEvent(undefined, this.listContainer.State, this.listContainer.List)
+    this.pepperiList = new PepperiList(this.cpiEventService, list)
     this.subscribeToChanges()
     this.lineMenu = this.pepperiList.getListActions()
     this.loadCompleted = true
