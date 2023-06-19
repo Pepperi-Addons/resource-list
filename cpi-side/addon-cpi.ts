@@ -21,13 +21,49 @@ import { SelectionTypeBuilder } from './events/helpers/selection-type.builder';
 export async function load(configuration: any) {
     //interceptors:
     pepperi.events.intercept(loadListEventKey as any, {}, async (data, next, main) => {
-        return await LoadListController.loadList(data.State, data.Changes, data.List)
+        try{
+            const result =  await LoadListController.loadList(data.State, data.Changes, data.List)
+            return {
+                success: true,
+                result: result 
+            }
+        }
+        catch(err){
+            return {
+                success: false,
+                error: `on client load list event ${err}`
+            }
+        }
     })
     pepperi.events.intercept(stateChangeEventKey as any, {}, async (data, next, main) => {
-        return await StateChangeController.onStateChanged(data.State, data.Changes, data.List)
+        try{
+            const result =  await StateChangeController.onStateChanged(data.State, data.Changes, data.List)
+            return {
+                success: true,
+                result: result
+            }
+        }
+        catch(err){
+            return {
+                success: false,
+                error: `on client state changed event ${err}`
+            }
+        }
     })
     pepperi.events.intercept(menuClickEventKey as any, {}, async (data, next, main) => {
-        return await MenuClickController.onMenuClicked(data.State, data.Key, data.List, data?.client?.context)
+        try{
+            const result = await MenuClickController.onMenuClicked(data.State, data.Key, data.List, data?.client?.context)
+            return {
+                success: true,
+                result: result
+            }
+        }
+        catch(err){
+            return {
+                success: false,
+                error: `on client menu clicked event ${err}`
+            }
+        }
     })
 }
 
