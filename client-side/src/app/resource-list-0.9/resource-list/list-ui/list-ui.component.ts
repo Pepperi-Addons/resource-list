@@ -28,6 +28,7 @@ export class ListUIComponent implements  AfterViewInit {
   
   //state inputs
   @Input() $searchString: ReplaySubject<string>
+  @Input() $selectAll: ReplaySubject<boolean>
 
   //pager states
   @Input() $pageIndex: ReplaySubject<number>
@@ -52,6 +53,7 @@ export class ListUIComponent implements  AfterViewInit {
     this.$pageType.subscribe(type => this.list.pager.type = type)
 
     this.$sorting.subscribe(sorting => this.list.listInputs.sorting = sorting)
+    this.$selectAll.subscribe(isAllSelected => this.list.selectAll = isAllSelected)
   }
 
   onMenuClicked(event: IPepMenuItemClickEvent){
