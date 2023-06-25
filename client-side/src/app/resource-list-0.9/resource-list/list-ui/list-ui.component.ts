@@ -29,6 +29,7 @@ export class ListUIComponent implements  AfterViewInit {
   //state inputs
   @Input() $searchString: ReplaySubject<string>
   @Input() $selectAll: ReplaySubject<boolean>
+  @Input() topScrollIndex: number = 0
 
   //pager states
   @Input() $pageIndex: ReplaySubject<number>
@@ -39,6 +40,7 @@ export class ListUIComponent implements  AfterViewInit {
   
   @Output() menuClickedEvent: EventEmitter<string> = new EventEmitter() 
   @Output() viewChangedEvent: EventEmitter<string> = new EventEmitter()
+  @Output() topScrollIndexChanged: EventEmitter<number> = new EventEmitter()
   
   //generic list instance
   @ViewChild(GenericListComponent) list: GenericListComponent
@@ -56,6 +58,13 @@ export class ListUIComponent implements  AfterViewInit {
     this.$selectAll.subscribe(isAllSelected => this.list.selectAll = isAllSelected)
   }
 
+  ngOnChanges(changes){
+    if(changes?.topScrollIndex !== undefined){
+      this.topScrollIndex = changes.topScrollIndex.currentValue
+
+    }
+  }
+
   onMenuClicked(event: IPepMenuItemClickEvent){
     this.menuClickedEvent.emit(event.source.key)
   }
@@ -66,6 +75,10 @@ export class ListUIComponent implements  AfterViewInit {
 
   getSelectedItems(){
     return this.list?.getSelectedItems()
+  }
+
+  onTopScrollIndexChanged($event){
+    this.topScrollIndexChanged.emit($event.startIndex)
   }
 
 }
