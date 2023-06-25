@@ -88,6 +88,10 @@ export class ViewsFormComponent implements OnInit {
         Value: fieldName
       }
     })
+    this.sortingOptions.push({
+      Key: "CreationDateTime",
+      Value: this.translate.instant("CreationDateTime")
+    })
     const editorOptionalValues = await this.getEditorOptionalValues()
     this.dataSource = this.convertViewToDataSource(this.currentView)
     this.dataView = this.getDataview(editorOptionalValues)
