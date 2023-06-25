@@ -42,7 +42,6 @@ export class ResourceListComponent implements OnInit {
   $searchString: ReplaySubject<string> = new ReplaySubject()
   $sorting: ReplaySubject<IPepListSortingChangeEvent> = new ReplaySubject()
   $selectAll: ReplaySubject<boolean> = new ReplaySubject()
-  $selectAll: ReplaySubject<boolean> = new ReplaySubject()
   
   @ViewChild(ListUIComponent) list: ListUIComponent
 
