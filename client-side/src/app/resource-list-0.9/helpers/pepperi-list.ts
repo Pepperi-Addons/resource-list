@@ -230,4 +230,8 @@ export class PepperiList implements IStateChangedHandler, ILineMenuHandler{
         
         
     }
+
+    setTopScrollIndex(index: number){
+        this.listContainer.State = {...(this.listContainer.State || {}), TopScrollIndex: index}
+    }
 }

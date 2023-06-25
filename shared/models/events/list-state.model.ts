@@ -9,7 +9,8 @@ export interface ListState {
     PageSize?: number //default is 25!
     PageIndex?: number // default = 1 (first page)
     PageType?: PageType
-    ItemSelection?: ItemSelection // default empty 
+    ItemSelection?: ItemSelection // default empty
+    TopScrollIndex?: number
 }
 
 /*
