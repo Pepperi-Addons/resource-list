@@ -191,7 +191,7 @@ export class PepperiList implements IStateChangedHandler, ILineMenuHandler{
         const changes = isFirstEvent? {} :this.stateManager.buildChangesFromPageParams(params, this.listContainer?.Layout?.SmartSearch?.Fields || [], this.listContainer.State)
         const listContainer = await this.getListContainer(changes)
         if(listContainer.ErrorMessage != undefined){
-            this.$errorMsg.next({title: 'Error', description: listContainer.ErrorMessage, show: false})
+            this.$errorMsg.next({title: 'Error', description: listContainer.ErrorMessage, show: true})
             return 
         }
         this.updateList(listContainer)
