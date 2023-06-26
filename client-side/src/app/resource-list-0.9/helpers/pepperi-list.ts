@@ -119,6 +119,7 @@ export class PepperiList implements IStateChangedHandler, ILineMenuHandler{
         }
         this.listContainer.Layout = {...(this.listContainer.Layout || {}), ...(listContainer.Layout || {})}
         this.listContainer.State = {...(this.listContainer.State || {}), ...(listContainer.State || {})}
+        this.listContainer.ErrorMessage = listContainer.ErrorMessage
 
     }
 
@@ -203,7 +204,7 @@ export class PepperiList implements IStateChangedHandler, ILineMenuHandler{
             return {
                 fields: JSON.parse(JSON.stringify(item))
             }
-        })
+        }) 
         this.updateSelectedLines(items);
 
         return {
