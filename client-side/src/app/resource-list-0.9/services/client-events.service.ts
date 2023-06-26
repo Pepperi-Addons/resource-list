@@ -18,24 +18,12 @@ export class ClientEventsService implements ICPIEventsService{
         
     }
     async emitLoadListEvent(state: Partial<ListState> | undefined ,changes: Partial<ListState>, list?: List): Promise<ListContainer>{
-        const result =  await this.addonService.emitEvent(loadListEventKey, {State: state, Changes: changes, List: list})
-        if(!result.success){
-            throw Error(result.error)
-        }
-        return result.result as ListContainer
+        return await this.addonService.emitEvent(loadListEventKey, {State: state, Changes: changes, List: list}) as ListContainer
     }
     async emitStateChangedEvent(state: Partial<ListState>, changes: Partial<ListState>, list?: List): Promise<ListContainer>{
-        const result =  await this.addonService.emitEvent(stateChangeEventKey, {State: state, Changes: changes, List: list})
-        if(!result.success){
-            throw Error(result.error)
-        }
-        return result.result as ListContainer
+        return await this.addonService.emitEvent(stateChangeEventKey, {State: state, Changes: changes, List: list}) as ListContainer
     }
     async emitMenuClickEvent(state: Partial<ListState>, key: string, list?: List): Promise<ListContainer>{
-        const result =  await this.addonService.emitEvent(menuClickEventKey, {State: state, Key: key, List: list})
-        if(!result.success){
-            throw Error(result.error)
-        }
-        return result.result as ListContainer
+        return await this.addonService.emitEvent(menuClickEventKey, {State: state, Key: key, List: list}) as ListContainer
     }
 }

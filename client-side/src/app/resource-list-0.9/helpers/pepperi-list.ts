@@ -4,7 +4,7 @@ import { StateManager } from "./state-manager";
 import { ListContainer, ListState, DataRow, MenuBlock } from "shared";
 import { GenericListAdapter } from "./generic-list-adapter";
 import { ViewBlocksAdapterFactory } from "./view-blocks-adapters/view-blocks-adapter";
-import { IPepGenericListActions, IPepGenericListDataSource, IPepGenericListInitData, IPepGenericListParams } from "@pepperi-addons/ngx-composite-lib/generic-list";
+import { IPepGenericListActions, IPepGenericListDataSource, IPepGenericListEmptyState, IPepGenericListInitData, IPepGenericListParams } from "@pepperi-addons/ngx-composite-lib/generic-list";
 import { LayoutObserver } from "./layout-observer";
 import { StateObserver } from "./state-observer";
 import { ListDataSource } from "./list-data-source";
@@ -15,7 +15,7 @@ import * as _ from "lodash";
 
 
 export interface IStateChangedHandler{
-    onListEvent(params: IPepGenericListParams, isFirstEvent?: boolean): Promise<ListEventResult>
+    onListEvent(params: IPepGenericListParams, isFirstEvent?: boolean):Promise<IPepGenericListInitData>
 }
 
 export interface ILineMenuHandler{
@@ -36,6 +36,7 @@ export class PepperiList implements IStateChangedHandler, ILineMenuHandler{
     private stateManager: StateManager = new StateManager();
     private listActions: ListActions;
     private $listActions: ReplaySubject<IPepGenericListActions> = new ReplaySubject();
+    private $errorMsg: ReplaySubject<IPepGenericListEmptyState> = new ReplaySubject();
     
     
     constructor(private clientEventsService: ICPIEventsService, private listContainer: ListContainer){
@@ -95,11 +96,12 @@ export class PepperiList implements IStateChangedHandler, ILineMenuHandler{
     }
 
     private async getListContainer(changes: Partial<ListState>){
+        let result: ListContainer
         // if the changes is an empty object, don't emit state changed event
         if(Object.keys(changes || {}).length > 0) {
-            return await this.clientEventsService.emitStateChangedEvent(this.listContainer.State, changes, this.listContainer.List) || {}
+            result =  await this.clientEventsService.emitStateChangedEvent(this.listContainer.State, changes, this.listContainer.List) || {}
         }
-        return this.listContainer || {};
+        return result || this.listContainer || {};
     }
 
     private convertToListLayout(listContainer: ListContainer): GenericListAdapterResult{
@@ -188,6 +190,14 @@ export class PepperiList implements IStateChangedHandler, ILineMenuHandler{
     async onListEvent(params: IPepGenericListParams, isFirstEvent: boolean): Promise<IPepGenericListInitData>{
         const changes = isFirstEvent? {} :this.stateManager.buildChangesFromPageParams(params, this.listContainer?.Layout?.SmartSearch?.Fields || [], this.listContainer.State)
         const listContainer = await this.getListContainer(changes)
+        if(listContainer.ErrorMessage != undefined){
+            this.$errorMsg.next({title: 'Error', description: listContainer.ErrorMessage, show: false})
+            return {
+                dataView: {Type: 'Grid', Fields: [], Context: {Profile: {Name: 'a'}, ScreenSize: 'Tablet', Name: 'a'},},
+                items: [],
+                totalCount: 0,
+            }
+        }
         this.updateList(listContainer)
 
         const viewBlocksAdapter = ViewBlocksAdapterFactory.create(this.listContainer.Layout.View.Type, this.listContainer.Layout.View.ViewBlocks.Blocks)
@@ -221,8 +231,12 @@ export class PepperiList implements IStateChangedHandler, ILineMenuHandler{
         })
     }
 
+    subscribeToErrors(cb: (err: IPepGenericListEmptyState) => void): void{
+        this.$errorMsg.subscribe(cb)
+    }
+
     async onViewChanged(key: string){
-        const listContainer = await this.clientEventsService.emitStateChangedEvent(this.listContainer.State, {ViewKey: key},  this.listContainer.List) || {}
+        const listContainer = await this.getListContainer({ViewKey: key})
         //update the list
         this.updateList(listContainer)
         //reload

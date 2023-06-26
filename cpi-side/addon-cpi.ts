@@ -26,7 +26,7 @@ export async function load(configuration: any) {
         }
         catch(err){
             return {
-                ErrorMessage: err
+                ErrorMessage: err instanceof Error? err.message : 'Unknown Error'
             }
         }
     })
@@ -36,7 +36,7 @@ export async function load(configuration: any) {
         }
         catch(err){
             return {
-                ErrorMessage: err
+                ErrorMessage: err instanceof Error? err.message : 'Unknown Error'
             }
         }
     })
@@ -46,7 +46,7 @@ export async function load(configuration: any) {
         }
         catch(err){
             return {
-                ErrorMessage: err
+                ErrorMessage: err instanceof Error? err.message : 'Unknown Error'
             }
         }
     })

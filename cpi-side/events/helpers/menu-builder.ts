@@ -34,7 +34,7 @@ export class MenuBuilder{
             body: { Changes: changes, State: state }
         })
         if(!result){
-            throw Error(`inside callDrawBlockFunction error occurred when trying to call draw block function of addon ${drawURL.AddonUUID} with function url ${drawURL.DrawURL}`)
+            throw Error(`can't draw  menu blocks for adddon uuid ${drawURL.AddonUUID} and url ${drawURL.DrawURL}`)
         }
         return result.Result as (MenuBlock[] | undefined)
     }

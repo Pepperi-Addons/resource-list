@@ -41,7 +41,7 @@ export class ViewRelationService{
         })
 
         if(!result.Data){
-            throw new Error(`in draw blocks - addon with uuid ${block.AddonUUID} inside draw url ${block.DrawURL} doesn't return object of type RowData[]`)
+            throw new Error(`can't draw  view blocks for adddon uuid ${block.AddonUUID} and url ${block.DrawURL}`)
         }
         return result.Data
     }

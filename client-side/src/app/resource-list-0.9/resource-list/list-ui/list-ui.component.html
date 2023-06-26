@@ -12,6 +12,7 @@
     [title]="title"
     [selectionType]="selectionType"
     [scrollPosition]="topScrollIndex"
+    [emptyState]="emptyState"
     (startIndexChange)="onTopScrollIndexChanged($event)"
     uuidMapping="Key">
     <ng-container right-buttons>
@@ -23,7 +24,7 @@
         [items]="menu">
         </pep-menu>
         <pep-select 
-            *ngIf="viewsMenu.Items.length > 0"
+            *ngIf="viewsMenu?.Items?.length > 0"
             class="pep-spacing-element"
             [value]="selectedViewKey"
             label="select view"
@@ -36,7 +37,7 @@
             [renderTitle]="false"
             (valueChange)="onViewChanged($event)">
         </pep-select>
-        <ng-container *ngIf="buttons.length > 0">
+        <ng-container *ngIf="buttons?.length > 0">
             <pep-button
                 *ngFor="let button of buttons"
                 [key]="button.key"
