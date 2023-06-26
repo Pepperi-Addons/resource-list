@@ -6,6 +6,7 @@ import { ListState } from "./list-state.model";
 export interface ListContainer{
     Layout?: Partial<ListLayout>,
     Data?: ListData,
-    State?: Partial<ListState>
-    List?: List
+    State?: Partial<ListState>,
+    List?: List,
+    ErrorMessage?: string
 }
