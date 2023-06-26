@@ -187,16 +187,12 @@ export class PepperiList implements IStateChangedHandler, ILineMenuHandler{
         this.reloadListIfNeeded(listContainer)
     }
 
-    async onListEvent(params: IPepGenericListParams, isFirstEvent: boolean): Promise<IPepGenericListInitData>{
+    async onListEvent(params: IPepGenericListParams, isFirstEvent: boolean): Promise<IPepGenericListInitData | undefined>{
         const changes = isFirstEvent? {} :this.stateManager.buildChangesFromPageParams(params, this.listContainer?.Layout?.SmartSearch?.Fields || [], this.listContainer.State)
         const listContainer = await this.getListContainer(changes)
         if(listContainer.ErrorMessage != undefined){
             this.$errorMsg.next({title: 'Error', description: listContainer.ErrorMessage, show: false})
-            return {
-                dataView: {Type: 'Grid', Fields: [], Context: {Profile: {Name: 'a'}, ScreenSize: 'Tablet', Name: 'a'},},
-                items: [],
-                totalCount: 0,
-            }
+            return 
         }
         this.updateList(listContainer)
 

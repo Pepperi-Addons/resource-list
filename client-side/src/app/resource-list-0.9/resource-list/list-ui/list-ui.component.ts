@@ -46,7 +46,7 @@ export class ListUIComponent implements  AfterViewInit {
   //generic list instance
   @ViewChild(GenericListComponent) list: GenericListComponent
 
-  emptyState: IPepGenericListEmptyState = {title: 'Error', description: '', show: true}
+  emptyState: IPepGenericListEmptyState = {title: '', description: '', show: true}
   
   constructor() { }
 
@@ -62,7 +62,7 @@ export class ListUIComponent implements  AfterViewInit {
 
     this.$errorMsg.subscribe(err => {
       this.emptyState.description = err.description
-      this.emptyState.show = err.show
+      // this.emptyState.show = err.show
       this.emptyState.title = err.title
     })
   }
