@@ -32,6 +32,7 @@ export class ResourceListComponent implements OnInit {
   selectionType: PepListSelectionType
   viewsMenu: ViewsMenuUI
   selectedViewKey: string
+  topScrollIndex: number
   
   //pager subjects
   $pageIndex: ReplaySubject<number> = new ReplaySubject()
@@ -40,6 +41,7 @@ export class ResourceListComponent implements OnInit {
 
   $searchString: ReplaySubject<string> = new ReplaySubject()
   $sorting: ReplaySubject<IPepListSortingChangeEvent> = new ReplaySubject()
+  $selectAll: ReplaySubject<boolean> = new ReplaySubject()
   
   @ViewChild(ListUIComponent) list: ListUIComponent
 
@@ -97,6 +99,8 @@ export class ResourceListComponent implements OnInit {
     .onSearchStringChanged(str => this.$searchString.next(str))
     .onSortingChanged(sorting => this.$sorting.next(sorting))
     .onViewKeyChanged(key => this.selectedViewKey = key)
+    .onSelectAllChanged(isAllSelected => this.$selectAll.next(isAllSelected))
+    .onTopScrollIndexChanged(index => this.topScrollIndex = index)
   }
 
   onClientMenuClick(key: string){
@@ -108,6 +112,10 @@ export class ResourceListComponent implements OnInit {
 
   getSelectedItems(){
     return this.list?.getSelectedItems()
+  }
+
+  onTopScrollIndexChanged(index: number){
+    this.pepperiList.setTopScrollIndex(index)
   }
 
 }

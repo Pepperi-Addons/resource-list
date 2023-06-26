@@ -24,6 +24,7 @@ export const defaultStateValues: Omit<ListState, "ListKey" | "ViewKey"> = {
     PageIndex: 1,
     PageType: "Pages",
     ItemSelection: {Items: [], SelectAll: false},
+    TopScrollIndex: 0
 }
 
 export const DrawGridDefaultURL = "addon-cpi/drawGrid"

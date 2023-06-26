@@ -129,6 +129,21 @@ router.post('/drawGrid' ,async (req,res,next) => {
 //                        Menu Blocks Draw Functions
 //-----------------------------------------------------------------------
 
+router.post('/drawScrollMenuBlock', (req, res, next) => {
+    return res.json({
+        Result: [
+            {
+                Key: 'scroll',
+                Title: 'Scroll',
+                DrawURL: 'addon-cpi/drawScrollMenuBlock',
+                AddonUUID: '0e2ae61b-a26a-4c26-81fe-13bdd2e4aaa3',
+                Hidden: false,
+                ExecuteURL: 'addon-cpi/scrollExecution'
+            }
+        ]
+    })
+})
+
 router.post('/drawImportMenuBlock', (req, res, next) => {
     return res.json({
         Result: [
@@ -253,6 +268,13 @@ router.post('/menuExecution', (req, res, next) => {
     const state = req.body.State
     const key = req.body.Key
     const container: ListContainer = {State: {...state, SearchString: key}}
+    return res.json(container)
+})
+
+router.post('/scrollExecution', (req, res, next) => {
+    const state = req.body.State
+    const key = req.body.Key
+    const container: ListContainer = {State: {...state, TopScrollIndex: 29}}
     return res.json(container)
 })
 

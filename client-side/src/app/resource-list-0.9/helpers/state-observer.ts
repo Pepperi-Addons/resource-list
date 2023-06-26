@@ -11,22 +11,38 @@ export class StateObserver{
     private $pageType: ReplaySubject<IPepGenericListPager['type']> = new ReplaySubject()
     private $sorting: ReplaySubject<IPepListSortingChangeEvent> = new ReplaySubject()
     private $selectedViewKey: ReplaySubject<string>  = new ReplaySubject()
+    private $selectAll: ReplaySubject<boolean>  = new ReplaySubject()
+    private $topScrollIndex: ReplaySubject<number>  = new ReplaySubject()
 
     notifyObservers(state: Partial<ListState>){
-        this.$searchString.next(state.SearchString)
-        this.$pageIndex.next(state.PageIndex)
-        this.$pageSize.next(state.PageSize)
-        this.$pageType.next(state.PageType?.toLowerCase() as IPepGenericListPager['type'])
+        if(state.SearchString != undefined){
+            this.$searchString.next(state.SearchString)
+        }
+        if(state.PageIndex != undefined){
+            this.$pageIndex.next(state.PageIndex)
+        }
+        if(state.PageSize != undefined){
+            this.$pageSize.next(state.PageSize)
+        }
+        if(state.PageType != undefined){
+            this.$pageType.next(state.PageType?.toLowerCase() as IPepGenericListPager['type'])
+        }
+        if(state.ItemSelection?.SelectAll != undefined){
+            this.$selectAll.next(state.ItemSelection?.SelectAll || false)
+        }
+        if(state.TopScrollIndex != undefined){
+            this.$topScrollIndex.next(state.TopScrollIndex)
+        }
         if(state.Sorting){
             this.$sorting.next({
                 isAsc: state.Sorting.Ascending,
                 sortBy: state.Sorting.FieldID  
             })
         }
-        this.$selectedViewKey.next(state.ViewKey)
-
+        if(state.ViewKey != undefined){
+            this.$selectedViewKey.next(state.ViewKey)
+        }
     }
-    // update variables
 
     onSearchStringChanged(cb: (data: string) => void): StateObserver{
         this.$searchString.subscribe(cb)
@@ -50,6 +66,14 @@ export class StateObserver{
     }
     onPageTypeChanged(cb: (type: IPepGenericListPager['type']) => void): StateObserver{
         this.$pageType.subscribe(cb)
+        return this
+    }
+    onSelectAllChanged(cb: (isAllSelected: boolean) => void): StateObserver{
+        this.$selectAll.subscribe(cb)
+        return this
+    }
+    onTopScrollIndexChanged(cb: (topScrollIndex: number) => void): StateObserver{
+        this.$topScrollIndex.subscribe(cb)
         return this
     }
 }
