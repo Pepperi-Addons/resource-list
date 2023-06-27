@@ -6,12 +6,12 @@ export class MenuBuilder{
 
     constructor(){}
 
-    async build(menu: ListMenu, state: Partial<ListState> | undefined, changes: Partial<ListState>): Promise<Menu | null>{
+    async build(menu: ListMenu, state: Partial<ListState> | undefined, changes: Partial<ListState>): Promise<Menu | undefined>{
         const drawFunctionsArray = groupRelationBlocks(menu.Blocks)
         const drawnBlocks = (await this.drawBlocks(drawFunctionsArray, state, changes)).filter(block => block)
         //if all the draw functions return undefined there is nothing to be rendered
         if(drawnBlocks.length == 0){
-            return null
+            return undefined
         }
         
         return  {
@@ -27,6 +27,7 @@ export class MenuBuilder{
         return await Promise.all(drawURLs.map(async drawURL => {
             return await this.callDrawBlockFunction(drawURL, state, changes)
         }))
+
     }
     async callDrawBlockFunction(drawURL: drawFunctionObject, state: Partial<ListState> | undefined, changes: Partial<ListState>): Promise<MenuBlock[] | undefined>{
         const result =  await pepperi.addons.api.uuid(drawURL.AddonUUID).post({

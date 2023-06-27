@@ -199,12 +199,20 @@ router.post('/drawNewButtonMenuBlock', (req, res, next) => {
 
 router.post('/drawEditLineMenuBlock', (req, res, next) => {
     const changes = req.body.Changes
-    //we will draw line menu block only when exactly one line is selected
-    const numOfSelectedItems = changes?.ItemSelection?.Items?.length || 0
+    
+    //if there is no change in the item selection do not render
+    if(!changes.ItemSelection){
+        return res.json({
+            Result: undefined
+        })
+    }
+    
+    const numOfSelectedItems = changes.ItemSelection.Items.length
+    //if the number of selected lines not equal to 1 
     
     if(numOfSelectedItems != 1){
         return res.json({
-            Result: null
+            Result: []
         })
     }
     return res.json({
@@ -223,12 +231,20 @@ router.post('/drawEditLineMenuBlock', (req, res, next) => {
 
 router.post('/drawDeleteLineMenuBlock', (req, res, next) => {
     const changes = req.body.Changes
-    //we will draw line menu block only when exactly one line is selected
-    const numOfSelectedItems = changes?.ItemSelection?.Items?.length || 0
+    
+    //if there is no change in the item selection do not render
+    if(!changes.ItemSelection){
+        return res.json({
+            Result: undefined
+        })
+    }
+    
+    const numOfSelectedItems = changes.ItemSelection.Items.length
+    //if the number of selected lines not equal to 1 
     
     if(numOfSelectedItems != 1){
         return res.json({
-            Result: null
+            Result: []
         })
     }
     return res.json({
