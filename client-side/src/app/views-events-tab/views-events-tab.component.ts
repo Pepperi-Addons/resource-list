@@ -3,6 +3,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { PepAddonBlockLoaderService } from '@pepperi-addons/ngx-lib/remote-loader';
 import { config } from '../addon.config';
 import { DRILL_DOWN_EVENT_KEY } from '../metadata';
+import { LOAD_EVENT_KEY } from 'shared';
 
 @Component({
   selector: 'views-events-tab',
@@ -57,6 +58,18 @@ export class ViewsEventsTabComponent implements OnInit, AfterViewInit {
                 Type: "String"
               },
               ResourceKey: {
+                Type: "String"
+              }
+          },
+          EventFilter: {
+            ViewKey: this.viewKey
+          }
+        },
+        {
+          Title: 'List load',
+          EventKey: LOAD_EVENT_KEY,
+          EventData: {
+              ResourceName: {
                 Type: "String"
               }
           },
