@@ -1,12 +1,17 @@
 import { AddonsDataSearchResult } from "@pepperi-addons/cpi-node/build/cpi-side/client-api";
 import { DataRow, ViewBlock } from "shared"
 import { groupRelationBlocks } from "../helpers/utils";
-import { RelationBlock } from "../metadata";
-
+import { DrawGridDefaultURL, RelationBlock } from "../metadata";
+import config from '../../../addon.config.json'
 export class ViewRelationService{
     
     async getRows(searchResult: AddonsDataSearchResult, blocks: ViewBlock[]): Promise<DataRow[]>{
-        const relationGroups = groupRelationBlocks(blocks)
+        //put default addon uuid and draw url if not exist
+        blocks.forEach(block => {
+            block.AddonUUID = block.AddonUUID || config.AddonUUID
+            block.DrawURL = block.DrawURL || DrawGridDefaultURL
+        })
+        const relationGroups = groupRelationBlocks(blocks as RelationBlock[])
         const gridArray = await this.drawLists(relationGroups, blocks, searchResult)
 
         //find the grid with the minimum number of objects

@@ -32,6 +32,7 @@ export class ResourceListComponent implements OnInit {
   selectionType: PepListSelectionType
   viewsMenu: ViewsMenuUI
   selectedViewKey: string
+  topScrollIndex: number
   
   //pager subjects
   $pageIndex: ReplaySubject<number> = new ReplaySubject()
@@ -40,10 +41,11 @@ export class ResourceListComponent implements OnInit {
 
   $searchString: ReplaySubject<string> = new ReplaySubject()
   $sorting: ReplaySubject<IPepListSortingChangeEvent> = new ReplaySubject()
+  $selectAll: ReplaySubject<boolean> = new ReplaySubject()
   
   @ViewChild(ListUIComponent) list: ListUIComponent
 
-  constructor(private clientEventService: ClientEventsService, private resourceService: ResourceService) { }
+  constructor() { }
 
   ngOnInit(): void {
     this.load()
@@ -53,7 +55,8 @@ export class ResourceListComponent implements OnInit {
     if(!this.cpiEventService || (!this.listContainer?.State?.ListKey && this.listContainer?.List)){
         throw Error(`error in resource list ABI component - cpi events service must be exist, list container must have a list or a list key inside the state`)
     }
-    this.pepperiList = new PepperiList(this.cpiEventService, this.listContainer , this.listContainer?.State)
+    const list = await this.cpiEventService.emitLoadListEvent(undefined, this.listContainer.State, this.listContainer.List)
+    this.pepperiList = new PepperiList(this.cpiEventService, list)
     this.subscribeToChanges()
     this.lineMenu = this.pepperiList.getListActions()
     this.loadCompleted = true
@@ -96,6 +99,8 @@ export class ResourceListComponent implements OnInit {
     .onSearchStringChanged(str => this.$searchString.next(str))
     .onSortingChanged(sorting => this.$sorting.next(sorting))
     .onViewKeyChanged(key => this.selectedViewKey = key)
+    .onSelectAllChanged(isAllSelected => this.$selectAll.next(isAllSelected))
+    .onTopScrollIndexChanged(index => this.topScrollIndex = index)
   }
 
   onClientMenuClick(key: string){
@@ -107,6 +112,10 @@ export class ResourceListComponent implements OnInit {
 
   getSelectedItems(){
     return this.list?.getSelectedItems()
+  }
+
+  onTopScrollIndexChanged(index: number){
+    this.pepperiList.setTopScrollIndex(index)
   }
 
 }

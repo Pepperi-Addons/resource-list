@@ -38,28 +38,28 @@ export const LIST1: List = {
             {
                 Key: 'recycleBin',
                 Title: 'Recycle Bin',
-                DrawURL: 'addon-cpi/drawMenuBlock',
+                DrawURL: 'addon-cpi/drawRecycleBinMenuBlock',
                 AddonUUID: '0e2ae61b-a26a-4c26-81fe-13bdd2e4aaa3',
                 ExecuteURL: 'addon-cpi/menuExecution'
             },
             {
                 Key: 'import',
                 Title: 'Import',
-                DrawURL: 'addon-cpi/drawMenuBlock',
+                DrawURL: 'addon-cpi/drawImportMenuBlock',
                 AddonUUID: '0e2ae61b-a26a-4c26-81fe-13bdd2e4aaa3',
                 ExecuteURL: 'addon-cpi/menuExecution'
             },
             {
                 Key: 'export',
                 Title: 'Export',
-                DrawURL: 'addon-cpi/drawMenuBlock',
+                DrawURL: 'addon-cpi/drawExportMenuBlock',
                 AddonUUID: '0e2ae61b-a26a-4c26-81fe-13bdd2e4aaa3',
                 ExecuteURL: 'addon-cpi/menuExecution'
             },
             {
                 Key: 'new',
                 Title: 'New',
-                DrawURL: 'addon-cpi/drawMenuBlock',
+                DrawURL: 'addon-cpi/drawNewButtonMenuBlock',
                 AddonUUID: '0e2ae61b-a26a-4c26-81fe-13bdd2e4aaa3',
                 ButtonStyleType: "Strong",
                 ExecuteURL: 'addon-cpi/menuExecution'

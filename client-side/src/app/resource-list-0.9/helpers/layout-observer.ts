@@ -1,22 +1,20 @@
-import { BehaviorSubject, ReplaySubject, Subject } from "rxjs"
+import {  ReplaySubject } from "rxjs"
 import { GenericListAdapterResult, PepSelectElement, SmartSearchInput } from "../metadata"
 import { PepMenuItem } from "@pepperi-addons/ngx-lib/menu"
 import { GVButton } from "../metadata"
 import { PepListSelectionType, PepSelectionData } from "@pepperi-addons/ngx-lib/list"
-import { PepSelectField } from "@pepperi-addons/ngx-lib"
-import { PepSelectModule } from "@pepperi-addons/ngx-lib/select"
-import { ListMenu, ViewsMenu } from "shared"
+import { ViewsMenu } from "shared"
 
 export class LayoutObserver{
     //subjects 
-    private $smartSearch: BehaviorSubject<SmartSearchInput> = new BehaviorSubject({dataView: {Fields: [], Type: 'Menu'}})
-    private $menu: BehaviorSubject<PepMenuItem[]> = new BehaviorSubject([])
-    private $buttons: BehaviorSubject<GVButton[]> = new BehaviorSubject([])
-    private $search: BehaviorSubject<boolean> = new BehaviorSubject(false)
-    private $title: BehaviorSubject<string> = new BehaviorSubject('')
-    private $selectionType: BehaviorSubject<PepListSelectionType> = new BehaviorSubject('multi')
-    private $viewsMenu: BehaviorSubject<ViewsMenu> = new BehaviorSubject({Visible: false, Items: []})
-    private $selectedView: BehaviorSubject<string> = new BehaviorSubject('')
+    private $smartSearch: ReplaySubject<SmartSearchInput> = new ReplaySubject()
+    private $menu: ReplaySubject<PepMenuItem[]> = new ReplaySubject()
+    private $buttons: ReplaySubject<GVButton[]> = new ReplaySubject()
+    private $search: ReplaySubject<boolean> = new ReplaySubject()
+    private $title: ReplaySubject<string> = new ReplaySubject()
+    private $selectionType: ReplaySubject<PepListSelectionType> = new ReplaySubject()
+    private $viewsMenu: ReplaySubject<ViewsMenu> = new ReplaySubject()
+    private $selectedView: ReplaySubject<string> = new ReplaySubject()
 
     /**
      * 

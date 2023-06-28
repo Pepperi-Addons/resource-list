@@ -1,4 +1,4 @@
-import { JSONFilter, JSONRegularFilter, concat, toApiQueryString } from "@pepperi-addons/pepperi-filters";
+import { JSONFilter, toApiQueryString } from "@pepperi-addons/pepperi-filters";
 import { List, ListSearchField, ListView as View, ListData, ListState } from "shared"
 import { SearchBody } from "@pepperi-addons/papi-sdk";
 import { ResourceService } from "../services/resource.service";
@@ -30,14 +30,21 @@ export class ListDataBuilder{
             viewFields.push('Key')
         }
 
+        /**
+         * we always use sorting, but there is an hierarchy for who decide what the sorting will be this is the order were the 1 is the most significant 
+         * 1. new state
+         * 2. configuration 
+         * 3. default 
+        */
+       const sorting = this.changes.Sorting || this.state.Sorting || this.list.Sorting || {FieldID: 'CreationDateTime', Ascending: false}
         const query = this.createQuery(newState,this.list.Filter)
-
         const searchBody: SearchBody = {
             Fields: viewFields,
             Where: query,
             Page: newState.PageIndex || 1,
-            PageSize: newState.PageSize || 100,
-            IncludeCount: true
+            PageSize: newState.PageSize || 25,
+            IncludeCount: true,
+            OrderBy: `${sorting?.FieldID || 'CreationDateTime'} ${sorting?.Ascending ? 'asc': 'desc'}`
         }
         //get the resource items
         const genericResourceService = new ResourceService()
@@ -77,8 +84,8 @@ export class ListDataBuilder{
         if(state.SearchString && this.list.Search.Fields.length > 0){
             queryArray.push(`(${this.buildSearchQuery(state, this.list.Search.Fields)})`)
         }
-        if(state.SmartSearchQuery && state.SmartSearchQuery.length > 0){
-            queryArray.push(`(${this.buildSmartSearchQuery(state.SmartSearchQuery)})`)
+        if(state.SmartSearchQuery){
+            queryArray.push(`(${toApiQueryString(state.SmartSearchQuery)})`)
         }
         if(filter){
             queryArray.push(`(${toApiQueryString(filter)})`)
@@ -89,17 +96,4 @@ export class ListDataBuilder{
     private buildSearchQuery(state: Partial<ListState>, searchFields: ListSearchField[]){
         return searchFields.map(searchField => `${searchField.FieldID} LIKE '%${state.SearchString}%'`).join(' OR ')
     }
-
-    private buildSmartSearchQuery(smartSearch: JSONRegularFilter[]): string{
-        if(smartSearch.length == 0){
-            return ''
-        }
-        //make a copy because we are changing the array
-        const smartSearchCopy = JSON.parse(JSON.stringify(smartSearch))
-        
-        const firstFilter = smartSearchCopy.pop() as JSONRegularFilter
-        const jsonFilter = concat(true, firstFilter, ...smartSearchCopy)
-        return toApiQueryString(jsonFilter) || ''
-    }  
-
 }

@@ -15,7 +15,9 @@
     [$pageIndex]="$pageIndex"
     [$pageSize]="$pageSize"
     [$pageType]="$pageType"
+    [$selectAll]="$selectAll"
+    [topScrollIndex]="topScrollIndex"
     (menuClickedEvent)="onClientMenuClick($event)"
     (viewChangedEvent)="onViewChanged($event)"
-    
+    (topScrollIndexChanged)="onTopScrollIndexChanged($event)"
 ></list-ui>

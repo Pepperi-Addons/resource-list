@@ -20,9 +20,11 @@ export interface DrawViewOutputData{
 
 export const defaultStateValues: Omit<ListState, "ListKey" | "ViewKey"> = {
     SearchString: "",
-    SmartSearchQuery: [],
     PageSize: 25,
     PageIndex: 1,
     PageType: "Pages",
     ItemSelection: {Items: [], SelectAll: false},
+    TopScrollIndex: 0
 }
+
+export const DrawGridDefaultURL = "addon-cpi/drawGrid"

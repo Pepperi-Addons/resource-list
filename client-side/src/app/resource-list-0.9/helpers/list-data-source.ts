@@ -5,20 +5,14 @@ import { IStateChangedHandler } from "./pepperi-list";
  */
 export class ListDataSource implements IPepGenericListDataSource{
     inputs: IPepGenericListListInputs;
+    private isFirstTime: boolean = true
     constructor(private stateChangedHandler: IStateChangedHandler){
 
     }
     async init(params: IPepGenericListParams): Promise<IPepGenericListInitData> {
-        const eventResult = await this.stateChangedHandler.onListEvent(params)
-        this.inputs = {
-            selectionType: eventResult.listData?.selectionType
-        }
-        const ret = {
-            dataView: eventResult.dataView,
-            items: eventResult.items,
-            totalCount: eventResult.totalCount,
-        }
-        return ret;
+        const result =   await this.stateChangedHandler.onListEvent(params, this.isFirstTime)
+        this.isFirstTime = false
+        return result
     }
     async update(params: IPepGenericListParams): Promise<any[]> {
         const result =  await this.stateChangedHandler.onListEvent(params)
