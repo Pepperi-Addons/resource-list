@@ -1,14 +1,14 @@
 import { TranslateService } from '@ngx-translate/core';
 import { Component, EventEmitter, Injector, Input, OnInit, Output, SimpleChanges, ViewChild, ViewContainerRef } from '@angular/core';
 import { PepMenuItem } from "@pepperi-addons/ngx-lib/menu";
-import { AddonData, GridDataView, MenuDataViewField, SearchData } from '@pepperi-addons/papi-sdk';
+import { AddonData, AddonDataScheme, GridDataView, MenuDataViewField, SearchData } from '@pepperi-addons/papi-sdk';
 import { DataSource, DynamicItemsDataSource } from '../data-source/data-source'
 import { PepSelectionData } from '@pepperi-addons/ngx-lib/list';
 import { Editor, IGenericViewer, SelectOption, View } from 'shared';
 import { PepDialogService } from '@pepperi-addons/ngx-lib/dialog';
 import { FieldEditorComponent } from '../field-editor/field-editor.component';
 import { EXPORT, IGenericViewerConfigurationObject, IMPORT } from '../metadata';
-import { GenericListComponent } from '@pepperi-addons/ngx-composite-lib/generic-list';
+import { GenericListComponent, IPepGenericListInitData, IPepGenericListParams } from '@pepperi-addons/ngx-composite-lib/generic-list';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { DIMXHostObject, PepDIMXHelperService } from '@pepperi-addons/ngx-composite-lib';
 import { IGenericViewerDataSource, isRegularGVDataSource, RegularGVDataSource } from '../generic-viewer-data-source';
@@ -33,6 +33,7 @@ export class GenericViewerComponent implements OnInit {
     @Input() accountUUID: string | undefined
 
     listOptions: ListOptions
+    listParams: IPepGenericListParams
 
     dataSource: DataSource
     menuItems: PepMenuItem[] = []
@@ -48,6 +49,9 @@ export class GenericViewerComponent implements OnInit {
     isButtonConfigured: boolean = false
     dialogRef = null
     dialogData = null
+
+    resourceFields: AddonDataScheme['Fields'];
+    recycleBin: boolean = false;
 
     constructor(private translate: TranslateService,
          private genericResourceService: GenericResourceOfflineService,
@@ -234,11 +238,12 @@ export class GenericViewerComponent implements OnInit {
       }
       this.genericViewer.lineMenuItems.Fields.length
       this.dataSource = new DataSource(new DynamicItemsDataSource(async (params) => {
-        const resourceFields = await this.genericViewerDataSource.getFields()
-        const items = await this.genericViewerDataSource.getItems(params, fields, resourceFields, this.accountUUID)
+        this.listParams = params;
+        this.resourceFields = await this.genericViewerDataSource.getFields()
+        const items = await this.genericViewerDataSource.getItems(this.listParams, fields, this.resourceFields, this.accountUUID)
         this.items = JSON.parse(JSON.stringify(items))
         //in order to support arrays and references we should check the "real" type of each field, and reformat the corresponding item
-        this.reformatItems(this.items.Objects, resourceFields)
+        this.reformatItems(this.items.Objects, this.resourceFields)
         
         return this.items;
       }), fields,columns, undefined, this.listOptions)
@@ -254,6 +259,7 @@ export class GenericViewerComponent implements OnInit {
     }
 
     async initRecycleBin(){
+      this.recycleBin = true;
       const deletedItems = await (this.genericViewerDataSource as RegularGVDataSource).getDeletedItems()
       this.menuItems = [({
         key: "BackToList",
@@ -288,6 +294,7 @@ export class GenericViewerComponent implements OnInit {
       }
     }
     async backToList(){
+      this.recycleBin = false;
       await this.loadViewBlock()
     }
     menuItemClick($event){
@@ -315,6 +322,7 @@ export class GenericViewerComponent implements OnInit {
     }
     export(){
       this.dimxService?.export({
+        DIMXExportWhere: this.genericViewerDataSource.getwhereClause(this.listParams, this.resourceFields, this.accountUUID, this.recycleBin),
         DIMXExportFormat: 'csv',
         DIMXExportIncludeDeleted: false,
         DIMXExportFileName: this.genericViewer.view.Name,

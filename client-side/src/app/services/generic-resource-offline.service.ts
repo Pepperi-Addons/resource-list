@@ -35,6 +35,7 @@ export class GenericResourceOfflineService{
         return `${accountRefFieldID}='${accountUUID}'`
 
     }
+
     async getItems(
         resourceName: string,
         getDeletedItems: boolean = false,
@@ -53,39 +54,17 @@ export class GenericResourceOfflineService{
             if(keyFiledIndex < 0){
                 fields = [...fields, "Key"]
             }
-            let stringQueryArray = []
+            
             const accountUUIDQuery = this.getAccountUUIDQuery(resourceFields, accountUUID)
             
-            if(accountUUIDQuery){
-                stringQueryArray.push(`(${accountUUIDQuery})`)
-            }
-
-            const smartSearchQuery = this.getSmartSearchStringQuery(resourceFields, params)
-
-            if(smartSearchQuery){
-                stringQueryArray.push(`(${smartSearchQuery})`)
-            }
-
-            const searchQuery = this.getSearchStringQuery(searchDataView?.Fields || [], params)
-
-            if(searchQuery){
-                stringQueryArray.push(`(${searchQuery})`)
-
-            }
-
-            if(filterQuery){
-                stringQueryArray.push(`(${filterQuery})`)
-            }
-
-            stringQueryArray.push(`(Hidden=${getDeletedItems})`)
             let query: FindOptions = {
-                where: stringQueryArray.join(' AND '), 
+                where: this.getWhereClause(filterQuery, params, resourceFields, accountUUID, searchDataView, getDeletedItems), 
                 include_deleted: getDeletedItems,
                 page: page,
                 page_size: pageSize                
             }
-
-        return (await this.addonService.postAddonCPICall(config.AddonUUID, `${GENERIC_RESOURCE_OFFLINE_URL}/get_items/${resourceName}`, {query: query, fields: fields, insideAccount: accountUUIDQuery != '', sorting: sorting}))
+            
+            return (await this.addonService.postAddonCPICall(config.AddonUUID, `${GENERIC_RESOURCE_OFFLINE_URL}/get_items/${resourceName}`, {query: query, fields: fields, insideAccount: accountUUIDQuery != '', sorting: sorting}))
         }catch(e){
             console.log(`error: ${e}`)
             this.utilitiesService.showDialog('error', 'GeneralErrorMsg', 'close')
@@ -95,6 +74,44 @@ export class GenericResourceOfflineService{
             }
         }
     }
+    
+    getWhereClause(
+        filterQuery?: string,
+        params?: IPepGenericListParams,
+        resourceFields?: AddonDataScheme['Fields'],
+        accountUUID?:string | undefined,
+        searchDataView?: MenuDataView,
+        getDeletedItems: boolean = false
+        ): string {
+        let stringQueryArray = [];
+
+        const accountUUIDQuery = this.getAccountUUIDQuery(resourceFields, accountUUID)
+        
+        if(accountUUIDQuery){
+            stringQueryArray.push(`(${accountUUIDQuery})`);
+        }
+
+        const smartSearchQuery = this.getSmartSearchStringQuery(resourceFields, params);
+
+        if(smartSearchQuery){
+            stringQueryArray.push(`(${smartSearchQuery})`);
+        }
+
+        const searchQuery = this.getSearchStringQuery(searchDataView?.Fields || [], params);
+
+        if(searchQuery){
+            stringQueryArray.push(`(${searchQuery})`);
+        }
+
+        if(filterQuery){
+            stringQueryArray.push(`(${filterQuery})`);
+        }
+
+        stringQueryArray.push(`(Hidden=${getDeletedItems})`);
+
+        return stringQueryArray.join(' AND ');
+    }
+    
     private getSmartSearchStringQuery(resourceFields: AddonDataScheme['Fields'], params?: IPepGenericListParams ){
         if(!params?.filters){
             return ''

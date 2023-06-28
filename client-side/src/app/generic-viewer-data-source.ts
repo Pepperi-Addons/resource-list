@@ -17,6 +17,7 @@ export interface IGenericViewerDataSource{
     update(item: any): Promise<any>
     getEditorItemByKey(key: string)
     isInlineList()
+    getwhereClause(params?: IPepGenericListParams, resourceFields?:AddonDataScheme['Fields'], accountUUID?:string | undefined, isRecycleBin?: boolean): string
 }
 
 export class ContainedArrayGVDataSource implements IGenericViewerDataSource{
@@ -95,6 +96,10 @@ export class ContainedArrayGVDataSource implements IGenericViewerDataSource{
     isInlineList() {
         return true;
     }
+
+    getwhereClause(params?: IPepGenericListParams, resourceFields?: { [key: string]: SchemeField; }, accountUUID?: string, isRecycleBin?: boolean): string {
+        return '';
+    }
 }
 
 export class RegularGVDataSource implements IGenericViewerDataSource{
@@ -125,6 +130,11 @@ export class RegularGVDataSource implements IGenericViewerDataSource{
     private async postItem(item: any){
         return await this.genericResourceService.postItem(this.genericViewer.view.Resource.Name, item, this.accountUUID)
     }
+    
+    getwhereClause(params?: IPepGenericListParams, resourceFields?:AddonDataScheme['Fields'], accountUUID?:string | undefined, isRecycleBin: boolean = false): string{
+        return this.genericResourceService.getWhereClause(this.genericViewer.filter, params, resourceFields, accountUUID, this.genericViewer.searchDataView, isRecycleBin)
+    }
+
     async getItems(params?: IPepGenericListParams, fields?:GridDataViewField[], resourceFields?:AddonDataScheme['Fields'], accountUUID?:string | undefined): Promise<SearchData<AddonData>>{
         return await this._getItems(false, params, fields, resourceFields, accountUUID)
     }
