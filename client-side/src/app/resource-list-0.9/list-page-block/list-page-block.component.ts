@@ -53,34 +53,7 @@ export class ListPageBlockComponent implements OnInit {
                           AddonUUID: '0e2ae61b-a26a-4c26-81fe-13bdd2e4aaa3'
                       },
                   ],
-              },
-              {
-                Key: "7debbfa8-a085-11ed-a8fc-fafas",
-                Type: "Grid",
-                Title: "sec",
-                Blocks: [
-                    {
-                        Title: "Name",
-                        Configuration: {
-                            Type: "TextBox",
-                            FieldID: "Name",
-                            Width: 10
-                        },
-                        DrawURL: 'addon-cpi/drawGrid',
-                        AddonUUID: '0e2ae61b-a26a-4c26-81fe-13bdd2e4aaa3'
-                    },
-                    {
-                        Title: "ERP Code",
-                        Configuration: {
-                            Type: "TextBox",
-                            FieldID: "ExternalID",
-                            Width: 10
-                        },
-                        DrawURL: 'addon-cpi/drawGrid',
-                        AddonUUID: '0e2ae61b-a26a-4c26-81fe-13bdd2e4aaa3'
-                    },
-                ],
-            }
+              }
           ],
           Search: {
               Fields: [
@@ -128,8 +101,6 @@ export class ListPageBlockComponent implements OnInit {
         },
         State: {
           ListKey: "LIST_KEY",
-          PageType: "Pages",
-          PageSize: 5
         }
     }
 
