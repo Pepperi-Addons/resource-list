@@ -81,7 +81,7 @@ export class PrimitiveArrayFieldComponent implements OnInit {
 
   editHandler(selectedRows: any){
     const selectedItemKey = selectedRows.rows[0]
-    const items = this.dataSource.getItems()
+    const items = this.dataSource.getItems().Objects
     const item = items.find(item => item.Index == selectedItemKey)
     this.openFormDialog(item, value => 
       { 
