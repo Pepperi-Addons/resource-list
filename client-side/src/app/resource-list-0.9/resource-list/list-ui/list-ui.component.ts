@@ -4,7 +4,7 @@ import { IPepMenuItemClickEvent, PepMenuItem } from '@pepperi-addons/ngx-lib/men
 import { GVButton } from '../../metadata'
 import { PepperiList } from '../../helpers/pepperi-list';
 import { IPepListSortingChangeEvent, PepListSelectionType } from '@pepperi-addons/ngx-lib/list';
-import { GenericListComponent, IPepGenericListActions, IPepGenericListPager } from '@pepperi-addons/ngx-composite-lib/generic-list';
+import { GenericListComponent, IPepGenericListActions, IPepGenericListEmptyState, IPepGenericListPager } from '@pepperi-addons/ngx-composite-lib/generic-list';
 import { ReplaySubject } from 'rxjs';
 import { ViewsMenu } from 'shared';
 
@@ -35,8 +35,9 @@ export class ListUIComponent implements  AfterViewInit {
   @Input() $pageIndex: ReplaySubject<number>
   @Input() $pageType: ReplaySubject<IPepGenericListPager['type']>
   @Input() $pageSize: ReplaySubject<number>
-  
   @Input() $sorting: ReplaySubject<IPepListSortingChangeEvent>
+
+  @Input() $errorMsg: ReplaySubject<IPepGenericListEmptyState>
   
   @Output() menuClickedEvent: EventEmitter<string> = new EventEmitter() 
   @Output() viewChangedEvent: EventEmitter<string> = new EventEmitter()
@@ -44,6 +45,8 @@ export class ListUIComponent implements  AfterViewInit {
   
   //generic list instance
   @ViewChild(GenericListComponent) list: GenericListComponent
+
+  emptyState: IPepGenericListEmptyState = {title: '', description: '', show: true}
   
   constructor() { }
 
@@ -56,6 +59,12 @@ export class ListUIComponent implements  AfterViewInit {
 
     this.$sorting.subscribe(sorting => this.list.listInputs.sorting = sorting)
     this.$selectAll.subscribe(isAllSelected => this.list.selectAll = isAllSelected)
+
+    this.$errorMsg.subscribe(err => {
+      this.emptyState.description = err.description
+      // this.emptyState.show = err.show
+      this.emptyState.title = err.title
+    })
   }
 
   ngOnChanges(changes){

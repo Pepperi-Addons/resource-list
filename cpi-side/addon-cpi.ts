@@ -21,13 +21,34 @@ import { SelectionTypeBuilder } from './events/helpers/selection-type.builder';
 export async function load(configuration: any) {
     //interceptors:
     pepperi.events.intercept(loadListEventKey as any, {}, async (data, next, main) => {
-        return await LoadListController.loadList(data.State, data.Changes, data.List)
+        try{
+            return await LoadListController.loadList(data.State, data.Changes, data.List)
+        }
+        catch(err){
+            return {
+                ErrorMessage: err instanceof Error? err.message : 'Unknown Error'
+            }
+        }
     })
     pepperi.events.intercept(stateChangeEventKey as any, {}, async (data, next, main) => {
-        return await StateChangeController.onStateChanged(data.State, data.Changes, data.List)
+        try{
+            return await StateChangeController.onStateChanged(data.State, data.Changes, data.List)
+        }
+        catch(err){
+            return {
+                ErrorMessage: err instanceof Error? err.message : 'Unknown Error'
+            }
+        }
     })
     pepperi.events.intercept(menuClickEventKey as any, {}, async (data, next, main) => {
-        return await MenuClickController.onMenuClicked(data.State, data.Key, data.List, data?.client?.context)
+        try{
+            return await MenuClickController.onMenuClicked(data.State, data.Key, data.List, data?.client?.context)
+        }
+        catch(err){
+            return {
+                ErrorMessage: err instanceof Error? err.message : 'Unknown Error'
+            }
+        }
     })
 }
 

@@ -1,6 +1,6 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { ClientEventsService, ICPIEventsService } from '../services/client-events.service';
-import { IPepGenericListActions, IPepGenericListDataSource, IPepGenericListPager, IPepGenericListParams } from '@pepperi-addons/ngx-composite-lib/generic-list';
+import { IPepGenericListActions, IPepGenericListDataSource, IPepGenericListEmptyState, IPepGenericListPager, IPepGenericListParams } from '@pepperi-addons/ngx-composite-lib/generic-list';
 import { GVButton, SmartSearchInput, ViewsMenuUI } from '../metadata';
 import { PepMenuItem } from '@pepperi-addons/ngx-lib/menu';
 import { PepperiList } from '../helpers/pepperi-list';
@@ -33,6 +33,7 @@ export class ResourceListComponent implements OnInit {
   viewsMenu: ViewsMenuUI
   selectedViewKey: string
   topScrollIndex: number
+  $errorMsg: ReplaySubject<IPepGenericListEmptyState> = new ReplaySubject()
   
   //pager subjects
   $pageIndex: ReplaySubject<number> = new ReplaySubject()
@@ -67,6 +68,7 @@ export class ResourceListComponent implements OnInit {
     this.pepperiList.subscribeToListActions((actions) => this.lineMenu = actions)
     this.subscribeToLayoutChanges()
     this.subscribeToStateChanges()
+    this.pepperiList.subscribeToErrors(err => this.$errorMsg.next(err))
   }
 
   subscribeToLayoutChanges(){

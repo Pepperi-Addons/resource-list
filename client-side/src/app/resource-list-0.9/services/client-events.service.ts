@@ -21,9 +21,9 @@ export class ClientEventsService implements ICPIEventsService{
         return await this.addonService.emitEvent(loadListEventKey, {State: state, Changes: changes, List: list}) as ListContainer
     }
     async emitStateChangedEvent(state: Partial<ListState>, changes: Partial<ListState>, list?: List): Promise<ListContainer>{
-        return await this.addonService.emitEvent(stateChangeEventKey, {State: state, Changes: changes, List: list}) as ListContainer 
+        return await this.addonService.emitEvent(stateChangeEventKey, {State: state, Changes: changes, List: list}) as ListContainer
     }
     async emitMenuClickEvent(state: Partial<ListState>, key: string, list?: List): Promise<ListContainer>{
-        return await this.addonService.emitEvent(menuClickEventKey, {State: state, Key: key, List: list}) as ListContainer 
+        return await this.addonService.emitEvent(menuClickEventKey, {State: state, Key: key, List: list}) as ListContainer
     }
 }

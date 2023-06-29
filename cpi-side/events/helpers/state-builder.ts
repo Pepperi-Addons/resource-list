@@ -12,14 +12,10 @@ export class StateBuilder{
         const state = JSON.parse(JSON.stringify(this.changes)) as Partial<ListState>
 
         //in case we changed a list or a view and the selected items are not cleared, we need to clear the selected items, reset the scroll position 
-        if((this.changes.ViewKey || this.changes.ListKey) && !this.isItemsSelectionEmpty() ){
+        if((this.changes.ViewKey || this.changes.ListKey)){
             state.ItemSelection = {SelectAll: false, Items: []}
             state.TopScrollIndex = 0
         }
         return state
-    }
-    isItemsSelectionEmpty(){
-        const itemsSelection = this.state.ItemSelection
-        return !itemsSelection!!.SelectAll && itemsSelection!!.Items.length == 0
     }
 }
