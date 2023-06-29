@@ -37,7 +37,7 @@ export class StateManager{
         }
         //if page size changed
         if(pager?.pageSize != state.PageSize){
-            changes.PageSize = pager?.pageSize || 100
+            changes.PageSize = pager?.pageSize || 25
         }
 
         //if sorting changed

@@ -14,6 +14,7 @@
     [scrollPosition]="topScrollIndex"
     [emptyState]="emptyState"
     (startIndexChange)="onTopScrollIndexChanged($event)"
+    [cacheSize]="0"
     uuidMapping="Key">
     <ng-container right-buttons>
         <pep-menu *ngIf="menu && menu.length > 0"
