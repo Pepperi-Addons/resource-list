@@ -1,6 +1,6 @@
 import { DataViewService } from '../services/data-view-service';
 import { ProfileService } from '../services/profile-service';
-import { BaseDataView, DataView, DataViewType } from '@pepperi-addons/papi-sdk';
+import { BaseDataView, DataView, DataViewColumn, DataViewType } from '@pepperi-addons/papi-sdk';
 import { IPepProfile, IPepProfileDataViewsCard } from '@pepperi-addons/ngx-lib/profile-data-views-list';
 import { IFieldConvertor, IMappedField } from '../metadata'
 import { IPepDraggableItem } from '@pepperi-addons/ngx-lib/draggable-items';
@@ -87,9 +87,11 @@ export class ProfileCardsManager{
     editCard(dataViewID: number): void{
         this.currentDataView = this.dataViewMap.get(dataViewID)!
         const mappedFieldsIDSet = new Set<string>()
+        const dvColumns: DataViewColumn[] = this.currentDataView['Columns'] || [];
         this.currentMappedFields = this.currentDataView.Fields?.map((field, index) => {
         mappedFieldsIDSet.add(field.FieldID)
-        return this.fieldConvertor.fieldToMappedField(field)
+        const fieldWidth = dvColumns[index]?.Width;
+        return this.fieldConvertor.fieldToMappedField(field, fieldWidth)
         }) || []
         this.currentSideCardsList = this.createSideCardsList(mappedFieldsIDSet)
     }

@@ -1,8 +1,8 @@
 
 import { DataViewContext, GridDataView, MenuDataView } from "@pepperi-addons/papi-sdk";
 import { AddonUUID } from "../../addon.config.json";
-import { View, Editor} from 'shared'
-import { toApiQueryString } from '@pepperi-addons/pepperi-filters'
+import { View, Editor, LOAD_EVENT_KEY} from 'shared'
+import { concat, JSONFilter, toApiQueryString } from '@pepperi-addons/pepperi-filters'
 
 export class ViewsService{
 
@@ -16,6 +16,8 @@ export class ViewsService{
             this.getDataView(`GV_${dataViewKey}_SmartSearchLandscape`),
             this.getDataView(`GV_${dataViewKey}_SearchLandscape`)
         ])
+        const dynamicFilter = await this.emitLoadEvent(view.Resource.Name, view.Key);
+        const viewFilter = this.getViewFilter(view.Filter, dynamicFilter)
         let result: any = {
             view : view,
             viewDataview: viewDataview,
@@ -24,7 +26,7 @@ export class ViewsService{
             editor: undefined,
             editorDataView: undefined,
             resourceName: view.Resource.Name,
-            filter: toApiQueryString(view.Filter) || '',
+            filter: viewFilter,
             smartSearchDataView: smartSearchDataView,
             searchDataView: searchDataView
         }
@@ -85,5 +87,26 @@ export class ViewsService{
     }
     private getDataViewKeyFromUUID(uuid: string){
         return uuid.replace(/-/g, '')
+    }
+    private async emitLoadEvent(resourceName: string, viewKey: string): Promise<JSONFilter | undefined> {
+        const filter = await pepperi.events.emit(LOAD_EVENT_KEY, {ResourceName: resourceName, ViewKey: viewKey});
+        return filter.data;
+    }
+    private getViewFilter(viewFilter: JSONFilter | undefined, dynamicFilter: JSONFilter | undefined): string {
+        let tempFilter: JSONFilter | undefined = undefined
+        const dynamicFilterEmpty = Object.keys(dynamicFilter || {}).length === 0
+        if(viewFilter) {
+            if (!dynamicFilterEmpty) {
+                tempFilter = concat(true, viewFilter, dynamicFilter);
+            }
+            else {
+                tempFilter = viewFilter;
+            }
+        }
+        else if(!dynamicFilterEmpty) {
+            tempFilter = dynamicFilter
+        }
+
+        return toApiQueryString(tempFilter) || '';
     }
 }
