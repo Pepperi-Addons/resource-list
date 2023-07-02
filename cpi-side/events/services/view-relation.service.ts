@@ -5,14 +5,14 @@ import { DrawGridDefaultURL, RelationBlock } from "../metadata";
 import config from '../../../addon.config.json'
 export class ViewRelationService{
     
-    async getRows(searchResult: AddonsDataSearchResult, blocks: ViewBlock[]): Promise<DataRow[]>{
+    async getRows(searchResult: AddonsDataSearchResult, blocks: ViewBlock[], resource: string): Promise<DataRow[]>{
         //put default addon uuid and draw url if not exist
         blocks.forEach(block => {
             block.AddonUUID = block.AddonUUID || config.AddonUUID
             block.DrawURL = block.DrawURL || DrawGridDefaultURL
         })
         const relationGroups = groupRelationBlocks(blocks as RelationBlock[])
-        const gridArray = await this.drawLists(relationGroups, blocks, searchResult)
+        const gridArray = await this.drawLists(relationGroups, blocks, searchResult, resource)
 
         //find the grid with the minimum number of objects
         const minLength = gridArray.reduce((acc, curr) => Math.max(acc, curr.length), -Infinity)
@@ -28,16 +28,16 @@ export class ViewRelationService{
         return result
     }
 
-    private async drawLists(relationBlocks: RelationBlock[], viewBlocks: ViewBlock[], searchResult: AddonsDataSearchResult){
+    private async drawLists(relationBlocks: RelationBlock[], viewBlocks: ViewBlock[], searchResult: AddonsDataSearchResult, resource: string){
         return Promise.all(relationBlocks.map(async relationBlock => {
-            return await this.drawList(relationBlock, viewBlocks, searchResult)
+            return await this.drawList(relationBlock, viewBlocks, searchResult, resource)
         }))
     }
 
-    private async drawList(block: RelationBlock, viewBlocks: ViewBlock[], searchResult: AddonsDataSearchResult): Promise<DataRow[]>{
+    private async drawList(block: RelationBlock, viewBlocks: ViewBlock[], searchResult: AddonsDataSearchResult, resource: string): Promise<DataRow[]>{
         const result =  await pepperi.addons.api.uuid(block.AddonUUID).post({
             url: block.DrawURL,
-            body: { Data: searchResult.Objects , ViewBlocks: viewBlocks }
+            body: { Data: searchResult.Objects , ViewBlocks: viewBlocks, Resource: resource }
         })
 
         if(!result.Data){
