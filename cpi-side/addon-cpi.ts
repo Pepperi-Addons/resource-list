@@ -123,6 +123,7 @@ router.post('/drawGrid' ,async (req,res,next) => {
                 }
             }
             row[block.Configuration.FieldID] = value   
+            row['Key'] = item.Key!
         })
         grid.push(row)
     })
