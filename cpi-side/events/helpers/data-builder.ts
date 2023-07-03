@@ -49,6 +49,10 @@ export class ListDataBuilder{
         //get the resource items
         const genericResourceService = new ResourceService()
         const items = await genericResourceService.search(this.list.Resource, searchBody)
+        //in case the number of the items is not known, return count = items.length
+        if(items.Count == undefined || items.Count < 0){
+            items.Count = items.Objects.length
+        }
         const viewRelationService = new ViewRelationService()
         const viewRows = await viewRelationService.getRows(items, selectedView.Blocks, this.list.Resource)
         this.listData = {Items: viewRows, Count: items.Count}
