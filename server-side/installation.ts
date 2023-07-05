@@ -154,27 +154,9 @@ async function createPageBlockRelation(client: Client): Promise<any> {
             EditorElementName: `viewer-block-editor-element-${client.AddonUUID}`
 
         };
-        const listPageBlockName = 'ListPageBlock'
-        const listPageBlockRelation: Relation = {
-            RelationName: "PageBlock",
-            Name: `${listPageBlockName}`,
-            Description: `list page block`,
-            Type: "NgComponent",
-            SubType: "NG14",
-            AddonUUID: client.AddonUUID,
-            AddonRelativeURL: fileName,
-            ComponentName: `${listPageBlockName}Component`, // This is should be the block component name (from the client-side)
-            ModuleName: `${listPageBlockName}Module`, // This is should be the block module name (from the client-side)
-            EditorComponentName: `BlockEditorComponent`, // This is should be the block editor component name (from the client-side)
-            EditorModuleName: `BlockEditorModule`, // This is should be the block editor module name (from the client-side)
-            ElementsModule: 'WebComponents',
-            ElementName: `list-page-block-element-${client.AddonUUID}`,
-            EditorElementName: `viewer-block-editor-element-${client.AddonUUID}`
 
-        };
         const service = new AddonService(client);
         const dataViewerResult = await service.upsertRelation(dataViewerRelation)
-        const resourceListResult = await service.upsertRelation(listPageBlockRelation)
 
         const dataConfigurationBlockRelation: Relation = {
             RelationName: "PageBlock",
@@ -193,7 +175,7 @@ async function createPageBlockRelation(client: Client): Promise<any> {
             EditorElementName: `data-config-block-editor-element-${client.AddonUUID}`
         };
         const dataConfigurationResult = await service.upsertRelation(dataConfigurationBlockRelation);
-        return { success:true, resultObject: {dataViewerResult, dataConfigurationResult, resourceListResult}};
+        return { success:true, resultObject: {dataViewerResult, dataConfigurationResult}};
 
 
     } catch(err) {
