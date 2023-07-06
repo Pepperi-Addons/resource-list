@@ -50,6 +50,10 @@ export class DataSource implements IPepGenericListDataSource{
         selectionType: this.listOptions?.selectionType || 'single',
       }
     }
+
+    getItemsCount(): number {
+      return this.items.Count || 0;
+    }
     
     async init(params: IPepGenericListParams): Promise<IPepGenericListInitData> {
       

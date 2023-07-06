@@ -56,5 +56,7 @@
     "AddEditor": "Add Editor", 
     "DeleteError": "could not delete the item, please make sure you have the right permissions in order to delete this item",
     "DONE": "Done",
-    "CANCEL": "Cancel"
+    "CANCEL": "Cancel",
+    "ExportErrorDialogTitle": "Export is blocked",
+    "ExportErrorDialogContent": "Export is blocked on lists with filters and more than {{max_items}} rows. \n please lower number of rows before exporting"
 }
