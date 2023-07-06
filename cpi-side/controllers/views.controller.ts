@@ -9,8 +9,9 @@ import { ViewsService } from "../services/views.service"
 export async function getGenericView(req, res, next){
     try{
         const key = req.query.Key
+        const accountUUID = req.query.AccountUUID || '';
         const service  = new ViewsService()
-        return  res.json(await service.getGenericView(key))
+        return  res.json(await service.getGenericView(key, accountUUID))
     }
     catch(err){
         next(err)

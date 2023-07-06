@@ -33,7 +33,7 @@ export class BlockComponent implements OnInit {
       }
       this.setConfigurationObject(hostObject)
       if(this.configurationObject.viewsList.length > 0){
-        this.genericViewer = await this.genericResourceService.getGenericView(this.configurationObject.viewsList[0].key)
+        this.genericViewer = await this.genericResourceService.getGenericView(this.configurationObject.viewsList[0].key, this.accountUUID)
         this.genericViewer.title = this.configurationObject.viewsList[0].value;
         this.genericViewerDataSource = new RegularGVDataSource(this.genericViewer, this.genericResourceService, [], this.accountUUID)
         this.hasViewToDisplay = true
