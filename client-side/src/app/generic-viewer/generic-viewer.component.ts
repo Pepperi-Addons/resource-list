@@ -7,7 +7,7 @@ import { PepSelectionData } from '@pepperi-addons/ngx-lib/list';
 import { Editor, IGenericViewer, SelectOption, View } from 'shared';
 import { PepDialogService } from '@pepperi-addons/ngx-lib/dialog';
 import { FieldEditorComponent } from '../field-editor/field-editor.component';
-import { EXPORT, IGenericViewerConfigurationObject, IMPORT } from '../metadata';
+import { EXPORT, EXPORT_MAX_ITEMS, IGenericViewerConfigurationObject, IMPORT } from '../metadata';
 import { GenericListComponent, IPepGenericListInitData, IPepGenericListParams } from '@pepperi-addons/ngx-composite-lib/generic-list';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { DIMXHostObject, PepDIMXHelperService } from '@pepperi-addons/ngx-composite-lib';
@@ -313,6 +313,7 @@ export class GenericViewerComponent implements OnInit {
       }
     }
     import(){
+      
       this.dimxService?.import({
         OverwriteObject: false,
         OwnerID: this.genericViewer.view.Resource.AddonUUID
@@ -320,14 +321,28 @@ export class GenericViewerComponent implements OnInit {
       
     }
     export(){
-      this.dimxService?.export({
-        DIMXExportWhere: this.genericViewerDataSource.getwhereClause(this.listParams, this.resourceFields, this.accountUUID, this.recycleBin),
-        DIMXExportFormat: 'csv',
-        DIMXExportIncludeDeleted: false,
-        DIMXExportFileName: this.genericViewer.view.Name,
-        DIMXExportDelimiter: ',',
-        DIMXExportFields: (this.genericViewer.viewDataview.Fields?.map(field => field.FieldID) || []).join()
-      })
+      const whereClause = this.genericViewerDataSource.getwhereClause(this.listParams, this.resourceFields, this.accountUUID, this.recycleBin);
+      const itemsCount = this.dataSource.getItemsCount();
+      if (whereClause != '' && itemsCount > EXPORT_MAX_ITEMS) {
+        this.dialogService.openDefaultDialog({
+          actionsType: 'close',
+           title: this.translate.instant('ExportErrorDialogTitle'),
+           content: this.translate.instant('ExportErrorDialogContent', {max_items: EXPORT_MAX_ITEMS}),
+           showClose: true,
+           showFooter: true,
+           showHeader: true
+        })
+      }
+      else {
+        this.dimxService?.export({
+          DIMXExportWhere: whereClause,
+          DIMXExportFormat: 'csv',
+          DIMXExportIncludeDeleted: false,
+          DIMXExportFileName: this.genericViewer.view.Name,
+          DIMXExportDelimiter: ',',
+          DIMXExportFields: (this.genericViewer.viewDataview.Fields?.map(field => field.FieldID) || []).join()
+        })
+      }
     }
      getActionsCallBack(){
       return async (data: PepSelectionData) => {

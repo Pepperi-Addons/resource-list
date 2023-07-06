@@ -107,7 +107,9 @@ export class GenericResourceOfflineService{
             stringQueryArray.push(`(${filterQuery})`);
         }
 
-        stringQueryArray.push(`(Hidden=${getDeletedItems})`);
+        if (getDeletedItems) {
+            stringQueryArray.push(`(Hidden=${getDeletedItems})`);
+        }
 
         return stringQueryArray.join(' AND ');
     }
