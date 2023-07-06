@@ -30,7 +30,7 @@ export class ContainedResourceArrayFieldComponent implements OnInit {
   async loadGenericViewer(){
     const referenceField = this.referenceFields.find(referenceField => this.configurationObject.FieldID == referenceField.FieldID)
     if(referenceField.SelectionList){
-      this.genericViewer = await this.genericResourceService.getGenericView(referenceField.SelectionListKey)
+      this.genericViewer = await this.genericResourceService.getGenericView(referenceField.SelectionListKey, '')
       this.genericViewerConfiguration = {
         viewsList: [
           {
