@@ -89,7 +89,6 @@ export class ViewsService{
         return uuid.replace(/-/g, '')
     }
     private async emitLoadEvent(resourceName: string, viewKey: string, accountUUID: string): Promise<JSONFilter | undefined> {
-        debugger;
         const filter = await pepperi.events.emit(LOAD_EVENT_KEY, {ResourceName: resourceName, ViewKey: viewKey, AccountUUID: accountUUID});
         return filter.data;
     }
