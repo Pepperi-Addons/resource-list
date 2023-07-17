@@ -144,8 +144,9 @@ export class GenericResourceOfflineService{
         const resource = await this.getResource(resourceName)
         return resource?.Fields || {}
     }
-    async getGenericView(viewKey: string, accountUUID: string){
-        return await this.addonService.getAddonCPICall(config.AddonUUID, `${GENERIC_VIEWS_RESOURCE}/generic_view?Key=${viewKey}&AccountUUID=${accountUUID}`)
+    async getGenericView(viewKey: string, accountUUID: string | undefined){
+        const accountQS = accountUUID ? `&AccountUUID=${accountUUID}`: '';
+        return await this.addonService.getAddonCPICall(config.AddonUUID, `${GENERIC_VIEWS_RESOURCE}/generic_view?Key=${viewKey}${accountQS}`)
     }
     async getSelectionList(viewKey?: string, resource?: string){
         if(viewKey){
