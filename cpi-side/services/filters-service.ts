@@ -2,7 +2,7 @@ import { AddonDataScheme } from "@pepperi-addons/papi-sdk";
 import { UtilitiesService } from "./utilities.service";
 import { JSONFilter } from "@pepperi-addons/pepperi-filters";
 
-const MAX_ACCOUNTS_IN_QUERY = 300
+const MAX_ACCOUNTS_IN_QUERY = 1000
 export class FiltersService {
 
     utilitiesService: UtilitiesService = new UtilitiesService(this.accountUUID != '');
