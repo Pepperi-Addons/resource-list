@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { IGenericViewer } from 'shared';
 import { RegularGVDataSource } from '../generic-viewer-data-source';
 import { IGenericViewerConfigurationObject } from '../metadata';
@@ -17,14 +17,19 @@ export class BlockComponent implements OnInit {
     hasViewToDisplay: boolean = false
     genericViewerDataSource: RegularGVDataSource
     accountUUID: string | undefined
+    isInitialized: boolean = false
     @Output() hostEvents: EventEmitter<any> = new EventEmitter<any>();
 
     constructor(
       private genericResourceService: GenericResourceOfflineService
       ) {}
     ngOnInit(): void {
+      if(this.isInitialized){
+        return
+      }
       this.accountUUID = this.hostObject.pageParameters?.AccountUUID
       this.loadGenericView(this.hostObject)
+      this.isInitialized = true
     }
     async loadGenericView(hostObject){
       if(hostObject?.configuration?.viewsList?.length == 0){
@@ -52,7 +57,8 @@ export class BlockComponent implements OnInit {
         viewsList: this.createDropDownOfViews(hostObject?.configuration?.viewsList || []),
       }
     } 
-    ngOnChanges(e: any): void {
+    ngOnChanges(e: SimpleChanges): void {
+      this.isInitialized = true
       this.accountUUID = this.hostObject.pageParameters?.AccountUUID
       this.loadGenericView(e.hostObject.currentValue)
     }
