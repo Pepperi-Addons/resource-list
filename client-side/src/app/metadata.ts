@@ -9,7 +9,7 @@ export const MODIFICATION_DATE_TIME_TITLE = "Modification Date Time"
 export const CREATION_DATE_TIME_ID = "CreationDateTime"
 export const MODIFICATION_DATE_TIME_ID = "ModificationDateTime"
 export const API_PAGE_SIZE = 100;
-export const EXPORT_MAX_ITEMS = 10000;
+export const EXPORT_MAX_ITEMS = 100000;
 
 
 export interface IMappedField {
