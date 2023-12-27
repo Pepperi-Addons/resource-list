@@ -39,7 +39,22 @@ export class BlockEditorComponent implements OnInit {
             this.views = views
             this.viewsList = this.filterViewsAndResourceThatNoLongerExist()
             this.loadCompleted = true
-        })   
+        })
+        this.hostEvents.emit({
+            action: 'set-page-configuration',
+            
+            // any object that the block wants to save on the configuration
+            pageConfiguration: {
+                "Parameters": [
+                    {
+                        "Key": "AccountUUID",
+                        "Type": "String",
+                        "Produce": false,
+                        "Consume": true,
+                    }
+                ]
+            }
+        })
     }
 
     filterViewsAndResourceThatNoLongerExist(){
@@ -81,6 +96,7 @@ export class BlockEditorComponent implements OnInit {
             key: key,
             value: value
         })
+        
     }
 
     restoreData(){
