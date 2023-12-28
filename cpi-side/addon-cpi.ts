@@ -1,6 +1,7 @@
 import '@pepperi-addons/cpi-node'
 import { router as genericResourceRouter }  from './routes/generic-resource.routes'
 import { router as viewsRouter } from './routes/views.routes'
+import { router as blocksRouter } from './routes/blocks.routes'
 import { MenuBuilder } from './events/helpers/menu-builder';
 import { ListService } from './services/list.service';
 import { DataRow, ListContainer, ViewBlock, loadListEventKey, menuClickEventKey, stateChangeEventKey } from 'shared';
@@ -65,6 +66,9 @@ router.use('/resources', genericResourceRouter)
 
 //views routes:
 router.use('/views', viewsRouter)
+
+//blocks routes:
+router.use('/blocks', blocksRouter)
 
 
 

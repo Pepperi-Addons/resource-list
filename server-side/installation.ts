@@ -151,7 +151,8 @@ async function createPageBlockRelation(client: Client): Promise<any> {
             EditorModuleName: `BlockEditorModule`, // This is should be the block editor module name (from the client-side)
             ElementsModule: 'WebComponents',
             ElementName: `viewer-block-element-${client.AddonUUID}`,
-            EditorElementName: `viewer-block-editor-element-${client.AddonUUID}`
+            EditorElementName: `viewer-block-editor-element-${client.AddonUUID}`,
+            BlockLoadEndpoint: '/addon-cpi/blocks/load'
 
         };
 
