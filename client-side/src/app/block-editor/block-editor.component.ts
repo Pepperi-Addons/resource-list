@@ -1,9 +1,8 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { CdkDragDrop, CdkDragEnd, CdkDragStart, moveItemInArray} from '@angular/cdk/drag-drop';
-import { ViewsCard } from '../draggable-card-fields/cards.model'
 import { CardsService } from '../draggable-card-fields/cards.service'
 import { config } from '../addon.config'
-import { SelectOption, View } from 'shared';
+import { SelectOption, View, ViewsCard} from 'shared';
 import { ViewsService } from '../services/views.service';
 import * as uuid from 'uuid';
 import { GenericResourceService } from '../services/generic-resource-service';

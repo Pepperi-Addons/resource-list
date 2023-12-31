@@ -1,8 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import {ICardEditor, ViewsCard } from './cards.model';
 import { GenericResourceService } from '../services/generic-resource-service';
-import { SelectOption, View } from 'shared';
+import { SelectOption, View, ViewsCard } from 'shared';
 import { debug } from 'console';
 
 
