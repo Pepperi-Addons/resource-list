@@ -66,6 +66,22 @@ export interface IReferenceField {
     smartSearchDataView?: MenuDataView
     searchDataView?: MenuDataView
   }
+
+export interface ICardEditor {
+    id: number;
+    showContent: boolean
+}
+export interface ViewsCard extends ICardEditor{
+    views: SelectOption[]
+    title: string
+    selectedView: SelectOption,
+    selectedResource?: string
+}
+
+export interface PageBlockConfiguration {
+    resource?: string;
+    viewsList: ViewsCard[];
+}
   
   export const  REFERENCE_TYPE = "Resource"
   export const SELECTION_LIST = "SelectionList"

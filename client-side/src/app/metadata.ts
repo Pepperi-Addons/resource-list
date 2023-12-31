@@ -2,7 +2,6 @@ import { IPepDraggableItem } from "@pepperi-addons/ngx-lib/draggable-items"
 import { AddonData, BaseFormDataViewField, DataViewField, DataViewFieldType, GridDataViewField, MenuDataViewField, SchemeField, SearchData } from "@pepperi-addons/papi-sdk"
 import { SelectOption } from "shared"
 import { AddFormComponent } from "./add-form/add-form.component"
-import { ViewsCard } from "./draggable-card-fields/cards.model"
 
 export const CREATION_DATE_TIME_TITLE = "Creation Date Time"
 export const MODIFICATION_DATE_TIME_TITLE = "Modification Date Time"
