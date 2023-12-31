@@ -4,10 +4,9 @@ import { GenericResourceService } from "../services/generic-resource.service";
 import { Addon, AddonData, AddonDataScheme, FindOptions, GridDataView, SearchData } from "@pepperi-addons/papi-sdk";
 
 export async function loadBlock(req, res, next){
-    try{
-        // console.log(`request recieved: ${JSON.stringify(req.body)}`);
-        const result = { ...req.body };
+    try {
         const body = req.body || {};
+        const result = { ...body };
         const accountUUID = body.State?.AccountUUID || '';
         const viewKey = getViewKey(body.Configuration || {});
         if(viewKey != '') {

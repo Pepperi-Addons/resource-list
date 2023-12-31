@@ -239,8 +239,11 @@ export class GenericViewerComponent implements OnInit {
       this.dataSource = new DataSource(new DynamicItemsDataSource(async (params) => {
         this.listParams = params;
         this.resourceFields = await this.genericViewerDataSource.getFields()
-        const items = await this.genericViewerDataSource.getItems(this.listParams, fields, this.resourceFields, this.accountUUID)
+        // if we got items on the configuration object, this means it's the first load and we need to get it instead of calling the cpi side.
+        const items = this.configurationObject.items ? this.configurationObject.items : await this.genericViewerDataSource.getItems(this.listParams, fields, this.resourceFields, this.accountUUID)
         this.items = JSON.parse(JSON.stringify(items))
+        // after using the items, we're deleting it from the object so we want use it on consecutive calls
+        delete this.configurationObject.items
         //in order to support arrays and references we should check the "real" type of each field, and reformat the corresponding item
         this.reformatItems(this.items.Objects, this.resourceFields)
         
