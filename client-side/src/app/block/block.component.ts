@@ -38,9 +38,10 @@ export class BlockComponent implements OnInit {
       }
       this.setConfigurationObject(hostObject)
       if(this.configurationObject.viewsList.length > 0){
-        this.genericViewer = await this.genericResourceService.getGenericView(this.configurationObject.viewsList[0].key, this.accountUUID)
+        this.genericViewer = hostObject?.configuration?.GenericView || await this.genericResourceService.getGenericView(this.configurationObject.viewsList[0].key, this.accountUUID)
         this.genericViewer.title = this.configurationObject.viewsList[0].value;
         this.genericViewerDataSource = new RegularGVDataSource(this.genericViewer, this.genericResourceService, [], this.accountUUID)
+        this.genericViewerDataSource.setFields(hostObject.configuration?.ResourceScheme?.Fields || {});
         this.hasViewToDisplay = true
       }
     }
@@ -55,6 +56,7 @@ export class BlockComponent implements OnInit {
     setConfigurationObject(hostObject): void{
       this.configurationObject = {
         viewsList: this.createDropDownOfViews(hostObject?.configuration?.viewsList || []),
+        items: hostObject.configuration?.Items
       }
     } 
     ngOnChanges(e: SimpleChanges): void {
