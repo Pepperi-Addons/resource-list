@@ -47,21 +47,26 @@ function getViewKey(configuration: PageBlockConfiguration) {
 }
 
 function getWhereClause(viewFilter: string, accountUUID: string, resourceFields: AddonDataScheme['Fields']) {
-    let whereClause = viewFilter;
+    let whereClauseArray: string[] = []
+    
+    if (viewFilter)
+    {
+        whereClauseArray.push(viewFilter);
+    }
     const accountFilter = getAccountUUIDQuery(accountUUID, resourceFields);
 
     if (accountFilter) {
-        whereClause = `${viewFilter} AND ${accountFilter}`;
+        whereClauseArray.push(accountFilter);
     }
     
-    return whereClause;
+    return whereClauseArray.join(' AND ');
 }
 
 function getAccountUUIDQuery(accountUUID: string, resourceFields: AddonDataScheme['Fields']) {
     const fieldName = getAccountField(resourceFields);
     let query = ''
     if (fieldName && accountUUID) {
-        query = `${fieldName}=${accountUUID}`
+        query = `${fieldName}='${accountUUID}'`
     }
 
     return query;
