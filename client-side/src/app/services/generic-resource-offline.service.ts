@@ -6,7 +6,7 @@ import { GENERIC_RESOURCE_OFFLINE_URL, GENERIC_VIEWS_RESOURCE, API_PAGE_SIZE } f
 import { IPepGenericListParams } from "@pepperi-addons/ngx-composite-lib/generic-list";
 import { SmartSearchParser } from "../smart-search-parser/smart-search-parser";
 import { UtilitiesService } from "./utilities-service";
-import { Sorting } from "shared";
+import { OldSorting, Sorting } from "shared";
 
 
 @Injectable({ providedIn: 'root' })
@@ -46,7 +46,7 @@ export class GenericResourceOfflineService{
         resourceFields?: AddonDataScheme['Fields'],
         accountUUID?:string | undefined,
         searchDataView?: MenuDataView,
-        sorting?: Sorting): Promise<SearchData<AddonData>> {
+        sorting?: OldSorting): Promise<SearchData<AddonData>> {
         try{
             const pageSize = (params?.toIndex - params?.fromIndex) + 1 || API_PAGE_SIZE;
             const page = params?.pageIndex || Math.ceil(params?.fromIndex / pageSize) || 1;
@@ -107,7 +107,9 @@ export class GenericResourceOfflineService{
             stringQueryArray.push(`(${filterQuery})`);
         }
 
-        stringQueryArray.push(`(Hidden=${getDeletedItems})`);
+        if (getDeletedItems) {
+            stringQueryArray.push(`(Hidden=${getDeletedItems})`);
+        }
 
         return stringQueryArray.join(' AND ');
     }
@@ -142,8 +144,9 @@ export class GenericResourceOfflineService{
         const resource = await this.getResource(resourceName)
         return resource?.Fields || {}
     }
-    async getGenericView(viewKey: string){
-        return await this.addonService.getAddonCPICall(config.AddonUUID, `${GENERIC_VIEWS_RESOURCE}/generic_view?Key=${viewKey}`)
+    async getGenericView(viewKey: string, accountUUID: string | undefined){
+        const accountQS = accountUUID ? `&AccountUUID=${accountUUID}`: '';
+        return await this.addonService.getAddonCPICall(config.AddonUUID, `${GENERIC_VIEWS_RESOURCE}/generic_view?Key=${viewKey}${accountQS}`)
     }
     async getSelectionList(viewKey?: string, resource?: string){
         if(viewKey){

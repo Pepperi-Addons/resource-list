@@ -3,10 +3,13 @@ import { DataViewContext, GridDataView, MenuDataView } from "@pepperi-addons/pap
 import { AddonUUID } from "../../addon.config.json";
 import { View, Editor, LOAD_EVENT_KEY} from 'shared'
 import { concat, JSONFilter, toApiQueryString } from '@pepperi-addons/pepperi-filters'
+import { UtilitiesService } from "./utilities.service";
+import { FiltersService } from "./filters-service";
 
 export class ViewsService{
 
-    async getGenericView(viewKey: string){
+    async getGenericView(viewKey: string, accountUUID: string){
+        const filtersService = new FiltersService(accountUUID);
         const dataViewKey = this.getDataViewKeyFromUUID(viewKey)
         const [view,viewDataview, lineMenuItems, menuItems, smartSearchDataView, searchDataView] = await Promise.all([
             this.getView(viewKey) as Promise<View>,
@@ -16,8 +19,9 @@ export class ViewsService{
             this.getDataView(`GV_${dataViewKey}_SmartSearchLandscape`),
             this.getDataView(`GV_${dataViewKey}_SearchLandscape`)
         ])
-        const dynamicFilter = await this.emitLoadEvent(view.Resource.Name, view.Key);
-        const viewFilter = this.getViewFilter(view.Filter, dynamicFilter)
+        const dynamicFilter = await this.emitLoadEvent(view.Resource.Name, view.Key, accountUUID);
+        const accountsFilter = await filtersService.getAssignedAccountsFilter(view.Resource.Name, accountUUID);
+        const viewFilter = this.getViewFilter(view.Filter, dynamicFilter, accountsFilter)
         let result: any = {
             view : view,
             viewDataview: viewDataview,
@@ -88,11 +92,11 @@ export class ViewsService{
     private getDataViewKeyFromUUID(uuid: string){
         return uuid.replace(/-/g, '')
     }
-    private async emitLoadEvent(resourceName: string, viewKey: string): Promise<JSONFilter | undefined> {
-        const filter = await pepperi.events.emit(LOAD_EVENT_KEY, {ResourceName: resourceName, ViewKey: viewKey});
+    private async emitLoadEvent(resourceName: string, viewKey: string, accountUUID: string): Promise<JSONFilter | undefined> {
+        const filter = await pepperi.events.emit(LOAD_EVENT_KEY, {ResourceName: resourceName, ViewKey: viewKey, AccountUUID: accountUUID});
         return filter.data;
     }
-    private getViewFilter(viewFilter: JSONFilter | undefined, dynamicFilter: JSONFilter | undefined): string {
+    private getViewFilter(viewFilter: JSONFilter | undefined, dynamicFilter: JSONFilter | undefined, accountFilter: JSONFilter | undefined): string {
         let tempFilter: JSONFilter | undefined = undefined
         const dynamicFilterEmpty = Object.keys(dynamicFilter || {}).length === 0
         if(viewFilter) {
@@ -107,6 +111,14 @@ export class ViewsService{
             tempFilter = dynamicFilter
         }
 
+        if (accountFilter) {
+            if (tempFilter) {
+                tempFilter = concat(true, tempFilter, accountFilter)
+            }
+            else {
+                tempFilter = accountFilter;
+            }
+        }
         return toApiQueryString(tempFilter) || '';
-    }
+    }   
 }

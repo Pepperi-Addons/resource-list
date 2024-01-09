@@ -3,6 +3,7 @@ import { ViewsService } from './services/views.service';
 import { EditorsService } from './services/editors.service';
 import { UDCService } from './udc.service';
 import { GenericViewerService } from './services/generic-viewer.service';
+import { AddonDataScheme, PapiClient } from '@pepperi-addons/papi-sdk';
 
 export async function get_all_collections(client: Client, request: Request){
     validateRequest('GET', request)
@@ -74,7 +75,7 @@ export async function get_generic_view(client: Client, request: Request){
     return await service.getGenericView(key)
 }
 /**
- * POST endpoint
+ * POST endpoint.
  * this is a post endpoint because in get request the url cannot be more than 2048 bytes
  * body:{
  * dataView: GridDataView

@@ -1,6 +1,6 @@
 import { AddonData, AddonDataScheme, GridDataViewField, SchemeField, SearchData } from "@pepperi-addons/papi-sdk";
 import { IPepGenericListParams } from "@pepperi-addons/ngx-composite-lib/generic-list";
-import { IGenericViewer, Sorting } from "shared";
+import { IGenericViewer } from "shared";
 import * as uuid from 'uuid';
 import { GenericResourceOfflineService } from "./services/generic-resource-offline.service";
 import { IDataViewField } from "./metadata";
@@ -18,6 +18,7 @@ export interface IGenericViewerDataSource{
     getEditorItemByKey(key: string)
     isInlineList()
     getwhereClause(params?: IPepGenericListParams, resourceFields?:AddonDataScheme['Fields'], accountUUID?:string | undefined, isRecycleBin?: boolean): string
+    setFields(fields: AddonDataScheme['Fields']);
 }
 
 export class ContainedArrayGVDataSource implements IGenericViewerDataSource{
@@ -142,7 +143,7 @@ export class RegularGVDataSource implements IGenericViewerDataSource{
         return await this.genericResourceService.getItems(this.genericViewer.view.Resource.Name, deleted,  this.fieldsIDs, this.genericViewer.filter, params, fields, resourceFields, accountUUID, this.genericViewer.searchDataView, this.genericViewer.view.Sorting)
     }
     async getFields(){
-        if(!this.fields){
+        if(Object.keys(this.fields || {}).length === 0){
             this.fields = (await this.genericResourceService.getResource(this.genericViewer.view.Resource.Name)).Fields || {}
         }
         return this.fields
@@ -163,7 +164,9 @@ export class RegularGVDataSource implements IGenericViewerDataSource{
     async update(item: any){
         return await this.postItem(item)
     }
-
+    setFields(fields: AddonDataScheme['Fields'] = {}){
+        this.fields = fields
+    }
     isInlineList() {
         return false;
     }

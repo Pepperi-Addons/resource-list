@@ -1,4 +1,10 @@
 import { AddonDataScheme, BaseFormDataView, GridDataView, MenuDataView } from "@pepperi-addons/papi-sdk"
+
+export interface OldSorting{
+  FieldKey: string;
+  Ascending: boolean;
+}
+
 export interface SelectOption{
     key: string,
     value: string
@@ -17,7 +23,7 @@ export interface View{
     Description: string,
     Resource: Resource,
     Filter?: any,
-    Sorting?: Sorting,
+    Sorting?: OldSorting,
     Editor?: string,
     CreationDateTime: string,
     ModificationDateTime: string,
@@ -40,11 +46,6 @@ export interface Resource{
     Name: string
 }
 
-export interface Sorting{
-    FieldKey: string,
-    Ascending: boolean
-}
-
 export interface IReferenceField {
     FieldID: string,
     DisplayField: string,
@@ -65,6 +66,22 @@ export interface IReferenceField {
     smartSearchDataView?: MenuDataView
     searchDataView?: MenuDataView
   }
+
+export interface ICardEditor {
+    id: number;
+    showContent: boolean
+}
+export interface ViewsCard extends ICardEditor{
+    views: SelectOption[]
+    title: string
+    selectedView: SelectOption,
+    selectedResource?: string
+}
+
+export interface PageBlockConfiguration {
+    resource?: string;
+    viewsList: ViewsCard[];
+}
   
   export const  REFERENCE_TYPE = "Resource"
   export const SELECTION_LIST = "SelectionList"

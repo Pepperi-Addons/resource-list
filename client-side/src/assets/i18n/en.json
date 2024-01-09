@@ -18,7 +18,7 @@
 
     "MappedFieldsTitle": "Mapped fields",
     "MappedFieldsTitleHint": "(Drag & Drop anywhere from available fields)",
-    "CreationDateTime": "CreationDateTime",
+    "CreationDateTime": "Creation Date Time",
     "Design": "Design",
     "SamePage": "replace the current page",
     "Popup": "open as popup",
@@ -54,5 +54,9 @@
     "GeneralErrorMsg": "Error occurred, please try again later.",
     "AddView": "Add View",
     "AddEditor": "Add Editor", 
-    "DeleteError": "could not delete the item, please make sure you have the right permissions in order to delete this item"
+    "DeleteError": "could not delete the item, please make sure you have the right permissions in order to delete this item",
+    "DONE": "Done",
+    "CANCEL": "Cancel",
+    "ExportErrorDialogTitle": "Export is blocked",
+    "ExportErrorDialogContent": "Export is blocked on lists with filters and more than {{max_items}} rows. \n please lower number of rows before exporting"
 }

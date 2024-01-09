@@ -7,7 +7,7 @@ import { PepSelectionData } from '@pepperi-addons/ngx-lib/list';
 import { Editor, IGenericViewer, SelectOption, View } from 'shared';
 import { PepDialogService } from '@pepperi-addons/ngx-lib/dialog';
 import { FieldEditorComponent } from '../field-editor/field-editor.component';
-import { EXPORT, IGenericViewerConfigurationObject, IMPORT } from '../metadata';
+import { EXPORT, EXPORT_MAX_ITEMS, IGenericViewerConfigurationObject, IMPORT } from '../metadata';
 import { GenericListComponent, IPepGenericListInitData, IPepGenericListParams } from '@pepperi-addons/ngx-composite-lib/generic-list';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { DIMXHostObject, PepDIMXHelperService } from '@pepperi-addons/ngx-composite-lib';
@@ -222,7 +222,7 @@ export class GenericViewerComponent implements OnInit {
       this.listOptions = await this.createListOptions()
     }
     async onViewChanged($event){
-      this.genericViewer = await this.genericResourceService.getGenericView($event)
+      this.genericViewer = await this.genericResourceService.getGenericView($event, this.accountUUID)
       const seletedView = this.dropDownOfViews.find(item => item.key === $event)
       this.genericViewer.title = seletedView ? seletedView.value : '';
       this.genericViewerDataSource = new RegularGVDataSource(this.genericViewer, this.genericResourceService, [], this.accountUUID)
@@ -236,12 +236,14 @@ export class GenericViewerComponent implements OnInit {
       if(this.genericViewer?.view?.isFirstFieldDrillDown && fields.length > 0){
         fields[0].Type = "Link"
       }
-      this.genericViewer.lineMenuItems.Fields.length
       this.dataSource = new DataSource(new DynamicItemsDataSource(async (params) => {
         this.listParams = params;
         this.resourceFields = await this.genericViewerDataSource.getFields()
-        const items = await this.genericViewerDataSource.getItems(this.listParams, fields, this.resourceFields, this.accountUUID)
+        // if we got items on the configuration object, this means it's the first load and we need to get it instead of calling the cpi side.
+        const items = this.configurationObject.items ? this.configurationObject.items : await this.genericViewerDataSource.getItems(this.listParams, fields, this.resourceFields, this.accountUUID)
         this.items = JSON.parse(JSON.stringify(items))
+        // after using the items, we're deleting it from the object so we want use it on consecutive calls
+        delete this.configurationObject.items
         //in order to support arrays and references we should check the "real" type of each field, and reformat the corresponding item
         this.reformatItems(this.items.Objects, this.resourceFields)
         
@@ -314,6 +316,7 @@ export class GenericViewerComponent implements OnInit {
       }
     }
     import(){
+      
       this.dimxService?.import({
         OverwriteObject: false,
         OwnerID: this.genericViewer.view.Resource.AddonUUID
@@ -321,14 +324,28 @@ export class GenericViewerComponent implements OnInit {
       
     }
     export(){
-      this.dimxService?.export({
-        DIMXExportWhere: this.genericViewerDataSource.getwhereClause(this.listParams, this.resourceFields, this.accountUUID, this.recycleBin),
-        DIMXExportFormat: 'csv',
-        DIMXExportIncludeDeleted: false,
-        DIMXExportFileName: this.genericViewer.view.Name,
-        DIMXExportDelimiter: ',',
-        DIMXExportFields: (this.genericViewer.viewDataview.Fields?.map(field => field.FieldID) || []).join()
-      })
+      const whereClause = this.genericViewerDataSource.getwhereClause(this.listParams, this.resourceFields, this.accountUUID, this.recycleBin);
+      const itemsCount = this.dataSource.getItemsCount();
+      if (whereClause != '' && itemsCount > EXPORT_MAX_ITEMS) {
+        this.dialogService.openDefaultDialog({
+          actionsType: 'close',
+           title: this.translate.instant('ExportErrorDialogTitle'),
+           content: this.translate.instant('ExportErrorDialogContent', {max_items: EXPORT_MAX_ITEMS}),
+           showClose: true,
+           showFooter: true,
+           showHeader: true
+        })
+      }
+      else {
+        this.dimxService?.export({
+          DIMXExportWhere: whereClause,
+          DIMXExportFormat: 'csv',
+          DIMXExportIncludeDeleted: false,
+          DIMXExportFileName: this.genericViewer.view.Name,
+          DIMXExportDelimiter: ',',
+          DIMXExportFields: (this.genericViewer.viewDataview.Fields?.map(field => field.FieldID) || []).join()
+        })
+      }
     }
      getActionsCallBack(){
       return async (data: PepSelectionData) => {
@@ -341,7 +358,7 @@ export class GenericViewerComponent implements OnInit {
                     const selectedItemKey = selectedRows.rows[0]
                     const item = await this.genericViewerDataSource.getEditorItemByKey(selectedItemKey);
                     const dialogData = {
-                      item : item,
+                      item : await this.genericViewerDataSource.getEditorItemByKey(selectedItemKey) || {},
                       editorDataView: this.genericViewer.editorDataView,
                       editor: this.genericViewer.editor,
                       originalValue: item,

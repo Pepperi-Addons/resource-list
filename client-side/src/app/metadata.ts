@@ -1,14 +1,14 @@
 import { IPepDraggableItem } from "@pepperi-addons/ngx-lib/draggable-items"
-import { AddonData, BaseFormDataViewField, DataViewField, DataViewFieldType, GridDataViewField, MenuDataViewField, SchemeField } from "@pepperi-addons/papi-sdk"
+import { AddonData, BaseFormDataViewField, DataViewField, DataViewFieldType, GridDataViewField, MenuDataViewField, SchemeField, SearchData } from "@pepperi-addons/papi-sdk"
 import { SelectOption } from "shared"
 import { AddFormComponent } from "./add-form/add-form.component"
-import { ViewsCard } from "./draggable-card-fields/cards.model"
 
 export const CREATION_DATE_TIME_TITLE = "Creation Date Time"
 export const MODIFICATION_DATE_TIME_TITLE = "Modification Date Time"
 export const CREATION_DATE_TIME_ID = "CreationDateTime"
 export const MODIFICATION_DATE_TIME_ID = "ModificationDateTime"
 export const API_PAGE_SIZE = 100;
+export const EXPORT_MAX_ITEMS = 100000;
 
 
 export interface IMappedField {
@@ -70,6 +70,7 @@ export const defaultCollectionFields = [
 ]
 export interface IGenericViewerConfigurationObject{
   viewsList: SelectOption[],
+  items?: SearchData<AddonData>,
   selectionList?: {
     none: boolean,
     selection: 'single' | 'multi'

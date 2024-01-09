@@ -8,6 +8,7 @@ import { EditorsService } from '../services/editors.service';
 import { UtilitiesService } from '../services/utilities-service';
 import { AddonData, AddonDataScheme, SchemeField } from '@pepperi-addons/papi-sdk';
 import { ResourceField } from '../metadata';
+import { KeyValuePair } from '@pepperi-addons/ngx-lib';
 
 @Component({
   selector: 'app-views-form',
@@ -82,11 +83,10 @@ export class ViewsFormComponent implements OnInit {
     this.resourceFields = await this.genericResourceService.getResourceFields(this.currentView.Resource.Name);
     this.searchFields = await this.genericResourceService.getResrourceSearchFields(this.currentView.Resource.Name);
     this.indexedFields = this.getIndexedFieldsArray(this.resourceFields)    
-    this.sortingOptions = Object.keys(this.searchFields).map(fieldName => {
-      return {
-        Key: fieldName,
-        Value: fieldName
-      }
+    this.sortingOptions = this.getFields();
+    this.sortingOptions.push({
+      Key: "CreationDateTime",
+      Value: this.translate.instant("CreationDateTime")
     })
     const editorOptionalValues = await this.getEditorOptionalValues()
     this.dataSource = this.convertViewToDataSource(this.currentView)
@@ -105,6 +105,27 @@ export class ViewsFormComponent implements OnInit {
       }
     })
     return result
+  }
+
+  getFields(): KeyValuePair<string>[]{
+    const res: KeyValuePair<string>[] = [];
+    this.indexedFields.forEach(indexedField => {
+      res.push({
+        Key: indexedField.FieldID,
+        Value: indexedField.FieldID
+      })
+
+      if(indexedField.IndexedFields) {
+        Object.keys(indexedField.IndexedFields || {}).forEach(fieldName => {
+          res.push({
+            Key: `${indexedField.FieldID}.${fieldName}`,
+            Value: `${indexedField.FieldID}.${fieldName}`
+          })
+        })
+      }
+    })
+
+    return res;
   }
 
   async getEditorOptionalValues(){
@@ -228,6 +249,9 @@ export class ViewsFormComponent implements OnInit {
             Width: 1,
             Height: 0
             }
+        },
+        AdditionalProps: {
+          emptyOption: false
         }
       },
       {
@@ -259,9 +283,14 @@ export class ViewsFormComponent implements OnInit {
     this.currentView.Filter = this.currentFilter && Object.keys(this.currentFilter).length == 0 ? undefined: this.currentFilter
     this.currentView.Description = this.dataSource.Description
     this.currentView.Editor = this.dataSource.Editor;
-    this.currentView.Sorting = {
-      FieldKey: this.dataSource.SortingField,
-      Ascending: this.dataSource.Ascending
+    if (this.dataSource.SortingField) {
+      this.currentView.Sorting = {
+        FieldKey: this.dataSource.SortingField,
+        Ascending: this.dataSource.Ascending.toString().toLocaleLowerCase() === 'true'
+      }
+    }
+    else {
+      this.currentView.Sorting = undefined;
     }
     this.viewsService.upsertItem(this.currentView)
     this.utilitiesService.showDialog("Update", "UpdateDialogMSG", 'close')

@@ -1,14 +1,14 @@
 import { AddonDataScheme, FindOptions, SearchBody } from "@pepperi-addons/papi-sdk"
 import { GenericResourceEndpoint } from "@pepperi-addons/papi-sdk/dist/endpoints";
-import { Sorting } from "shared";
+import { OldSorting } from "shared";
 import { UtilitiesService } from "./utilities.service";
 
 export class GenericResourceService {
-    utilities: UtilitiesService = new UtilitiesService();
+    utilities: UtilitiesService = new UtilitiesService(this.inAccountContext);
 
     constructor(private inAccountContext) { }
     
-    async getItems(resourceName: string, query: FindOptions, fields: string[], sorting?: Sorting){
+    async getItems(resourceName: string, query: FindOptions, fields: string[], sorting?: OldSorting){
         const apiBaseObj = await this.getBaseObject();
         const sortingStr = this.utilities.getSortingString(sorting);
         const body: SearchBody = {
@@ -47,14 +47,8 @@ export class GenericResourceService {
         return schema.Type == "papi"
     }
 
-    private async shouldWorkOnline(): Promise<boolean> {
-        const isWebApp = await global['app']['wApp']['isWebApp']();
-		const isBuyer = await global['app']['wApp']['isBuyer']();
-        return !isBuyer && isWebApp && !this.inAccountContext;
-    }
-
     private async getBaseObject() {
-        const workOnline = await this.shouldWorkOnline();
+        const workOnline = await this.utilities.shouldWorkOnline();
         let res: any = pepperi.resources;
         if (workOnline) {
             res = pepperi.papiClient.resources

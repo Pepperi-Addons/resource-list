@@ -1,9 +1,8 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { CdkDragDrop, CdkDragEnd, CdkDragStart, moveItemInArray} from '@angular/cdk/drag-drop';
-import { ViewsCard } from '../draggable-card-fields/cards.model'
 import { CardsService } from '../draggable-card-fields/cards.service'
 import { config } from '../addon.config'
-import { SelectOption, View } from 'shared';
+import { SelectOption, View, ViewsCard} from 'shared';
 import { ViewsService } from '../services/views.service';
 import * as uuid from 'uuid';
 import { GenericResourceService } from '../services/generic-resource-service';
@@ -39,7 +38,22 @@ export class BlockEditorComponent implements OnInit {
             this.views = views
             this.viewsList = this.filterViewsAndResourceThatNoLongerExist()
             this.loadCompleted = true
-        })   
+        })
+        this.hostEvents.emit({
+            action: 'set-page-configuration',
+            
+            // any object that the block wants to save on the configuration
+            pageConfiguration: {
+                "Parameters": [
+                    {
+                        "Key": "AccountUUID",
+                        "Type": "String",
+                        "Produce": false,
+                        "Consume": true,
+                    }
+                ]
+            }
+        })
     }
 
     filterViewsAndResourceThatNoLongerExist(){
@@ -81,6 +95,7 @@ export class BlockEditorComponent implements OnInit {
             key: key,
             value: value
         })
+        
     }
 
     restoreData(){

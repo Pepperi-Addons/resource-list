@@ -226,7 +226,8 @@ export class FieldEditorComponent implements OnInit {
         const optionalValues = field.OptionalValues || field.Items?.OptionalValues || [];
         let fieldValue = this.dataSource[key];
         if (optionalValues.length > 0) {
-          fieldValue = fieldValue.split(';');
+          //in case of no match, split returns an array with an empty string inside of it, so we will filter the array.
+          fieldValue = fieldValue.split(';').filter(val => val);
         }
         this.dataSource[key] = this.castStringArray(fieldValue, this.resourceFields[key].Items.Type)
       }
@@ -408,5 +409,4 @@ export class FieldEditorComponent implements OnInit {
       this.dataView.Fields.splice(index, 1, dvField);
     }
   }
-
 }

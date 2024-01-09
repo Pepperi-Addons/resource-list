@@ -71,6 +71,9 @@ export class ViewsEventsTabComponent implements OnInit, AfterViewInit {
           EventData: {
               ResourceName: {
                 Type: "String"
+              },
+              AccountUUID: {
+                Type: "String"
               }
           },
           EventFilter: {

@@ -1,0 +1,23 @@
+
+<ng-container pep-main-area>
+    <resource-list
+        [cpiEventService]="clientEventsService"
+        [listContainer]="hostObject.listContainer"
+    ></resource-list>
+    <div *ngIf="hostObject.inDialog" class="pep-border-top mat-dialog-actions">
+        <pep-button 
+            class="pep-spacing-element"
+            [sizeType]="'md'" 
+            [value]="'DONE' | translate"
+            [styleType]="'strong'" 
+            (buttonClick)="onDoneClicked()"
+        ></pep-button>        
+        <pep-button 
+            class="pep-spacing-element"
+            [sizeType]="'md'" 
+            [value]="'CANCEL' | translate"
+            [styleType]="'weak'" 
+            (buttonClick)="onCancelClicked()"
+        ></pep-button>
+    </div>
+</ng-container>
