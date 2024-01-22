@@ -86,6 +86,10 @@ export class ListUIComponent implements  AfterViewInit {
     return this.list?.getSelectedItems()
   }
 
+  getSelectAll(){
+    return this.list?.selectAll || false
+  }
+
   onTopScrollIndexChanged($event){
     this.topScrollIndexChanged.emit($event.startIndex)
   }

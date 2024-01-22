@@ -116,6 +116,10 @@ export class ResourceListComponent implements OnInit {
     return this.list?.getSelectedItems()
   }
 
+  getSelectAll(){
+    return this.list?.getSelectAll();
+  }
+
   onTopScrollIndexChanged(index: number){
     this.pepperiList.setTopScrollIndex(index)
   }
