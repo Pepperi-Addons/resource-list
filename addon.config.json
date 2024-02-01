@@ -22,13 +22,14 @@
     ],
     "Dependencies": {
       "generic_resource": "0.0.11",
-      "cpi_data": "0.6.6"
+      "cpi_data": "0.6.6",
+      "pepperi_pack": "1.1.6"
     },
     "CPISide": [
       "addon-cpi.ts"
     ]
   },
   "AddonPackage": {
-    "ClientZip": false
+    "ClientZip": true
   }
 }
