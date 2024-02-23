@@ -100,7 +100,7 @@ export abstract class AbstractProfileCardsTabComponent {
   }
   async onSaveNewProfileClicked(event){
     const dvType = this.getDefaultDataView();
-    await this.profileCardsManager.createCard(event, dvType)
+    await this.profileCardsManager.createCard(event.profileId, dvType)
     this.loadProfileCardVariables()
   }
   async onDataViewDeleteClicked($event){
